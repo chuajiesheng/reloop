@@ -1,0 +1,348 @@
+#!/usr/bin/python
+'''
+Created on Dec 28, 2010
+
+@author: Martin Mladenov
+'''
+# import glpk
+import glob
+import scipy.io
+import matplotlib as mpl
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.pyplot as plt
+from matplotlib import *
+import matplotlib.cm as cm
+from cvxopt import matrix,spmatrix
+from cvxopt import solvers
+from cvxopt import printing
+import time
+import sys
+from sys import argv
+from math import fabs, log, exp
+import numpy as np
+import scipy as scp
+import scipy.sparse as sp
+import scipy.linalg as lg
+import wrapper
+
+
+# import LiftedLPWrapper
+
+def save(A,b,c):
+    np.savetxt('A.csv', A, delimiter=',')
+    np.savetxt('b.csv', b, delimiter=',')
+    np.savetxt('c.csv', c, delimiter=',')
+def plotLP(N,b,c):
+    from mpl_toolkits.axes_grid1 import make_axes_locatable
+    rcParams['backend'] = "ps"
+    rcParams['axes.labelsize'] = 20
+    rcParams['font.size'] = 20
+    rcParams['legend.fontsize'] = 20
+    rcParams['legend.numpoints']=1
+    rcParams['xtick.labelsize'] = 20
+    rcParams['ytick.labelsize'] = 20
+    rcParams['lines.linewidth'] = 3
+    rcParams['lines.markersize'] = 8   
+    # to mirror the plot
+    N_m = np.array(N)
+    print N.shape
+    print N_m.shape
+    b_m = b.copy()
+    for i in range(N.shape[0]):
+        b_m[i] = b[N.shape[0]-i-1]
+        for j in range(N.shape[1]):
+            N_m[i][j] = N[N.shape[0]-i-1][j]
+    print N_m.shape
+    axScatter = plt.subplot(111)
+    axScatter.pcolor(N_m)#, cmap=plt.get_cmap('Accent'))
+    divider = make_axes_locatable(axScatter)
+    axHistx = divider.append_axes("top", 1.2, pad=0.1, sharex=axScatter)
+    axHisty = divider.append_axes("right", 1.2, pad=0.1, sharey=axScatter)
+    plt.setp(axHistx.get_xticklabels() + axHisty.get_yticklabels(),
+         visible=False)
+    plt.setp(axHistx.get_yticklabels() + axHisty.get_xticklabels(),
+         visible=False)
+    axHistx.pcolor(np.array(c).T)#, cmap=plt.get_cmap('Accent'))
+    axHisty.pcolor(np.array(b_m))#, cmap=plt.get_cmap('Accent'))
+    plt.draw()
+    plt.show()
+
+def rowUnique(a):
+    b = np.ascontiguousarray(a).view(np.dtype((np.void, a.dtype.itemsize * a.shape[1])))
+    _, idx = np.unique(b, return_inverse=True)
+    return idx
+def col2matrix(c):
+    brows = np.array(range(len(c)))
+    bdata = np.ones(len(c),dtype=np.int)
+    Bcc = sp.csr_matrix((bdata,np.vstack((brows,c))),dtype=np.int).tocsr()
+    return Bcc
+
+def sumRefinement(A, b):
+    print "SumRef starting"
+    czero = b
+    ncols = np.max(b) + 1
+    ncolsold = 0
+    while ncols != ncolsold:
+        B = col2matrix(czero)
+        czero = rowUnique((A*B).todense())
+        ncolsold = ncols
+        ncols = np.max(czero) + 1
+    return czero
+
+
+
+def lift(Ar, br, cr, sparse=True, orbits=False, sumRefine=False):
+    if (not sparse):
+
+        _, cmod = np.unique(np.array(cr), return_inverse=True)
+        _, bmod = np.unique(np.array(br), return_inverse=True)
+        A = sp.lil_matrix(Ar)
+
+    else:
+        _, cmod = np.unique(np.array(cr.todense()), return_inverse=True)
+        _, bmod = np.unique(np.array(br.todense()), return_inverse=True)
+        A = Ar.tolil()
+
+
+    bmod = bmod + np.max(cmod) + 1
+    b = sp.lil_matrix(bmod)
+    c = sp.lil_matrix(cmod)
+
+    co = sp.lil_matrix(cr)
+    bo = sp.lil_matrix(br)
+    #=====================================================================
+    # this block is extremely slow for some reason (coo conversion?), even though nothing particularly useful is being done here.
+    # for now, we don't count the lost time here
+
+    zC = sp.identity(A.shape[1],format = "lil",dtype=np.float)
+    zR = 2*sp.identity(A.shape[0],format = "lil",dtype=np.float)
+    AA = sp.vstack( ( sp.hstack((zC,A.transpose())), sp.hstack((A,zR))) )
+    T = AA.tocoo()
+
+
+    cc = np.array(sp.hstack((c,b)).todense(),dtype=np.float).ravel()
+    #=====================================================================
+    starttime = time.clock()
+    o = 1
+    if orbits: o = 0 
+    if sumRefine and not orbits: 
+        bcolsSaucy = sumRefinement(AA,cc)
+    else: 
+        bcolsSaucy = wrapper.epSaucy(T.data.round(6).astype(np.float), T.row.astype(np.uintp), T.col.astype(np.uintp), cc.astype(np.uintp), np.int32(0), np.int32(o));
+        # bcolsSaucy2 = LiftedLPWrapper.equitablePartitionSaucy(T.data.round(6).astype(np.float), T.row.astype(np.int32), T.col.astype(np.int32), cc.astype(np.int32), np.int32(0), np.int32(o));
+        # if (len( (bcolsSaucy-bcolsSaucy2).nonzero()[0] ) > 0 ): exit("wrappers don't agree")
+    print "refinement took: ", time.clock() - starttime, "seconds."
+    n =  c.shape[1]
+    _, bcols = np.unique(bcolsSaucy[0:n], return_inverse=True)  
+    brows = np.array(range(n))
+
+    bdata = np.ones(n,dtype=np.int)
+    Bcc = sp.csr_matrix((bdata,np.vstack((brows,bcols))),dtype=np.int).tocsr()
+    m = b.shape[1]
+    _, rcols = np.unique(bcolsSaucy[n:n+m], return_inverse=True)
+    u, rowfilter = np.unique(rcols, return_index=True)
+    k = rowfilter.size
+    l = A.shape[0]
+    rfrows = np.array(range(k))
+    Scc = sp.csr_matrix( (np.ones(k,dtype=np.int),np.vstack((rfrows,rowfilter))),
+                       dtype=np.int, shape=(k,l))
+    LA = Scc*A.tocsr()*Bcc
+    print cr.shape
+    Lc = (co.T * Bcc).T
+    compresstime = time.clock()-starttime
+    Lb = (Scc*bo).todense()
+    LA = LA.tocoo()
+    Lc = Lc.todense()
+
+    return LA, Lb, Lc, compresstime, Bcc 
+
+
+
+
+
+
+
+
+                               
+def sp_liftedLPCVXOPT(A,b,c,debug=False,optiter=200,plot=False,save=False, orbits=False, sumRefine=False):
+    #print "================Original================"
+    print A.shape
+    print b.shape
+    print c.shape
+    print  "objsum: ", np.sum(c.todense())
+    if debug:
+
+        mc = -matrix(c.todense())
+        # print np.max(A.tocoo().row)
+        # exit()
+        mA = spmatrix(A.tocoo().data,A.tocoo().row.tolist(),A.tocoo().col.tolist())
+        print mA.size
+        mb = matrix(b.todense())
+        print mb.size
+        starttime = time.clock()     
+        sol = solvers.lp(mc,\
+                         mA,\
+                         mb, solver='glpk')
+        xground = np.array(sol['x']).ravel()
+        timeground = time.clock() - starttime   
+
+    LA, Lb, Lc, compresstime, Bcc = lift(A,b,c, sparse = True, orbits=orbits)
+    starttime = time.clock()
+    sol = solvers.lp(-matrix(Lc),spmatrix(LA.data,LA.row.tolist(),LA.col.tolist()),matrix(Lb),solver='glpk')
+    r = sp.csr_matrix(np.array(sol['x']).ravel())
+    xopt = np.array((Bcc * r.T).todense()).ravel()
+    timelift = time.clock() - starttime + compresstime
+    print "lifting cols: ", A.shape[1], " -> ", LA.shape[1]
+    print "lifting rows: ", A.shape[0], " -> ", LA.shape[0]
+    if debug: 
+        report(xopt, xground, timelift, timeground)
+        return [xopt, timeground, timelift, compresstime, Bcc.shape[0], Bcc.shape[1], A.shape[0], LA.shape[0]]
+    else:
+        print "tlift: ", timelift, "timecomp: ", compresstime 
+        return [xopt, timelift, compresstime, Bcc.shape[0], Bcc.shape[1], A.shape[0], LA.shape[0]]
+    
+def report(xopt, xground, timelift, timeground):
+    print "================================="
+    print "difference with ground solution: "
+    g = np.max(np.abs(xopt - xground))
+    i = np.argmax(np.abs(xopt - xground))
+    print "abs: ", g, " at xground: ",xground[i], " xlift: ", xopt[i]
+    # gg =  np.max(np.abs(xopt/xground))
+    # hh =  np.max(np.abs(xground/xopt))
+    # if gg>hh:
+    #     m = gg
+    #     i = np.argmax(np.abs(xopt/xground))
+    # else:
+    #     m = hh
+    #     i = np.argmax(np.abs(xground/xopt))
+    # print "rel: ", m, " at xground: ",xground[i], " xlift: ", xopt[i]
+    print "ground time: ", timeground, " lifted time: ", timelift
+    print "================================="
+
+
+                   
+def liftedLPCVXOPT(A,b,c,debug=False,optiter=200,plot=False,save=False, orbits=False, sumRefine=False):
+    # liftedLPCVXOPT: takes as input an LP in the form
+    #     max   c'x
+    #     s.t.  Ax <= b
+    # where A, b, x are numpy arrays of size (m,n), (m,1), (n,1) respectively and returns a vector solving
+    # the linear program. 
+    # By default, the linear program is preprocessed by color-passing, the smaller LP is solved in 
+    # CVXOPT and then the solution vector is recovered.
+    # One may additionally use the following optional arguments:
+    #   debug: when set to true, an uncompressed version of the LP is solved before solving the lifted one
+    #          in order to measure time gains and potentially differences between ground and lifted solutions.
+    #   optiter: limits CVXOPT iterations.
+    #   plot: produces matrix plots similar to those in the thesis (see the plot() function definition).
+    #   save: saves the lifted LP in CVS (see the save() function definition).  
+    A = np.matrix(A)
+    b = np.matrix(b)
+    c = np.matrix(c)
+    b.shape = (b.size,1)
+    c.shape = (c.size,1)
+    print "shapes: ", A.shape, b.shape, c.shape
+    solvers.options["maxiters"]=optiter
+    if debug:    
+        starttime = time.clock()
+        sol = solvers.lp(-matrix(c),matrix(A),matrix(b))
+        xground = np.array(sol["x"]).ravel()
+        timeground = time.clock() - starttime
+        # print timeground
+        # return
+    
+    LA, Lb, Lc, compresstime, Bcc = lift(A,b,c, sparse = False, orbits=orbits)
+    if save: save(np.array(LA),Lb,Lc)
+    if plot:
+        plotLP(np.array(A),b,c)
+        plotLP(np.array(LA),Lb,Lc)
+    
+    starttime = time.clock()
+    print "lshapes: ", LA.shape, Lb.shape, Lc.shape
+    # sol = solvers.lp(-matrix(Lc),spmatrix(LA.data,LA.row.tolist(),LA.col.tolist()),matrix(Lb))
+    sol = solvers.lp(-matrix(Lc),matrix(LA.todense()),matrix(Lb))
+    r = np.array(sol['x']).ravel()
+    xopt = np.array(np.dot(Bcc.todense(),r)).ravel()
+    timelift = time.clock() - starttime + compresstime
+    print "lifting cols: ", A.shape[1], " -> ", LA.shape[1]
+    print "lifting rows: ", A.shape[0], " -> ", LA.shape[0]
+    if debug: 
+        report(xopt, xground, timelift, timeground)
+        return [xopt, timeground, timelift, compresstime, Bcc.shape[0], Bcc.shape[1], A.shape[0], LA.shape[0]]
+    else:
+        print "tlift: ", timelift, "timecomp: ", compresstime 
+        return [xopt, timelift, compresstime, Bcc.shape[0], Bcc.shape[1], A.shape[0], LA.shape[0]]
+
+if __name__ == '__main__':
+    N = 3
+    times = np.zeros((N,2))
+    countz = np.zeros((N,2))
+    vars = np.zeros(N,dtype=np.int)    
+    A = np.array([[0, 1], [0.2, 1], [0.4, 1], [0.6, 1], [0.8, 1], [1.0, 1], [1.2, 1], [1.4, 1], [1.6, 1], [1.8, 1], [ 2, 1]])    
+    zero = np.zeros(A.shape, dtype=np.float)
+    b = np.array([1, 1.01, 1.04, 1.09, 1.16, 1.25, 1.36, 1.49, 1.64, 1.81, 2]).transpose()
+    c = np.array([1., 1.]).transpose()
+    b.shape = (b.size,1)
+    c.shape = (c.size,1)
+    vec = np.ones((5,), dtype=np.float)
+
+    for j in range(N):
+        zero = np.zeros(A.shape, dtype=np.float)
+        A = np.hstack((np.vstack((A,zero)),np.vstack((zero,A))))
+        b = np.vstack((b,b))
+        c = np.vstack((c,c))
+
+    print A
+    print sp_liftedLPCVXOPT(sp.coo_matrix(A),sp.coo_matrix(b),sp.coo_matrix(c), debug=True)
+# colsSaucy = LiftedLPWrapper.equitablePartitionSaucy(np.array([1.,2.,3.,4.], dtype=np.float), np.array([1,2,3,4],dtype=np.int32), np.array([1,2,3,4], dtype=np.int32), np.array([1,2,3,4], dtype=np.int32), np.uint64(0), np.int32(1));
+# matr = sp.coo_matrix(scipy.io.mmread("/home/mladenov/workspace/soda/sparsematrices/pltexpa/pltexpa.mtx"))
+# matr = sp.coo_matrix(scipy.io.mmread("/home/mladenov/workspace/soda/sparsematrices/ca-AstroPh.mtx"))
+
+
+
+# if __name__ == '__main__':
+
+    # files = glob.glob("/home/mladenov/workspace/soda/sparsematrices/grid*.mat")
+    # for f in files:
+    #     print f
+    # 	dictmat = scipy.io.loadmat(f)
+    #     print dictmat
+    #     #----- uncomment
+    #     # for i in [1,2,7]:
+    #     # 	print type(dictmat["Problem"][0][0][i])
+    #     # 	if type(dictmat["Problem"][0][0][i]) is sp.csc.csc_matrix: break
+    #     # print i	
+    #     # #print dictmat["Problem"][0][0]	
+    #     # #print type(dictmat["Problem"][0][0][i])
+    #     # matr = dictmat["Problem"][0][0][i]
+    #     #----- uncomment
+    #     matr = dictmat["A"]
+
+    #     # exit()
+    #     # matr = dictmat["Problem"][0][0][7]
+    # 	sym = False
+    # 	if matr.shape[0] == matr.shape[1]: 
+    #  		matr = matr + matr.T
+    #  		sym = True   
+    # 	if (sym):
+    #  		matr = sp.coo_matrix(sp.triu(matr,k=1))
+    #  		size = matr.shape[0]
+    #  		off = 0
+    #  		a = numpy.asarray([ matr.col, matr.row ])
+    # 	else:    
+    # 		matr = sp.coo_matrix(matr)
+    #  		size = matr.shape[0] + matr.shape[1]
+    #  		off = matr.shape[1]
+    #  # print np.max(matr.col)
+    #  # print np.max(matr.row)
+    #  	a = numpy.asarray([ matr.col, matr.row + off ])
+
+    #     # f_handle = file('/home/mladenov/workspace/saucy-3.0/foo.graph', 'w')
+    #     # # f_handle.write("%d %d %d\n\n"%(size, matr.col.shape[0], 1))
+    #     # # np.savetxt(f_handle, a.T, fmt="%d", delimiter=" ")
+    #     # # f_handle.close()
+    #     print matr.shape
+    #     print matr.col.shape
+    #     cols = LiftedLPWrapper.equitablePartitionSaucyUnlabeled(matr.col, matr.row + off, np.zeros(size, dtype=np.int32), np.int32(0), np.int32(1));
+    #     print "======"
+    #     print "before: ", size
+    #     print "after:", np.max(cols)
