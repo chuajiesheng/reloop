@@ -6,6 +6,5 @@ python wrapper-setup.py install
 #The neccessary files are now being compiled
 #After all files are compiled run
 
-python test.wrapper.py 
-
+python liftedLP_glpk.py
 #to run the Test Application
