@@ -91,11 +91,15 @@ pyublas::numpy_array<double> getMatrix(bounds boundquery, int scaled) {
   /*incredibly, glpk array indices start from 1...*/
   int foundrows = 0;
   int boundtype = 0;
+  vector globalindvec; 
+  vector globaldatavec; 
+
   if ((boundquery == EQUAL) || (boundquery == UNBOUND)) boundtype = 1;
   for (int i = 1; i <= numrows; i++) {
     int rowtype = glp_get_row_type(lp,i);
     if ( ( (boundtype == 1) &&   (rowtype == boundquery) ) \
       || ( (boundtype == 0) && ( (rowtype == GLP_DB) || (rowtype == boundquery) ) ) ) {
+
 
       std::fill(datavec.begin(), datavec.end(), 0); std::fill(indvec.begin(), indvec.end(), 0);
       len = glp_get_mat_row(lp, i, indvec.data(), datavec.data());
@@ -110,6 +114,7 @@ pyublas::numpy_array<double> getMatrix(bounds boundquery, int scaled) {
           *(datavec.begin()+p) = tmp;
         }
       }
+      globalindvec.append(indvec)
       std::copy(indvec.begin() + 1, indvec.begin()+len+1, itera);
      /* for (std::vector<int>::iterator it = indvec.begin()+1; it <= indvec.begin() + len; it++) cout << *it;
       cout << endl;*/

@@ -28,7 +28,8 @@ cdef extern from "<vector>" namespace "std":
 
 cdef vector[int].iterator iter
 
-cdef extern from "fc.h": 
+cdef extern from "fc.h":
+    vector[np.intp_t] equitablePartitionSaucyBipartite(const size_t nrows, const size_t ncols, const size_t medges, const size_t data[], const size_t rowind[], const size_t colind[], const size_t b[], const size_t c[], int cIters, int coarsest);
     vector[itype_t] equitablePartitionSaucyV2(itype_t mvertices, itype_t medges, double data[], itype_t rown[], itype_t coln[], itype_t b[], int cIters, int coarsest);
 
 
@@ -42,6 +43,31 @@ def epSaucy(
 
     # Pass references to c++ function to guarantee correct memory access
     cdef vector[size_t] res = equitablePartitionSaucyV2(Z.shape[0], A.shape[0], &A[0], &B[0], &C[0], &Z[0], cIters, 1 if coarsest else 0)
+    
+    #Instantiate Iterator and iterate over returned c++ vector and assign values to numpy array
+    iter = res.begin()
+    i = 0 
+    while iter != res.end():
+     i = i + 1
+     inc(iter)
+    cdef np.ndarray result = np.empty(i)
+    for x in range(0,i):
+     result[x] = res[x]
+   
+    
+    #Print and return resulting numpy array
+    return result
+
+def epSaucyBipartite(
+    np.ndarray[itype_t,ndim=1] A,
+    np.ndarray[itype_t,ndim=1] rows,
+    np.ndarray[itype_t,ndim=1] cols,
+    np.ndarray[itype_t,ndim=1] rowcolor,
+    np.ndarray[itype_t,ndim=1] colcolor,
+    cIters = 0,
+    coarsest = True):
+    # Pass references to c++ function to guarantee correct memory access
+    cdef vector[int] res = equitablePartitionSaucyBipartite(rowcolor.shape[0], colcolor.shape[0], A.shape[0], &A[0], &rows[0], &cols[0], &rowcolor[0], &colcolor[0], cIters, 1 if coarsest else 0)
     
     #Instantiate Iterator and iterate over returned c++ vector and assign values to numpy array
     iter = res.begin()

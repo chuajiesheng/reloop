@@ -104,57 +104,79 @@ def lift(Ar, br, cr, sparse=True, orbits=False, sumRefine=False):
         A = Ar.tolil()
 
 
-    bmod = bmod + np.max(cmod) + 1
-    b = sp.lil_matrix(bmod)
-    c = sp.lil_matrix(cmod)
+    # cmod = cmod + np.max(bmod) + 1
+    # b = sp.lil_matrix(bmod)
+    # c = sp.lil_matrix(cmod)
 
     co = sp.lil_matrix(cr)
     bo = sp.lil_matrix(br)
+    # #=====================================================================
+    # # this block is extremely slow for some reason (coo conversion?), even though nothing particularly useful is being done here.
+    # # for now, we don't count the lost time here
+
+    # zC = sp.identity(A.shape[1],format = "lil",dtype=np.float)
+    # zR = 2*sp.identity(A.shape[0],format = "lil",dtype=np.float)
+    # AA = sp.vstack( ( sp.hstack((zC,A.transpose())), sp.hstack((A,zR))) )
+    # T = AA.tocoo()
+
+
+    # cc = np.array(sp.hstack((c,b)).todense(),dtype=np.float).ravel()
     #=====================================================================
-    # this block is extremely slow for some reason (coo conversion?), even though nothing particularly useful is being done here.
-    # for now, we don't count the lost time here
-
-    zC = sp.identity(A.shape[1],format = "lil",dtype=np.float)
-    zR = 2*sp.identity(A.shape[0],format = "lil",dtype=np.float)
-    AA = sp.vstack( ( sp.hstack((zC,A.transpose())), sp.hstack((A,zR))) )
-    T = AA.tocoo()
-
-
-    cc = np.array(sp.hstack((c,b)).todense(),dtype=np.float).ravel()
-    #=====================================================================
+    AC = Ar.tocoo()
+    _, data =  np.unique(AC.data.round(6), return_inverse=True)
     starttime = time.clock()
     o = 1
     if orbits: o = 0 
     if sumRefine and not orbits: 
         bcolsSaucy = sumRefinement(AA,cc)
     else: 
-        bcolsSaucy = wrapper.epSaucy(T.data.round(6).astype(np.float), T.row.astype(np.uintp), T.col.astype(np.uintp), cc.astype(np.uintp), np.int32(0), np.int32(o));
+        # bcolsSaucy = wrapper.epSaucy(T.data.round(6).astype(np.float), T.row.astype(np.uintp), T.col.astype(np.uintp), cc.astype(np.uintp), np.int32(0), np.int32(o));
+    	# print "refinement 1: ", time.clock() - starttime, "seconds."
+    	# t1 = time.clock()
+    	# print AC.shape
+        bcolsSaucy2 = wrapper.epSaucyBipartite(data.astype(np.uintp), AC.row.astype(np.uintp), AC.col.astype(np.uintp), bmod.astype(np.uintp), cmod.astype(np.uintp), np.int32(0), np.int32(o));
+        # print "refinement 2: ", time.clock() - t1, "seconds."
         # bcolsSaucy2 = LiftedLPWrapper.equitablePartitionSaucy(T.data.round(6).astype(np.float), T.row.astype(np.int32), T.col.astype(np.int32), cc.astype(np.int32), np.int32(0), np.int32(o));
-        # if (len( (bcolsSaucy-bcolsSaucy2).nonzero()[0] ) > 0 ): exit("wrappers don't agree")
     print "refinement took: ", time.clock() - starttime, "seconds."
-    n =  c.shape[1]
-    _, bcols = np.unique(bcolsSaucy[0:n], return_inverse=True)  
+    # print bcolsSaucy2
+    n =  cmod.shape[0]
+    m = bmod.shape[0]
+    # _, bcols = np.unique(bcolsSaucy[0:n], return_inverse=True)
+    _, bcols2 = np.unique(bcolsSaucy2[m:n+m], return_inverse=True)
+    # print bcols
+    # print bcols2
+    # if (len( (bcolsSaucy-bcolsSaucy2).nonzero()[0] ) > 0 ): exit("wrappers don't agree")
+    
     brows = np.array(range(n))
 
     bdata = np.ones(n,dtype=np.int)
-    Bcc = sp.csr_matrix((bdata,np.vstack((brows,bcols))),dtype=np.int).tocsr()
-    m = b.shape[1]
-    _, rcols = np.unique(bcolsSaucy[n:n+m], return_inverse=True)
-    u, rowfilter = np.unique(rcols, return_index=True)
-    k = rowfilter.size
-    l = A.shape[0]
-    rfrows = np.array(range(k))
-    Scc = sp.csr_matrix( (np.ones(k,dtype=np.int),np.vstack((rfrows,rowfilter))),
-                       dtype=np.int, shape=(k,l))
-    LA = Scc*A.tocsr()*Bcc
-    print cr.shape
-    Lc = (co.T * Bcc).T
+    # Bcc = sp.csr_matrix((bdata,np.vstack((brows,bcols))),dtype=np.int).tocsr()
+    Bcc2 = sp.csr_matrix((bdata,np.vstack((brows,bcols2))),dtype=np.int).tocsr()
+    # _, rcols = np.unique(bcolsSaucy[n:n+m], return_inverse=True)
+    _, rcols2 = np.unique(bcolsSaucy2[0:m], return_inverse=True)
+    # print rcols
+    # print rcols2
+    # _, rowfilter = np.unique(rcols, return_index=True)
+    # print rcols2
+    _, rowfilter2 = np.unique(rcols2, return_index=True)
+    # print rowfilter
+    # print rowfilter2
+    # LA = A.tocsr()[rowfilter,:]*Bcc
+    LA2 = A.tocsr()[rowfilter2,:]*Bcc2
+    # print LB.todense()
+    # k = rowfilter.size
+    # l = A.shape[0]
+    # rfrows = np.array(range(k))
+    # Scc = sp.csr_matrix( (np.ones(k,dtype=np.int),np.vstack((rfrows,rowfilter))),
+    #                    dtype=np.int, shape=(k,l))
+    # LA = Scc*A.tocsr()*Bcc
+    Lc = (co.T * Bcc2).T
     compresstime = time.clock()-starttime
-    Lb = (Scc*bo).todense()
-    LA = LA.tocoo()
+    Lb = bo[rowfilter2].todense()
+    LA2 = LA2.tocoo()
     Lc = Lc.todense()
 
-    return LA, Lb, Lc, compresstime, Bcc 
+    return LA2, Lb, Lc, compresstime, Bcc2
 
 
 
@@ -182,13 +204,13 @@ def sp_liftedLPCVXOPT(A,b,c,debug=False,optiter=200,plot=False,save=False, orbit
         starttime = time.clock()     
         sol = solvers.lp(mc,\
                          mA,\
-                         mb, solver='glpk')
+                         mb)
         xground = np.array(sol['x']).ravel()
         timeground = time.clock() - starttime   
 
     LA, Lb, Lc, compresstime, Bcc = lift(A,b,c, sparse = True, orbits=orbits)
     starttime = time.clock()
-    sol = solvers.lp(-matrix(Lc),spmatrix(LA.data,LA.row.tolist(),LA.col.tolist()),matrix(Lb),solver='glpk')
+    sol = solvers.lp(-matrix(Lc),spmatrix(LA.data,LA.row.tolist(),LA.col.tolist()),matrix(Lb))
     r = sp.csr_matrix(np.array(sol['x']).ravel())
     xopt = np.array((Bcc * r.T).todense()).ravel()
     timelift = time.clock() - starttime + compresstime
@@ -293,6 +315,7 @@ if __name__ == '__main__':
 
     print A
     print sp_liftedLPCVXOPT(sp.coo_matrix(A),sp.coo_matrix(b),sp.coo_matrix(c), debug=True)
+
 # colsSaucy = LiftedLPWrapper.equitablePartitionSaucy(np.array([1.,2.,3.,4.], dtype=np.float), np.array([1,2,3,4],dtype=np.int32), np.array([1,2,3,4], dtype=np.int32), np.array([1,2,3,4], dtype=np.int32), np.uint64(0), np.int32(1));
 # matr = sp.coo_matrix(scipy.io.mmread("/home/mladenov/workspace/soda/sparsematrices/pltexpa/pltexpa.mtx"))
 # matr = sp.coo_matrix(scipy.io.mmread("/home/mladenov/workspace/soda/sparsematrices/ca-AstroPh.mtx"))

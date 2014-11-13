@@ -26,32 +26,6 @@ extern void init_fixadj2(int n, int e, int *adj);
 
 using namespace std;
 
-vector<double> fc( int N, const double a[], const long int b[], const long int c[], double z[] ){
-    printf("This C++-Function assigns some values to an empty vector and returns it to Python Code \n");
-     
-     double d[sizeof(a)];
-
-     int count = 0;
-     cout << "sizeof z" << sizeof(a) << endl;
-     vector<double> result (sizeof(z),0); 
-     cout << "Building std::Vector<double> in C++ function ... "; 
-     for(vector<double>::iterator i = result.begin(); i != result.end(); i++){	
-        cout << endl << "***" << count << "****" << endl;
-		*i = a[count] + count + 0.123456 ;
-		cout << "[" << *i << "]" << " ";
-		d[count] = a[count];
-		count ++;
-	}
-       cout << endl;
-       cout << "Values from Python Numpy Arrays :" << endl;
-     for(int i = 0 ; i <= sizeof(a) ; i++){
-	cout << "a : [" << a[i] << "]";	
-	cout << " b : [" << b[i] << "]";	
-	cout << " c : [" << c[i] << "]" << endl;	
-	}
-     cout << endl;
-     return result;
-}
 vector<size_t> equitablePartitionSaucyV2(const size_t mvertices, const size_t medges, const double data[], const size_t rown[], const size_t coln[], const size_t b[], int cIters, int coarsest)
 {
     size_t Aijd;
@@ -76,7 +50,7 @@ vector<size_t> equitablePartitionSaucyV2(const size_t mvertices, const size_t me
 
 
     //printf("saucy: ping 1\n");
-    /* Initialize Saucy datastructure */
+    // Initialize Saucy datastructure 
     struct amorph_graph *g = NULL;
     int tmpe, i, j, oldi, p, k, colorcount, *aout, *eout, *ain, *ein, *colors;
 
@@ -189,30 +163,16 @@ vector<size_t> equitablePartitionSaucyV2(const size_t mvertices, const size_t me
     }
     return res;
                         }
-
+vector<int> equitablePartitionSaucyBipartite(const size_t nrows, const size_t ncols, const size_t medges, const size_t data[], const size_t rowind[], const size_t colind[], const size_t b[], const size_t c[], int cIters, int coarsest)
     //Attention: here b is supposed to indicate a coloring, i.e. it should contain all integers 0...p
-    /* {
-    size_t ncols;
-    bool diagfound = false;
-    std::vector<size_t> row;
-    std::vector<size_t> tmpdiag;
-    std::vector<size_t> diag;
-    std::vector<double> tuple;
-    size_t* result;
-
-    std::map<std::vector<double>, size_t> colorMap;
-    map<std::vector<double>, size_t>::iterator colorsIter;
-    std::map<size_t, size_t> varRepr;
-    map<size_t, size_t >::iterator mapIter;
-
-    //scan once to find the values for the diagonal entries and keep them in a dense vector
-    //if this turns out to be too much memory, there are other options
-    diag.clear();
-
+     {
+    
+    cout << "entring wrapper with " << nrows << " rows, " << ncols << " cols and " << medges << " entries." << endl;
+    size_t mvertices = nrows + ncols;
 
     //printf("saucy: ping 1\n");
     struct amorph_graph *g = NULL;
-    int tmpe, i, j, oldi, p, k, colorcount, *aout, *eout, *ain, *ein, *colors;
+    int tmpe, i, j, oldi, p, rowcolorcount, colorcount, *aout, *eout, *ain, *ein, *colors;
 
     int overestN = medges + mvertices; // we replace the colored edges by vertices
     int overestE = medges * 2; // for every new colored edge-vertex we have 2 uncolored edges
@@ -233,15 +193,21 @@ vector<size_t> equitablePartitionSaucyV2(const size_t mvertices, const size_t me
 
     //printf("saucy: graph tmpe: %d, tmpn: %d \n", overestE, overestN);
     colorcount = 0;
-    for (i = 0; i < mvertices; i++) {
+    for (i = 0; i < nrows; i++) {
         colors[i] = b[i];
-        if (b[i] > colorcount) colorcount = b[i];
+        // cout << "colors[" << i << "]: " << colors[i] << endl;
+        if (colors[i] > colorcount) colorcount = colors[i];
+    }
+    rowcolorcount = colorcount + 1;
+    for (j = nrows; j < nrows + ncols; j++) {
+        colors[j] = c[j - nrows] + colorcount;
+        if (colors[j] > colorcount) colorcount = colors[j];
     }
     colorcount++;
-    
+    // cout << "colorcount: " << colorcount << endl;
     int e = 0;
     for(p = 0; p < medges; ++p) {
-        i = coln[p]; j = rown[p];
+        i = rowind[p]; j = colind[p] + nrows;
             {
             colors[mvertices + e] = data[p] + colorcount;
             // printf("edge i=%d j=%d: col=%d, e=%d, index:%d\n",i,j,data[p] + colorcount,e,mvertices + e);
@@ -255,7 +221,7 @@ vector<size_t> equitablePartitionSaucyV2(const size_t mvertices, const size_t me
     init_fixadj1(n, aout);
     tmpe = 0;
     for(p = 0; p < medges; ++p) {
-        i = coln[p]; j = rown[p];
+        i = rowind[p]; j = colind[p] + nrows;
         eout[aout[i]++] = mvertices + tmpe;
         ein[ain[mvertices + tmpe]++] = i;
         eout[aout[mvertices + tmpe]++] = j;
@@ -276,15 +242,17 @@ vector<size_t> equitablePartitionSaucyV2(const size_t mvertices, const size_t me
     g->sg.edg = eout;
     g->colors = colors;
     g->consumer = amorph_print_automorphism;
-    g->free = amorph_graph_free;
+    g->free = amorph_graph_free; 
     g->stats = NULL;
     if (dupe_check(n, aout, eout)) printf("dupe check failed?\n");
-    result = (int *) malloc(n * sizeof(int));
-    saucy_with_graph(g, 1, 0, 1, coarsest, result);
+    // result = (int *) malloc(n * sizeof(int));
+    std::vector<int> res(n);
+    saucy_with_graph(g, 1, 0, 1, coarsest, &res.front());
 
 
-    cout << "building block matrix" << endl;
-    std::vector<size_t> res(n);
+   /* cout << "building color vector" << endl;
+    
+    res.assign(result, result+n);
     varRepr.clear();
     i = 0;
     for (p = 0; p<n; ++p) {
@@ -302,6 +270,6 @@ vector<size_t> equitablePartitionSaucyV2(const size_t mvertices, const size_t me
     }
 
     
-    // g->free(g);
+    // g->free(g);*/
     return res;
-                        }*/
+                        }
