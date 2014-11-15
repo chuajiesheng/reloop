@@ -92,17 +92,19 @@ def sumRefinement(A, b):
 
 
 def lift(Ar, br, cr, sparse=True, orbits=False, sumRefine=False):
+    if sparse:
+        AC = Ar.tocoo()
+    else:
+        AC = sp.coo_matrix(Ar)
+    starttime = time.clock()
     if (not sparse):
 
         _, cmod = np.unique(np.array(cr), return_inverse=True)
         _, bmod = np.unique(np.array(br), return_inverse=True)
-        A = sp.lil_matrix(Ar)
 
     else:
         _, cmod = np.unique(np.array(cr.todense()), return_inverse=True)
         _, bmod = np.unique(np.array(br.todense()), return_inverse=True)
-        A = Ar.tolil()
-
 
     # cmod = cmod + np.max(bmod) + 1
     # b = sp.lil_matrix(bmod)
@@ -122,9 +124,7 @@ def lift(Ar, br, cr, sparse=True, orbits=False, sumRefine=False):
 
     # cc = np.array(sp.hstack((c,b)).todense(),dtype=np.float).ravel()
     #=====================================================================
-    AC = Ar.tocoo()
     _, data =  np.unique(AC.data.round(6), return_inverse=True)
-    starttime = time.clock()
     o = 1
     if orbits: o = 0 
     if sumRefine and not orbits: 
@@ -162,7 +162,7 @@ def lift(Ar, br, cr, sparse=True, orbits=False, sumRefine=False):
     # print rowfilter
     # print rowfilter2
     # LA = A.tocsr()[rowfilter,:]*Bcc
-    LA2 = A.tocsr()[rowfilter2,:]*Bcc2
+    LA2 = AC.tocsr()[rowfilter2,:]*Bcc2
     # print LB.todense()
     # k = rowfilter.size
     # l = A.shape[0]
@@ -171,8 +171,8 @@ def lift(Ar, br, cr, sparse=True, orbits=False, sumRefine=False):
     #                    dtype=np.int, shape=(k,l))
     # LA = Scc*A.tocsr()*Bcc
     Lc = (co.T * Bcc2).T
-    compresstime = time.clock()-starttime
     Lb = bo[rowfilter2].todense()
+    compresstime = time.clock()-starttime
     LA2 = LA2.tocoo()
     Lc = Lc.todense()
 
