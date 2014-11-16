@@ -1,10 +1,12 @@
+#include "glpk2py.h"
 #include <limits>
 #include <vector>
-#include <pyublas/numpy.hpp>
-#include <boost/python.hpp>
+//#include <pyublas/numpy.hpp>
+//#include <boost/python.hpp>
 #include <numpy/arrayobject.h>
 #include "numpy/arrayscalars.h"
 #include "numpy/npy_math.h"
+#include <iostream>
 //#include "npy_config.h"
 //#include "numpy/npy_3kcompat.h"
 // #include <boost/python/class.hpp>
@@ -20,7 +22,7 @@
 // #include <boost/python/docstring_options.hpp>
 // #include <boost/python/enum.hpp>
 // #include <boost/python/numeric.hpp>
-#include <boost/functional/hash.hpp>
+//#include <boost/functional/hash.hpp>
 #include <math.h>
 #include <algorithm>
 #define DEBUG 0
@@ -30,14 +32,14 @@
 #include <stdlib.h>           /* C standard library                   */
 #include <glpk.h>             /* GNU GLPK linear/mixed integer solver */
 
-using namespace boost::python;
+//using namespace boost::python;
 using namespace std;
-enum filetype {
+/*enum filetype {
   MPS = 0,
   LP = 1
 };
 enum bounds {UPPER=GLP_UP, LOWER=GLP_LO, EQUAL=GLP_FX, UNBOUND=GLP_FR}; // ax < b, ax > b, ax = b, ax < 0
-enum scaling {GEOMMEAN=GLP_SF_GM, EQUILIB=GLP_SF_EQ};
+enum scaling {GEOMMEAN=GLP_SF_GM, EQUILIB=GLP_SF_EQ};*/
 
 glp_prob *lp = NULL;
 int numrows, numcols; 
@@ -57,6 +59,7 @@ void openLP(const std::string & fname, int format) {
   }
   numrows = glp_get_num_rows(lp);
   numcols = glp_get_num_cols(lp);
+   cout << "end" << endl;
 }
 
 
@@ -68,11 +71,10 @@ void closeLP(void) {
     numcols = 0;
   }
 }
-pyublas::numpy_array<double> getMatrix(bounds boundquery, int scaled) {
-
+ 
+vector<double> getMatrix(bounds boundquery, int scaled) {
   assert(lp != NULL);
-
-  pyublas::numpy_array<double>::iterator itera, iterb;
+  vector<double>::iterator itera, iterb;
   int len = 0;
 
   std::vector<int> indvec (numcols+1);
@@ -80,19 +82,21 @@ pyublas::numpy_array<double> getMatrix(bounds boundquery, int scaled) {
   
 
   int nonzero = glp_get_num_nz(lp);
-  npy_intp dims[] = {4,0};
+  //npy_intp dims[] = {4,0};
+  int dims[] = {4,0};
   int d = nonzero + numcols + 1;
   dims[1] = d; // we return variable bounds as constraints, hence the numcols.
 
-  pyublas::numpy_array<double> sparsematrix(2,dims);
+  vector<double> sparsematrix;
+  sparsematrix.resize(dims[1]*dims[0],0);
 
   itera = sparsematrix.begin() + 1;
   iterb = itera + 3*d;
   /*incredibly, glpk array indices start from 1...*/
   int foundrows = 0;
   int boundtype = 0;
-  vector globalindvec; 
-  vector globaldatavec; 
+  //vector globalindvec; 
+  //vector globaldatavec; 
 
   if ((boundquery == EQUAL) || (boundquery == UNBOUND)) boundtype = 1;
   for (int i = 1; i <= numrows; i++) {
@@ -114,7 +118,7 @@ pyublas::numpy_array<double> getMatrix(bounds boundquery, int scaled) {
           *(datavec.begin()+p) = tmp;
         }
       }
-      globalindvec.append(indvec)
+      //globalindvec.append(indvec)
       std::copy(indvec.begin() + 1, indvec.begin()+len+1, itera);
      /* for (std::vector<int>::iterator it = indvec.begin()+1; it <= indvec.begin() + len; it++) cout << *it;
       cout << endl;*/
@@ -168,10 +172,10 @@ pyublas::numpy_array<double> getMatrix(bounds boundquery, int scaled) {
   return sparsematrix;
 }
 
-pyublas::numpy_vector<double> getObjective(int scaled) {
+vector<double> getObjective(int scaled) {
   assert(lp != NULL);
-  pyublas::numpy_vector<double> objective(numcols);
-  pyublas::numpy_vector<double>::iterator itera;
+  vector<double> objective(numcols);
+  vector<double>::iterator itera;
   itera = objective.begin();
 
   for (int i = 1; i <= numcols; i++) {
@@ -185,7 +189,8 @@ pyublas::numpy_vector<double> getObjective(int scaled) {
   }
   */
   if (glp_get_obj_dir(lp) == GLP_MIN) {
-    return -1*objective;
+    transform(objective.begin(),objective.end(),objective.begin(),bind1st(multiplies<int>(),-1));
+    return objective;
   } else {
     return objective;
   }
@@ -202,7 +207,7 @@ void solve() {
 }
 
 
-BOOST_PYTHON_MODULE(glpk2py)
+/*BOOST_PYTHON_MODULE(glpk2py)
 {
   numeric::array::set_module_and_type( "numpy", "ndarray");
   enum_<bounds>("bounds")
@@ -223,4 +228,4 @@ BOOST_PYTHON_MODULE(glpk2py)
   //def("getB", getB);
   //def("getScale", doAndGetScale);
 
-}
+}*/

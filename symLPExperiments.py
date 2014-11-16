@@ -1,9 +1,18 @@
-import glpk2py
 from liftedLP_glpk import *
 import glob
 import pickle
 import cvxopt.modeling
+import glpkwrapper as glpk
+import numpy as np
 
+
+
+UPPER = 3
+LOWER = 2
+EQUAL = 5
+UNBOUND = 1
+GEOMMEAN = 6
+EQUILIB = 7
 def extract_matrix(lpmatrix):
     ncols = np.int(lpmatrix[0,0])
     nrows = np.int(lpmatrix[1,0])
@@ -21,16 +30,18 @@ def loadNsolve(fname, scaled, ftype):
     A = sp.coo_matrix((1,1))
     b = np.zeros((0,0))
     e = False
+    glpk.openLP_Py(fname,np.int32(ftype))
 
-    glpk2py.openLP(fname,np.int32(ftype))
-    if scaled == 1: glpk2py.doScaling(glpk2py.scaling.EQUILIB)
-    lpmatrix = glpk2py.getMatrix(glpk2py.bounds.UPPER, scaled)    
+    if scaled == 1: glpk.doScaling_Py(EQUILIB)
+    lpmatrix = glpk.getMatrix_Py(UPPER, scaled) 
     nelms = np.int(lpmatrix[2,0])
+    print "nelms"
     if nelms > 0:
+        print"if statement"
         [A, b] = extract_matrix(lpmatrix)
         e = True
     print "after up: ", A.shape
-    lpmatrix = glpk2py.getMatrix(glpk2py.bounds.LOWER, scaled)
+    lpmatrix = glpk.getMatrix_Py(LOWER, scaled)
     nelms = np.int(lpmatrix[2,0])
     if nelms > 0:
         [AA, bb] = extract_matrix(lpmatrix)
@@ -42,7 +53,7 @@ def loadNsolve(fname, scaled, ftype):
             b = -bb
             e = True
     print "after low: ", A.shape
-    lpmatrix = glpk2py.getMatrix(glpk2py.bounds.EQUAL, scaled)
+    lpmatrix = glpk.getMatrix_Py(EQUAL, scaled)
     nelms = np.int(lpmatrix[2,0])
     if nelms > 0:
         [AA, bb] = extract_matrix(lpmatrix)
@@ -59,12 +70,13 @@ def loadNsolve(fname, scaled, ftype):
     b.shape = (b.shape[1],1)
     b = sp.coo_matrix(b)
     # done with A
-    c = glpk2py.getObjective(scaled)
+    c = glpk.getObjective_Py(scaled)
     c.shape = (len(c),1)
     c = sp.coo_matrix(c)
-    # glpk2py.solve()
+    # glpk2py_wrapper.solve()
     # exit()
-    glpk2py.closeLP()
+    glpk.closeLP_Py()
+    print A
     # return liftedLPCVXOPT(A.todense(),b.todense(),c.todense(),debug=True,plot=False,orbits=False, sumRefine=False)
     return sp_liftedLPCVXOPT(A,b,c,debug=True,orbits=False, sumRefine=False)
 
@@ -76,14 +88,13 @@ def loadNsolveCVX(fname, scaled, ftype):
     print A
     prob.solve(format='sparse',solver='glpk')
     exit()
-    # glpk2py.solve()
+    # glpk2py-wrapper.solve()
     # exit()
     # return liftedLPCVXOPT(A.todense(),b.todense(),c.todense(),debug=True,plot=False,orbits=False, sumRefine=False)
     return sp_liftedLPCVXOPT(A,b,c,debug=True,orbits=False, sumRefine=False)
 
 
 def runbatch(path, output, type):
-
     error_handle = file('error.log', 'w')
 
 
@@ -108,4 +119,4 @@ def runbatch(path, output, type):
 if __name__ == '__main__':
     LP = 1
     MTS = 0
-    runbatch("*.lp","results_ep_Meszaros_counting_ref.pkl",LP)
+    runbatch("data/*.lp","results_ep_Meszaros_counting_ref.pkl",LP)
