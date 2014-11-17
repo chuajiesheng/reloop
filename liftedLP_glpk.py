@@ -112,23 +112,11 @@ def lift(Ar, br, cr, sparse=True, orbits=False, sumRefine=False):
 
     co = sp.lil_matrix(cr)
     bo = sp.lil_matrix(br)
-    # #=====================================================================
-    # # this block is extremely slow for some reason (coo conversion?), even though nothing particularly useful is being done here.
-    # # for now, we don't count the lost time here
-
-    # zC = sp.identity(A.shape[1],format = "lil",dtype=np.float)
-    # zR = 2*sp.identity(A.shape[0],format = "lil",dtype=np.float)
-    # AA = sp.vstack( ( sp.hstack((zC,A.transpose())), sp.hstack((A,zR))) )
-    # T = AA.tocoo()
-
-
-    # cc = np.array(sp.hstack((c,b)).todense(),dtype=np.float).ravel()
-    #=====================================================================
     _, data =  np.unique(AC.data.round(6), return_inverse=True)
     o = 1
     if orbits: o = 0 
     if sumRefine and not orbits: 
-        bcolsSaucy = sumRefinement(AA,cc)
+        bcolsSaucy2 = sumRefinement(AA,cc)
     else: 
         # bcolsSaucy = wrapper.epSaucy(T.data.round(6).astype(np.float), T.row.astype(np.uintp), T.col.astype(np.uintp), cc.astype(np.uintp), np.int32(0), np.int32(o));
     	# print "refinement 1: ", time.clock() - starttime, "seconds."

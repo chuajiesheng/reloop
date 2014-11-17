@@ -199,17 +199,23 @@ vector<int> equitablePartitionSaucyBipartite(const size_t nrows, const size_t nc
         if (colors[i] > colorcount) colorcount = colors[i];
     }
     rowcolorcount = colorcount + 1;
+    cout << "row colors: " << rowcolorcount << endl;
+
     for (j = nrows; j < nrows + ncols; j++) {
-        colors[j] = c[j - nrows] + colorcount;
+        colors[j] = c[j - nrows] + rowcolorcount;
         if (colors[j] > colorcount) colorcount = colors[j];
     }
     colorcount++;
+
+    cout << "col colors: " << colorcount << endl;
     // cout << "colorcount: " << colorcount << endl;
+    int tmpcolcount = 0;
     int e = 0;
     for(p = 0; p < medges; ++p) {
         i = rowind[p]; j = colind[p] + nrows;
             {
             colors[mvertices + e] = data[p] + colorcount;
+            if (colors[mvertices + e] > tmpcolcount) tmpcolcount = colors[mvertices + e];
             // printf("edge i=%d j=%d: col=%d, e=%d, index:%d\n",i,j,data[p] + colorcount,e,mvertices + e);
             ++aout[i]; ++ain[mvertices + e];
             ++aout[mvertices + e]; ++ain[j];
@@ -218,6 +224,7 @@ vector<int> equitablePartitionSaucyBipartite(const size_t nrows, const size_t nc
         }
     n = mvertices + e;
     e *= 2;
+    std::vector<int> res(n);
     init_fixadj1(n, aout);
     tmpe = 0;
     for(p = 0; p < medges; ++p) {
@@ -246,7 +253,6 @@ vector<int> equitablePartitionSaucyBipartite(const size_t nrows, const size_t nc
     g->stats = NULL;
     if (dupe_check(n, aout, eout)) printf("dupe check failed?\n");
     // result = (int *) malloc(n * sizeof(int));
-    std::vector<int> res(n);
     saucy_with_graph(g, 1, 0, 1, coarsest, &res.front());
 
 
