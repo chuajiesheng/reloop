@@ -75,22 +75,25 @@ vector<size_t> equitablePartitionSaucyV2(const size_t mvertices, const size_t me
     colorMap.clear();
     colorcount = 0;
     int e = 0;
+    for(p = 0; p < mvertices; ++p) {
+        int tmpcol;
+        tuple.clear();
+        tuple.push_back(b[p]);
+        colorsIter = colorMap.find(tuple);
+        if (colorsIter == colorMap.end()) {
+            tmpcol = colorcount++;
+            colorMap[tuple] = tmpcol;
+        } else {
+            tmpcol = colorMap[tuple];
+        }
+        colors[p] = tmpcol;
+
+    }
     for(p = 0; p < medges; ++p) {
         int tmpcol;
         i = coln[p]; j = rown[p];
         if ( i == j ) {
-            tuple.clear();
-            tuple.push_back(b[j]);
-            tuple.push_back(data[p]);
-            colorsIter = colorMap.find(tuple);
-            if (colorsIter == colorMap.end()) {
-                tmpcol = colorcount++;
-                colorMap[tuple] = tmpcol;
-            } else {
-                tmpcol = colorMap[tuple];
-            }
-            colors[i] = tmpcol;
-            //printf("node i=%d j=%d: col=%d\n",i,j,tmpcol);
+            printf("WARNING! Your matrix has a diagonal element (%d,%d = %f). Diagonal elements are ignored, incorporate them in the b-vector.\n",i,j,data[p]);
          } else if (i<j) {
             //printf("i,j,e : %d %d %d\n",j,i,e);
             tuple.clear();
