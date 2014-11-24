@@ -25,6 +25,7 @@ cdef extern from "<vector>" namespace "std":
         T& at(int)
         iterator begin()
         iterator end()
+        int size()
 
 cdef vector[int].iterator iter
 
@@ -32,6 +33,34 @@ cdef extern from "fc.h":
     vector[np.intp_t] equitablePartitionSaucyBipartite(const size_t nrows, const size_t ncols, const size_t medges, const size_t data[], const size_t rowind[], const size_t colind[], const size_t b[], const size_t c[], int cIters, int coarsest);
     vector[itype_t] equitablePartitionSaucyV2(itype_t mvertices, itype_t medges, double data[], itype_t rown[], itype_t coln[], itype_t b[], int cIters, int coarsest);
 
+cdef extern from "glpk2py.h":
+ 
+    cdef enum bounds:      
+        UPPER
+        LOWER
+        EQUAL
+        UNBOUND
+
+    cdef enum scaling:     
+        GEOMMEAN
+        EQUILIB
+
+    void openLP(const char* fname, int format_);
+    void closeLP();
+    vector[double] getMatrix(bounds boundquery,int scaled);
+    vector[double] getMatrixUpper(int scaled);
+    vector[double] getMatrixLower(int scaled);
+    vector[double] getMatrixEqual(int scaled);
+    vector[double] getMatrixUnbound(int scaled);
+    vector[double] getObjective(int scaled);
+    void doScaling(scaling sctype);
+    void solve();
+
+
+################################################
+#EquitablePartitionSaucyWrapper
+#All functions from fc.h are defined below
+################################################
 
 def epSaucy(
     np.ndarray[np.double_t,ndim=1] A,
@@ -82,3 +111,70 @@ def epSaucyBipartite(
     
     #Print and return resulting numpy array
     return result
+
+################################################
+#GLPK2PY-Wrapper
+#All functions from glpk2py.h are defined below
+################################################
+
+def openLP_Py(fname,format_):
+    openLP(fname,format_)
+
+def closeLP_Py():
+    closeLP()
+
+def getMatrix_Py(boundquery,scaled):
+    # Time needed for one call =~ 0,015s
+    #TODO : Split getMatrix into four functions as soon as it is confirmed as working properly
+    cdef vector[double] res
+    print"MatrixGeneration"
+    if boundquery == UPPER:
+        res = getMatrixUpper(scaled) 
+    elif boundquery == LOWER:
+        res = getMatrixLower(scaled) 
+    elif boundquery == EQUAL:
+        res = getMatrixEqual(scaled) 
+    elif boundquery == UNBOUND:
+        res = getMatrixUnbound(scaled) 
+    
+    i = res.size()
+    d = i/4
+    cdef np.ndarray result = np.zeros([4,i/4],dtype=np.double)
+  
+    #More dynamic version for copying the resulting vector. Should be better for general solutions
+    #   
+    #for x in range(0,result.shape[0]):
+    #    for y in range(0,result.shape[1]):
+    #        result[x,y] = res[x*result.shape[1]+y]
+    
+    
+    # Parallelized copying : We know that we have exactly for rows so we can copy them more efficient.
+ 
+    for x in range(0,d):
+        result[0,x] = res[x]
+        result[1,x] = res[x+d]
+        result[2,x] = res[x+d*2]
+        result[3,x] = res[x+d*3]
+
+    return result
+
+def getObjective_Py(scaled):
+
+    cdef vector[double] res = getObjective(scaled)
+    #Instantiate numpy Array and get size of objective
+    i = res.size()
+    cdef np.ndarray result = np.empty(i)
+
+    for x in range(0,i):
+     result[x] = res[x]
+  
+    return result
+
+def doScaling_Py(sctype):
+    if sctype == 7:
+        doScaling(EQUILIB)
+    else:
+        doScaling(GEOMMEAN)
+
+def solve_Py():
+    solve()

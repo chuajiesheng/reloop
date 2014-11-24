@@ -44,7 +44,11 @@ cdef extern from "glpk2py.h":
 
     void openLP(const char* fname, int format_);
     void closeLP();
-    vector[double] getMatrix(bounds boundquery, int scaled);
+    vector[double] getMatrix(bounds boundquery,int scaled);
+    vector[double] getMatrixUpper(int scaled);
+    vector[double] getMatrixLower(int scaled);
+    vector[double] getMatrixEqual(int scaled);
+    vector[double] getMatrixUnbound(int scaled);
     vector[double] getObjective(int scaled);
     void doScaling(scaling sctype);
     void solve();
@@ -64,13 +68,13 @@ def getMatrix_Py(boundquery,scaled):
     cdef vector[double] res
     print"MatrixGeneration"
     if boundquery == UPPER:
-        res = getMatrix(UPPER,scaled) 
+        res = getMatrixUpper(scaled) 
     elif boundquery == LOWER:
-        res = getMatrix(LOWER,scaled) 
+        res = getMatrixLower(scaled) 
     elif boundquery == EQUAL:
-        res = getMatrix(EQUAL,scaled) 
+        res = getMatrixEqual(scaled) 
     elif boundquery == UNBOUND:
-        res = getMatrix(UNBOUND,scaled) 
+        res = getMatrixUnbound(scaled) 
     
     i = res.size()
     d = i/4
@@ -84,6 +88,7 @@ def getMatrix_Py(boundquery,scaled):
     
     
     # Parallelized copying : We know that we have exactly for rows so we can copy them more efficient.
+ 
     for x in range(0,d):
         result[0,x] = res[x]
         result[1,x] = res[x+d]

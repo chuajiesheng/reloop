@@ -1,28 +1,10 @@
 #include "glpk2py.h"
 #include <limits>
 #include <vector>
-//#include <pyublas/numpy.hpp>
-//#include <boost/python.hpp>
 #include <numpy/arrayobject.h>
 #include "numpy/arrayscalars.h"
 #include "numpy/npy_math.h"
 #include <iostream>
-//#include "npy_config.h"
-//#include "numpy/npy_3kcompat.h"
-// #include <boost/python/class.hpp>
-// #include <boost/python/module.hpp>
-// #include <boost/python/operators.hpp>
-// #include <boost/python/def.hpp>
-// #include <boost/python/pure_virtual.hpp>
-// #include <boost/python/errors.hpp>
-// #include <boost/python/wrapper.hpp>
-// #include <boost/python/call.hpp>
-// #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
-// #include <boost/python/suite/indexing/map_indexing_suite.hpp>
-// #include <boost/python/docstring_options.hpp>
-// #include <boost/python/enum.hpp>
-// #include <boost/python/numeric.hpp>
-//#include <boost/functional/hash.hpp>
 #include <math.h>
 #include <algorithm>
 #define DEBUG 0
@@ -32,14 +14,7 @@
 #include <stdlib.h>           /* C standard library                   */
 #include <glpk.h>             /* GNU GLPK linear/mixed integer solver */
 
-//using namespace boost::python;
 using namespace std;
-/*enum filetype {
-  MPS = 0,
-  LP = 1
-};
-enum bounds {UPPER=GLP_UP, LOWER=GLP_LO, EQUAL=GLP_FX, UNBOUND=GLP_FR}; // ax < b, ax > b, ax = b, ax < 0
-enum scaling {GEOMMEAN=GLP_SF_GM, EQUILIB=GLP_SF_EQ};*/
 
 glp_prob *lp = NULL;
 int numrows, numcols; 
@@ -72,7 +47,361 @@ void closeLP(void) {
   }
 }
  
-vector<double> getMatrix(bounds boundquery, int scaled) {
+vector<double> getMatrixUpper(int scaled) {
+  bounds boundquery = UPPER;
+  assert(lp != NULL);
+  vector<double>::iterator itera, iterb;
+  int len = 0;
+
+  std::vector<int> indvec (numcols+1);
+  std::vector<double> datavec (numcols+1);
+  
+
+  int nonzero = glp_get_num_nz(lp);
+  //npy_intp dims[] = {4,0};
+  int dims[] = {4,0};
+  int d = nonzero + numcols + 1;
+  dims[1] = d; // we return variable bounds as constraints, hence the numcols.
+
+  vector<double> sparsematrix;
+  sparsematrix.resize(dims[1]*dims[0],0);
+
+  itera = sparsematrix.begin() + 1;
+  iterb = itera + 3*d;
+  /*incredibly, glpk array indices start from 1...*/
+  int foundrows = 0;
+  int boundtype = 0;
+
+  //if ((boundquery == EQUAL) || (boundquery == UNBOUND)) boundtype = 1;
+  for (int i = 1; i <= numrows; i++) {
+    int rowtype = glp_get_row_type(lp,i);
+    if ( ( (boundtype == 0) && ( (rowtype == GLP_DB) || (rowtype == boundquery) ) ) ) {
+
+
+      std::fill(datavec.begin(), datavec.end(), 0); std::fill(indvec.begin(), indvec.end(), 0);
+      len = glp_get_mat_row(lp, i, indvec.data(), datavec.data());
+      if (!len) {
+        printf("WARNING!! Zero elements in row %s of type \n", glp_get_row_name(lp,i));
+        continue;
+      }
+      if (scaled){
+        for (int p=1; p<=len; p++) {
+          double tmp = *(datavec.begin()+p);
+          tmp = glp_get_rii(lp,i)*tmp*glp_get_sjj(lp,*(indvec.begin()+p));
+          *(datavec.begin()+p) = tmp;
+        }
+      }
+      std::copy(indvec.begin() + 1, indvec.begin()+len+1, itera);
+     /* for (std::vector<int>::iterator it = indvec.begin()+1; it <= indvec.begin() + len; it++) cout << *it;
+      cout << endl;*/
+      std::fill(itera+d, d+itera+len, foundrows);
+      std::copy(datavec.begin() + 1, datavec.begin()+len+1, itera+2*d);
+      
+      double r = 1;
+      if (scaled) r = glp_get_rii(lp,i);
+      if  ( (boundquery == UPPER) ) { 
+       *iterb = glp_get_row_ub(lp, i);
+      }
+
+      itera += len;
+      iterb++;
+      foundrows++;
+    }
+    
+  }
+  //variable bounds as constraints.
+  for (int i = 1; i <= numcols; i++) {
+    int coltype = glp_get_col_type(lp,i);
+    //if variable is unbounded, we don't want to return anything
+    if ( ( (boundtype == 0) && ( (coltype == GLP_DB) || (coltype == boundquery) ) ) ) {
+      *itera = i;
+      *(itera + d) = foundrows;
+      *(itera + 2*d) = 1;
+      double r = 1;
+      //if (scaled) r = glp_get_rii(lp,i);
+      //**************TODO: FIGURE OUT HOW TO FIX THE SCALING OF COLUMN BOUNDS***********
+      if  ( (boundquery == UPPER) ) { 
+        *iterb = r*glp_get_col_ub(lp, i);
+      }
+
+      itera++;
+      iterb++;
+      foundrows++;
+
+
+    }
+  }
+  sparsematrix[0] = numcols;
+  sparsematrix[d] = foundrows;
+  sparsematrix[2*d] = itera - sparsematrix.begin() - 1;
+  sparsematrix[3*d] = iterb - sparsematrix.begin() - 3*d - 1;
+
+  //itera = sparsematrix.begin();
+  //for (  vector<double>::iterator tmp = iter; tmp < iter + 50; tmp++) cout << *tmp;
+  return sparsematrix;
+}
+
+vector<double> getMatrixLower(int scaled) {
+  bounds boundquery = LOWER;
+  assert(lp != NULL);
+  vector<double>::iterator itera, iterb;
+  int len = 0;
+
+  std::vector<int> indvec (numcols+1);
+  std::vector<double> datavec (numcols+1);
+  
+
+  int nonzero = glp_get_num_nz(lp);
+  //npy_intp dims[] = {4,0};
+  int dims[] = {4,0};
+  int d = nonzero + numcols + 1;
+  dims[1] = d; // we return variable bounds as constraints, hence the numcols.
+
+  vector<double> sparsematrix;
+  sparsematrix.resize(dims[1]*dims[0],0);
+
+  itera = sparsematrix.begin() + 1;
+  iterb = itera + 3*d;
+  /*incredibly, glpk array indices start from 1...*/
+  int foundrows = 0;
+  int boundtype = 0;
+
+  for (int i = 1; i <= numrows; i++) {
+    int rowtype = glp_get_row_type(lp,i);
+    if ( (boundtype == 0) && ( (rowtype == GLP_DB) || (rowtype == boundquery) ) ) {
+
+
+      std::fill(datavec.begin(), datavec.end(), 0); std::fill(indvec.begin(), indvec.end(), 0);
+      len = glp_get_mat_row(lp, i, indvec.data(), datavec.data());
+      if (!len) {
+        printf("WARNING!! Zero elements in row %s of type \n", glp_get_row_name(lp,i));
+        continue;
+      }
+      if (scaled){
+        for (int p=1; p<=len; p++) {
+          double tmp = *(datavec.begin()+p);
+          tmp = glp_get_rii(lp,i)*tmp*glp_get_sjj(lp,*(indvec.begin()+p));
+          *(datavec.begin()+p) = tmp;
+        }
+      }
+      std::copy(indvec.begin() + 1, indvec.begin()+len+1, itera);
+     /* for (std::vector<int>::iterator it = indvec.begin()+1; it <= indvec.begin() + len; it++) cout << *it;
+      cout << endl;*/
+      std::fill(itera+d, d+itera+len, foundrows);
+      std::copy(datavec.begin() + 1, datavec.begin()+len+1, itera+2*d);
+      
+      double r = 1;
+      if (scaled) r = glp_get_rii(lp,i);
+      if (rowtype == LOWER){
+         *iterb = glp_get_row_lb(lp, i);
+      }
+
+      itera += len;
+      iterb++;
+      foundrows++;
+    }
+    
+  }
+  //variable bounds as constraints.
+  for (int i = 1; i <= numcols; i++) {
+    int coltype = glp_get_col_type(lp,i);
+    //if variable is unbounded, we don't want to return anything
+    if ( (boundtype == 0) && ( (coltype == GLP_DB) || (coltype == boundquery) ) ) {
+      *itera = i;
+      *(itera + d) = foundrows;
+      *(itera + 2*d) = 1;
+      double r = 1;
+      //if (scaled) r = glp_get_rii(lp,i);
+      //**************TODO: FIGURE OUT HOW TO FIX THE SCALING OF COLUMN BOUNDS***********
+      if (boundquery == LOWER) {
+        *iterb = r*glp_get_col_lb(lp, i);
+      }
+
+      itera++;
+      iterb++;
+      foundrows++;
+
+
+    }
+  }
+  sparsematrix[0] = numcols;
+  sparsematrix[d] = foundrows;
+  sparsematrix[2*d] = itera - sparsematrix.begin() - 1;
+  sparsematrix[3*d] = iterb - sparsematrix.begin() - 3*d - 1;
+
+  //itera = sparsematrix.begin();
+  //for (  vector<double>::iterator tmp = iter; tmp < iter + 50; tmp++) cout << *tmp;
+  return sparsematrix;
+}
+
+vector<double> getMatrixEqual(int scaled) {
+  bounds boundquery = EQUAL;
+  assert(lp != NULL);
+  vector<double>::iterator itera, iterb;
+  int len = 0;
+
+  std::vector<int> indvec (numcols+1);
+  std::vector<double> datavec (numcols+1);
+  
+
+  int nonzero = glp_get_num_nz(lp);
+  //npy_intp dims[] = {4,0};
+  int dims[] = {4,0};
+  int d = nonzero + numcols + 1;
+  dims[1] = d; // we return variable bounds as constraints, hence the numcols.
+
+  vector<double> sparsematrix;
+  sparsematrix.resize(dims[1]*dims[0],0);
+
+  itera = sparsematrix.begin() + 1;
+  iterb = itera + 3*d;
+  /*incredibly, glpk array indices start from 1...*/
+  int foundrows = 0;
+  int boundtype = 0;
+
+  if ((boundquery == EQUAL) || (boundquery == UNBOUND)) boundtype = 1;
+  for (int i = 1; i <= numrows; i++) {
+    int rowtype = glp_get_row_type(lp,i);
+    if ( ( (boundtype == 1) &&   (rowtype == boundquery) ) )  {
+
+
+      std::fill(datavec.begin(), datavec.end(), 0); std::fill(indvec.begin(), indvec.end(), 0);
+      len = glp_get_mat_row(lp, i, indvec.data(), datavec.data());
+      if (!len) {
+        printf("WARNING!! Zero elements in row %s of type \n", glp_get_row_name(lp,i));
+        continue;
+      }
+      if (scaled){
+        for (int p=1; p<=len; p++) {
+          double tmp = *(datavec.begin()+p);
+          tmp = glp_get_rii(lp,i)*tmp*glp_get_sjj(lp,*(indvec.begin()+p));
+          *(datavec.begin()+p) = tmp;
+        }
+      }
+      std::copy(indvec.begin() + 1, indvec.begin()+len+1, itera);
+     /* for (std::vector<int>::iterator it = indvec.begin()+1; it <= indvec.begin() + len; it++) cout << *it;
+      cout << endl;*/
+      std::fill(itera+d, d+itera+len, foundrows);
+      std::copy(datavec.begin() + 1, datavec.begin()+len+1, itera+2*d);
+      
+      double r = 1;
+      if (scaled) r = glp_get_rii(lp,i);
+      if  (boundquery == EQUAL) { 
+       *iterb = glp_get_row_ub(lp, i);
+      }
+
+      itera += len;
+      iterb++;
+      foundrows++;
+    }
+    
+  }
+  //variable bounds as constraints.
+  for (int i = 1; i <= numcols; i++) {
+    int coltype = glp_get_col_type(lp,i);
+    //if variable is unbounded, we don't want to return anything
+    if ( ( (boundquery == EQUAL) &&  (coltype == boundquery) ) ) {
+      *itera = i;
+      *(itera + d) = foundrows;
+      *(itera + 2*d) = 1;
+      double r = 1;
+      //if (scaled) r = glp_get_rii(lp,i);
+      //**************TODO: FIGURE OUT HOW TO FIX THE SCALING OF COLUMN BOUNDS***********
+      if  (boundquery == EQUAL) { 
+        *iterb = r*glp_get_col_ub(lp, i);
+      }
+
+      itera++;
+      iterb++;
+      foundrows++;
+
+
+    }
+  }
+  sparsematrix[0] = numcols;
+  sparsematrix[d] = foundrows;
+  sparsematrix[2*d] = itera - sparsematrix.begin() - 1;
+  sparsematrix[3*d] = iterb - sparsematrix.begin() - 3*d - 1;
+
+  //itera = sparsematrix.begin();
+  //for (  vector<double>::iterator tmp = iter; tmp < iter + 50; tmp++) cout << *tmp;
+  return sparsematrix;
+}
+
+vector<double> getMatrixUnbound(int scaled) {
+  bounds boundquery = UNBOUND;
+  assert(lp != NULL);
+  vector<double>::iterator itera, iterb;
+  int len = 0;
+
+  std::vector<int> indvec (numcols+1);
+  std::vector<double> datavec (numcols+1);
+  
+
+  int nonzero = glp_get_num_nz(lp);
+  //npy_intp dims[] = {4,0};
+  int dims[] = {4,0};
+  int d = nonzero + numcols + 1;
+  dims[1] = d; // we return variable bounds as constraints, hence the numcols.
+
+  vector<double> sparsematrix;
+  sparsematrix.resize(dims[1]*dims[0],0);
+
+  itera = sparsematrix.begin() + 1;
+  iterb = itera + 3*d;
+  /*incredibly, glpk array indices start from 1...*/
+  int foundrows = 0;
+  int boundtype = 0;
+ 
+  if ((boundquery == EQUAL) || (boundquery == UNBOUND)) boundtype = 1;
+  for (int i = 1; i <= numrows; i++) {
+    int rowtype = glp_get_row_type(lp,i);
+    if ( ( (boundtype == 1) &&   (rowtype == boundquery) ) ) {
+
+
+      std::fill(datavec.begin(), datavec.end(), 0); std::fill(indvec.begin(), indvec.end(), 0);
+      len = glp_get_mat_row(lp, i, indvec.data(), datavec.data());
+      if (!len) {
+        printf("WARNING!! Zero elements in row %s of type \n", glp_get_row_name(lp,i));
+        continue;
+      }
+      if (scaled){
+        for (int p=1; p<=len; p++) {
+          double tmp = *(datavec.begin()+p);
+          tmp = glp_get_rii(lp,i)*tmp*glp_get_sjj(lp,*(indvec.begin()+p));
+          *(datavec.begin()+p) = tmp;
+        }
+      }
+      std::copy(indvec.begin() + 1, indvec.begin()+len+1, itera);
+     /* for (std::vector<int>::iterator it = indvec.begin()+1; it <= indvec.begin() + len; it++) cout << *it;
+      cout << endl;*/
+      std::fill(itera+d, d+itera+len, foundrows);
+      std::copy(datavec.begin() + 1, datavec.begin()+len+1, itera+2*d);
+      
+      double r = 1;
+      if (scaled) r = glp_get_rii(lp,i);
+      if (rowtype == LOWER){
+         *iterb = glp_get_row_lb(lp, i);
+      }
+
+      itera += len;
+      iterb++;
+      foundrows++;
+    }
+    
+  }
+  
+  sparsematrix[0] = numcols;
+  sparsematrix[d] = foundrows;
+  sparsematrix[2*d] = itera - sparsematrix.begin() - 1;
+  sparsematrix[3*d] = iterb - sparsematrix.begin() - 3*d - 1;
+
+  //itera = sparsematrix.begin();
+  //for (  vector<double>::iterator tmp = iter; tmp < iter + 50; tmp++) cout << *tmp;
+  return sparsematrix;
+}
+
+vector<double> getMatrix(bounds boundquery,int scaled) {
   assert(lp != NULL);
   vector<double>::iterator itera, iterb;
   int len = 0;
@@ -172,6 +501,7 @@ vector<double> getMatrix(bounds boundquery, int scaled) {
   return sparsematrix;
 }
 
+
 vector<double> getObjective(int scaled) {
   assert(lp != NULL);
   vector<double> objective(numcols);
@@ -206,26 +536,3 @@ void solve() {
   glp_simplex(lp, NULL);
 }
 
-
-/*BOOST_PYTHON_MODULE(glpk2py)
-{
-  numeric::array::set_module_and_type( "numpy", "ndarray");
-  enum_<bounds>("bounds")
-        .value("UPPER", UPPER)
-        .value("LOWER", LOWER)
-        .value("EQUAL", EQUAL)
-        .value("UNBOUND", UNBOUND);
-  enum_<scaling>("scaling")
-        .value("GEOMMEAN", GEOMMEAN)
-        .value("EQUILIB", EQUILIB);
-    
-  def("getMatrix", getMatrix);
-  def("openLP", openLP);
-  def("closeLP", closeLP);
-  def("getObjective", getObjective);
-  def("doScaling", doScaling);
-  def("solve", solve);
-  //def("getB", getB);
-  //def("getScale", doAndGetScale);
-
-}*/

@@ -2,7 +2,7 @@ from liftedLP_glpk import *
 import glob
 import pickle
 import cvxopt.modeling
-import glpkwrapper as glpk
+import wrapper as glpk
 import numpy as np
 
 
@@ -119,4 +119,4 @@ def runbatch(path, output, type):
 if __name__ == '__main__':
     LP = 1
     MTS = 0
-    runbatch("data/*.lp","results_ep_Meszaros_counting_ref.pkl",LP)
+    runbatch("*.lp","results_ep_Meszaros_counting_ref.pkl",LP)
