@@ -119,4 +119,4 @@ def runbatch(path, output, type):
 if __name__ == '__main__':
     LP = 1
     MTS = 0
-    runbatch("*.lp","results_ep_Meszaros_counting_ref.pkl",LP)
+    runbatch("data/*.lp","results_ep_Meszaros_counting_ref.pkl",LP)
