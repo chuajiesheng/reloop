@@ -48,10 +48,6 @@ cdef extern from "glpk2py.h":
     void openLP(const char* fname, int format_);
     void closeLP();
     vector[double] getMatrix(bounds boundquery,int scaled);
-    vector[double] getMatrixUpper(int scaled);
-    vector[double] getMatrixLower(int scaled);
-    vector[double] getMatrixEqual(int scaled);
-    vector[double] getMatrixUnbound(int scaled);
     vector[double] getObjective(int scaled);
     void doScaling(scaling sctype);
     void solve();
@@ -115,35 +111,66 @@ def openLP_Py(fname,format_):
 def closeLP_Py():
     closeLP()
 
-def getMatrix_Py(boundquery,scaled):
-    # Time needed for one call =~ 0,015s
+def getMatrix_Upper(scaled):
+
     cdef vector[double] res
-    if boundquery == UPPER:
-        print"MatrixGeneration - UPPER"
-        res = getMatrixUpper(scaled) 
-    elif boundquery == LOWER:
-        print"MatrixGeneration - LOWER"
-        res = getMatrixLower(scaled) 
-    elif boundquery == EQUAL:
-        print"MatrixGeneration - EQUAL"
-        res = getMatrixEqual(scaled) 
-    elif boundquery == UNBOUND:
-        print"MatrixGeneration - UNBOUND"
-        res = getMatrixUnbound(scaled) 
+    res = getMatrix(UPPER,scaled)
     
     i = res.size()
     d = i/4
     cdef np.ndarray result = np.zeros([4,i/4],dtype=np.double)
-  
-    #More dynamic version for copying the resulting vector. Should be better for general solutions
-    #   
-    #for x in range(0,result.shape[0]):
-    #    for y in range(0,result.shape[1]):
-    #        result[x,y] = res[x*result.shape[1]+y]
-    
-    
-    # Parallelized copying : We know that we have exactly for rows so we can copy them more efficient.
- 
+
+    for x in range(0,d):
+        result[0,x] = res[x]
+        result[1,x] = res[x+d]
+        result[2,x] = res[x+d*2]
+        result[3,x] = res[x+d*3]
+
+    return result
+
+def getMatrix_Lower(scaled):
+
+    cdef vector[double] res
+    res = getMatrix(LOWER,scaled)
+
+    i = res.size()
+    d = i/4
+    cdef np.ndarray result = np.zeros([4,i/4],dtype=np.double)
+
+    for x in range(0,d):
+        result[0,x] = res[x]
+        result[1,x] = res[x+d]
+        result[2,x] = res[x+d*2]
+        result[3,x] = res[x+d*3]
+
+    return result
+
+def getMatrix_Equal(scaled):
+
+    cdef vector[double] res
+    res = getMatrix(EQUAL,scaled)
+
+    i = res.size()
+    d = i/4
+    cdef np.ndarray result = np.zeros([4,i/4],dtype=np.double)
+
+    for x in range(0,d):
+        result[0,x] = res[x]
+        result[1,x] = res[x+d]
+        result[2,x] = res[x+d*2]
+        result[3,x] = res[x+d*3]
+
+    return result
+
+def getMatrix_Unbound(scaled):
+
+    cdef vector[double] res
+    res = getMatrix(UNBOUND,scaled)
+
+    i = res.size()
+    d = i/4
+    cdef np.ndarray result = np.zeros([4,i/4],dtype=np.double)
+
     for x in range(0,d):
         result[0,x] = res[x]
         result[1,x] = res[x+d]

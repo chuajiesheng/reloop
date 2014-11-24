@@ -2,7 +2,7 @@ from liftedLP_glpk import *
 import glob
 import pickle
 import cvxopt.modeling
-import wrapper as glpk
+import wrapper
 import numpy as np
 
 
@@ -30,10 +30,10 @@ def loadNsolve(fname, scaled, ftype):
     A = sp.coo_matrix((1,1))
     b = np.zeros((0,0))
     e = False
-    glpk.openLP_Py(fname,np.int32(ftype))
+    wrapper.openLP_Py(fname,np.int32(ftype))
 
-    if scaled == 1: glpk.doScaling_Py(EQUILIB)
-    lpmatrix = glpk.getMatrix_Py(UPPER, scaled) 
+    if scaled == 1: wrapper.doScaling_Py(EQUILIB)
+    lpmatrix = wrapper.getMatrix_Upper(scaled) 
     nelms = np.int(lpmatrix[2,0])
     print "nelms"
     if nelms > 0:
@@ -41,7 +41,7 @@ def loadNsolve(fname, scaled, ftype):
         [A, b] = extract_matrix(lpmatrix)
         e = True
     print "after up: ", A.shape
-    lpmatrix = glpk.getMatrix_Py(LOWER, scaled)
+    lpmatrix = wrapper.getMatrix_Lower(scaled)
     nelms = np.int(lpmatrix[2,0])
     if nelms > 0:
         [AA, bb] = extract_matrix(lpmatrix)
@@ -53,7 +53,7 @@ def loadNsolve(fname, scaled, ftype):
             b = -bb
             e = True
     print "after low: ", A.shape
-    lpmatrix = glpk.getMatrix_Py(EQUAL, scaled)
+    lpmatrix = wrapper.getMatrix_Equal(scaled)
     nelms = np.int(lpmatrix[2,0])
     if nelms > 0:
         [AA, bb] = extract_matrix(lpmatrix)
@@ -70,12 +70,12 @@ def loadNsolve(fname, scaled, ftype):
     b.shape = (b.shape[1],1)
     b = sp.coo_matrix(b)
     # done with A
-    c = glpk.getObjective_Py(scaled)
+    c = wrapper.getObjective_Py(scaled)
     c.shape = (len(c),1)
     c = sp.coo_matrix(c)
     # glpk2py_wrapper.solve()
     # exit()
-    glpk.closeLP_Py()
+    wrapper.closeLP_Py()
     print A
     # return liftedLPCVXOPT(A.todense(),b.todense(),c.todense(),debug=True,plot=False,orbits=False, sumRefine=False)
     return sp_liftedLPCVXOPT(A,b,c,debug=True,orbits=False, sumRefine=False)
