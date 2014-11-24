@@ -1,11 +1,7 @@
 #include <limits>
 #include <vector>
-//#include <pyublas/numpy.hpp>
-#include <boost/python.hpp>
-#include <numpy/arrayobject.h>
-#include "numpy/arrayscalars.h"
-#include "numpy/npy_math.h"
-#include <boost/functional/hash.hpp>
+#include<iostream>
+#include<assert.h>
 #include <math.h>
 #include <algorithm>
 #define DEBUG 0

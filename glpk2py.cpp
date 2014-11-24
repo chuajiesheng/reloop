@@ -1,9 +1,6 @@
 #include "glpk2py.h"
 #include <limits>
 #include <vector>
-#include <numpy/arrayobject.h>
-#include "numpy/arrayscalars.h"
-#include "numpy/npy_math.h"
 #include <iostream>
 #include <math.h>
 #include <algorithm>

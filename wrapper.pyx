@@ -27,7 +27,7 @@ cdef extern from "<vector>" namespace "std":
         iterator end()
         int size()
 
-cdef vector[int].iterator iter
+#cdef vector[int].iterator iter
 
 cdef extern from "fc.h":
     vector[np.intp_t] equitablePartitionSaucyBipartite(const size_t nrows, const size_t ncols, const size_t medges, const size_t data[], const size_t rowind[], const size_t colind[], const size_t b[], const size_t c[], int cIters, int coarsest);
@@ -73,12 +73,8 @@ def epSaucy(
     # Pass references to c++ function to guarantee correct memory access
     cdef vector[size_t] res = equitablePartitionSaucyV2(Z.shape[0], A.shape[0], &A[0], &B[0], &C[0], &Z[0], cIters, 1 if coarsest else 0)
     
-    #Instantiate Iterator and iterate over returned c++ vector and assign values to numpy array
-    iter = res.begin()
-    i = 0 
-    while iter != res.end():
-     i = i + 1
-     inc(iter)
+    #Get size of result and copy elements into numpy array
+    i = res.size()
     cdef np.ndarray result = np.empty(i)
     for x in range(0,i):
      result[x] = res[x]
@@ -98,12 +94,8 @@ def epSaucyBipartite(
     # Pass references to c++ function to guarantee correct memory access
     cdef vector[int] res = equitablePartitionSaucyBipartite(rowcolor.shape[0], colcolor.shape[0], A.shape[0], &A[0], &rows[0], &cols[0], &rowcolor[0], &colcolor[0], cIters, 1 if coarsest else 0)
     
-    #Instantiate Iterator and iterate over returned c++ vector and assign values to numpy array
-    iter = res.begin()
-    i = 0 
-    while iter != res.end():
-     i = i + 1
-     inc(iter)
+    #Get size of result and copy elements into numpy array
+    i = res.size()
     cdef np.ndarray result = np.empty(i)
     for x in range(0,i):
      result[x] = res[x]
@@ -125,16 +117,18 @@ def closeLP_Py():
 
 def getMatrix_Py(boundquery,scaled):
     # Time needed for one call =~ 0,015s
-    #TODO : Split getMatrix into four functions as soon as it is confirmed as working properly
     cdef vector[double] res
-    print"MatrixGeneration"
     if boundquery == UPPER:
+        print"MatrixGeneration - UPPER"
         res = getMatrixUpper(scaled) 
     elif boundquery == LOWER:
+        print"MatrixGeneration - LOWER"
         res = getMatrixLower(scaled) 
     elif boundquery == EQUAL:
+        print"MatrixGeneration - EQUAL"
         res = getMatrixEqual(scaled) 
     elif boundquery == UNBOUND:
+        print"MatrixGeneration - UNBOUND"
         res = getMatrixUnbound(scaled) 
     
     i = res.size()
