@@ -74,18 +74,6 @@ cdef extern from "glpk2py.h":
 #All functions from fc.h are defined below
 ################################################
 
-
-################################################
-#Param 
-#A - the data vector of a scipy coordinate matrix
-#B - the row vector of a scipy coordinate matrix
-#C- the column vector of a scipy coordinate matrix
-#Z - a numpy inverted dense matrix
-# cIters - 
-# coarsest -
-#Return
-# Numpy Multidimensional Array computed by equitablePartitionSaucyV2 in LiftedLPWrapper(see LiftedLPWrapper)
-################################################
 def epSaucy(
     np.ndarray[np.double_t,ndim=1] A,
     np.ndarray[itype_t,ndim=1] B,
@@ -93,6 +81,17 @@ def epSaucy(
     np.ndarray[itype_t,ndim=1] Z,
     cIters = 0,
     coarsest = True):
+    """
+    Computes and equiable partition of given matrix,which is passed over as a coordinate matrix
+
+    Keyword arguments:
+    A -- the data vector of a scipy coordinate matrix
+    B -- the row vector of a scipy coordinate matrix
+    C -- the column vector of a scipy coordinate matrix
+    Z -- numpy inverted dense matrix
+    cIters -- TODO
+    coarsest -- TODO
+    """
 
     # Pass references to c++ function to guarantee correct memory access
     cdef vector[size_t] res = equitablePartitionSaucyV2(Z.shape[0], A.shape[0], &A[0], &B[0], &C[0], &Z[0], cIters, 1 if coarsest else 0)
@@ -115,6 +114,18 @@ def epSaucyBipartite(
     np.ndarray[itype_t,ndim=1] colcolor,
     cIters = 0,
     coarsest = True):
+    """
+    TODO : Description of epSaucyBipartite
+
+    Keyword arguments:
+    A -- the data vector of a scipy coordinate matrix
+    rows -- the row vector of a scipy coordinate matrix
+    cols -- the column vector of a scipy coordinate matrix
+    rowcolor -- TODO
+    colcolor -- TODO
+    cIters -- TODO
+    coarsest -- TODO
+    """
     # Pass references to c++ function to guarantee correct memory access
     cdef vector[int] res = equitablePartitionSaucyBipartite(rowcolor.shape[0], colcolor.shape[0], A.shape[0], &A[0], &rows[0], &cols[0], &rowcolor[0], &colcolor[0], cIters, 1 if coarsest else 0)
     
