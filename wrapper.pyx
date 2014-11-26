@@ -133,30 +133,31 @@ def epSaucyBipartite(
 #All functions from glpk2py.h are defined below
 ################################################
 
-
-################################################
-#Calls C++ code which opens a linear Program to solve given problem in specified file
-#Param :
-#fname - the path of a specified file, which is subject to solving
-#format_ - a specified format as to how to solve the given LP
-################################################
 def openLP_Py(fname,format_):
+    """
+    Calls C++ code which opens a linear Program to solve given problem in specified file
+
+    Keyword arguments:
+    fname -- the path of a specified file, which is subject to solving
+    format -- a specified format as how to solve the given LP ?
+    """
     openLP(fname,format_)
 
-################################################
-#Calls function closeLP from glpk2py.cpp (see closeLP)
-################################################
+
 def closeLP_Py():
+    """
+    Calls function closeLP from glpk2py.cpp (see closeLP)
+    """
     closeLP()
 
-################################################
-#Computes the Upper Bounds for a given LP
-#Param
-#int scaled - information for the scaling process, which is to be passed over to the actual function getMatrix (see getMatrix from glpk2py.cpp)
-#Return
-#Upper Bounds of given LP as Numpy Multidimensional Array 
-################################################
+
 def getMatrix_Upper(scaled):
+    """
+    Computes the Upper Bounds for a given LP and returns it as a multi-dimensional array
+
+    Keyword arguments:
+    scaled -- Flag, which indicates a scaled matrix    
+    """
 
     cdef vector[double] res
     res = getMatrix(UPPER,scaled)
@@ -173,15 +174,14 @@ def getMatrix_Upper(scaled):
 
     return result
 
-################################################
-# Computes the Lower Bounds for a given LP
-#Param
-#int scaled - information for the scaling process, which is to be passed over to the actual function getMatrix(see getMatrix from glpk2py.cpp)
-#Return
-#Lower Bounds of given LP as Numpy Multidimensional Array
-################################################
-def getMatrix_Lower(scaled):
 
+def getMatrix_Lower(scaled):
+    """
+    Computes the Lower Bounds for a given LP and returns it as a multi-dimensional array
+
+    Keyword arguments:
+    scaled -- Flag, which indicates a scaled matrix    
+    """
     cdef vector[double] res
     res = getMatrix(LOWER,scaled)
 
@@ -197,14 +197,15 @@ def getMatrix_Lower(scaled):
 
     return result
 
-################################################
-#Computes the Equality constraints of given LP
-#Param
-#int scaled - information for the scaling process, which is to be passed over to the actual function getMatrix(see getMatrix from glpk2py.cpp)
-#Return
-#Equality constraints of given LP as Numpy Multidimensional Array
-################################################
 def getMatrix_Equal(scaled):
+    """
+    Computes the Equality constraints of given LP and returns it as a multi-dimensional array
+    
+
+    Keyword arguments:
+    scaled -- Flag, which indicates a scaled matrix
+
+    """
 
     cdef vector[double] res
     res = getMatrix(EQUAL,scaled)
@@ -238,10 +239,13 @@ def getMatrix_Unbound(scaled):
 
     return result
 
-################################################
-#Calls the function getObjective from glpk2py.cpp and returns the objectives as one-dimensional array (see getObjective.cpp)
-################################################
 def getObjective_Py(scaled):
+    """Calls the function getObjective from glpk2py.cpp and returns the objectives as one-dimensional array (see getObjective.cpp)
+    
+
+    Keyword arguments:
+    scaled -- Flag, which indicates a scaled matrix
+    """
 
     cdef vector[double] res = getObjective(scaled)
     #Instantiate numpy Array and get size of objective
