@@ -4,6 +4,13 @@
 # link: python f-setup.py build_ext --inplace  -> f.so, a dynamic library
 # py test-f.py: import f gets f.so, f.fpy below calls fc()
 
+#
+#DISCLAIMER
+################################################
+#The functions in this file only act as glue for the python and c++ code. The actual computation of the matrices is done inside the c++ code
+#For a full documentation on this please see the *.cpp files such as glpk2py.cpp and LiftedLPWrapper.cpp
+################################################
+
 from cython.operator cimport preincrement as inc
 import numpy as np
 cimport numpy as np
@@ -11,7 +18,11 @@ cimport numpy as np
 #there is a bug with typing certain variables. To circumvent it we need to define our own type and pass it to the compiler otherwise the function will pass garbage to the c++ function
 ctypedef np.uintp_t itype_t
 
-#Defining std::vector to process the return type of fc
+
+################################################
+#Defining the STL-Container std::vector as this object is used as a return value for some functions.
+#We need to be able to access certain attributes such as size.
+################################################
 cdef extern from "<vector>" namespace "std":
     cdef cppclass vector[T]:
         cppclass iterator:
@@ -27,12 +38,18 @@ cdef extern from "<vector>" namespace "std":
         iterator end()
         int size()
 
-#cdef vector[int].iterator iter
-
+################################################
+#Importing the functions from fc.h to be able to compute the equitable partition of give LP as well as the Bipratite Graph
+################################################
 cdef extern from "fc.h":
     vector[np.intp_t] equitablePartitionSaucyBipartite(const size_t nrows, const size_t ncols, const size_t medges, const size_t data[], const size_t rowind[], const size_t colind[], const size_t b[], const size_t c[], int cIters, int coarsest);
     vector[itype_t] equitablePartitionSaucyV2(itype_t mvertices, itype_t medges, double data[], itype_t rown[], itype_t coln[], itype_t b[], int cIters, int coarsest);
 
+################################################
+#Importing Enums to and functions from glpk2py.h 
+#The Enum values act as flags for the getMatrix function, which behaves differently depending on which bound is passed to it
+#The functions are used to compute different matrices such as upper bounds of the LP
+################################################
 cdef extern from "glpk2py.h":
  
     cdef enum bounds:      
@@ -52,12 +69,23 @@ cdef extern from "glpk2py.h":
     void doScaling(scaling sctype);
     void solve();
 
-
 ################################################
 #EquitablePartitionSaucyWrapper
 #All functions from fc.h are defined below
 ################################################
 
+
+################################################
+#Param 
+#A - the data vector of a scipy coordinate matrix
+#B - the row vector of a scipy coordinate matrix
+#C- the column vector of a scipy coordinate matrix
+#Z - a numpy inverted dense matrix
+# cIters - 
+# coarsest -
+#Return
+# Numpy Multidimensional Array computed by equitablePartitionSaucyV2 in LiftedLPWrapper(see LiftedLPWrapper)
+################################################
 def epSaucy(
     np.ndarray[np.double_t,ndim=1] A,
     np.ndarray[itype_t,ndim=1] B,
@@ -105,12 +133,29 @@ def epSaucyBipartite(
 #All functions from glpk2py.h are defined below
 ################################################
 
+
+################################################
+#Calls C++ code which opens a linear Program to solve given problem in specified file
+#Param :
+#fname - the path of a specified file, which is subject to solving
+#format_ - a specified format as to how to solve the given LP
+################################################
 def openLP_Py(fname,format_):
     openLP(fname,format_)
 
+################################################
+#Calls function closeLP from glpk2py.cpp (see closeLP)
+################################################
 def closeLP_Py():
     closeLP()
 
+################################################
+#Computes the Upper Bounds for a given LP
+#Param
+#int scaled - information for the scaling process, which is to be passed over to the actual function getMatrix (see getMatrix from glpk2py.cpp)
+#Return
+#Upper Bounds of given LP as Numpy Multidimensional Array 
+################################################
 def getMatrix_Upper(scaled):
 
     cdef vector[double] res
@@ -128,6 +173,13 @@ def getMatrix_Upper(scaled):
 
     return result
 
+################################################
+# Computes the Lower Bounds for a given LP
+#Param
+#int scaled - information for the scaling process, which is to be passed over to the actual function getMatrix(see getMatrix from glpk2py.cpp)
+#Return
+#Lower Bounds of given LP as Numpy Multidimensional Array
+################################################
 def getMatrix_Lower(scaled):
 
     cdef vector[double] res
@@ -145,6 +197,13 @@ def getMatrix_Lower(scaled):
 
     return result
 
+################################################
+#Computes the Equality constraints of given LP
+#Param
+#int scaled - information for the scaling process, which is to be passed over to the actual function getMatrix(see getMatrix from glpk2py.cpp)
+#Return
+#Equality constraints of given LP as Numpy Multidimensional Array
+################################################
 def getMatrix_Equal(scaled):
 
     cdef vector[double] res
@@ -179,6 +238,9 @@ def getMatrix_Unbound(scaled):
 
     return result
 
+################################################
+#Calls the function getObjective from glpk2py.cpp and returns the objectives as one-dimensional array (see getObjective.cpp)
+################################################
 def getObjective_Py(scaled):
 
     cdef vector[double] res = getObjective(scaled)
