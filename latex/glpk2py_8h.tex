@@ -1,0 +1,202 @@
+\hypertarget{glpk2py_8h}{\section{glpk2py.\-h File Reference}
+\label{glpk2py_8h}\index{glpk2py.\-h@{glpk2py.\-h}}
+}
+{\ttfamily \#include $<$limits$>$}\\*
+{\ttfamily \#include $<$vector$>$}\\*
+{\ttfamily \#include $<$iostream$>$}\\*
+{\ttfamily \#include $<$assert.\-h$>$}\\*
+{\ttfamily \#include $<$math.\-h$>$}\\*
+{\ttfamily \#include $<$algorithm$>$}\\*
+{\ttfamily \#include $<$stdio.\-h$>$}\\*
+{\ttfamily \#include $<$stdlib.\-h$>$}\\*
+{\ttfamily \#include $<$glpk.\-h$>$}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{glpk2py_8h_ad72dbcf6d0153db1b8d8a58001feed83}{\#define {\bfseries D\-E\-B\-U\-G}~0}\label{glpk2py_8h_ad72dbcf6d0153db1b8d8a58001feed83}
+
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{glpk2py_8h_af547d73b85f475c4abfafdb76bf0c301}{filetype} \{ \hyperlink{glpk2py_8h_af547d73b85f475c4abfafdb76bf0c301a4cbbc72444d4ced39a1fd03acc1cff2f}{M\-P\-S} = 0, 
+\hyperlink{glpk2py_8h_af547d73b85f475c4abfafdb76bf0c301a417c69b8c9313307f484fd52ea61db84}{L\-P} = 1
+ \}
+\item 
+enum \hyperlink{glpk2py_8h_aa88cd70ec11880aa8a698595d0bc7aaa}{bounds} \{ \hyperlink{glpk2py_8h_aa88cd70ec11880aa8a698595d0bc7aaaae704d5d328a8522a6193aa3efb28c724}{U\-P\-P\-E\-R} =G\-L\-P\-\_\-\-U\-P, 
+\hyperlink{glpk2py_8h_aa88cd70ec11880aa8a698595d0bc7aaaaa1017e9b343135a54a98b6f479354d16}{L\-O\-W\-E\-R} =G\-L\-P\-\_\-\-L\-O, 
+\hyperlink{glpk2py_8h_aa88cd70ec11880aa8a698595d0bc7aaaa59a84258a4cb9025b567ee5139455029}{E\-Q\-U\-A\-L} =G\-L\-P\-\_\-\-F\-X, 
+\hyperlink{glpk2py_8h_aa88cd70ec11880aa8a698595d0bc7aaaa51b693a50f803002924d92a677dba9c9}{U\-N\-B\-O\-U\-N\-D} =G\-L\-P\-\_\-\-F\-R
+ \}
+\item 
+enum \hyperlink{glpk2py_8h_a83e4e30239128472979d5017bf6a950d}{scaling} \{ \hyperlink{glpk2py_8h_a83e4e30239128472979d5017bf6a950da90d00b13e076e3df693e62f80bfb8c01}{G\-E\-O\-M\-M\-E\-A\-N} =G\-L\-P\-\_\-\-S\-F\-\_\-\-G\-M, 
+\hyperlink{glpk2py_8h_a83e4e30239128472979d5017bf6a950dafbba7bd8dbd986e6a1fd2c787358bc93}{E\-Q\-U\-I\-L\-I\-B} =G\-L\-P\-\_\-\-S\-F\-\_\-\-E\-Q
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{glpk2py_8h_a9457361d59293c73382a3e75a905981d}{open\-L\-P} (const std\-::string \&fname, int format)
+\begin{DoxyCompactList}\small\item\em Opens a specified L\-P by calling the constructor of the G\-L\-P\-K solver. \end{DoxyCompactList}\item 
+void \hyperlink{glpk2py_8h_a7b19ea3ebb9f9a42e88b5e5a6bfedb9e}{close\-L\-P} (void)
+\begin{DoxyCompactList}\small\item\em Closes the given L\-P by deallocating memory. \end{DoxyCompactList}\item 
+std\-::vector$<$ double $>$ \hyperlink{glpk2py_8h_a62ebad3c6e0e84d7604c8b828517c6a6}{get\-Matrix} (\hyperlink{glpk2py_8h_aa88cd70ec11880aa8a698595d0bc7aaa}{bounds} boundquery, int scaled)
+\begin{DoxyCompactList}\small\item\em Calculates properties of a given L\-P depending on the bounds Flag. \end{DoxyCompactList}\item 
+std\-::vector$<$ double $>$ \hyperlink{glpk2py_8h_ab268a627edc86300184db7ba21a07c39}{get\-Objective} (int scaled)
+\begin{DoxyCompactList}\small\item\em Calculates the objective of a given L\-P. \end{DoxyCompactList}\item 
+void \hyperlink{glpk2py_8h_aa75992ff911562c7c6ce7657bd71d9e8}{do\-Scaling} (\hyperlink{glpk2py_8h_a83e4e30239128472979d5017bf6a950d}{scaling} sctype)
+\begin{DoxyCompactList}\small\item\em Scales the given L\-P. \end{DoxyCompactList}\item 
+void \hyperlink{glpk2py_8h_af7d39f0eac0af0ed5785935ac72a1e7d}{solve} ()
+\begin{DoxyCompactList}\small\item\em Solves the given L\-P with an off-\/the-\/shelf L\-P-\/\-Solver e.\-g. Gnu glpk. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Enumeration Type Documentation}
+\hypertarget{glpk2py_8h_aa88cd70ec11880aa8a698595d0bc7aaa}{\index{glpk2py.\-h@{glpk2py.\-h}!bounds@{bounds}}
+\index{bounds@{bounds}!glpk2py.h@{glpk2py.\-h}}
+\subsubsection[{bounds}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf bounds}}}\label{glpk2py_8h_aa88cd70ec11880aa8a698595d0bc7aaa}
+T\-O\-D\-O \begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{U\-P\-P\-E\-R@{U\-P\-P\-E\-R}!glpk2py.\-h@{glpk2py.\-h}}\index{glpk2py.\-h@{glpk2py.\-h}!U\-P\-P\-E\-R@{U\-P\-P\-E\-R}}\item[{\em 
+\hypertarget{glpk2py_8h_aa88cd70ec11880aa8a698595d0bc7aaaae704d5d328a8522a6193aa3efb28c724}{U\-P\-P\-E\-R}\label{glpk2py_8h_aa88cd70ec11880aa8a698595d0bc7aaaae704d5d328a8522a6193aa3efb28c724}
+}]T\-O\-D\-O. \index{L\-O\-W\-E\-R@{L\-O\-W\-E\-R}!glpk2py.\-h@{glpk2py.\-h}}\index{glpk2py.\-h@{glpk2py.\-h}!L\-O\-W\-E\-R@{L\-O\-W\-E\-R}}\item[{\em 
+\hypertarget{glpk2py_8h_aa88cd70ec11880aa8a698595d0bc7aaaaa1017e9b343135a54a98b6f479354d16}{L\-O\-W\-E\-R}\label{glpk2py_8h_aa88cd70ec11880aa8a698595d0bc7aaaaa1017e9b343135a54a98b6f479354d16}
+}]T\-O\-D\-O. \index{E\-Q\-U\-A\-L@{E\-Q\-U\-A\-L}!glpk2py.\-h@{glpk2py.\-h}}\index{glpk2py.\-h@{glpk2py.\-h}!E\-Q\-U\-A\-L@{E\-Q\-U\-A\-L}}\item[{\em 
+\hypertarget{glpk2py_8h_aa88cd70ec11880aa8a698595d0bc7aaaa59a84258a4cb9025b567ee5139455029}{E\-Q\-U\-A\-L}\label{glpk2py_8h_aa88cd70ec11880aa8a698595d0bc7aaaa59a84258a4cb9025b567ee5139455029}
+}]T\-O\-D\-O. \index{U\-N\-B\-O\-U\-N\-D@{U\-N\-B\-O\-U\-N\-D}!glpk2py.\-h@{glpk2py.\-h}}\index{glpk2py.\-h@{glpk2py.\-h}!U\-N\-B\-O\-U\-N\-D@{U\-N\-B\-O\-U\-N\-D}}\item[{\em 
+\hypertarget{glpk2py_8h_aa88cd70ec11880aa8a698595d0bc7aaaa51b693a50f803002924d92a677dba9c9}{U\-N\-B\-O\-U\-N\-D}\label{glpk2py_8h_aa88cd70ec11880aa8a698595d0bc7aaaa51b693a50f803002924d92a677dba9c9}
+}]T\-O\-D\-O. \end{description}
+\end{Desc}
+\hypertarget{glpk2py_8h_af547d73b85f475c4abfafdb76bf0c301}{\index{glpk2py.\-h@{glpk2py.\-h}!filetype@{filetype}}
+\index{filetype@{filetype}!glpk2py.h@{glpk2py.\-h}}
+\subsubsection[{filetype}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf filetype}}}\label{glpk2py_8h_af547d73b85f475c4abfafdb76bf0c301}
+T\-O\-D\-O \begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{M\-P\-S@{M\-P\-S}!glpk2py.\-h@{glpk2py.\-h}}\index{glpk2py.\-h@{glpk2py.\-h}!M\-P\-S@{M\-P\-S}}\item[{\em 
+\hypertarget{glpk2py_8h_af547d73b85f475c4abfafdb76bf0c301a4cbbc72444d4ced39a1fd03acc1cff2f}{M\-P\-S}\label{glpk2py_8h_af547d73b85f475c4abfafdb76bf0c301a4cbbc72444d4ced39a1fd03acc1cff2f}
+}]T\-O\-D\-O. \index{L\-P@{L\-P}!glpk2py.\-h@{glpk2py.\-h}}\index{glpk2py.\-h@{glpk2py.\-h}!L\-P@{L\-P}}\item[{\em 
+\hypertarget{glpk2py_8h_af547d73b85f475c4abfafdb76bf0c301a417c69b8c9313307f484fd52ea61db84}{L\-P}\label{glpk2py_8h_af547d73b85f475c4abfafdb76bf0c301a417c69b8c9313307f484fd52ea61db84}
+}]T\-O\-D\-O. \end{description}
+\end{Desc}
+\hypertarget{glpk2py_8h_a83e4e30239128472979d5017bf6a950d}{\index{glpk2py.\-h@{glpk2py.\-h}!scaling@{scaling}}
+\index{scaling@{scaling}!glpk2py.h@{glpk2py.\-h}}
+\subsubsection[{scaling}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf scaling}}}\label{glpk2py_8h_a83e4e30239128472979d5017bf6a950d}
+T\-O\-D\-O \begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{G\-E\-O\-M\-M\-E\-A\-N@{G\-E\-O\-M\-M\-E\-A\-N}!glpk2py.\-h@{glpk2py.\-h}}\index{glpk2py.\-h@{glpk2py.\-h}!G\-E\-O\-M\-M\-E\-A\-N@{G\-E\-O\-M\-M\-E\-A\-N}}\item[{\em 
+\hypertarget{glpk2py_8h_a83e4e30239128472979d5017bf6a950da90d00b13e076e3df693e62f80bfb8c01}{G\-E\-O\-M\-M\-E\-A\-N}\label{glpk2py_8h_a83e4e30239128472979d5017bf6a950da90d00b13e076e3df693e62f80bfb8c01}
+}]T\-O\-D\-O. \index{E\-Q\-U\-I\-L\-I\-B@{E\-Q\-U\-I\-L\-I\-B}!glpk2py.\-h@{glpk2py.\-h}}\index{glpk2py.\-h@{glpk2py.\-h}!E\-Q\-U\-I\-L\-I\-B@{E\-Q\-U\-I\-L\-I\-B}}\item[{\em 
+\hypertarget{glpk2py_8h_a83e4e30239128472979d5017bf6a950dafbba7bd8dbd986e6a1fd2c787358bc93}{E\-Q\-U\-I\-L\-I\-B}\label{glpk2py_8h_a83e4e30239128472979d5017bf6a950dafbba7bd8dbd986e6a1fd2c787358bc93}
+}]T\-O\-D\-O. \end{description}
+\end{Desc}
+
+
+\subsection{Function Documentation}
+\hypertarget{glpk2py_8h_a7b19ea3ebb9f9a42e88b5e5a6bfedb9e}{\index{glpk2py.\-h@{glpk2py.\-h}!close\-L\-P@{close\-L\-P}}
+\index{close\-L\-P@{close\-L\-P}!glpk2py.h@{glpk2py.\-h}}
+\subsubsection[{close\-L\-P}]{\setlength{\rightskip}{0pt plus 5cm}void close\-L\-P (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{glpk2py_8h_a7b19ea3ebb9f9a42e88b5e5a6bfedb9e}
+
+
+Closes the given L\-P by deallocating memory. 
+
+Closes L\-P by calling the destructor of glpk, which deallocates all memory used by the corresponding problem object iff the constructor was called in open\-L\-P\par
+The call of glp\-\_\-free\-\_\-env() frees all resources used by G\-L\-P\-K routines \hypertarget{glpk2py_8h_aa75992ff911562c7c6ce7657bd71d9e8}{\index{glpk2py.\-h@{glpk2py.\-h}!do\-Scaling@{do\-Scaling}}
+\index{do\-Scaling@{do\-Scaling}!glpk2py.h@{glpk2py.\-h}}
+\subsubsection[{do\-Scaling}]{\setlength{\rightskip}{0pt plus 5cm}void do\-Scaling (
+\begin{DoxyParamCaption}
+\item[{{\bf scaling}}]{sctype}
+\end{DoxyParamCaption}
+)}}\label{glpk2py_8h_aa75992ff911562c7c6ce7657bd71d9e8}
+
+
+Scales the given L\-P. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em sctype} & A Flag, which indicates which scaling type is to be used\\
+\hline
+\end{DoxyParams}
+Detailed Description T\-O\-D\-O \hypertarget{glpk2py_8h_a62ebad3c6e0e84d7604c8b828517c6a6}{\index{glpk2py.\-h@{glpk2py.\-h}!get\-Matrix@{get\-Matrix}}
+\index{get\-Matrix@{get\-Matrix}!glpk2py.h@{glpk2py.\-h}}
+\subsubsection[{get\-Matrix}]{\setlength{\rightskip}{0pt plus 5cm}std\-::vector$<$double$>$ get\-Matrix (
+\begin{DoxyParamCaption}
+\item[{{\bf bounds}}]{boundquery, }
+\item[{int}]{scaled}
+\end{DoxyParamCaption}
+)}}\label{glpk2py_8h_a62ebad3c6e0e84d7604c8b828517c6a6}
+
+
+Calculates properties of a given L\-P depending on the bounds Flag. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em boundquery} & A Flag, which indicates which matrix is going to be calculated \\
+\hline
+{\em scaled} & An integer, which indicates a scaled matrix(\-L\-P) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Vector (structure) equivalent to a matrix with 4 rows
+\end{DoxyReturn}
+Computes a Matrix depending on the boundquery Argument (see bounds) \par
+U\-P\-P\-E\-R --Calculates the Upper bounds of a given L\-P and returns it as a vector\par
+L\-O\-W\-E\-R --Calculates the Lower bounds of a given L\-P and returns it as a vector\par
+E\-Q\-U\-A\-L -- T\-O\-D\-O \par
+U\-N\-B\-O\-U\-N\-D --T\-O\-D\-O \par
+ \hypertarget{glpk2py_8h_ab268a627edc86300184db7ba21a07c39}{\index{glpk2py.\-h@{glpk2py.\-h}!get\-Objective@{get\-Objective}}
+\index{get\-Objective@{get\-Objective}!glpk2py.h@{glpk2py.\-h}}
+\subsubsection[{get\-Objective}]{\setlength{\rightskip}{0pt plus 5cm}std\-::vector$<$double$>$ get\-Objective (
+\begin{DoxyParamCaption}
+\item[{int}]{scaled}
+\end{DoxyParamCaption}
+)}}\label{glpk2py_8h_ab268a627edc86300184db7ba21a07c39}
+
+
+Calculates the objective of a given L\-P. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em scaled} & An integer, which indicates a scaled matrix(\-L\-P) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The objective of a given L\-P as vector
+\end{DoxyReturn}
+Detailed Description T\-O\-D\-O \hypertarget{glpk2py_8h_a9457361d59293c73382a3e75a905981d}{\index{glpk2py.\-h@{glpk2py.\-h}!open\-L\-P@{open\-L\-P}}
+\index{open\-L\-P@{open\-L\-P}!glpk2py.h@{glpk2py.\-h}}
+\subsubsection[{open\-L\-P}]{\setlength{\rightskip}{0pt plus 5cm}void open\-L\-P (
+\begin{DoxyParamCaption}
+\item[{const std\-::string \&}]{fname, }
+\item[{int}]{format}
+\end{DoxyParamCaption}
+)}}\label{glpk2py_8h_a9457361d59293c73382a3e75a905981d}
+
+
+Opens a specified L\-P by calling the constructor of the G\-L\-P\-K solver. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fname} & The name of the file to be opened \\
+\hline
+{\em format} & The filetype of given file either M\-P\-S or L\-P are valid (see enum filetype)\\
+\hline
+\end{DoxyParams}
+Opens the L\-P by creating a glpk problem object and assigning the given file to it \par
+Furthermore extracts the number of columns and rows of the opened L\-P and assigns the values to global variables \hypertarget{glpk2py_8h_af7d39f0eac0af0ed5785935ac72a1e7d}{\index{glpk2py.\-h@{glpk2py.\-h}!solve@{solve}}
+\index{solve@{solve}!glpk2py.h@{glpk2py.\-h}}
+\subsubsection[{solve}]{\setlength{\rightskip}{0pt plus 5cm}void solve (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{glpk2py_8h_af7d39f0eac0af0ed5785935ac72a1e7d}
+
+
+Solves the given L\-P with an off-\/the-\/shelf L\-P-\/\-Solver e.\-g. Gnu glpk. 
+
+Detailed Description T\-O\-D\-O 

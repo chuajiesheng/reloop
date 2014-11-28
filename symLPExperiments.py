@@ -48,10 +48,10 @@ def loadNsolve(fname, scaled, ftype):
     A = sp.coo_matrix((1,1))
     b = np.zeros((0,0))
     e = False
-    wrapper.openLP_Py(fname,np.int32(ftype))
+    openLP(fname,np.int32(ftype))
 
-    if scaled == 1: wrapper.doScaling_Py(EQUILIB)
-    lpmatrix = wrapper.getMatrix_Upper(scaled) 
+    if scaled == 1: doScaling(EQUILIB)
+    lpmatrix = getMatrix_Upper(scaled) 
     nelms = np.int(lpmatrix[2,0])
     print "nelms"
     if nelms > 0:
@@ -59,7 +59,7 @@ def loadNsolve(fname, scaled, ftype):
         [A, b] = extract_matrix(lpmatrix)
         e = True
     print "after up: ", A.shape
-    lpmatrix = wrapper.getMatrix_Lower(scaled)
+    lpmatrix = getMatrix_Lower(scaled)
     nelms = np.int(lpmatrix[2,0])
     if nelms > 0:
         [AA, bb] = extract_matrix(lpmatrix)
@@ -71,7 +71,7 @@ def loadNsolve(fname, scaled, ftype):
             b = -bb
             e = True
     print "after low: ", A.shape
-    lpmatrix = wrapper.getMatrix_Equal(scaled)
+    lpmatrix = getMatrix_Equal(scaled)
     nelms = np.int(lpmatrix[2,0])
     if nelms > 0:
         [AA, bb] = extract_matrix(lpmatrix)
@@ -88,12 +88,12 @@ def loadNsolve(fname, scaled, ftype):
     b.shape = (b.shape[1],1)
     b = sp.coo_matrix(b)
     # done with A
-    c = wrapper.getObjective_Py(scaled)
+    c = getObjective(scaled)
     c.shape = (len(c),1)
     c = sp.coo_matrix(c)
     # glpk2py_wrapper.solve()
     # exit()
-    wrapper.closeLP_Py()
+    closeLP()
     print A
     # return liftedLPCVXOPT(A.todense(),b.todense(),c.todense(),debug=True,plot=False,orbits=False, sumRefine=False)
     return sp_liftedLPCVXOPT(A,b,c,debug=True,orbits=False, sumRefine=False)
@@ -116,13 +116,53 @@ def loadNsolveCVX(fname, scaled, ftype):
     # return liftedLPCVXOPT(A.todense(),b.todense(),c.todense(),debug=True,plot=False,orbits=False, sumRefine=False)
     return sp_liftedLPCVXOPT(A,b,c,debug=True,orbits=False, sumRefine=False)
 
+##Calls C++ code which opens a linear Program to solve given problem in specified file
+#
+#@param fname The path of a specified file, which is subject to solving
+#@param format A specified format as how to solve the given LP ?
+def openLP(fname,ftype):
+    wrapper.openLP_Py(fname,ftype)
+
+##Computes the Upper Bounds for a given LP and returns it as a multi-dimensional array
+#@param scaled  Flag, which indicates a scaled matrix    
+def getMatrix_Upper(scaled):
+    return wrapper.getMatrix_Upper(scaled)
+
+##Computes the Lower Bounds for a given LP and returns it as a multi-dimensional array
+#
+#@param scaled Flag, which indicates a scaled matrix
+def getMatrix_Lower(scaled):
+    return wrapper.getMatrix_Lower(scaled)
+
+##Computes the Equality constraints of given LP and returns it as a multi-dimensional array
+#
+#@param scaled Flag, which indicates a scaled matrix 
+def getMatrix_Equal(scaled):
+    return wrapper.getMatrix_Equal(scaled)
+
+##Computes Unbound variables of given LP
+#
+#@param scaled Flag, which indicates a scaled matrix 
+def getMatrix_Unbound(scaled):
+    return wrapper.getMatrix_Unbound(scaled)
+
+##Calls the function getObjective from glpk2py.cpp and returns the objectives as one-dimensional array (see getObjective.cpp)
+#
+#@param scaled Flag, which indicates a scaled matrix
+def getObjective(scaled):
+    return wrapper.getObjective_Py(scaled)
+def solve():
+    wrapper.solve_Py()
+def doScaling(sctype):
+     wrapper.doScaling_Py(sctype)
+def closeLP():
+    wrapper.closeLP_Py()
 
 ##
 #Iterates over every file specified in the main method.    
 #@param path  The path to *.LP files
 #@param output A specified file where the output is going to be saved
 #@param type The type of given problem (Here always type = LP = 1)
-
 def runbatch(path, output, type):
     error_handle = file('error.log', 'w')
 

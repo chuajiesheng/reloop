@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['extract_5fmatrix',['extract_matrix',['../namespacesymLPExperiments.html#a00f49f67a2a2d9e675d6f392a28c6d21',1,'symLPExperiments']]]
+  ['dimacs_5finfo',['dimacs_info',['../structdimacs__info.html',1,'']]],
+  ['doscaling',['doScaling',['../glpk2py_8cpp.html#aa75992ff911562c7c6ce7657bd71d9e8',1,'doScaling(scaling sctype):&#160;glpk2py.cpp'],['../glpk2py_8h.html#aa75992ff911562c7c6ce7657bd71d9e8',1,'doScaling(scaling sctype):&#160;glpk2py.cpp']]]
 ];

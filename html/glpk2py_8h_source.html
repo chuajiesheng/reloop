@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>My Project: glpk2py.h Source File</title>
+<title>Relational Linear Programming: glpk2py.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,7 +22,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">My Project
+   <div id="projectname">Relational Linear Programming
    </div>
   </td>
  </tr>
@@ -61,6 +61,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="files.html"><span>File&#160;List</span></a></li>
+      <li><a href="globals.html"><span>File&#160;Members</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -69,7 +70,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -83,37 +84,70 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">glpk2py.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#include &lt;limits&gt;</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include&lt;iostream&gt;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include&lt;assert.h&gt;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;math.h&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;algorithm&gt;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#define DEBUG 0</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;stdio.h&gt;</span>            <span class="comment">/* C input/output                       */</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span>           <span class="comment">/* C standard library                   */</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;glpk.h&gt;</span>             <span class="comment">/* GNU GLPK linear/mixed integer solver */</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">enum</span> filetype {</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;  MPS = 0,</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;  LP = 1</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;};</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">enum</span> bounds {UPPER=GLP_UP, LOWER=GLP_LO, EQUAL=GLP_FX, UNBOUND=GLP_FR}; <span class="comment">// ax &lt; b, ax &gt; b, ax = b, ax &lt; 0</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">enum</span> scaling {GEOMMEAN=GLP_SF_GM, EQUILIB=GLP_SF_EQ};</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keywordtype">void</span> openLP(<span class="keyword">const</span> std::string &amp; fname, <span class="keywordtype">int</span> format);</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keywordtype">void</span> closeLP(<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;std::vector&lt;double&gt; getMatrix(bounds boundquery, <span class="keywordtype">int</span> scaled);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;std::vector&lt;double&gt; getObjective(<span class="keywordtype">int</span> scaled);</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keywordtype">void</span> doScaling(scaling sctype);</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keywordtype">void</span> solve();</div>
+<a href="glpk2py_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;limits&gt;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include&lt;iostream&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include&lt;assert.h&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;math.h&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;algorithm&gt;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#define DEBUG 0</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;stdio.h&gt;</span>            <span class="comment">/* C input/output                       */</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span>           <span class="comment">/* C standard library                   */</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &lt;glpk.h&gt;</span>             <span class="comment">/* GNU GLPK linear/mixed integer solver */</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;</div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="glpk2py_8h.html#af547d73b85f475c4abfafdb76bf0c301">   18</a></span>&#160;<span class="keyword">enum</span> <a class="code" href="glpk2py_8h.html#af547d73b85f475c4abfafdb76bf0c301">filetype</a> {</div>
+<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="glpk2py_8h.html#af547d73b85f475c4abfafdb76bf0c301a4cbbc72444d4ced39a1fd03acc1cff2f">   19</a></span>&#160;  <a class="code" href="glpk2py_8h.html#af547d73b85f475c4abfafdb76bf0c301a4cbbc72444d4ced39a1fd03acc1cff2f">MPS</a> = 0,  </div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="glpk2py_8h.html#af547d73b85f475c4abfafdb76bf0c301a417c69b8c9313307f484fd52ea61db84">   20</a></span>&#160;  <a class="code" href="glpk2py_8h.html#af547d73b85f475c4abfafdb76bf0c301a417c69b8c9313307f484fd52ea61db84">LP</a> = 1    </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;};</div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="glpk2py_8h.html#aa88cd70ec11880aa8a698595d0bc7aaa">   24</a></span>&#160;<span class="keyword">enum</span> <a class="code" href="glpk2py_8h.html#aa88cd70ec11880aa8a698595d0bc7aaa">bounds</a> {</div>
+<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="glpk2py_8h.html#aa88cd70ec11880aa8a698595d0bc7aaaae704d5d328a8522a6193aa3efb28c724">   25</a></span>&#160;    <a class="code" href="glpk2py_8h.html#aa88cd70ec11880aa8a698595d0bc7aaaae704d5d328a8522a6193aa3efb28c724">UPPER</a>=GLP_UP, </div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="glpk2py_8h.html#aa88cd70ec11880aa8a698595d0bc7aaaaa1017e9b343135a54a98b6f479354d16">   26</a></span>&#160;    <a class="code" href="glpk2py_8h.html#aa88cd70ec11880aa8a698595d0bc7aaaaa1017e9b343135a54a98b6f479354d16">LOWER</a>=GLP_LO, </div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="glpk2py_8h.html#aa88cd70ec11880aa8a698595d0bc7aaaa59a84258a4cb9025b567ee5139455029">   27</a></span>&#160;    <a class="code" href="glpk2py_8h.html#aa88cd70ec11880aa8a698595d0bc7aaaa59a84258a4cb9025b567ee5139455029">EQUAL</a>=GLP_FX, </div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="glpk2py_8h.html#aa88cd70ec11880aa8a698595d0bc7aaaa51b693a50f803002924d92a677dba9c9">   28</a></span>&#160;    <a class="code" href="glpk2py_8h.html#aa88cd70ec11880aa8a698595d0bc7aaaa51b693a50f803002924d92a677dba9c9">UNBOUND</a>=GLP_FR</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;}; <span class="comment">// ax &lt; b, ax &gt; b, ax = b, ax &lt; 0</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="glpk2py_8h.html#a83e4e30239128472979d5017bf6a950d">   33</a></span>&#160;<span class="keyword">enum</span> <a class="code" href="glpk2py_8h.html#a83e4e30239128472979d5017bf6a950d">scaling</a> {</div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="glpk2py_8h.html#a83e4e30239128472979d5017bf6a950da90d00b13e076e3df693e62f80bfb8c01">   34</a></span>&#160;    <a class="code" href="glpk2py_8h.html#a83e4e30239128472979d5017bf6a950da90d00b13e076e3df693e62f80bfb8c01">GEOMMEAN</a>=GLP_SF_GM, </div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="glpk2py_8h.html#a83e4e30239128472979d5017bf6a950dafbba7bd8dbd986e6a1fd2c787358bc93">   35</a></span>&#160;    <a class="code" href="glpk2py_8h.html#a83e4e30239128472979d5017bf6a950dafbba7bd8dbd986e6a1fd2c787358bc93">EQUILIB</a>=GLP_SF_EQ   </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;};</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keywordtype">void</span> <a class="code" href="glpk2py_8h.html#a9457361d59293c73382a3e75a905981d">openLP</a>(<span class="keyword">const</span> std::string &amp; fname, <span class="keywordtype">int</span> format);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keywordtype">void</span> <a class="code" href="glpk2py_8h.html#a7b19ea3ebb9f9a42e88b5e5a6bfedb9e">closeLP</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;std::vector&lt;double&gt; <a class="code" href="glpk2py_8h.html#a62ebad3c6e0e84d7604c8b828517c6a6">getMatrix</a>(<a class="code" href="glpk2py_8h.html#aa88cd70ec11880aa8a698595d0bc7aaa">bounds</a> boundquery, <span class="keywordtype">int</span> scaled);</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;std::vector&lt;double&gt; <a class="code" href="glpk2py_8h.html#ab268a627edc86300184db7ba21a07c39">getObjective</a>(<span class="keywordtype">int</span> scaled);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keywordtype">void</span> <a class="code" href="glpk2py_8h.html#aa75992ff911562c7c6ce7657bd71d9e8">doScaling</a>(<a class="code" href="glpk2py_8h.html#a83e4e30239128472979d5017bf6a950d">scaling</a> sctype);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keywordtype">void</span> <a class="code" href="glpk2py_8h.html#af7d39f0eac0af0ed5785935ac72a1e7d">solve</a>();</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="ttc" id="glpk2py_8h_html_ab268a627edc86300184db7ba21a07c39"><div class="ttname"><a href="glpk2py_8h.html#ab268a627edc86300184db7ba21a07c39">getObjective</a></div><div class="ttdeci">std::vector&lt; double &gt; getObjective(int scaled)</div><div class="ttdoc">Calculates the objective of a given LP. </div><div class="ttdef"><b>Definition:</b> glpk2py.cpp:157</div></div>
+<div class="ttc" id="glpk2py_8h_html_a7b19ea3ebb9f9a42e88b5e5a6bfedb9e"><div class="ttname"><a href="glpk2py_8h.html#a7b19ea3ebb9f9a42e88b5e5a6bfedb9e">closeLP</a></div><div class="ttdeci">void closeLP(void)</div><div class="ttdoc">Closes the given LP by deallocating memory. </div><div class="ttdef"><b>Definition:</b> glpk2py.cpp:42</div></div>
+<div class="ttc" id="glpk2py_8h_html_aa88cd70ec11880aa8a698595d0bc7aaaa51b693a50f803002924d92a677dba9c9"><div class="ttname"><a href="glpk2py_8h.html#aa88cd70ec11880aa8a698595d0bc7aaaa51b693a50f803002924d92a677dba9c9">UNBOUND</a></div><div class="ttdoc">TODO. </div><div class="ttdef"><b>Definition:</b> glpk2py.h:28</div></div>
+<div class="ttc" id="glpk2py_8h_html_af547d73b85f475c4abfafdb76bf0c301"><div class="ttname"><a href="glpk2py_8h.html#af547d73b85f475c4abfafdb76bf0c301">filetype</a></div><div class="ttdeci">filetype</div><div class="ttdef"><b>Definition:</b> glpk2py.h:18</div></div>
+<div class="ttc" id="glpk2py_8h_html_af7d39f0eac0af0ed5785935ac72a1e7d"><div class="ttname"><a href="glpk2py_8h.html#af7d39f0eac0af0ed5785935ac72a1e7d">solve</a></div><div class="ttdeci">void solve()</div><div class="ttdoc">Solves the given LP with an off-the-shelf LP-Solver e.g. Gnu glpk. </div><div class="ttdef"><b>Definition:</b> glpk2py.cpp:190</div></div>
+<div class="ttc" id="glpk2py_8h_html_aa88cd70ec11880aa8a698595d0bc7aaa"><div class="ttname"><a href="glpk2py_8h.html#aa88cd70ec11880aa8a698595d0bc7aaa">bounds</a></div><div class="ttdeci">bounds</div><div class="ttdef"><b>Definition:</b> glpk2py.h:24</div></div>
+<div class="ttc" id="glpk2py_8h_html_aa88cd70ec11880aa8a698595d0bc7aaaaa1017e9b343135a54a98b6f479354d16"><div class="ttname"><a href="glpk2py_8h.html#aa88cd70ec11880aa8a698595d0bc7aaaaa1017e9b343135a54a98b6f479354d16">LOWER</a></div><div class="ttdoc">TODO. </div><div class="ttdef"><b>Definition:</b> glpk2py.h:26</div></div>
+<div class="ttc" id="glpk2py_8h_html_af547d73b85f475c4abfafdb76bf0c301a417c69b8c9313307f484fd52ea61db84"><div class="ttname"><a href="glpk2py_8h.html#af547d73b85f475c4abfafdb76bf0c301a417c69b8c9313307f484fd52ea61db84">LP</a></div><div class="ttdoc">TODO. </div><div class="ttdef"><b>Definition:</b> glpk2py.h:20</div></div>
+<div class="ttc" id="glpk2py_8h_html_aa88cd70ec11880aa8a698595d0bc7aaaa59a84258a4cb9025b567ee5139455029"><div class="ttname"><a href="glpk2py_8h.html#aa88cd70ec11880aa8a698595d0bc7aaaa59a84258a4cb9025b567ee5139455029">EQUAL</a></div><div class="ttdoc">TODO. </div><div class="ttdef"><b>Definition:</b> glpk2py.h:27</div></div>
+<div class="ttc" id="glpk2py_8h_html_a83e4e30239128472979d5017bf6a950da90d00b13e076e3df693e62f80bfb8c01"><div class="ttname"><a href="glpk2py_8h.html#a83e4e30239128472979d5017bf6a950da90d00b13e076e3df693e62f80bfb8c01">GEOMMEAN</a></div><div class="ttdoc">TODO. </div><div class="ttdef"><b>Definition:</b> glpk2py.h:34</div></div>
+<div class="ttc" id="glpk2py_8h_html_a83e4e30239128472979d5017bf6a950dafbba7bd8dbd986e6a1fd2c787358bc93"><div class="ttname"><a href="glpk2py_8h.html#a83e4e30239128472979d5017bf6a950dafbba7bd8dbd986e6a1fd2c787358bc93">EQUILIB</a></div><div class="ttdoc">TODO. </div><div class="ttdef"><b>Definition:</b> glpk2py.h:35</div></div>
+<div class="ttc" id="glpk2py_8h_html_a62ebad3c6e0e84d7604c8b828517c6a6"><div class="ttname"><a href="glpk2py_8h.html#a62ebad3c6e0e84d7604c8b828517c6a6">getMatrix</a></div><div class="ttdeci">std::vector&lt; double &gt; getMatrix(bounds boundquery, int scaled)</div><div class="ttdoc">Calculates properties of a given LP depending on the bounds Flag. </div><div class="ttdef"><b>Definition:</b> glpk2py.cpp:56</div></div>
+<div class="ttc" id="glpk2py_8h_html_af547d73b85f475c4abfafdb76bf0c301a4cbbc72444d4ced39a1fd03acc1cff2f"><div class="ttname"><a href="glpk2py_8h.html#af547d73b85f475c4abfafdb76bf0c301a4cbbc72444d4ced39a1fd03acc1cff2f">MPS</a></div><div class="ttdoc">TODO. </div><div class="ttdef"><b>Definition:</b> glpk2py.h:19</div></div>
+<div class="ttc" id="glpk2py_8h_html_aa88cd70ec11880aa8a698595d0bc7aaaae704d5d328a8522a6193aa3efb28c724"><div class="ttname"><a href="glpk2py_8h.html#aa88cd70ec11880aa8a698595d0bc7aaaae704d5d328a8522a6193aa3efb28c724">UPPER</a></div><div class="ttdoc">TODO. </div><div class="ttdef"><b>Definition:</b> glpk2py.h:25</div></div>
+<div class="ttc" id="glpk2py_8h_html_a83e4e30239128472979d5017bf6a950d"><div class="ttname"><a href="glpk2py_8h.html#a83e4e30239128472979d5017bf6a950d">scaling</a></div><div class="ttdeci">scaling</div><div class="ttdef"><b>Definition:</b> glpk2py.h:33</div></div>
+<div class="ttc" id="glpk2py_8h_html_aa75992ff911562c7c6ce7657bd71d9e8"><div class="ttname"><a href="glpk2py_8h.html#aa75992ff911562c7c6ce7657bd71d9e8">doScaling</a></div><div class="ttdeci">void doScaling(scaling sctype)</div><div class="ttdoc">Scales the given LP. </div><div class="ttdef"><b>Definition:</b> glpk2py.cpp:183</div></div>
+<div class="ttc" id="glpk2py_8h_html_a9457361d59293c73382a3e75a905981d"><div class="ttname"><a href="glpk2py_8h.html#a9457361d59293c73382a3e75a905981d">openLP</a></div><div class="ttdeci">void openLP(const std::string &amp;fname, int format)</div><div class="ttdoc">Opens a specified LP by calling the constructor of the GLPK solver. </div><div class="ttdef"><b>Definition:</b> glpk2py.cpp:23</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Nov 28 2014 10:03:06 for My Project by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Nov 28 2014 12:36:52 for Relational Linear Programming by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

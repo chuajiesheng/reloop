@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['loadnsolve',['loadNsolve',['../namespacesymLPExperiments.html#a13db8437b54c2d6e412fdca6beebcd73',1,'symLPExperiments']]],
-  ['loadnsolvecvx',['loadNsolveCVX',['../namespacesymLPExperiments.html#aac02ec1af252db0b5351036a4725aa22',1,'symLPExperiments']]]
+  ['doscaling',['doScaling',['../glpk2py_8cpp.html#aa75992ff911562c7c6ce7657bd71d9e8',1,'doScaling(scaling sctype):&#160;glpk2py.cpp'],['../glpk2py_8h.html#aa75992ff911562c7c6ce7657bd71d9e8',1,'doScaling(scaling sctype):&#160;glpk2py.cpp']]]
 ];

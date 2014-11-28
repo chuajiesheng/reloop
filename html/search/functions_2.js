@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['runbatch',['runbatch',['../namespacesymLPExperiments.html#a0b36c729a222467b8abb13726eeee5f5',1,'symLPExperiments']]]
+  ['extract_5fmatrix',['extract_matrix',['../namespacesymLPExperiments.html#a00f49f67a2a2d9e675d6f392a28c6d21',1,'symLPExperiments']]]
 ];

@@ -1,3 +1,4 @@
+/*! \file */ 
 #include "glpk2py.h"
 #include <limits>
 #include <vector>
@@ -17,7 +18,8 @@ glp_prob *lp = NULL;
 int numrows, numcols; 
 
 
-
+/// Opens the LP by creating a glpk problem object and assigning the given file to it \n
+/// Furthermore extracts the number of columns and rows of the opened LP and assigns the values to global variables
 void openLP(const std::string & fname, int format) {
   cout << fname << endl;
   lp = glp_create_prob();
@@ -34,7 +36,9 @@ void openLP(const std::string & fname, int format) {
    cout << "end" << endl;
 }
 
-
+/// Closes LP by calling the destructor of glpk, which deallocates all memory used by the corresponding problem object iff the constructor was called in openLP\n
+/// The call of glp_free_env() frees all resources used by GLPK routines
+///
 void closeLP(void) {
   if (lp) {
     glp_delete_prob(lp);
@@ -44,7 +48,11 @@ void closeLP(void) {
   }
 }
  
-
+/// Computes a Matrix depending on the boundquery Argument (see bounds) \n
+/// UPPER --Calculates the Upper bounds of a given LP and returns it as a vector\n
+/// LOWER --Calculates the Lower bounds of a given LP and returns it as a vector\n
+/// EQUAL -- TODO \n
+/// UNBOUND --TODO \n
 vector<double> getMatrix(bounds boundquery,int scaled) {
   assert(lp != NULL);
   vector<double>::iterator itera, iterb;
@@ -91,7 +99,6 @@ vector<double> getMatrix(bounds boundquery,int scaled) {
           *(datavec.begin()+p) = tmp;
         }
       }
-      //globalindvec.append(indvec)
       std::copy(indvec.begin() + 1, indvec.begin()+len+1, itera);
      /* for (std::vector<int>::iterator it = indvec.begin()+1; it <= indvec.begin() + len; it++) cout << *it;
       cout << endl;*/
@@ -145,7 +152,8 @@ vector<double> getMatrix(bounds boundquery,int scaled) {
   return sparsematrix;
 }
 
-
+/// Detailed Description TODO
+///
 vector<double> getObjective(int scaled) {
   assert(lp != NULL);
   vector<double> objective(numcols);
@@ -170,11 +178,15 @@ vector<double> getObjective(int scaled) {
   }
 }
 
+/// Detailed Description TODO
+///
 void doScaling(scaling sctype) {
   assert(lp != NULL);
   glp_scale_prob(lp, sctype);
 }
 
+/// Detailed Description TODO
+///
 void solve() {
   assert(lp != NULL);
   glp_simplex(lp, NULL);
