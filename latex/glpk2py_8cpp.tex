@@ -28,21 +28,21 @@ vector$<$ double $>$ \hyperlink{glpk2py_8cpp_a4ee95926faf2a34d6557e67c6d2c330f}{
 vector$<$ double $>$ \hyperlink{glpk2py_8cpp_ac51f9a3ef234596b91705d0cbe279a1c}{get\-Objective} (int scaled)
 \begin{DoxyCompactList}\small\item\em Calculates the objective of a given L\-P. \end{DoxyCompactList}\item 
 void \hyperlink{glpk2py_8cpp_aa75992ff911562c7c6ce7657bd71d9e8}{do\-Scaling} (\hyperlink{glpk2py_8h_a83e4e30239128472979d5017bf6a950d}{scaling} sctype)
-\begin{DoxyCompactList}\small\item\em Scales the given L\-P. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Wrapper function for the glp scaling method, which does the actual scaling of the given lp. \end{DoxyCompactList}\item 
 void \hyperlink{glpk2py_8cpp_af7d39f0eac0af0ed5785935ac72a1e7d}{solve} ()
-\begin{DoxyCompactList}\small\item\em Solves the given L\-P with an off-\/the-\/shelf L\-P-\/\-Solver e.\-g. Gnu glpk. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Solves the given L\-P with an off-\/the-\/shelf L\-P-\/\-Solver for instance using the Gnu glpk. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
-\hypertarget{glpk2py_8cpp_a40cbe938281fa3b02bcdc00a51ccad72}{glp\-\_\-prob $\ast$ {\bfseries lp} = N\-U\-L\-L}\label{glpk2py_8cpp_a40cbe938281fa3b02bcdc00a51ccad72}
+\hypertarget{glpk2py_8cpp_a40cbe938281fa3b02bcdc00a51ccad72}{glp\-\_\-prob $\ast$ \hyperlink{glpk2py_8cpp_a40cbe938281fa3b02bcdc00a51ccad72}{lp} = N\-U\-L\-L}\label{glpk2py_8cpp_a40cbe938281fa3b02bcdc00a51ccad72}
 
-\item 
-\hypertarget{glpk2py_8cpp_ad91e60eb2d691c6f4143701f8f03d614}{int {\bfseries numrows}}\label{glpk2py_8cpp_ad91e60eb2d691c6f4143701f8f03d614}
+\begin{DoxyCompactList}\small\item\em Global pointer to a yet to be specified glp object. \end{DoxyCompactList}\item 
+\hypertarget{glpk2py_8cpp_a29c98fb6fb031b475a58a7227f8fd485}{int \hyperlink{glpk2py_8cpp_a29c98fb6fb031b475a58a7227f8fd485}{numrow}}\label{glpk2py_8cpp_a29c98fb6fb031b475a58a7227f8fd485}
 
-\item 
-\hypertarget{glpk2py_8cpp_aa865e8618585eb8d76281d00e41b4d6d}{int {\bfseries numcols}}\label{glpk2py_8cpp_aa865e8618585eb8d76281d00e41b4d6d}
+\begin{DoxyCompactList}\small\item\em Number of rows of a given glp object. \end{DoxyCompactList}\item 
+\hypertarget{glpk2py_8cpp_aa865e8618585eb8d76281d00e41b4d6d}{int \hyperlink{glpk2py_8cpp_aa865e8618585eb8d76281d00e41b4d6d}{numcols}}\label{glpk2py_8cpp_aa865e8618585eb8d76281d00e41b4d6d}
 
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Number of columns of a given glp object. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Function Documentation}
@@ -67,9 +67,9 @@ The call of glp\-\_\-free\-\_\-env() frees all resources used by G\-L\-P\-K rout
 )}}\label{glpk2py_8cpp_aa75992ff911562c7c6ce7657bd71d9e8}
 
 
-Scales the given L\-P. 
+Wrapper function for the glp scaling method, which does the actual scaling of the given lp. 
 
-Detailed Description T\-O\-D\-O \hypertarget{glpk2py_8cpp_a4ee95926faf2a34d6557e67c6d2c330f}{\index{glpk2py.\-cpp@{glpk2py.\-cpp}!get\-Matrix@{get\-Matrix}}
+Does scaling for the given L\-P. \hypertarget{glpk2py_8cpp_a4ee95926faf2a34d6557e67c6d2c330f}{\index{glpk2py.\-cpp@{glpk2py.\-cpp}!get\-Matrix@{get\-Matrix}}
 \index{get\-Matrix@{get\-Matrix}!glpk2py.cpp@{glpk2py.\-cpp}}
 \subsubsection[{get\-Matrix}]{\setlength{\rightskip}{0pt plus 5cm}vector$<$double$>$ get\-Matrix (
 \begin{DoxyParamCaption}
@@ -97,7 +97,7 @@ U\-N\-B\-O\-U\-N\-D --T\-O\-D\-O \par
 
 Calculates the objective of a given L\-P. 
 
-Detailed Description T\-O\-D\-O \hypertarget{glpk2py_8cpp_a9457361d59293c73382a3e75a905981d}{\index{glpk2py.\-cpp@{glpk2py.\-cpp}!open\-L\-P@{open\-L\-P}}
+Creates a new vector object with the size of the number of columns of given lp then iterates over this vector and calculates the objective coefficient at the i-\/th column of the lp (problem) object. If the problem is scaled the scale factor s is set to the current scaled factor and the current position of the matrix of the lp object. \hypertarget{glpk2py_8cpp_a9457361d59293c73382a3e75a905981d}{\index{glpk2py.\-cpp@{glpk2py.\-cpp}!open\-L\-P@{open\-L\-P}}
 \index{open\-L\-P@{open\-L\-P}!glpk2py.cpp@{glpk2py.\-cpp}}
 \subsubsection[{open\-L\-P}]{\setlength{\rightskip}{0pt plus 5cm}void open\-L\-P (
 \begin{DoxyParamCaption}
@@ -119,6 +119,6 @@ Furthermore extracts the number of columns and rows of the opened L\-P and assig
 )}}\label{glpk2py_8cpp_af7d39f0eac0af0ed5785935ac72a1e7d}
 
 
-Solves the given L\-P with an off-\/the-\/shelf L\-P-\/\-Solver e.\-g. Gnu glpk. 
+Solves the given L\-P with an off-\/the-\/shelf L\-P-\/\-Solver for instance using the Gnu glpk. 
 
 Detailed Description T\-O\-D\-O 

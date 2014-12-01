@@ -1,4 +1,3 @@
-/*! \file */ 
 #include "glpk2py.h"
 #include <limits>
 #include <vector>
@@ -14,8 +13,9 @@
 
 using namespace std;
 
-glp_prob *lp = NULL;
-int numrows, numcols; 
+glp_prob *lp = NULL; ///< Global pointer to a yet to be specified glp object
+int numrows;  ///< Number of rows of a given glp object
+int numcols; ///< Number of columns of a given glp object
 
 
 /// Opens the LP by creating a glpk problem object and assigning the given file to it \n
@@ -51,8 +51,8 @@ void closeLP(void) {
 /// Computes a Matrix depending on the boundquery Argument (see bounds) \n
 /// UPPER --Calculates the Upper bounds of a given LP and returns it as a vector\n
 /// LOWER --Calculates the Lower bounds of a given LP and returns it as a vector\n
-/// EQUAL -- TODO \n
-/// UNBOUND --TODO \n
+/// EQUAL -- Calculates fixed variables of a given LP and returns it as a vector\n
+/// UNBOUND -- Calculates unbound variables of a given LP
 vector<double> getMatrix(bounds boundquery,int scaled) {
   assert(lp != NULL);
   vector<double>::iterator itera, iterb;
@@ -152,8 +152,9 @@ vector<double> getMatrix(bounds boundquery,int scaled) {
   return sparsematrix;
 }
 
-/// Detailed Description TODO
-///
+/// Creates a new vector object with the size of the number of columns of given lp then iterates over this vector and 
+/// calculates the objective coefficient at the i-th column of the lp (problem) object. If the problem is scaled 
+///the scale factor s is set to the current scaled factor and the current position of the matrix of the lp object. 
 vector<double> getObjective(int scaled) {
   assert(lp != NULL);
   vector<double> objective(numcols);
@@ -178,14 +179,13 @@ vector<double> getObjective(int scaled) {
   }
 }
 
-/// Detailed Description TODO
-///
+/// Wrapper function for the glp scaling method, which does the actual scaling of the given lp.
 void doScaling(scaling sctype) {
   assert(lp != NULL);
   glp_scale_prob(lp, sctype);
 }
 
-/// Detailed Description TODO
+/// Solves the given (lifted) lp
 ///
 void solve() {
   assert(lp != NULL);

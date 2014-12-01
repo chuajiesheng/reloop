@@ -13,26 +13,26 @@
 #include <stdlib.h>           /* C standard library                   */
 #include <glpk.h>             /* GNU GLPK linear/mixed integer solver */
 
-///TODO
+/// The format of a given file.
 ///
 enum filetype {
-  MPS = 0,  ///< TODO
-  LP = 1    ///< TODO
+  MPS = 0,  ///< Given file is in the MPS format
+  LP = 1    ///< Given file is in the LP format   
 };
-/// TODO
-///
+/// Flags, which indicate the different bounds to be calculated for given LP.
+/// For instance if UPPER is set the function getMatrix() will calculate the upper bounds for the specified LP object.
 enum bounds {
-    UPPER=GLP_UP, ///< TODO
-    LOWER=GLP_LO, ///< TODO
-    EQUAL=GLP_FX, ///< TODO
-    UNBOUND=GLP_FR///< TODO
+    UPPER=GLP_UP, ///< Upper bounds
+    LOWER=GLP_LO, ///< Lower bounds
+    EQUAL=GLP_FX, ///< Fixed bounds
+    UNBOUND=GLP_FR///< Unbounded
 }; // ax < b, ax > b, ax = b, ax < 0
 
-///TODO
+/// Flags used for distinguishing between the different scaling types to be used by the defined functions.
 ///
 enum scaling {
-    GEOMMEAN=GLP_SF_GM, ///< TODO
-    EQUILIB=GLP_SF_EQ   ///< TODO
+    GEOMMEAN=GLP_SF_GM, ///< Geometric mean scaling
+    EQUILIB=GLP_SF_EQ   ///< Equilibration scaling
 };
 
 ///@brief Opens a specified LP by calling the constructor of the GLPK solver.
@@ -59,12 +59,12 @@ std::vector<double> getMatrix(bounds boundquery, int scaled);
 ///
 std::vector<double> getObjective(int scaled);
 
-///@brief Scales the given LP
-///@param sctype A Flag, which indicates which scaling type is to be used
+///@brief Does scaling for the given LP
+///@param sctype A Flag, which indicates which scaling type is to be used by the called function.
 ///
 void doScaling(scaling sctype);
 
-///@brief Solves the given LP with an off-the-shelf LP-Solver e.g. Gnu glpk
+///@brief Solves the given LP with an off-the-shelf LP-Solver for instance using the Gnu glpk
 ///
 ///
 ///

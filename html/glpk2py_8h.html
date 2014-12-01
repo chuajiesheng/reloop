@@ -138,10 +138,10 @@ Functions</h2></td></tr>
 <tr class="memdesc:ab268a627edc86300184db7ba21a07c39"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the objective of a given LP.  <a href="#ab268a627edc86300184db7ba21a07c39">More...</a><br/></td></tr>
 <tr class="separator:ab268a627edc86300184db7ba21a07c39"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa75992ff911562c7c6ce7657bd71d9e8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glpk2py_8h.html#aa75992ff911562c7c6ce7657bd71d9e8">doScaling</a> (<a class="el" href="glpk2py_8h.html#a83e4e30239128472979d5017bf6a950d">scaling</a> sctype)</td></tr>
-<tr class="memdesc:aa75992ff911562c7c6ce7657bd71d9e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scales the given LP.  <a href="#aa75992ff911562c7c6ce7657bd71d9e8">More...</a><br/></td></tr>
+<tr class="memdesc:aa75992ff911562c7c6ce7657bd71d9e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Does scaling for the given LP.  <a href="#aa75992ff911562c7c6ce7657bd71d9e8">More...</a><br/></td></tr>
 <tr class="separator:aa75992ff911562c7c6ce7657bd71d9e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af7d39f0eac0af0ed5785935ac72a1e7d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glpk2py_8h.html#af7d39f0eac0af0ed5785935ac72a1e7d">solve</a> ()</td></tr>
-<tr class="memdesc:af7d39f0eac0af0ed5785935ac72a1e7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solves the given LP with an off-the-shelf LP-Solver e.g. Gnu glpk.  <a href="#af7d39f0eac0af0ed5785935ac72a1e7d">More...</a><br/></td></tr>
+<tr class="memdesc:af7d39f0eac0af0ed5785935ac72a1e7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solves the given LP with an off-the-shelf LP-Solver for instance using the Gnu glpk.  <a href="#af7d39f0eac0af0ed5785935ac72a1e7d">More...</a><br/></td></tr>
 <tr class="separator:af7d39f0eac0af0ed5785935ac72a1e7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
@@ -154,19 +154,19 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>TODO </p>
+<p>Flags, which indicate the different bounds to be calculated for given LP. For instance if UPPER is set the function <a class="el" href="glpk2py_8h.html#a62ebad3c6e0e84d7604c8b828517c6a6" title="Calculates properties of a given LP depending on the bounds Flag. ">getMatrix()</a> will calculate the upper bounds for the specified LP object. </p>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><em><a class="anchor" id="aa88cd70ec11880aa8a698595d0bc7aaaae704d5d328a8522a6193aa3efb28c724"></a>UPPER</em>&#160;</td><td class="fielddoc">
-<p>TODO. </p>
+<p>Upper bounds. </p>
 </td></tr>
 <tr><td class="fieldname"><em><a class="anchor" id="aa88cd70ec11880aa8a698595d0bc7aaaaa1017e9b343135a54a98b6f479354d16"></a>LOWER</em>&#160;</td><td class="fielddoc">
-<p>TODO. </p>
+<p>Lower bounds. </p>
 </td></tr>
 <tr><td class="fieldname"><em><a class="anchor" id="aa88cd70ec11880aa8a698595d0bc7aaaa59a84258a4cb9025b567ee5139455029"></a>EQUAL</em>&#160;</td><td class="fielddoc">
-<p>TODO. </p>
+<p>Fixed bounds. </p>
 </td></tr>
 <tr><td class="fieldname"><em><a class="anchor" id="aa88cd70ec11880aa8a698595d0bc7aaaa51b693a50f803002924d92a677dba9c9"></a>UNBOUND</em>&#160;</td><td class="fielddoc">
-<p>TODO. </p>
+<p>Unbounded. </p>
 </td></tr>
 </table>
 
@@ -181,13 +181,13 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>TODO </p>
+<p>The format of a given file. </p>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><em><a class="anchor" id="af547d73b85f475c4abfafdb76bf0c301a4cbbc72444d4ced39a1fd03acc1cff2f"></a>MPS</em>&#160;</td><td class="fielddoc">
-<p>TODO. </p>
+<p>Given file is in the MPS format. </p>
 </td></tr>
 <tr><td class="fieldname"><em><a class="anchor" id="af547d73b85f475c4abfafdb76bf0c301a417c69b8c9313307f484fd52ea61db84"></a>LP</em>&#160;</td><td class="fielddoc">
-<p>TODO. </p>
+<p>Given file is in the LP format. </p>
 </td></tr>
 </table>
 
@@ -202,13 +202,13 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>TODO </p>
+<p>Flags used for distinguishing between the different scaling types to be used by the defined functions. </p>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><em><a class="anchor" id="a83e4e30239128472979d5017bf6a950da90d00b13e076e3df693e62f80bfb8c01"></a>GEOMMEAN</em>&#160;</td><td class="fielddoc">
-<p>TODO. </p>
+<p>Geometric mean scaling. </p>
 </td></tr>
 <tr><td class="fieldname"><em><a class="anchor" id="a83e4e30239128472979d5017bf6a950dafbba7bd8dbd986e6a1fd2c787358bc93"></a>EQUILIB</em>&#160;</td><td class="fielddoc">
-<p>TODO. </p>
+<p>Equilibration scaling. </p>
 </td></tr>
 </table>
 
@@ -249,14 +249,14 @@ The call of glp_free_env() frees all resources used by GLPK routines </p>
       </table>
 </div><div class="memdoc">
 
-<p>Scales the given LP. </p>
+<p>Does scaling for the given LP. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">sctype</td><td>A Flag, which indicates which scaling type is to be used</td></tr>
+    <tr><td class="paramname">sctype</td><td>A Flag, which indicates which scaling type is to be used by the called function.</td></tr>
   </table>
   </dd>
 </dl>
-<p>Detailed Description TODO </p>
+<p>Does scaling for the given LP. </p>
 
 </div>
 </div>
@@ -296,9 +296,8 @@ The call of glp_free_env() frees all resources used by GLPK routines </p>
 <p>Computes a Matrix depending on the boundquery Argument (see bounds) <br/>
 UPPER &ndash;Calculates the Upper bounds of a given LP and returns it as a vector<br/>
 LOWER &ndash;Calculates the Lower bounds of a given LP and returns it as a vector<br/>
-EQUAL &ndash; TODO <br/>
-UNBOUND &ndash;TODO <br/>
- </p>
+EQUAL &ndash; Calculates fixed variables of a given LP and returns it as a vector<br/>
+UNBOUND &ndash; Calculates unbound variables of a given LP </p>
 
 </div>
 </div>
@@ -324,7 +323,7 @@ UNBOUND &ndash;TODO <br/>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The objective of a given LP as vector</dd></dl>
-<p>Detailed Description TODO </p>
+<p>Creates a new vector object with the size of the number of columns of given lp then iterates over this vector and calculates the objective coefficient at the i-th column of the lp (problem) object. If the problem is scaled the scale factor s is set to the current scaled factor and the current position of the matrix of the lp object. </p>
 
 </div>
 </div>
@@ -378,15 +377,15 @@ Furthermore extracts the number of columns and rows of the opened LP and assigns
       </table>
 </div><div class="memdoc">
 
-<p>Solves the given LP with an off-the-shelf LP-Solver e.g. Gnu glpk. </p>
-<p>Detailed Description TODO </p>
+<p>Solves the given LP with an off-the-shelf LP-Solver for instance using the Gnu glpk. </p>
+<p>Solves the given (lifted) lp </p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Nov 28 2014 12:36:52 for Relational Linear Programming by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Dec 1 2014 10:48:23 for Relational Linear Programming by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

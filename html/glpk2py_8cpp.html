@@ -69,7 +69,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -119,22 +119,25 @@ Functions</h2></td></tr>
 <tr class="memdesc:ac51f9a3ef234596b91705d0cbe279a1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the objective of a given LP.  <a href="#ac51f9a3ef234596b91705d0cbe279a1c">More...</a><br/></td></tr>
 <tr class="separator:ac51f9a3ef234596b91705d0cbe279a1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa75992ff911562c7c6ce7657bd71d9e8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glpk2py_8cpp.html#aa75992ff911562c7c6ce7657bd71d9e8">doScaling</a> (<a class="el" href="glpk2py_8h.html#a83e4e30239128472979d5017bf6a950d">scaling</a> sctype)</td></tr>
-<tr class="memdesc:aa75992ff911562c7c6ce7657bd71d9e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scales the given LP.  <a href="#aa75992ff911562c7c6ce7657bd71d9e8">More...</a><br/></td></tr>
+<tr class="memdesc:aa75992ff911562c7c6ce7657bd71d9e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wrapper function for the glp scaling method, which does the actual scaling of the given lp.  <a href="#aa75992ff911562c7c6ce7657bd71d9e8">More...</a><br/></td></tr>
 <tr class="separator:aa75992ff911562c7c6ce7657bd71d9e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af7d39f0eac0af0ed5785935ac72a1e7d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glpk2py_8cpp.html#af7d39f0eac0af0ed5785935ac72a1e7d">solve</a> ()</td></tr>
-<tr class="memdesc:af7d39f0eac0af0ed5785935ac72a1e7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solves the given LP with an off-the-shelf LP-Solver e.g. Gnu glpk.  <a href="#af7d39f0eac0af0ed5785935ac72a1e7d">More...</a><br/></td></tr>
+<tr class="memdesc:af7d39f0eac0af0ed5785935ac72a1e7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solves the given LP with an off-the-shelf LP-Solver for instance using the Gnu glpk.  <a href="#af7d39f0eac0af0ed5785935ac72a1e7d">More...</a><br/></td></tr>
 <tr class="separator:af7d39f0eac0af0ed5785935ac72a1e7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:a40cbe938281fa3b02bcdc00a51ccad72"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a40cbe938281fa3b02bcdc00a51ccad72"></a>
-glp_prob *&#160;</td><td class="memItemRight" valign="bottom"><b>lp</b> = NULL</td></tr>
+glp_prob *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glpk2py_8cpp.html#a40cbe938281fa3b02bcdc00a51ccad72">lp</a> = NULL</td></tr>
+<tr class="memdesc:a40cbe938281fa3b02bcdc00a51ccad72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Global pointer to a yet to be specified glp object. <br/></td></tr>
 <tr class="separator:a40cbe938281fa3b02bcdc00a51ccad72"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad91e60eb2d691c6f4143701f8f03d614"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad91e60eb2d691c6f4143701f8f03d614"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>numrows</b></td></tr>
-<tr class="separator:ad91e60eb2d691c6f4143701f8f03d614"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29c98fb6fb031b475a58a7227f8fd485"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a29c98fb6fb031b475a58a7227f8fd485"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glpk2py_8cpp.html#a29c98fb6fb031b475a58a7227f8fd485">numrow</a></td></tr>
+<tr class="memdesc:a29c98fb6fb031b475a58a7227f8fd485"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of rows of a given glp object. <br/></td></tr>
+<tr class="separator:a29c98fb6fb031b475a58a7227f8fd485"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa865e8618585eb8d76281d00e41b4d6d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa865e8618585eb8d76281d00e41b4d6d"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>numcols</b></td></tr>
+int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="glpk2py_8cpp.html#aa865e8618585eb8d76281d00e41b4d6d">numcols</a></td></tr>
+<tr class="memdesc:aa865e8618585eb8d76281d00e41b4d6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of columns of a given glp object. <br/></td></tr>
 <tr class="separator:aa865e8618585eb8d76281d00e41b4d6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
@@ -172,8 +175,8 @@ The call of glp_free_env() frees all resources used by GLPK routines </p>
       </table>
 </div><div class="memdoc">
 
-<p>Scales the given LP. </p>
-<p>Detailed Description TODO </p>
+<p>Wrapper function for the glp scaling method, which does the actual scaling of the given lp. </p>
+<p>Does scaling for the given LP. </p>
 
 </div>
 </div>
@@ -226,7 +229,7 @@ UNBOUND &ndash;TODO <br/>
 </div><div class="memdoc">
 
 <p>Calculates the objective of a given LP. </p>
-<p>Detailed Description TODO </p>
+<p>Creates a new vector object with the size of the number of columns of given lp then iterates over this vector and calculates the objective coefficient at the i-th column of the lp (problem) object. If the problem is scaled the scale factor s is set to the current scaled factor and the current position of the matrix of the lp object. </p>
 
 </div>
 </div>
@@ -273,7 +276,7 @@ Furthermore extracts the number of columns and rows of the opened LP and assigns
       </table>
 </div><div class="memdoc">
 
-<p>Solves the given LP with an off-the-shelf LP-Solver e.g. Gnu glpk. </p>
+<p>Solves the given LP with an off-the-shelf LP-Solver for instance using the Gnu glpk. </p>
 <p>Detailed Description TODO </p>
 
 </div>
@@ -281,7 +284,7 @@ Furthermore extracts the number of columns and rows of the opened LP and assigns
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Nov 28 2014 12:36:52 for Relational Linear Programming by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Dec 1 2014 10:16:53 for Relational Linear Programming by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
