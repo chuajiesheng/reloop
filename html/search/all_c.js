@@ -1,11 +1,6 @@
 var searchData=
 [
-  ['saucywrapper',['Saucywrapper',['../index.html',1,'']]],
-  ['saucy',['saucy',['../structsaucy.html',1,'']]],
-  ['saucy_5fgraph',['saucy_graph',['../structsaucy__graph.html',1,'']]],
-  ['saucy_5fstats',['saucy_stats',['../structsaucy__stats.html',1,'']]],
-  ['scaling',['scaling',['../glpk2py_8h.html#a83e4e30239128472979d5017bf6a950d',1,'glpk2py.h']]],
-  ['solve',['solve',['../glpk2py_8h.html#af7d39f0eac0af0ed5785935ac72a1e7d',1,'solve():&#160;glpk2py.cpp'],['../namespacesymLPExperiments.html#a9149118eedae9835161d4188f43de77a',1,'symLPExperiments.solve()']]],
-  ['sorter',['sorter',['../classsorter.html',1,'']]],
-  ['symlpexperiments',['symLPExperiments',['../namespacesymLPExperiments.html',1,'']]]
+  ['report',['report',['../namespaceliftedLP__glpk.html#a9e18e21d4de3c75150d99ee9b8876c11',1,'liftedLP_glpk']]],
+  ['rowunique',['rowUnique',['../namespaceliftedLP__glpk.html#a5a80db66e57f2e9d7bcc55774a1b7623',1,'liftedLP_glpk']]],
+  ['runbatch',['runbatch',['../namespacesymLPExperiments.html#a0b36c729a222467b8abb13726eeee5f5',1,'symLPExperiments']]]
 ];

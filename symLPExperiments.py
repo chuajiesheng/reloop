@@ -1,5 +1,5 @@
 ## @package symLPExperiments
-#Documentation for this module.
+#Module, which acts as a framework for the actual lifting.
 #This module retrieves LPs from specified files and provides the necessary interface to solve given LPs.
 #Calculation and Computation is done in the C/C++ core, where most of the work is done. 
 

@@ -1,4 +1,9 @@
 #!/usr/bin/python
+## @package liftedLP_glpk
+#TODO
+#
+#
+
 '''
 Created on Dec 28, 2010
 
@@ -28,10 +33,23 @@ import wrapper
 
 # import LiftedLPWrapper
 
+## TODO
+#
+#
+#@param A 
+#@param b
+#@param c
 def save(A,b,c):
     np.savetxt('A.csv', A, delimiter=',')
     np.savetxt('b.csv', b, delimiter=',')
     np.savetxt('c.csv', c, delimiter=',')
+
+## TODO
+#
+#
+#@param N 
+#@param b
+#@param c
 def plotLP(N,b,c):
     from mpl_toolkits.axes_grid1 import make_axes_locatable
     rcParams['backend'] = "ps"
@@ -67,16 +85,27 @@ def plotLP(N,b,c):
     plt.draw()
     plt.show()
 
+## TODO
+#
+#@param a
 def rowUnique(a):
     b = np.ascontiguousarray(a).view(np.dtype((np.void, a.dtype.itemsize * a.shape[1])))
     _, idx = np.unique(b, return_inverse=True)
     return idx
+
+## TODO
+#
+#@param c
 def col2matrix(c):
     brows = np.array(range(len(c)))
     bdata = np.ones(len(c),dtype=np.int)
     Bcc = sp.csr_matrix((bdata,np.vstack((brows,c))),dtype=np.int).tocsr()
     return Bcc
 
+## TODO
+#
+#@param A 
+#@param b
 def sumRefinement(A, b):
     print "SumRef starting"
     czero = b
@@ -90,7 +119,15 @@ def sumRefinement(A, b):
     return czero
 
 
-
+## TODO
+#
+#
+#@param Ar
+#@param br
+#@param cr
+#@param sparse
+#@param orbits
+#@param sumRefine
 def lift(Ar, br, cr, sparse=True, orbits=False, sumRefine=False):
     if sparse:
         AC = Ar.tocoo()
@@ -173,7 +210,18 @@ def lift(Ar, br, cr, sparse=True, orbits=False, sumRefine=False):
 
 
 
-                               
+## TODO
+#
+#
+#@param A
+#@param b
+#@param c
+#@param debug
+#@param optiter
+#@param plot
+#@param save  
+#@param orbits
+#@param sumRefine                             
 def sp_liftedLPCVXOPT(A,b,c,debug=False,optiter=200,plot=False,save=False, orbits=False, sumRefine=False):
     #print "================Original================"
     print A.shape
@@ -210,7 +258,13 @@ def sp_liftedLPCVXOPT(A,b,c,debug=False,optiter=200,plot=False,save=False, orbit
     else:
         print "tlift: ", timelift, "timecomp: ", compresstime 
         return [xopt, timelift, compresstime, Bcc.shape[0], Bcc.shape[1], A.shape[0], LA.shape[0]]
-    
+## TODO
+#
+#
+#@param xopt
+#@param xground
+#@param timelift
+#@param timeground    
 def report(xopt, xground, timelift, timeground):
     print "================================="
     print "difference with ground solution: "
@@ -230,7 +284,18 @@ def report(xopt, xground, timelift, timeground):
     print "================================="
 
 
-                   
+## TODO
+#
+#
+#@param A
+#@param b
+#@param c
+#@param debug    
+#@param optiter
+#@param plot
+#@param save  
+#@param orbits
+#@param sumRefine                
 def liftedLPCVXOPT(A,b,c,debug=False,optiter=200,plot=False,save=False, orbits=False, sumRefine=False):
     # liftedLPCVXOPT: takes as input an LP in the form
     #     max   c'x

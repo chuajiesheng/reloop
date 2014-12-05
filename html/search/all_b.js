@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['runbatch',['runbatch',['../namespacesymLPExperiments.html#a0b36c729a222467b8abb13726eeee5f5',1,'symLPExperiments']]]
+  ['plotlp',['plotLP',['../namespaceliftedLP__glpk.html#adeb318ae57c5cca3832fe8e6f8d22768',1,'liftedLP_glpk']]]
 ];

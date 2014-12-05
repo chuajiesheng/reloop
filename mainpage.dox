@@ -2,11 +2,120 @@
  *
  * \section intro_sec Introduction
  *
- * Welcome to the documentation of saucywrapper.
- *
+ * Welcome to the documentation of saucywrapper. Below this short introduction you will find a tutorial on installing the necessary packages to run the program.
+ * Saucywrapper is a tool, which utilizes the symmetry discoverer <a href="http://stackoverflow.com">Saucy</a>, which is written in plain C.
  * \section install_sec Installation
- *  To install saucywrapper ...
+ * The framework for the script is written in Python, but utilizes cython to call C++ functions for its computationally intensive operations.
+ * 
  * \subsection step1 Step 1: Installing Cython
- *
- * TODO
+ * First of all, to compile saucywrapper, you will need to install cython, which creates a shared library from specified C++ and .pyx files available for use in the python runtime environment.
+ * The documentation on cython and on how to install it can be found <a href="http://docs.cython.org/src/quickstart/install.html">here</a>. For more information about Cython and how to write Python/C 
+ * hybrid code within the .pyx file domain please visit the <a href="cython.http://docs.cython.org/index.html">here</a> of Cython.
+ * \subsection step2 Step 2: Installing SciPy
+ * Scipy is a package, which lets us represent arrays and matrices in python in a more efficient way. New data structures like coordinate and sparse matrices are made available to allow more scalability in   
+ * the python code itself. If you are using Ubuntu,Debian or similiar distributions of said OS and have the necessary permissions you can simply execute 
+ * \code
+ *  sudo apt-get install python-numpy python-scipy python-matplotlib ipython ipython-notebook python-pandas python-sympy python-nose+
+ * \endcode
+ * Otherwise please see the more detailed description of the installation process <a href="http://scipy.org/install.html">here</a>
+ * \subsection step3 Step 3 : Installing GLPK-Sol
+ * The GNU Linear Programming Kit (GLPK) is used to [lift?] calculate the bounds and the objective of a given problem and then solve it by calling a standard linear solver for that matter.
+ * A detailed description on how to set-up GLPK for your OS can be found <a href="http://en.wikibooks.org/wiki/GLPK/Compiling_GLPK">here</a>
+ * \subsection step4 Step 4 : Installing zLib
+ * To install the zLib programming kit simply run 
+ * \code
+ *   $sudo apt-get install zlib1g-dev
+ * \endcode
+ * 
+ * \subsection step5 Step 5 : Compiling the Code
+ * At this point you should be able to compile an executable version of the code. This can be done by cloning into the repository and changing into the cloned directory : 
+ * \code 
+ * $[clone saucywrapper link]
+ * $cd saucywrapper
+ * \endcode
+ * Once you have navigated to the folder where the code is (usually directly in the cloned directory) you can run :
+ * \code
+ * $python wrapper-setup.py install
+ * \endcode
+ * The shared library is now being compiled and should do so without any problems. If you get an error saying the your permissions were denied try to run either : 
+ * \code
+ * $python wrapper-setup.py install --user
+ * \endcode
+ * or 
+ * \code
+ * $sudo python wrapper-setup.py install
+ * \endcode
+ * if you have the necessary permissions to execute the sudo command.
+ * \subsection step6 Step 6 : Running the script
+ * To test if the compilation and installation of all packages was successful you can run 
+ * \code 
+ * $ python symLPExperiments.py
+ * \endcode
+ * to execute the script with a given set of sample data, which is located in the /data folder. 
+ * If you have seperate data to test feel free to edit the path to the LPs at the bottom of symLPExperiments.py.
+ * The resulting code of one file should be looking somewhat like this
+ * \code
+ * aircraft.gz.mts.lp
+ *Reading problem data from `aircraft.gz.mts.lp'...
+ *3754 rows, 7517 columns, 20267 non-zeros
+ *8015 lines were read
+ *{...}
+ *     pcost       dcost       gap    pres   dres   k/t
+ * 0:  8.9190e+02  8.9190e+02  4e+06  4e-01  4e+00  1e+00
+ * 1:  9.3491e+02  9.3833e+02  2e+05  1e-02  1e-01  3e+00
+ * 2:  8.6932e+02  8.7007e+02  3e+04  3e-03  3e-02  8e-01
+ * 3:  8.7424e+02  8.7499e+02  2e+04  2e-03  2e-02  8e-01
+ * 4:  8.8281e+02  8.8315e+02  6e+03  4e-04  4e-03  3e-01
+ * 5:  8.6983e+02  8.6991e+02  8e+02  5e-05  4e-04  8e-02
+ * 6:  8.8243e+02  8.8277e+02  5e+03  1e-04  1e-03  3e-01
+ * 7:  8.6915e+02  8.6994e+02  2e+04  1e-04  1e-03  8e-01
+ * 8:  8.4090e+02  8.4212e+02  3e+04  1e-04  1e-03  1e+00
+ * 9:  7.8972e+02  7.9118e+02  3e+04  9e-05  9e-04  2e+00
+ *10:  7.5280e+02  7.5590e+02  7e+04  1e-04  1e-03  3e+00
+ *11:  7.0188e+02  7.0521e+02  7e+04  9e-05  8e-04  3e+00
+ *12:  6.6434e+02  6.6823e+02  8e+04  8e-05  8e-04  4e+00
+ *13:  5.7715e+02  5.7821e+02  9e+03  6e-06  1e-04  8e-01
+ *14:  5.7110e+02  5.7094e+02  1e+02  7e-08  2e-04  1e-02
+ *Terminated (singular KKT matrix).
+ *entring wrapper with 15025 rows, 7517 cols and 48051 entries.
+ *row colors: 41
+ *col colors: 51
+ *nodes 70593
+ *edges 96102
+ *input file = (null)
+ *vertices = 70593
+ *edges = 96102
+ *group size = 1.000000e0
+ *levels = 0
+ *nodes = 1
+ *generators = 0
+ *total support = 0
+ *average support = -nan
+ *nodes per generator = inf
+ *bad nodes = 0
+ *cpu time (s) = 0.03
+ *refinement took:  0.112955 seconds.
+ *     pcost       dcost       gap    pres   dres   k/t
+ * 0:  8.9068e+02  8.9068e+02  3e+04  5e-01  3e-01  1e+00
+ * 1:  7.5498e+02  7.5820e+02  6e+03  1e-01  8e-02  3e+00
+ * 2:  2.4557e+02  3.2486e+02  3e+04  1e-01  1e-01  8e+01
+ * 3:  7.3189e+02  7.4305e+02  2e+03  2e-02  1e-02  1e+01
+ * 4:  7.6277e+02  7.7054e+02  8e+02  6e-03  4e-03  8e+00
+ * 5:  6.2595e+02  6.3442e+02  9e+02  3e-03  2e-03  8e+00
+ * 6:  5.7297e+02  5.7376e+02  6e+01  2e-04  1e-04  8e-01
+ * 7:  5.7102e+02  5.7103e+02  6e-01  2e-06  1e-06  8e-03
+ * 8:  5.7100e+02  5.7100e+02  6e-03  2e-08  1e-08  8e-05
+ *Terminated (singular KKT matrix).
+ *lifting cols:  7517  ->  57
+ *lifting rows:  15025  ->  105
+ *=================================
+ *difference with ground solution: 
+ *abs:  17074.6788578  at xground:  17259.6208612  xlift:  184.942003353
+ *ground time:  1.397532  lifted time:  0.135736
+ *=================================
+ *aircraft.gz.mts.lp :  [1.397532, 0.13573600000000008, 0.12887099999999974, 7517, 57, 15025, 105]
+ * \endcode
+ * \section contact_sec Contact
+ * If you have any questions or problems installing the prequisites of saucywrapper please feel free to contact us.
+ *[....]
  */t
