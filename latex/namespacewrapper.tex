@@ -1,0 +1,217 @@
+\hypertarget{namespacewrapper}{\section{wrapper Namespace Reference}
+\label{namespacewrapper}\index{wrapper@{wrapper}}
+}
+
+
+This module is just the python equivalent of the cython wrapper.\-pyx file to generate a documentation for this file.  
+
+
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{namespacewrapper_aee91f25e53bf05bae4d7aa26aa04830d}{ep\-Saucy}
+\begin{DoxyCompactList}\small\item\em Computes and equiable partition of given matrix,which is passed over as a coordinate matrix. \end{DoxyCompactList}\item 
+def \hyperlink{namespacewrapper_ab13b9edec3e484ab6965d696b28172e0}{ep\-Saucy\-Bipartite}
+\begin{DoxyCompactList}\small\item\em T\-O\-D\-O \-: Description of ep\-Saucy\-Bipartite. \end{DoxyCompactList}\item 
+def \hyperlink{namespacewrapper_acef89f01c3dc732a4493a8922cf07710}{open\-L\-P\-\_\-\-Py}
+\begin{DoxyCompactList}\small\item\em Calls C++ code which opens a linear Program to solve given problem in specified file. \end{DoxyCompactList}\item 
+\hypertarget{namespacewrapper_ae2781010cf84ee622287444bb452422c}{def \hyperlink{namespacewrapper_ae2781010cf84ee622287444bb452422c}{close\-L\-P\-\_\-\-Py}}\label{namespacewrapper_ae2781010cf84ee622287444bb452422c}
+
+\begin{DoxyCompactList}\small\item\em Calls function close\-L\-P from glpk2py.\-cpp (see close\-L\-P) \end{DoxyCompactList}\item 
+def \hyperlink{namespacewrapper_af85ce18c809a907acb3f5e8dbaa9fd2f}{get\-Matrix\-\_\-\-Upper}
+\begin{DoxyCompactList}\small\item\em Computes the Upper Bounds for a given L\-P and returns it as a multi-\/dimensional array. \end{DoxyCompactList}\item 
+def \hyperlink{namespacewrapper_aab3037fb34f946a592208efe61eae6d3}{get\-Matrix\-\_\-\-Lower}
+\begin{DoxyCompactList}\small\item\em Computes the Lower Bounds for a given L\-P and returns it as a multi-\/dimensional array. \end{DoxyCompactList}\item 
+def \hyperlink{namespacewrapper_ae0bdfc2adf409de2a31aa8080b3ea92a}{get\-Matrix\-\_\-\-Equal}
+\begin{DoxyCompactList}\small\item\em Computes the Equality constraints of given L\-P and returns it as a multi-\/dimensional array. \end{DoxyCompactList}\item 
+\hypertarget{namespacewrapper_a74fef5c27b34c8176a2c4bf1a8bf787c}{def {\bfseries get\-Matrix\-\_\-\-Unbound}}\label{namespacewrapper_a74fef5c27b34c8176a2c4bf1a8bf787c}
+
+\item 
+def \hyperlink{namespacewrapper_a8a2cc634e4351219ec187fc8920a0e0b}{get\-Objective\-\_\-\-Py}
+\begin{DoxyCompactList}\small\item\em Calls the function get\-Objective from glpk2py.\-cpp and returns the objectives as one-\/dimensional array (see get\-Objective.\-cpp) \end{DoxyCompactList}\item 
+\hypertarget{namespacewrapper_a5d6cc1569656eeacf197bacbd2bfc1c6}{def {\bfseries do\-Scaling\-\_\-\-Py}}\label{namespacewrapper_a5d6cc1569656eeacf197bacbd2bfc1c6}
+
+\item 
+\hypertarget{namespacewrapper_a6664efcb2ed0386c07d4dd97d9bcf6bc}{def {\bfseries solve\-\_\-\-Py}}\label{namespacewrapper_a6664efcb2ed0386c07d4dd97d9bcf6bc}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This module is just the python equivalent of the cython wrapper.\-pyx file to generate a documentation for this file. Do not use this file as it will not work ! 
+
+\subsection{Function Documentation}
+\hypertarget{namespacewrapper_aee91f25e53bf05bae4d7aa26aa04830d}{\index{wrapper@{wrapper}!ep\-Saucy@{ep\-Saucy}}
+\index{ep\-Saucy@{ep\-Saucy}!wrapper@{wrapper}}
+\subsubsection[{ep\-Saucy}]{\setlength{\rightskip}{0pt plus 5cm}def wrapper.\-ep\-Saucy (
+\begin{DoxyParamCaption}
+\item[{}]{np, }
+\item[{}]{ndarray, }
+\item[{}]{np, }
+\item[{}]{double\-\_\-t, }
+\item[{}]{ndim = {\ttfamily 1\mbox{]}A}, }
+\item[{}]{np, }
+\item[{}]{ndarray, }
+\item[{}]{itype\-\_\-t, }
+\item[{}]{ndim = {\ttfamily 1\mbox{]}B}, }
+\item[{}]{np, }
+\item[{}]{ndarray, }
+\item[{}]{itype\-\_\-t, }
+\item[{}]{ndim = {\ttfamily 1\mbox{]}C}, }
+\item[{}]{np, }
+\item[{}]{ndarray, }
+\item[{}]{itype\-\_\-t, }
+\item[{}]{ndim = {\ttfamily 1\mbox{]}Z}, }
+\item[{}]{c\-Iters = {\ttfamily 0}, }
+\item[{}]{coarsest = {\ttfamily True}}
+\end{DoxyParamCaption}
+)}}\label{namespacewrapper_aee91f25e53bf05bae4d7aa26aa04830d}
+
+
+Computes and equiable partition of given matrix,which is passed over as a coordinate matrix. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em A} & -- the data vector of a scipy coordinate matrix \\
+\hline
+{\em B} & -- the row vector of a scipy coordinate matrix \\
+\hline
+{\em C} & -- the column vector of a scipy coordinate matrix \\
+\hline
+{\em Z} & -- numpy inverted dense matrix \\
+\hline
+{\em c\-Iters} & -- T\-O\-D\-O \\
+\hline
+{\em coarsest} & -- T\-O\-D\-O \\
+\hline
+\end{DoxyParams}
+\hypertarget{namespacewrapper_ab13b9edec3e484ab6965d696b28172e0}{\index{wrapper@{wrapper}!ep\-Saucy\-Bipartite@{ep\-Saucy\-Bipartite}}
+\index{ep\-Saucy\-Bipartite@{ep\-Saucy\-Bipartite}!wrapper@{wrapper}}
+\subsubsection[{ep\-Saucy\-Bipartite}]{\setlength{\rightskip}{0pt plus 5cm}def wrapper.\-ep\-Saucy\-Bipartite (
+\begin{DoxyParamCaption}
+\item[{}]{np, }
+\item[{}]{ndarray, }
+\item[{}]{itype\-\_\-t, }
+\item[{}]{ndim = {\ttfamily 1\mbox{]}~A}, }
+\item[{}]{np, }
+\item[{}]{ndarray, }
+\item[{}]{itype\-\_\-t, }
+\item[{}]{ndim = {\ttfamily 1\mbox{]}~rows}, }
+\item[{}]{np, }
+\item[{}]{ndarray, }
+\item[{}]{itype\-\_\-t, }
+\item[{}]{ndim = {\ttfamily 1\mbox{]}~cols}, }
+\item[{}]{np, }
+\item[{}]{ndarray, }
+\item[{}]{itype\-\_\-t, }
+\item[{}]{ndim = {\ttfamily 1\mbox{]}~rowcolor}, }
+\item[{}]{np, }
+\item[{}]{ndarray, }
+\item[{}]{itype\-\_\-t, }
+\item[{}]{ndim = {\ttfamily 1\mbox{]}~colcolor}, }
+\item[{}]{c\-Iters = {\ttfamily 0}, }
+\item[{}]{coarsest = {\ttfamily True}}
+\end{DoxyParamCaption}
+)}}\label{namespacewrapper_ab13b9edec3e484ab6965d696b28172e0}
+
+
+T\-O\-D\-O \-: Description of ep\-Saucy\-Bipartite. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em A} & The data vector of a scipy coordinate matrix \\
+\hline
+{\em rows} & The row vector of a scipy coordinate matrix \\
+\hline
+{\em cols} & The column vector of a scipy coordinate matrix \\
+\hline
+{\em rowcolor} & T\-O\-D\-O \\
+\hline
+{\em c\-Iters} & T\-O\-D\-O \\
+\hline
+{\em coarsest} & T\-O\-D\-O \\
+\hline
+\end{DoxyParams}
+\hypertarget{namespacewrapper_ae0bdfc2adf409de2a31aa8080b3ea92a}{\index{wrapper@{wrapper}!get\-Matrix\-\_\-\-Equal@{get\-Matrix\-\_\-\-Equal}}
+\index{get\-Matrix\-\_\-\-Equal@{get\-Matrix\-\_\-\-Equal}!wrapper@{wrapper}}
+\subsubsection[{get\-Matrix\-\_\-\-Equal}]{\setlength{\rightskip}{0pt plus 5cm}def wrapper.\-get\-Matrix\-\_\-\-Equal (
+\begin{DoxyParamCaption}
+\item[{}]{scaled}
+\end{DoxyParamCaption}
+)}}\label{namespacewrapper_ae0bdfc2adf409de2a31aa8080b3ea92a}
+
+
+Computes the Equality constraints of given L\-P and returns it as a multi-\/dimensional array. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em scaled} & Flag, which indicates a scaled matrix \\
+\hline
+\end{DoxyParams}
+\hypertarget{namespacewrapper_aab3037fb34f946a592208efe61eae6d3}{\index{wrapper@{wrapper}!get\-Matrix\-\_\-\-Lower@{get\-Matrix\-\_\-\-Lower}}
+\index{get\-Matrix\-\_\-\-Lower@{get\-Matrix\-\_\-\-Lower}!wrapper@{wrapper}}
+\subsubsection[{get\-Matrix\-\_\-\-Lower}]{\setlength{\rightskip}{0pt plus 5cm}def wrapper.\-get\-Matrix\-\_\-\-Lower (
+\begin{DoxyParamCaption}
+\item[{}]{scaled}
+\end{DoxyParamCaption}
+)}}\label{namespacewrapper_aab3037fb34f946a592208efe61eae6d3}
+
+
+Computes the Lower Bounds for a given L\-P and returns it as a multi-\/dimensional array. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em scaled} & Flag, which indicates a scaled matrix \\
+\hline
+\end{DoxyParams}
+\hypertarget{namespacewrapper_af85ce18c809a907acb3f5e8dbaa9fd2f}{\index{wrapper@{wrapper}!get\-Matrix\-\_\-\-Upper@{get\-Matrix\-\_\-\-Upper}}
+\index{get\-Matrix\-\_\-\-Upper@{get\-Matrix\-\_\-\-Upper}!wrapper@{wrapper}}
+\subsubsection[{get\-Matrix\-\_\-\-Upper}]{\setlength{\rightskip}{0pt plus 5cm}def wrapper.\-get\-Matrix\-\_\-\-Upper (
+\begin{DoxyParamCaption}
+\item[{}]{scaled}
+\end{DoxyParamCaption}
+)}}\label{namespacewrapper_af85ce18c809a907acb3f5e8dbaa9fd2f}
+
+
+Computes the Upper Bounds for a given L\-P and returns it as a multi-\/dimensional array. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em scaled} & Flag, which indicates a scaled matrix \\
+\hline
+\end{DoxyParams}
+\hypertarget{namespacewrapper_a8a2cc634e4351219ec187fc8920a0e0b}{\index{wrapper@{wrapper}!get\-Objective\-\_\-\-Py@{get\-Objective\-\_\-\-Py}}
+\index{get\-Objective\-\_\-\-Py@{get\-Objective\-\_\-\-Py}!wrapper@{wrapper}}
+\subsubsection[{get\-Objective\-\_\-\-Py}]{\setlength{\rightskip}{0pt plus 5cm}def wrapper.\-get\-Objective\-\_\-\-Py (
+\begin{DoxyParamCaption}
+\item[{}]{scaled}
+\end{DoxyParamCaption}
+)}}\label{namespacewrapper_a8a2cc634e4351219ec187fc8920a0e0b}
+
+
+Calls the function get\-Objective from glpk2py.\-cpp and returns the objectives as one-\/dimensional array (see get\-Objective.\-cpp) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em scaled} & Flag, which indicates a scaled matrix \\
+\hline
+\end{DoxyParams}
+\hypertarget{namespacewrapper_acef89f01c3dc732a4493a8922cf07710}{\index{wrapper@{wrapper}!open\-L\-P\-\_\-\-Py@{open\-L\-P\-\_\-\-Py}}
+\index{open\-L\-P\-\_\-\-Py@{open\-L\-P\-\_\-\-Py}!wrapper@{wrapper}}
+\subsubsection[{open\-L\-P\-\_\-\-Py}]{\setlength{\rightskip}{0pt plus 5cm}def wrapper.\-open\-L\-P\-\_\-\-Py (
+\begin{DoxyParamCaption}
+\item[{}]{fname, }
+\item[{}]{format\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{namespacewrapper_acef89f01c3dc732a4493a8922cf07710}
+
+
+Calls C++ code which opens a linear Program to solve given problem in specified file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fname} & -- The path of a specified file, which is subject to solving \\
+\hline
+{\em format} & -- A specified format as how to solve the given L\-P ? \\
+\hline
+\end{DoxyParams}

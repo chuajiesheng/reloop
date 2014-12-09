@@ -8,3 +8,17 @@ python wrapper-setup.py install
 
 python liftedLP_glpk.py
 #to run the Test Application
+
+python symLPExperiments.py
+#to run lifting
+
+#Requirements
+#############
+#To compile and run this script you'll need to install the following libaries on your local machine.
+#SciPy from http://scipy.org/install.html
+#glpk from http://en.wikibooks.org/wiki/GLPK/Linux_OS#Obtain
+
+#The zlib1g-dev debian package
+
+#cvxopt from http://cvxopt.org/install/index.html
+##############

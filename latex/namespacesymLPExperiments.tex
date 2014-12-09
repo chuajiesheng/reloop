@@ -1,0 +1,276 @@
+\hypertarget{namespacesymLPExperiments}{\section{sym\-L\-P\-Experiments Namespace Reference}
+\label{namespacesymLPExperiments}\index{sym\-L\-P\-Experiments@{sym\-L\-P\-Experiments}}
+}
+
+
+Modul, which acts as a framework for the actual lifting.  
+
+
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{namespacesymLPExperiments_a00f49f67a2a2d9e675d6f392a28c6d21}{extract\-\_\-matrix}
+\begin{DoxyCompactList}\small\item\em Extracts a coordinate matrix from a given n-\/dimensional array Creates a coordinate matrix for the given lpmatrix, by extracting necessary values from the given lpmatrix. \end{DoxyCompactList}\item 
+def \hyperlink{namespacesymLPExperiments_a13db8437b54c2d6e412fdca6beebcd73}{load\-Nsolve}
+\begin{DoxyCompactList}\small\item\em Loads and solves a given L\-P by lifting the data and then solving it-\/. \end{DoxyCompactList}\item 
+def \hyperlink{namespacesymLPExperiments_aac02ec1af252db0b5351036a4725aa22}{load\-Nsolve\-C\-V\-X}
+\begin{DoxyCompactList}\small\item\em Solves a given L\-P file by using cvxopt as a method to generate the matrix and glpk to solve it. \end{DoxyCompactList}\item 
+def \hyperlink{namespacesymLPExperiments_afa34014b1f1672e7afeb43b92ef3a772}{open\-L\-P}
+\begin{DoxyCompactList}\small\item\em Calls C++ code which opens a linear Program to solve given problem in specified file. \end{DoxyCompactList}\item 
+def \hyperlink{namespacesymLPExperiments_a93c8ed89eba71dcb13d4b0096f20367f}{get\-Matrix\-\_\-\-Upper}
+\begin{DoxyCompactList}\small\item\em Computes the Upper Bounds for a given L\-P and returns it as a multi-\/dimensional array. \end{DoxyCompactList}\item 
+def \hyperlink{namespacesymLPExperiments_a92bdbf0ba2cc9cde5c83ecc88f48bdc9}{get\-Matrix\-\_\-\-Lower}
+\begin{DoxyCompactList}\small\item\em Computes the Lower Bounds for a given L\-P and returns it as a multi-\/dimensional array. \end{DoxyCompactList}\item 
+def \hyperlink{namespacesymLPExperiments_aeff528f7778911571744f131ba25fa5b}{get\-Matrix\-\_\-\-Equal}
+\begin{DoxyCompactList}\small\item\em Computes the Equality constraints of given L\-P and returns it as a multi-\/dimensional array. \end{DoxyCompactList}\item 
+def \hyperlink{namespacesymLPExperiments_a4be7dae61f3f79886fa2d2f015fef1b5}{get\-Matrix\-\_\-\-Unbound}
+\begin{DoxyCompactList}\small\item\em Computes Unbound variables of given L\-P. \end{DoxyCompactList}\item 
+def \hyperlink{namespacesymLPExperiments_a8d2d07c1a8b150727dec946b71f19854}{get\-Objective}
+\begin{DoxyCompactList}\small\item\em Calls the function get\-Objective from glpk2py.\-cpp and returns the objectives as one-\/dimensional array (see get\-Objective.\-cpp) \end{DoxyCompactList}\item 
+def \hyperlink{namespacesymLPExperiments_a9149118eedae9835161d4188f43de77a}{solve}
+\begin{DoxyCompactList}\small\item\em Solves the given L\-P with an off-\/the-\/shelf L\-P-\/\-Solver for instance using the Gnu glpk. \end{DoxyCompactList}\item 
+\hypertarget{namespacesymLPExperiments_ad16c25f2fef221aa9e16be530727cf07}{def {\bfseries do\-Scaling}}\label{namespacesymLPExperiments_ad16c25f2fef221aa9e16be530727cf07}
+
+\item 
+def \hyperlink{namespacesymLPExperiments_af0c1f995f0246facbabd21b2bd88b7de}{close\-L\-P}
+\begin{DoxyCompactList}\small\item\em Closes the given L\-P by deallocating memory. \end{DoxyCompactList}\item 
+def \hyperlink{namespacesymLPExperiments_a0b36c729a222467b8abb13726eeee5f5}{runbatch}
+\begin{DoxyCompactList}\small\item\em Iterates over every file specified in the main method. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{namespacesymLPExperiments_a9a922fb530cc4e5f4b3815131fa3c371}{int {\bfseries U\-P\-P\-E\-R} = 3}\label{namespacesymLPExperiments_a9a922fb530cc4e5f4b3815131fa3c371}
+
+\item 
+\hypertarget{namespacesymLPExperiments_a59472bb37d81ca8001d5cc3353cf4eaa}{int {\bfseries L\-O\-W\-E\-R} = 2}\label{namespacesymLPExperiments_a59472bb37d81ca8001d5cc3353cf4eaa}
+
+\item 
+\hypertarget{namespacesymLPExperiments_a46b8d304e13a7c4130a3188af48eb75f}{int {\bfseries E\-Q\-U\-A\-L} = 5}\label{namespacesymLPExperiments_a46b8d304e13a7c4130a3188af48eb75f}
+
+\item 
+\hypertarget{namespacesymLPExperiments_a28e15d061ce80b2268c38cf230c47234}{int {\bfseries U\-N\-B\-O\-U\-N\-D} = 1}\label{namespacesymLPExperiments_a28e15d061ce80b2268c38cf230c47234}
+
+\item 
+\hypertarget{namespacesymLPExperiments_af086c1b10d5e4ab2988e689c83bf3f2b}{int {\bfseries G\-E\-O\-M\-M\-E\-A\-N} = 6}\label{namespacesymLPExperiments_af086c1b10d5e4ab2988e689c83bf3f2b}
+
+\item 
+\hypertarget{namespacesymLPExperiments_a973f0d69838ed63d09a2d13b5eb5f93a}{int {\bfseries E\-Q\-U\-I\-L\-I\-B} = 7}\label{namespacesymLPExperiments_a973f0d69838ed63d09a2d13b5eb5f93a}
+
+\item 
+\hypertarget{namespacesymLPExperiments_a6680909d6fdcc093706c541e3e3295ec}{int {\bfseries L\-P} = 1}\label{namespacesymLPExperiments_a6680909d6fdcc093706c541e3e3295ec}
+
+\item 
+\hypertarget{namespacesymLPExperiments_ae4e28dbe2606236884d4f5968b2784b6}{int {\bfseries M\-T\-S} = 0}\label{namespacesymLPExperiments_ae4e28dbe2606236884d4f5968b2784b6}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Modul, which acts as a framework for the actual lifting. This module retrieves L\-Ps from specified files and provides the necessary interface to solve given L\-Ps. Calculation and Computation is done in the C/\-C++ core, where most of the work is done. 
+
+\subsection{Function Documentation}
+\hypertarget{namespacesymLPExperiments_af0c1f995f0246facbabd21b2bd88b7de}{\index{sym\-L\-P\-Experiments@{sym\-L\-P\-Experiments}!close\-L\-P@{close\-L\-P}}
+\index{close\-L\-P@{close\-L\-P}!symLPExperiments@{sym\-L\-P\-Experiments}}
+\subsubsection[{close\-L\-P}]{\setlength{\rightskip}{0pt plus 5cm}def sym\-L\-P\-Experiments.\-close\-L\-P (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{namespacesymLPExperiments_af0c1f995f0246facbabd21b2bd88b7de}
+
+
+Closes the given L\-P by deallocating memory. 
+
+Closes L\-P by calling the destructor of glpk, which deallocates all memory used by the corresponding problem object iff the constructor was called in open\-L\-P\par
+The call of glp\-\_\-free\-\_\-env() frees all resources used by G\-L\-P\-K routines \hypertarget{namespacesymLPExperiments_a00f49f67a2a2d9e675d6f392a28c6d21}{\index{sym\-L\-P\-Experiments@{sym\-L\-P\-Experiments}!extract\-\_\-matrix@{extract\-\_\-matrix}}
+\index{extract\-\_\-matrix@{extract\-\_\-matrix}!symLPExperiments@{sym\-L\-P\-Experiments}}
+\subsubsection[{extract\-\_\-matrix}]{\setlength{\rightskip}{0pt plus 5cm}def sym\-L\-P\-Experiments.\-extract\-\_\-matrix (
+\begin{DoxyParamCaption}
+\item[{}]{lpmatrix}
+\end{DoxyParamCaption}
+)}}\label{namespacesymLPExperiments_a00f49f67a2a2d9e675d6f392a28c6d21}
+
+
+Extracts a coordinate matrix from a given n-\/dimensional array Creates a coordinate matrix for the given lpmatrix, by extracting necessary values from the given lpmatrix. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lpmatrix} & The four dimensional array with column and row coordinates in the first two rows and data in the third row \\
+\hline
+\end{DoxyParams}
+\hypertarget{namespacesymLPExperiments_aeff528f7778911571744f131ba25fa5b}{\index{sym\-L\-P\-Experiments@{sym\-L\-P\-Experiments}!get\-Matrix\-\_\-\-Equal@{get\-Matrix\-\_\-\-Equal}}
+\index{get\-Matrix\-\_\-\-Equal@{get\-Matrix\-\_\-\-Equal}!symLPExperiments@{sym\-L\-P\-Experiments}}
+\subsubsection[{get\-Matrix\-\_\-\-Equal}]{\setlength{\rightskip}{0pt plus 5cm}def sym\-L\-P\-Experiments.\-get\-Matrix\-\_\-\-Equal (
+\begin{DoxyParamCaption}
+\item[{}]{scaled}
+\end{DoxyParamCaption}
+)}}\label{namespacesymLPExperiments_aeff528f7778911571744f131ba25fa5b}
+
+
+Computes the Equality constraints of given L\-P and returns it as a multi-\/dimensional array. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em scaled} & Flag, which indicates a scaled matrix \\
+\hline
+\end{DoxyParams}
+\hypertarget{namespacesymLPExperiments_a92bdbf0ba2cc9cde5c83ecc88f48bdc9}{\index{sym\-L\-P\-Experiments@{sym\-L\-P\-Experiments}!get\-Matrix\-\_\-\-Lower@{get\-Matrix\-\_\-\-Lower}}
+\index{get\-Matrix\-\_\-\-Lower@{get\-Matrix\-\_\-\-Lower}!symLPExperiments@{sym\-L\-P\-Experiments}}
+\subsubsection[{get\-Matrix\-\_\-\-Lower}]{\setlength{\rightskip}{0pt plus 5cm}def sym\-L\-P\-Experiments.\-get\-Matrix\-\_\-\-Lower (
+\begin{DoxyParamCaption}
+\item[{}]{scaled}
+\end{DoxyParamCaption}
+)}}\label{namespacesymLPExperiments_a92bdbf0ba2cc9cde5c83ecc88f48bdc9}
+
+
+Computes the Lower Bounds for a given L\-P and returns it as a multi-\/dimensional array. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em scaled} & Flag, which indicates a scaled matrix \\
+\hline
+\end{DoxyParams}
+\hypertarget{namespacesymLPExperiments_a4be7dae61f3f79886fa2d2f015fef1b5}{\index{sym\-L\-P\-Experiments@{sym\-L\-P\-Experiments}!get\-Matrix\-\_\-\-Unbound@{get\-Matrix\-\_\-\-Unbound}}
+\index{get\-Matrix\-\_\-\-Unbound@{get\-Matrix\-\_\-\-Unbound}!symLPExperiments@{sym\-L\-P\-Experiments}}
+\subsubsection[{get\-Matrix\-\_\-\-Unbound}]{\setlength{\rightskip}{0pt plus 5cm}def sym\-L\-P\-Experiments.\-get\-Matrix\-\_\-\-Unbound (
+\begin{DoxyParamCaption}
+\item[{}]{scaled}
+\end{DoxyParamCaption}
+)}}\label{namespacesymLPExperiments_a4be7dae61f3f79886fa2d2f015fef1b5}
+
+
+Computes Unbound variables of given L\-P. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em scaled} & Flag, which indicates a scaled matrix \\
+\hline
+\end{DoxyParams}
+\hypertarget{namespacesymLPExperiments_a93c8ed89eba71dcb13d4b0096f20367f}{\index{sym\-L\-P\-Experiments@{sym\-L\-P\-Experiments}!get\-Matrix\-\_\-\-Upper@{get\-Matrix\-\_\-\-Upper}}
+\index{get\-Matrix\-\_\-\-Upper@{get\-Matrix\-\_\-\-Upper}!symLPExperiments@{sym\-L\-P\-Experiments}}
+\subsubsection[{get\-Matrix\-\_\-\-Upper}]{\setlength{\rightskip}{0pt plus 5cm}def sym\-L\-P\-Experiments.\-get\-Matrix\-\_\-\-Upper (
+\begin{DoxyParamCaption}
+\item[{}]{scaled}
+\end{DoxyParamCaption}
+)}}\label{namespacesymLPExperiments_a93c8ed89eba71dcb13d4b0096f20367f}
+
+
+Computes the Upper Bounds for a given L\-P and returns it as a multi-\/dimensional array. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em scaled} & Flag, which indicates a scaled matrix \\
+\hline
+\end{DoxyParams}
+\hypertarget{namespacesymLPExperiments_a8d2d07c1a8b150727dec946b71f19854}{\index{sym\-L\-P\-Experiments@{sym\-L\-P\-Experiments}!get\-Objective@{get\-Objective}}
+\index{get\-Objective@{get\-Objective}!symLPExperiments@{sym\-L\-P\-Experiments}}
+\subsubsection[{get\-Objective}]{\setlength{\rightskip}{0pt plus 5cm}def sym\-L\-P\-Experiments.\-get\-Objective (
+\begin{DoxyParamCaption}
+\item[{}]{scaled}
+\end{DoxyParamCaption}
+)}}\label{namespacesymLPExperiments_a8d2d07c1a8b150727dec946b71f19854}
+
+
+Calls the function get\-Objective from glpk2py.\-cpp and returns the objectives as one-\/dimensional array (see get\-Objective.\-cpp) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em scaled} & Flag, which indicates a scaled matrix \\
+\hline
+\end{DoxyParams}
+\hypertarget{namespacesymLPExperiments_a13db8437b54c2d6e412fdca6beebcd73}{\index{sym\-L\-P\-Experiments@{sym\-L\-P\-Experiments}!load\-Nsolve@{load\-Nsolve}}
+\index{load\-Nsolve@{load\-Nsolve}!symLPExperiments@{sym\-L\-P\-Experiments}}
+\subsubsection[{load\-Nsolve}]{\setlength{\rightskip}{0pt plus 5cm}def sym\-L\-P\-Experiments.\-load\-Nsolve (
+\begin{DoxyParamCaption}
+\item[{}]{fname, }
+\item[{}]{scaled, }
+\item[{}]{ftype}
+\end{DoxyParamCaption}
+)}}\label{namespacesymLPExperiments_a13db8437b54c2d6e412fdca6beebcd73}
+
+
+Loads and solves a given L\-P by lifting the data and then solving it-\/. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fname} & The name of a given file, which contains the L\-P \\
+\hline
+{\em scaled} & An integer value, which indicates a scaling/scaled L\-P (?) \\
+\hline
+{\em ftype} & The type of the given problem (mostly L\-Ps) \\
+\hline
+\end{DoxyParams}
+\hypertarget{namespacesymLPExperiments_aac02ec1af252db0b5351036a4725aa22}{\index{sym\-L\-P\-Experiments@{sym\-L\-P\-Experiments}!load\-Nsolve\-C\-V\-X@{load\-Nsolve\-C\-V\-X}}
+\index{load\-Nsolve\-C\-V\-X@{load\-Nsolve\-C\-V\-X}!symLPExperiments@{sym\-L\-P\-Experiments}}
+\subsubsection[{load\-Nsolve\-C\-V\-X}]{\setlength{\rightskip}{0pt plus 5cm}def sym\-L\-P\-Experiments.\-load\-Nsolve\-C\-V\-X (
+\begin{DoxyParamCaption}
+\item[{}]{fname, }
+\item[{}]{scaled, }
+\item[{}]{ftype}
+\end{DoxyParamCaption}
+)}}\label{namespacesymLPExperiments_aac02ec1af252db0b5351036a4725aa22}
+
+
+Solves a given L\-P file by using cvxopt as a method to generate the matrix and glpk to solve it. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fname} & The name of a given file, which contains the L\-P \\
+\hline
+{\em scaled} & An integer value, which indicates a scaling/scaled L\-P (?) \\
+\hline
+{\em ftype} & The type of the given problem (mostly L\-Ps) \\
+\hline
+\end{DoxyParams}
+\hypertarget{namespacesymLPExperiments_afa34014b1f1672e7afeb43b92ef3a772}{\index{sym\-L\-P\-Experiments@{sym\-L\-P\-Experiments}!open\-L\-P@{open\-L\-P}}
+\index{open\-L\-P@{open\-L\-P}!symLPExperiments@{sym\-L\-P\-Experiments}}
+\subsubsection[{open\-L\-P}]{\setlength{\rightskip}{0pt plus 5cm}def sym\-L\-P\-Experiments.\-open\-L\-P (
+\begin{DoxyParamCaption}
+\item[{}]{fname, }
+\item[{}]{ftype}
+\end{DoxyParamCaption}
+)}}\label{namespacesymLPExperiments_afa34014b1f1672e7afeb43b92ef3a772}
+
+
+Calls C++ code which opens a linear Program to solve given problem in specified file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fname} & The path of a specified file, which is subject to solving \\
+\hline
+{\em format} & A specified format as how to solve the given L\-P ? \\
+\hline
+\end{DoxyParams}
+\hypertarget{namespacesymLPExperiments_a0b36c729a222467b8abb13726eeee5f5}{\index{sym\-L\-P\-Experiments@{sym\-L\-P\-Experiments}!runbatch@{runbatch}}
+\index{runbatch@{runbatch}!symLPExperiments@{sym\-L\-P\-Experiments}}
+\subsubsection[{runbatch}]{\setlength{\rightskip}{0pt plus 5cm}def sym\-L\-P\-Experiments.\-runbatch (
+\begin{DoxyParamCaption}
+\item[{}]{path, }
+\item[{}]{output, }
+\item[{}]{type}
+\end{DoxyParamCaption}
+)}}\label{namespacesymLPExperiments_a0b36c729a222467b8abb13726eeee5f5}
+
+
+Iterates over every file specified in the main method. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & The path to $\ast$.L\-P files \\
+\hline
+{\em output} & A specified file where the output is going to be saved \\
+\hline
+{\em type} & The type of given problem (Here always type = L\-P = 1) \\
+\hline
+\end{DoxyParams}
+\hypertarget{namespacesymLPExperiments_a9149118eedae9835161d4188f43de77a}{\index{sym\-L\-P\-Experiments@{sym\-L\-P\-Experiments}!solve@{solve}}
+\index{solve@{solve}!symLPExperiments@{sym\-L\-P\-Experiments}}
+\subsubsection[{solve}]{\setlength{\rightskip}{0pt plus 5cm}def sym\-L\-P\-Experiments.\-solve (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{namespacesymLPExperiments_a9149118eedae9835161d4188f43de77a}
+
+
+Solves the given L\-P with an off-\/the-\/shelf L\-P-\/\-Solver for instance using the Gnu glpk. 
+
+Solves the given (lifted) lp 

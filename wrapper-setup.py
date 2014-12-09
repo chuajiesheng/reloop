@@ -22,11 +22,12 @@ os.environ["CC"] = "g++"
 
 ext_modules = [Extension(
     name="wrapper",
-    sources=["wrapper.pyx", "fc.cpp", "saucy.c", "main.c", "saucyio.c", "util.c"],
+    sources=["wrapper.pyx", "fc.cpp", "saucy.c", "main.c", "saucyio.c", "util.c","glpk2py.cpp"],
         # extra_objects=["fc.o"],  # if you compile fc.cpp separately
-    include_dirs = [numpy.get_include()],  # .../site-packages/numpy/core/include
+    include_dirs = [numpy.get_include(),"./libs/"],  # .../site-packages/numpy/core/include
     language="c++",
-        # libraries=
+    libraries= ["glpk"],
+    library_dirs = ["./libs/"],
     extra_compile_args = "-ansi -fpermissive -Wall -O0 -ggdb -fPIC".split(),
         # extra_link_args = "...".split()
     )]

@@ -1,28 +1,7 @@
 #include "glpk2py.h"
 #include <limits>
 #include <vector>
-//#include <pyublas/numpy.hpp>
-//#include <boost/python.hpp>
-#include <numpy/arrayobject.h>
-#include "numpy/arrayscalars.h"
-#include "numpy/npy_math.h"
 #include <iostream>
-//#include "npy_config.h"
-//#include "numpy/npy_3kcompat.h"
-// #include <boost/python/class.hpp>
-// #include <boost/python/module.hpp>
-// #include <boost/python/operators.hpp>
-// #include <boost/python/def.hpp>
-// #include <boost/python/pure_virtual.hpp>
-// #include <boost/python/errors.hpp>
-// #include <boost/python/wrapper.hpp>
-// #include <boost/python/call.hpp>
-// #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
-// #include <boost/python/suite/indexing/map_indexing_suite.hpp>
-// #include <boost/python/docstring_options.hpp>
-// #include <boost/python/enum.hpp>
-// #include <boost/python/numeric.hpp>
-//#include <boost/functional/hash.hpp>
 #include <math.h>
 #include <algorithm>
 #define DEBUG 0
@@ -32,20 +11,15 @@
 #include <stdlib.h>           /* C standard library                   */
 #include <glpk.h>             /* GNU GLPK linear/mixed integer solver */
 
-//using namespace boost::python;
 using namespace std;
-/*enum filetype {
-  MPS = 0,
-  LP = 1
-};
-enum bounds {UPPER=GLP_UP, LOWER=GLP_LO, EQUAL=GLP_FX, UNBOUND=GLP_FR}; // ax < b, ax > b, ax = b, ax < 0
-enum scaling {GEOMMEAN=GLP_SF_GM, EQUILIB=GLP_SF_EQ};*/
 
-glp_prob *lp = NULL;
-int numrows, numcols; 
+glp_prob *lp = NULL; ///< Global pointer to a yet to be specified glp object
+int numrows;  ///< Number of rows of a given glp object
+int numcols; ///< Number of columns of a given glp object
 
 
-
+/// Opens the LP by creating a glpk problem object and assigning the given file to it \n
+/// Furthermore extracts the number of columns and rows of the opened LP and assigns the values to global variables
 void openLP(const std::string & fname, int format) {
   cout << fname << endl;
   lp = glp_create_prob();
@@ -62,7 +36,9 @@ void openLP(const std::string & fname, int format) {
    cout << "end" << endl;
 }
 
-
+/// Closes LP by calling the destructor of glpk, which deallocates all memory used by the corresponding problem object iff the constructor was called in openLP\n
+/// The call of glp_free_env() frees all resources used by GLPK routines
+///
 void closeLP(void) {
   if (lp) {
     glp_delete_prob(lp);
@@ -72,7 +48,12 @@ void closeLP(void) {
   }
 }
  
-vector<double> getMatrix(bounds boundquery, int scaled) {
+/// Computes a Matrix depending on the boundquery Argument (see bounds) \n
+/// UPPER --Calculates the Upper bounds of a given LP and returns it as a vector\n
+/// LOWER --Calculates the Lower bounds of a given LP and returns it as a vector\n
+/// EQUAL -- Calculates fixed variables of a given LP and returns it as a vector\n
+/// UNBOUND -- Calculates unbound variables of a given LP
+vector<double> getMatrix(bounds boundquery,int scaled) {
   assert(lp != NULL);
   vector<double>::iterator itera, iterb;
   int len = 0;
@@ -118,7 +99,6 @@ vector<double> getMatrix(bounds boundquery, int scaled) {
           *(datavec.begin()+p) = tmp;
         }
       }
-      //globalindvec.append(indvec)
       std::copy(indvec.begin() + 1, indvec.begin()+len+1, itera);
      /* for (std::vector<int>::iterator it = indvec.begin()+1; it <= indvec.begin() + len; it++) cout << *it;
       cout << endl;*/
@@ -172,6 +152,9 @@ vector<double> getMatrix(bounds boundquery, int scaled) {
   return sparsematrix;
 }
 
+/// Creates a new vector object with the size of the number of columns of given lp then iterates over this vector and 
+/// calculates the objective coefficient at the i-th column of the lp (problem) object. If the problem is scaled 
+///the scale factor s is set to the current scaled factor and the current position of the matrix of the lp object. 
 vector<double> getObjective(int scaled) {
   assert(lp != NULL);
   vector<double> objective(numcols);
@@ -196,36 +179,16 @@ vector<double> getObjective(int scaled) {
   }
 }
 
+/// Wrapper function for the glp scaling method, which does the actual scaling of the given lp.
 void doScaling(scaling sctype) {
   assert(lp != NULL);
   glp_scale_prob(lp, sctype);
 }
 
+/// Solves the given (lifted) lp
+///
 void solve() {
   assert(lp != NULL);
   glp_simplex(lp, NULL);
 }
 
-
-/*BOOST_PYTHON_MODULE(glpk2py)
-{
-  numeric::array::set_module_and_type( "numpy", "ndarray");
-  enum_<bounds>("bounds")
-        .value("UPPER", UPPER)
-        .value("LOWER", LOWER)
-        .value("EQUAL", EQUAL)
-        .value("UNBOUND", UNBOUND);
-  enum_<scaling>("scaling")
-        .value("GEOMMEAN", GEOMMEAN)
-        .value("EQUILIB", EQUILIB);
-    
-  def("getMatrix", getMatrix);
-  def("openLP", openLP);
-  def("closeLP", closeLP);
-  def("getObjective", getObjective);
-  def("doScaling", doScaling);
-  def("solve", solve);
-  //def("getB", getB);
-  //def("getScale", doAndGetScale);
-
-}*/

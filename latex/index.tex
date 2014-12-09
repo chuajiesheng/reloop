@@ -1,0 +1,102 @@
+\hypertarget{index_intro_sec}{}\section{Introduction}\label{index_intro_sec}
+Welcome to the documentation of saucywrapper. Below this short introduction you will find a tutorial on installing the necessary packages to run the program. Saucywrapper is a tool, which utilizes the symmetry discoverer \href{http://stackoverflow.com}{\tt Saucy}, which is written in plain C. \hypertarget{index_install_sec}{}\section{Installation}\label{index_install_sec}
+The framework for the script is written in Python, but utilizes cython to call C++ functions for its computationally intensive operations.\hypertarget{index_step1}{}\subsection{Step 1\-: Installing Cython}\label{index_step1}
+First of all, to compile saucywrapper, you will need to install cython, which creates a shared library from specified C++ and .pyx files available for use in the python runtime environment. The documentation on cython and on how to install it can be found \href{http://docs.cython.org/src/quickstart/install.html}{\tt here}. For more information about Cython and how to write Python/\-C hybrid code within the .pyx file domain please visit the \href{cython.http://docs.cython.org/index.html}{\tt here} of Cython. \hypertarget{index_step2}{}\subsection{Step 2\-: Installing Sci\-Py}\label{index_step2}
+Scipy is a package, which lets us represent arrays and matrices in python in a more efficient way. New data structures like coordinate and sparse matrices are made available to allow more scalability in the python code itself. If you are using Ubuntu,Debian or similiar distributions of said O\-S and have the necessary permissions you can simply execute 
+\begin{DoxyCode}
+sudo apt-\textcolor{keyword}{get} install python-numpy python-scipy python-matplotlib ipython ipython-notebook python-pandas 
+      python-sympy python-nose+
+\end{DoxyCode}
+ Otherwise please see the more detailed description of the installation process \href{http://scipy.org/install.html}{\tt here} \hypertarget{index_step3}{}\subsection{Step 3 \-: Installing G\-L\-P\-K-\/\-Sol}\label{index_step3}
+The G\-N\-U Linear Programming Kit (G\-L\-P\-K) is used to \mbox{[}lift?\mbox{]} calculate the bounds and the objective of a given problem and then solve it by calling a standard linear solver for that matter. A detailed description on how to set-\/up G\-L\-P\-K for your O\-S can be found \href{http://en.wikibooks.org/wiki/GLPK/Compiling_GLPK}{\tt here} \hypertarget{index_step4}{}\subsection{Step 4 \-: Installing z\-Lib}\label{index_step4}
+To install the z\-Lib programming kit simply run 
+\begin{DoxyCode}
+$sudo apt-\textcolor{keyword}{get} install zlib1g-dev
+\end{DoxyCode}
+\hypertarget{index_step5}{}\subsection{Step 5 \-: Compiling the Code}\label{index_step5}
+At this point you should be able to compile an executable version of the code. This can be done by cloning into the repository and changing into the cloned directory \-: 
+\begin{DoxyCode}
+$[clone saucywrapper link]
+$cd saucywrapper
+\end{DoxyCode}
+ Once you have navigated to the folder where the code is (usually directly in the cloned directory) you can run \-: 
+\begin{DoxyCode}
+$python wrapper-setup.py install
+\end{DoxyCode}
+ The shared library is now being compiled and should do so without any problems. If you get an error saying the your permissions were denied try to run either \-: 
+\begin{DoxyCode}
+$python wrapper-setup.py install --user
+\end{DoxyCode}
+ or 
+\begin{DoxyCode}
+$sudo python wrapper-setup.py install
+\end{DoxyCode}
+ if you have the necessary permissions to execute the sudo command. \hypertarget{index_step6}{}\subsection{Step 6 \-: Running the script}\label{index_step6}
+To test if the compilation and installation of all packages was successful you can run 
+\begin{DoxyCode}
+$ python symLPExperiments.py
+\end{DoxyCode}
+ to execute the script with a given set of sample data, which is located in the /data folder. If you have seperate data to test feel free to edit the path to the L\-Ps at the bottom of sym\-L\-P\-Experiments.\-py. The resulting code of one file should be looking somewhat like this 
+\begin{DoxyCode}
+ aircraft.gz.mts.lp
+Reading problem data from `aircraft.gz.mts.lp\textcolor{stringliteral}{'...}
+\textcolor{stringliteral}{3754 rows, 7517 columns, 20267 non-zeros}
+\textcolor{stringliteral}{8015 lines were read}
+\textcolor{stringliteral}{\{...\}}
+\textcolor{stringliteral}{     pcost       dcost       gap    pres   dres   k/t}
+\textcolor{stringliteral}{ 0:  8.9190e+02  8.9190e+02  4e+06  4e-01  4e+00  1e+00}
+\textcolor{stringliteral}{ 1:  9.3491e+02  9.3833e+02  2e+05  1e-02  1e-01  3e+00}
+\textcolor{stringliteral}{ 2:  8.6932e+02  8.7007e+02  3e+04  3e-03  3e-02  8e-01}
+\textcolor{stringliteral}{ 3:  8.7424e+02  8.7499e+02  2e+04  2e-03  2e-02  8e-01}
+\textcolor{stringliteral}{ 4:  8.8281e+02  8.8315e+02  6e+03  4e-04  4e-03  3e-01}
+\textcolor{stringliteral}{ 5:  8.6983e+02  8.6991e+02  8e+02  5e-05  4e-04  8e-02}
+\textcolor{stringliteral}{ 6:  8.8243e+02  8.8277e+02  5e+03  1e-04  1e-03  3e-01}
+\textcolor{stringliteral}{ 7:  8.6915e+02  8.6994e+02  2e+04  1e-04  1e-03  8e-01}
+\textcolor{stringliteral}{ 8:  8.4090e+02  8.4212e+02  3e+04  1e-04  1e-03  1e+00}
+\textcolor{stringliteral}{ 9:  7.8972e+02  7.9118e+02  3e+04  9e-05  9e-04  2e+00}
+\textcolor{stringliteral}{10:  7.5280e+02  7.5590e+02  7e+04  1e-04  1e-03  3e+00}
+\textcolor{stringliteral}{11:  7.0188e+02  7.0521e+02  7e+04  9e-05  8e-04  3e+00}
+\textcolor{stringliteral}{12:  6.6434e+02  6.6823e+02  8e+04  8e-05  8e-04  4e+00}
+\textcolor{stringliteral}{13:  5.7715e+02  5.7821e+02  9e+03  6e-06  1e-04  8e-01}
+\textcolor{stringliteral}{14:  5.7110e+02  5.7094e+02  1e+02  7e-08  2e-04  1e-02}
+\textcolor{stringliteral}{Terminated (singular KKT matrix).}
+\textcolor{stringliteral}{entring wrapper with 15025 rows, 7517 cols and 48051 entries.}
+\textcolor{stringliteral}{row colors: 41}
+\textcolor{stringliteral}{col colors: 51}
+\textcolor{stringliteral}{nodes 70593}
+\textcolor{stringliteral}{edges 96102}
+\textcolor{stringliteral}{input file = (null)}
+\textcolor{stringliteral}{vertices = 70593}
+\textcolor{stringliteral}{edges = 96102}
+\textcolor{stringliteral}{group size = 1.000000e0}
+\textcolor{stringliteral}{levels = 0}
+\textcolor{stringliteral}{nodes = 1}
+\textcolor{stringliteral}{generators = 0}
+\textcolor{stringliteral}{total support = 0}
+\textcolor{stringliteral}{average support = -nan}
+\textcolor{stringliteral}{nodes per generator = inf}
+\textcolor{stringliteral}{bad nodes = 0}
+\textcolor{stringliteral}{cpu time (s) = 0.03}
+\textcolor{stringliteral}{refinement took:  0.112955 seconds.}
+\textcolor{stringliteral}{     pcost       dcost       gap    pres   dres   k/t}
+\textcolor{stringliteral}{ 0:  8.9068e+02  8.9068e+02  3e+04  5e-01  3e-01  1e+00}
+\textcolor{stringliteral}{ 1:  7.5498e+02  7.5820e+02  6e+03  1e-01  8e-02  3e+00}
+\textcolor{stringliteral}{ 2:  2.4557e+02  3.2486e+02  3e+04  1e-01  1e-01  8e+01}
+\textcolor{stringliteral}{ 3:  7.3189e+02  7.4305e+02  2e+03  2e-02  1e-02  1e+01}
+\textcolor{stringliteral}{ 4:  7.6277e+02  7.7054e+02  8e+02  6e-03  4e-03  8e+00}
+\textcolor{stringliteral}{ 5:  6.2595e+02  6.3442e+02  9e+02  3e-03  2e-03  8e+00}
+\textcolor{stringliteral}{ 6:  5.7297e+02  5.7376e+02  6e+01  2e-04  1e-04  8e-01}
+\textcolor{stringliteral}{ 7:  5.7102e+02  5.7103e+02  6e-01  2e-06  1e-06  8e-03}
+\textcolor{stringliteral}{ 8:  5.7100e+02  5.7100e+02  6e-03  2e-08  1e-08  8e-05}
+\textcolor{stringliteral}{Terminated (singular KKT matrix).}
+\textcolor{stringliteral}{lifting cols:  7517  ->  57}
+\textcolor{stringliteral}{lifting rows:  15025  ->  105}
+\textcolor{stringliteral}{=================================}
+\textcolor{stringliteral}{difference with ground solution: }
+\textcolor{stringliteral}{abs:  17074.6788578  at xground:  17259.6208612  xlift:  184.942003353}
+\textcolor{stringliteral}{ground time:  1.397532  lifted time:  0.135736}
+\textcolor{stringliteral}{=================================}
+\textcolor{stringliteral}{aircraft.gz.mts.lp :  [1.397532, 0.13573600000000008, 0.12887099999999974, 7517, 57, 15025, 105]}
+\end{DoxyCode}
+ \hypertarget{index_contact_sec}{}\section{Contact}\label{index_contact_sec}
+If you have any questions or problems installing the prequisites of saucywrapper please feel free to contact us. \mbox{[}....\mbox{]} 
