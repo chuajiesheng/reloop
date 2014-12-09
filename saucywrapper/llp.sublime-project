@@ -1,0 +1,18 @@
+{
+	"folders":
+    [
+        {
+            "path": "/home/mmladenov/workspace/LiftedLP"
+        }
+    ],
+	 "build_systems":
+    [
+        {
+        	"name": "LiftedLP",
+            "cmd": ["export LD_LIBRARY_PATH=/home/mmladenov/workspace/LiftedLP && python -u liftedLP.py"],
+			"file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
+			"selector": "source.python",
+			"shell": true
+        }
+    ]
+}
