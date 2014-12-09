@@ -24,7 +24,8 @@ import scipy as scp
 import scipy.sparse as sp
 import scipy.linalg as lg
 import wrapper
-
+from cvxopt.modeling import variable, op, dot
+import picos as pic
 
 # import LiftedLPWrapper
 
@@ -169,50 +170,88 @@ def lift(Ar, br, cr, sparse=True, orbits=False, sumRefine=False):
 
 
 
+def sp_saveProblem(fname, A,b,c):
+    print pic.tools.available_solvers()
+    prob = pic.Problem()
+    x = prob.add_variable('x',A.size[1], vtype='continuous')
+    print A.size
+    print x.size
+    print b.size
+    prob.add_constraint(A*x < b.T)
+    prob.set_objective('min',c.T*x)
+    print prob
+    prob.write_to_file(fname,writer='gurobi')
+    prob.solve(solver='gurobi',verbose=True)
+
+
+
 
 
 
 
                                
-def sp_liftedLPCVXOPT(A,b,c,debug=False,optiter=200,plot=False,save=False, orbits=False, sumRefine=False):
+def sp_liftedLPCVXOPT(A,b,c,debug=False,optiter=200,plot=False, save=False, orbits=False, sumRefine=False, solver='cvxopt', tol=1e-7):
     #print "================Original================"
-    print A.shape
-    print b.shape
-    print c.shape
-    print  "objsum: ", np.sum(c.todense())
-    if debug:
-
+    # print  "objsum: ", np.sum(c.todense())
+    solvers.options['abstol'] = tol
+    if debug or (save != False):
         mc = -matrix(c.todense())
         # print np.max(A.tocoo().row)
         # exit()
         mA = spmatrix(A.tocoo().data,A.tocoo().row.tolist(),A.tocoo().col.tolist())
-        print mA.size
         mb = matrix(b.todense())
-        print mb.size
-        starttime = time.clock()     
-        sol = solvers.lp(mc,\
-                         mA,\
-                         mb)
-        xground = np.array(sol['x']).ravel()
-        timeground = time.clock() - starttime   
+        # sp_saveProblem("asdf.mps", mA, mb, mc)
+        
+        probground = pic.Problem()
+        x = probground.add_variable('x',mA.size[1], vtype='continuous')
+        probground.add_constraint(mA*x < mb.T)
+        probground.set_objective('min',mc.T*x)
+        # probground.write_to_file(fname,writer='gurobi')
+
+
+        # if glpk:     
+        solinfognd = probground.solve(solver=solver,verbose=True)
+        #     sol = solvers.lp(mc, mA, mb, solver="glpk")
+        # else: 
+        #     sol = solvers.lp(mc, mA, mb)
+
+        xground = x.value
+        xground = np.array(xground).ravel()
+        timeground = solinfognd['time']  
+        objground = solinfognd['obj']  
 
     LA, Lb, Lc, compresstime, Bcc = lift(A,b,c, sparse = True, orbits=orbits)
     starttime = time.clock()
-    sol = solvers.lp(-matrix(Lc),spmatrix(LA.data,LA.row.tolist(),LA.col.tolist()),matrix(Lb))
-    r = sp.csr_matrix(np.array(sol['x']).ravel())
+
+    problifted = pic.Problem()
+    lx =  problifted.add_variable('lx',LA.shape[1], vtype='continuous')
+    problifted.add_constraint(spmatrix(LA.data,LA.row.tolist(),LA.col.tolist())*lx < matrix(Lb).T)
+    problifted.set_objective('min',-matrix(Lc).T*lx)
+    solinfolifted = problifted.solve(solver=solver,verbose=True)
+    xopt = lx.value
+    # if glpk:
+    #     sol = solvers.lp(-matrix(Lc),,matrix(Lb), solver="glpk")
+    # else:
+    #     sol = solvers.lp(-matrix(Lc),spmatrix(LA.data,LA.row.tolist(),LA.col.tolist()),matrix(Lb))
+    r = sp.csr_matrix(np.array(xopt).ravel())
     xopt = np.array((Bcc * r.T).todense()).ravel()
-    timelift = time.clock() - starttime + compresstime
+    timelift = solinfolifted['time'] + compresstime  
+    objlift = solinfolifted['obj']  
+    # timelift = time.clock() - starttime + compresstime
+    # objlift = problifted.obj_value() 
     print "lifting cols: ", A.shape[1], " -> ", LA.shape[1]
     print "lifting rows: ", A.shape[0], " -> ", LA.shape[0]
     if debug: 
-        report(xopt, xground, timelift, timeground)
+        report(objlift, objground, xopt, xground, timelift, timeground)
         return [xopt, timeground, timelift, compresstime, Bcc.shape[0], Bcc.shape[1], A.shape[0], LA.shape[0]]
     else:
         print "tlift: ", timelift, "timecomp: ", compresstime 
         return [xopt, timelift, compresstime, Bcc.shape[0], Bcc.shape[1], A.shape[0], LA.shape[0]]
     
-def report(xopt, xground, timelift, timeground):
+def report(objlift, objground, xopt, xground, timelift, timeground):
     print "================================="
+    print "objective values of lifted: ", objlift, ", ground: ", objground, "\n\n"
+    if (np.abs(objlift-objground) > 0.0001): exit("ERROR: Objective values of lifted and ground do not agree!")
     print "difference with ground solution: "
     g = np.max(np.abs(xopt - xground))
     i = np.argmax(np.abs(xopt - xground))
@@ -257,6 +296,7 @@ def liftedLPCVXOPT(A,b,c,debug=False,optiter=200,plot=False,save=False, orbits=F
         sol = solvers.lp(-matrix(c),matrix(A),matrix(b))
         xground = np.array(sol["x"]).ravel()
         timeground = time.clock() - starttime
+        objground = sol['primal objective']
         # print timeground
         # return
     
@@ -273,10 +313,11 @@ def liftedLPCVXOPT(A,b,c,debug=False,optiter=200,plot=False,save=False, orbits=F
     r = np.array(sol['x']).ravel()
     xopt = np.array(np.dot(Bcc.todense(),r)).ravel()
     timelift = time.clock() - starttime + compresstime
+    objlift = sol['primal objective']
     print "lifting cols: ", A.shape[1], " -> ", LA.shape[1]
     print "lifting rows: ", A.shape[0], " -> ", LA.shape[0]
     if debug: 
-        report(xopt, xground, timelift, timeground)
+        report(objlift, objground, xopt, xground, timelift, timeground)
         return [xopt, timeground, timelift, compresstime, Bcc.shape[0], Bcc.shape[1], A.shape[0], LA.shape[0]]
     else:
         print "tlift: ", timelift, "timecomp: ", compresstime 
