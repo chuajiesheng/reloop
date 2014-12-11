@@ -2,15 +2,15 @@
 #Module, which acts as a framework for the actual lifting.
 #This module retrieves LPs from specified files and provides the necessary interface to solve given LPs.
 #Calculation and Computation is done in the C/C++ core, where most of the work is done. 
-
-from liftedLP_glpk import *
+import liftedLP
 import glob
 import pickle
 import cvxopt.modeling
-import wrapper
+import scipy.sparse as sp
 import numpy as np
 
-
+print dir(liftedLP)
+print liftedLP.__package__
 
 UPPER = 3
 LOWER = 2
@@ -121,42 +121,42 @@ def loadNsolveCVX(fname, scaled, ftype):
 #@param fname The path of a specified file, which is subject to solving
 #@param format A specified format as how to solve the given LP ?
 def openLP(fname,ftype):
-    wrapper.openLP_Py(fname,ftype)
+    glpkwrap.openLP_Py(fname,ftype)
 
 ##Computes the Upper Bounds for a given LP and returns it as a multi-dimensional array
 #@param scaled  Flag, which indicates a scaled matrix    
 def getMatrix_Upper(scaled):
-    return wrapper.getMatrix_Upper(scaled)
+    return glpkwrap.getMatrix_Upper(scaled)
 
 ##Computes the Lower Bounds for a given LP and returns it as a multi-dimensional array
 #
 #@param scaled Flag, which indicates a scaled matrix
 def getMatrix_Lower(scaled):
-    return wrapper.getMatrix_Lower(scaled)
+    return glpkwrap.getMatrix_Lower(scaled)
 
 ##Computes the Equality constraints of given LP and returns it as a multi-dimensional array
 #
 #@param scaled Flag, which indicates a scaled matrix 
 def getMatrix_Equal(scaled):
-    return wrapper.getMatrix_Equal(scaled)
+    return glpkwrap.getMatrix_Equal(scaled)
 
 ##Computes Unbound variables of given LP
 #
 #@param scaled Flag, which indicates a scaled matrix 
 def getMatrix_Unbound(scaled):
-    return wrapper.getMatrix_Unbound(scaled)
+    return glpkwrap.getMatrix_Unbound(scaled)
 
 ##Calls the function getObjective from glpk2py.cpp and returns the objectives as one-dimensional array (see getObjective.cpp)
 #
 #@param scaled Flag, which indicates a scaled matrix
 def getObjective(scaled):
-    return wrapper.getObjective_Py(scaled)
+    return glpkwrap.getObjective_Py(scaled)
 def solve():
-    wrapper.solve_Py()
+    glpkwrap.solve_Py()
 def doScaling(sctype):
-     wrapper.doScaling_Py(sctype)
+     glpkwrap.doScaling_Py(sctype)
 def closeLP():
-    wrapper.closeLP_Py()
+    glpkwrap.closeLP_Py()
 
 ##
 #Iterates over every file specified in the main method.    
@@ -171,11 +171,11 @@ def runbatch(path, output, type):
     resdict = {}
     fnames = glob.glob(path)
     for fname in fnames:
-        try:
-            [xopt, timeground, timelift, compresstime, shapeR0, shapeR1,shapeC0, shapeC1] = loadNsolve(fname,scaled, type)
-            resdict[fname] = [timeground, timelift, compresstime, shapeR0, shapeR1,shapeC0, shapeC1] 
-        except Exception as e:
-            error_handle.write("problem in "+fname+" exception "+ str(e))
+        # try:
+        [xopt, timeground, timelift, compresstime, shapeR0, shapeR1,shapeC0, shapeC1] = loadNsolve(fname,scaled, type)
+        resdict[fname] = [timeground, timelift, compresstime, shapeR0, shapeR1,shapeC0, shapeC1] 
+        # except Exception as e:
+        #     error_handle.write("problem in "+fname+" exception "+ str(e))
     error_handle.close()
     output = open(output, 'wb')
     pickle.dump(resdict, output)
