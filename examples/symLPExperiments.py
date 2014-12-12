@@ -64,7 +64,7 @@ def loadNsolve(fname, scaled, ftype):
     # exit()
     lpread.closeLP()
     # return liftedLPCVXOPT(A.todense(),b.todense(),c.todense(),debug=True,plot=False,orbits=False, sumRefine=False)
-    return llpsolve.sparse(A,b,c,debug=True,orbits=False, sumRefine=False, solver='gurobi')
+    return llpsolve.sparse(A,b,c,debug=True,orbits=False, sumRefine=False, solver='cvxopt')
 
 ## Solves a given LP file by using cvxopt as a method to generate the matrix and glpk to solve it.
 #
@@ -91,7 +91,6 @@ def loadNsolveCVX(fname, scaled, ftype):
 #@param output A specified file where the output is going to be saved
 #@param type The type of given problem (Here always type = LP = 1)
 def runbatch(path, output, type):
-    error_handle = file('error.log', 'w')
 
 
     scaled = 0;
@@ -103,7 +102,6 @@ def runbatch(path, output, type):
         resdict[fname] = [timeground, timelift, compresstime, shapeR0, shapeR1,shapeC0, shapeC1] 
         # except Exception as e:
         #     error_handle.write("problem in "+fname+" exception "+ str(e))
-    error_handle.close()
     output = open(output, 'wb')
     pickle.dump(resdict, output)
     output.close()
@@ -115,4 +113,4 @@ def runbatch(path, output, type):
 if __name__ == '__main__':
     LP = 1
     MTS = 0
-    runbatch("saucywrapper/data/*.lp","results_ep_Meszaros_counting_ref.pkl",LP)
+    runbatch("../data/*.lp","results_ep_Meszaros_counting_ref.pkl",LP)
