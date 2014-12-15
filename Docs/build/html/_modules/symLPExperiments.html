@@ -1,0 +1,288 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>symLPExperiments &mdash; Relational Linear Programming 0.0.1a documentation</title>
+    
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/ls8layout.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.1a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="Relational Linear Programming 0.0.1a documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default ">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><img class="intro-logo" src="../_static/tulogo.svg">
+        </a>
+        <span class="navbar-text navbar-ls8-title">
+          Relational Linear Programming<span class="navbar-version"><b> (0.0.1)</b></span>
+        </span>
+      </div>
+
+      <div class="collapse navbar-collapse nav-collapse navbar-right">
+        <ul class="nav navbar-nav">
+          
+          
+            <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../introduction.html#heading-1">Heading 1</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code.html">Code</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../symLPExperiments.html">symLPExperiments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../read.html">Read</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../code.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</ul>
+</li>
+            
+              <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+            
+          
+          
+          
+          
+          
+        </ul>
+
+        
+          
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        
+      </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <h1>Source code for symLPExperiments</h1><div class="highlight"><pre>
+<span class="c">## @package symLPExperiments</span>
+<span class="c">#Module, which acts as a framework for the actual lifting.</span>
+<span class="c">#This module retrieves LPs from specified files and provides the necessary interface to solve given LPs.</span>
+<span class="c">#Calculation and Computation is done in the C/C++ core, where most of the work is done. </span>
+<span class="kn">import</span> <span class="nn">relopt.liftedLP.solvers</span> <span class="kn">as</span> <span class="nn">llpsolve</span>
+<span class="kn">import</span> <span class="nn">relopt.liftedLP.utils.read</span> <span class="kn">as</span> <span class="nn">lpread</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">scipy.sparse</span> <span class="kn">as</span> <span class="nn">sp</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<div class="viewcode-block" id="loadNsolve"><a class="viewcode-back" href="../symLPExperiments.html#symLPExperiments.loadNsolve">[docs]</a><span class="k">def</span> <span class="nf">loadNsolve</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">scaled</span><span class="p">,</span> <span class="n">ftype</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">     Loads and solves a given LP by lifting the data and then solving it with the GNU linear programming kit solver.</span>
+
+<span class="sd">    :param fname: The name of a given file, which contains the LP</span>
+<span class="sd">    :type fname: str.</span>
+<span class="sd">    :param scaled: scaled An integeftype The type of the given problem (mostly LPs)r value, which indicates a scaling/scaled LP (?)</span>
+<span class="sd">    :type scaled: int.</span>
+<span class="sd">    :param ftype: ftype The type of the given problem (mostly LPs)</span>
+<span class="sd">    :type ftype: str.</span>
+<span class="sd">    :returns:  The n-tuple  [xopt, timeground, timelift, compresstime, shapeR0, shapeR1,shapeC0, shapeC1]:: </span>
+
+<span class="sd">            xopt --</span>
+<span class="sd">            timeground -- </span>
+<span class="sd">            timelift --</span>
+<span class="sd">            compresstime --</span>
+<span class="sd">            shapeR0 --</span>
+<span class="sd">            shapeR1 --</span>
+<span class="sd">            shapeC0 --</span>
+<span class="sd">            shapeC1 --</span>
+
+<span class="sd">     &gt;&gt;&gt; print loadNsolve(&#39;aircraft.gz.mts.lp&#39;,0,&#39;LP&#39;)</span>
+<span class="sd">     aircraft.gz.mts.lp :  [4.140719000000001, 0.393192, 0.37750799999999973, 7517, 57, 15025, 105]</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>  
+    <span class="n">A</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">lpread</span><span class="o">.</span><span class="n">openLP</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">ftype</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">scaled</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="n">lpread</span><span class="o">.</span><span class="n">doScaling</span><span class="p">(</span><span class="n">EQUILIB</span><span class="p">)</span>
+    <span class="n">lpmatrix</span> <span class="o">=</span> <span class="n">lpread</span><span class="o">.</span><span class="n">getMatrix_Upper</span><span class="p">(</span><span class="n">scaled</span><span class="p">)</span> 
+    <span class="n">nelms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="n">lpmatrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">nelms</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">]</span> <span class="o">=</span> <span class="n">lpread</span><span class="o">.</span><span class="n">extract_matrix</span><span class="p">(</span><span class="n">lpmatrix</span><span class="p">)</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">lpmatrix</span> <span class="o">=</span> <span class="n">lpread</span><span class="o">.</span><span class="n">getMatrix_Lower</span><span class="p">(</span><span class="n">scaled</span><span class="p">)</span>
+    <span class="n">nelms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="n">lpmatrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">nelms</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="p">[</span><span class="n">AA</span><span class="p">,</span> <span class="n">bb</span><span class="p">]</span> <span class="o">=</span> <span class="n">lpread</span><span class="o">.</span><span class="n">extract_matrix</span><span class="p">(</span><span class="n">lpmatrix</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">A</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">A</span><span class="p">,</span><span class="o">-</span><span class="n">AA</span><span class="p">))</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">b</span><span class="p">,</span><span class="o">-</span><span class="n">bb</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">A</span> <span class="o">=</span> <span class="o">-</span><span class="n">AA</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="n">bb</span>
+            <span class="n">e</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">lpmatrix</span> <span class="o">=</span> <span class="n">lpread</span><span class="o">.</span><span class="n">getMatrix_Equal</span><span class="p">(</span><span class="n">scaled</span><span class="p">)</span>
+    <span class="n">nelms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="n">lpmatrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">nelms</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="p">[</span><span class="n">AA</span><span class="p">,</span> <span class="n">bb</span><span class="p">]</span> <span class="o">=</span> <span class="n">lpread</span><span class="o">.</span><span class="n">extract_matrix</span><span class="p">(</span><span class="n">lpmatrix</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">A</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">A</span><span class="p">,</span><span class="o">-</span><span class="n">AA</span><span class="p">))</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">b</span><span class="p">,</span><span class="o">-</span><span class="n">bb</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">A</span> <span class="o">=</span> <span class="o">-</span><span class="n">AA</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="n">bb</span> 
+        <span class="n">A</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">A</span><span class="p">,</span><span class="n">AA</span><span class="p">))</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">b</span><span class="p">,</span><span class="n">bb</span><span class="p">))</span>
+    <span class="k">print</span> <span class="s">&quot;after eq: &quot;</span><span class="p">,</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+    <span class="n">b</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+    <span class="c"># done with A</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">lpread</span><span class="o">.</span><span class="n">getObjective</span><span class="p">(</span><span class="n">scaled</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="c"># glpk2py_wrapper.solve()</span>
+    <span class="c"># exit()</span>
+    <span class="n">lpread</span><span class="o">.</span><span class="n">closeLP</span><span class="p">()</span>
+    <span class="c"># return liftedLPCVXOPT(A.todense(),b.todense(),c.todense(),debug=True,plot=False,orbits=False, sumRefine=False)</span>
+    <span class="k">return</span> <span class="n">llpsolve</span><span class="o">.</span><span class="n">sparse</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">orbits</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">sumRefine</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s">&#39;cvxopt&#39;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="loadNsolveCVX"><a class="viewcode-back" href="../symLPExperiments.html#symLPExperiments.loadNsolveCVX">[docs]</a><span class="k">def</span> <span class="nf">loadNsolveCVX</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">scaled</span><span class="p">,</span> <span class="n">ftype</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Solves a specified LP file by assigning its contents to cvxopt and solving the created problem with the gklp solver.</span>
+
+<span class="sd">    :param fname: The name of a given file, which contains the LP</span>
+<span class="sd">    :type fname: str.</span>
+<span class="sd">    :param scaled: scaled An integeftype The type of the given problem (mostly LPs)r value, which indicates a scaling/scaled LP (?)</span>
+<span class="sd">    :type scaled: int.</span>
+<span class="sd">    :param ftype: ftype The type of the given problem (mostly LPs)</span>
+<span class="sd">    :type ftype: str.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">print</span> <span class="n">fname</span>
+    <span class="n">prob</span> <span class="o">=</span> <span class="n">cvxopt</span><span class="o">.</span><span class="n">modeling</span><span class="o">.</span><span class="n">op</span><span class="p">()</span>
+    <span class="n">prob</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">prob</span><span class="o">.</span><span class="n">inequalities</span><span class="p">()</span>
+    <span class="k">print</span> <span class="n">A</span>
+    <span class="n">prob</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">format</span><span class="o">=</span><span class="s">&#39;sparse&#39;</span><span class="p">,</span><span class="n">solver</span><span class="o">=</span><span class="s">&#39;glpk&#39;</span><span class="p">)</span>
+    <span class="nb">exit</span><span class="p">()</span>
+    <span class="c"># glpk2py-wrapper.solve()</span>
+    <span class="c"># exit()</span>
+    <span class="c"># return liftedLPCVXOPT(A.todense(),b.todense(),c.todense(),debug=True,plot=False,orbits=False, sumRefine=False)</span>
+    <span class="k">return</span> <span class="n">sp_liftedLPCVXOPT</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">orbits</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">sumRefine</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="runbatch"><a class="viewcode-back" href="../symLPExperiments.html#symLPExperiments.runbatch">[docs]</a><span class="k">def</span> <span class="nf">runbatch</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Solves all given LP problems by iteratint over every specified file from the given path.</span>
+
+<span class="sd">    :param path: The path, which contains the LPs to solve. </span>
+<span class="sd">    :type path: str.</span>
+<span class="sd">    :param output: The output file</span>
+<span class="sd">    :type output: str.</span>
+<span class="sd">    :param type: The type of given problem (Here always type = LP = 1)</span>
+<span class="sd">    :type type: int.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">scaled</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">resdict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">fnames</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">fnames</span><span class="p">:</span>
+        <span class="c"># try:</span>
+        <span class="p">[</span><span class="n">xopt</span><span class="p">,</span> <span class="n">timeground</span><span class="p">,</span> <span class="n">timelift</span><span class="p">,</span> <span class="n">compresstime</span><span class="p">,</span> <span class="n">shapeR0</span><span class="p">,</span> <span class="n">shapeR1</span><span class="p">,</span><span class="n">shapeC0</span><span class="p">,</span> <span class="n">shapeC1</span><span class="p">]</span> <span class="o">=</span> <span class="n">loadNsolve</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span><span class="n">scaled</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span>
+        <span class="n">resdict</span><span class="p">[</span><span class="n">fname</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">timeground</span><span class="p">,</span> <span class="n">timelift</span><span class="p">,</span> <span class="n">compresstime</span><span class="p">,</span> <span class="n">shapeR0</span><span class="p">,</span> <span class="n">shapeR1</span><span class="p">,</span><span class="n">shapeC0</span><span class="p">,</span> <span class="n">shapeC1</span><span class="p">]</span> 
+        <span class="c"># except Exception as e:</span>
+        <span class="c">#     error_handle.write(&quot;problem in &quot;+fname+&quot; exception &quot;+ str(e))</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="s">&#39;wb&#39;</span><span class="p">)</span>
+    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">resdict</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+    <span class="n">output</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">resdict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">print</span> <span class="n">i</span><span class="p">,</span> <span class="s">&quot;: &quot;</span><span class="p">,</span> <span class="n">resdict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+</div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">LP</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">MTS</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">runbatch</span><span class="p">(</span><span class="s">&quot;../data/*.lp&quot;</span><span class="p">,</span><span class="s">&quot;results_ep_Meszaros_counting_ref.pkl&quot;</span><span class="p">,</span><span class="n">LP</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, Martin Mladenov.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3b2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

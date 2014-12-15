@@ -9,15 +9,32 @@ import pickle
 import scipy.sparse as sp
 import numpy as np
 
-
-
-
-## Loads and solves a given LP by lifting the data and then solving it-
-#
-#@param fname The name of a given file, which contains the LP
-#@param scaled An integer value, which indicates a scaling/scaled LP (?)
-#@param ftype The type of the given problem (mostly LPs)
 def loadNsolve(fname, scaled, ftype):
+    """
+     Loads and solves a given LP by lifting the data and then solving it with the GNU linear programming kit solver.
+
+    :param fname: The name of a given file, which contains the LP
+    :type fname: str.
+    :param scaled: scaled An integeftype The type of the given problem (mostly LPs)r value, which indicates a scaling/scaled LP (?)
+    :type scaled: int.
+    :param ftype: ftype The type of the given problem (mostly LPs)
+    :type ftype: str.
+    :returns:  The n-tuple  [xopt, timeground, timelift, compresstime, shapeR0, shapeR1,shapeC0, shapeC1]:: 
+
+            xopt --
+            timeground -- 
+            timelift --
+            compresstime --
+            shapeR0 --
+            shapeR1 --
+            shapeC0 --
+            shapeC1 --
+
+     >>> print loadNsolve('aircraft.gz.mts.lp',0,'LP')
+     aircraft.gz.mts.lp :  [4.140719000000001, 0.393192, 0.37750799999999973, 7517, 57, 15025, 105]
+
+
+    """  
     A = sp.coo_matrix((1,1))
     b = np.zeros((0,0))
     e = False
@@ -66,12 +83,17 @@ def loadNsolve(fname, scaled, ftype):
     # return liftedLPCVXOPT(A.todense(),b.todense(),c.todense(),debug=True,plot=False,orbits=False, sumRefine=False)
     return llpsolve.sparse(A,b,c,debug=True,orbits=False, sumRefine=False, solver='cvxopt')
 
-## Solves a given LP file by using cvxopt as a method to generate the matrix and glpk to solve it.
-#
-#@param fname The name of a given file, which contains the LP
-#@param scaled An integer value, which indicates a scaling/scaled LP (?)
-#@param ftype The type of the given problem (mostly LPs)
 def loadNsolveCVX(fname, scaled, ftype):
+    """
+    Solves a specified LP file by assigning its contents to cvxopt and solving the created problem with the gklp solver.
+
+    :param fname: The name of a given file, which contains the LP
+    :type fname: str.
+    :param scaled: scaled An integeftype The type of the given problem (mostly LPs)r value, which indicates a scaling/scaled LP (?)
+    :type scaled: int.
+    :param ftype: ftype The type of the given problem (mostly LPs)
+    :type ftype: str.
+    """
     print fname
     prob = cvxopt.modeling.op()
     prob.fromfile(fname)
@@ -84,14 +106,17 @@ def loadNsolveCVX(fname, scaled, ftype):
     # return liftedLPCVXOPT(A.todense(),b.todense(),c.todense(),debug=True,plot=False,orbits=False, sumRefine=False)
     return sp_liftedLPCVXOPT(A,b,c,debug=True,orbits=False, sumRefine=False)
 
-
-##
-#Iterates over every file specified in the main method.    
-#@param path  The path to *.LP files
-#@param output A specified file where the output is going to be saved
-#@param type The type of given problem (Here always type = LP = 1)
 def runbatch(path, output, type):
+    """
+    Solves all given LP problems by iteratint over every specified file from the given path.
 
+    :param path: The path, which contains the LPs to solve. 
+    :type path: str.
+    :param output: The output file
+    :type output: str.
+    :param type: The type of given problem (Here always type = LP = 1)
+    :type type: int.
+    """
 
     scaled = 0;
     resdict = {}

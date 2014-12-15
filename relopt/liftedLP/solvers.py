@@ -24,28 +24,47 @@ import picos as pic
 import relopt.liftedLP.saucywrap as saucy
 
 
-## TODO
-#
-#@param a
 def rowUnique(a):
+    """
+    TODO
+
+    :param a:
+    :type a:
+
+    :returns:
+    """
+
     b = np.ascontiguousarray(a).view(np.dtype((np.void, a.dtype.itemsize * a.shape[1])))
     _, idx = np.unique(b, return_inverse=True)
     return idx
 
-## TODO
-#
-#@param c
 def col2matrix(c):
+    """
+    TODO
+
+    :param c:
+    :type c:
+
+    :returns:
+    """
+
     brows = np.array(range(len(c)))
     bdata = np.ones(len(c),dtype=np.int)
     Bcc = sp.csr_matrix((bdata,np.vstack((brows,c))),dtype=np.int).tocsr()
     return Bcc
 
-## TODO
-#
-#@param A 
-#@param b
 def sumRefinement(A, b):
+    """
+    TODO
+
+    :param A:
+    :type A:
+    :param b:
+    :type b:
+
+    :returns:
+    """
+
     print "SumRef starting"
     czero = b
     ncols = np.max(b) + 1
@@ -57,17 +76,25 @@ def sumRefinement(A, b):
         ncols = np.max(czero) + 1
     return czero
 
-
-## TODO
-#
-#
-#@param Ar
-#@param br
-#@param cr
-#@param sparse
-#@param orbits
-#@param sumRefine
 def lift(Ar, br, cr, sparse=True, orbits=False, sumRefine=False):
+    """
+    TODO
+
+    :param Ar:
+    :type Ar:
+    :param br:
+    :type br:
+    :param cr:
+    :type cr:
+    :param sparse:
+    :type sparse:
+    :param orbits:
+    :type orbits:
+    :param sumRefine:
+    :type sumRefine
+
+    :returns:
+    """
     if sparse:
         AC = Ar.tocoo()
     else:
@@ -130,25 +157,50 @@ def lift(Ar, br, cr, sparse=True, orbits=False, sumRefine=False):
 
 
 def sp_saveProblem(fname, A,b,c):
+    """
+    TODO
+
+    :param fname:
+    :type fname:
+    :param A:
+    :type A:
+    :param b:
+    :type b:
+    :param c:
+    :type c:
+
+    :returns:
+    """
+    
     prob = pic.Problem()
     x = prob.add_variable('x',A.size[1], vtype='continuous')
     prob.add_constraint(A*x < b.T)
     prob.set_objective('min',c.T*x)
     prob.write_to_file(fname,writer='gurobi')
 
-## TODO
-#
-#
-#@param A
-#@param b
-#@param c
-#@param debug
-#@param optiter
-#@param plot
-#@param save  
-#@param orbits
-#@param sumRefine                             
+                             
 def sparse(A,b,c,debug=False,optiter=200,plot=False, save=False, orbits=False, sumRefine=False, solver='cvxopt', tol=1e-7):
+    """
+    TODO
+    :param A:
+    :type A:
+    :param b:
+    :type b:
+    :param c:
+    :type c:
+    :param optiter:
+    :type optiter:
+    :param plot:
+    :type plot:
+    :param save:
+    :type save:
+    :param orbits:
+    :type orbits:
+    :param sumRefine:
+    :type sumRefine:
+
+    :returns:
+    """
 
     #print "================Original================"
     # print  "objsum: ", np.sum(c.todense())
@@ -207,15 +259,21 @@ def sparse(A,b,c,debug=False,optiter=200,plot=False, save=False, orbits=False, s
         print "tlift: ", timelift, "timecomp: ", compresstime 
         return [xopt, timelift, compresstime, Bcc.shape[0], Bcc.shape[1], A.shape[0], LA.shape[0]]
     
-# =======
-## TODO
-#
-#
-#@param xopt
-#@param xground
-#@param timelift
-#@param timeground    
 def report(objlift, objground, xopt, xground, timelift, timeground):
+    """
+    TODO
+
+    :param xopt:
+    :type xopt:
+    :param xground:
+    :type xground:
+    :param timelift:
+    :type timelift:
+    :param timeground:
+    :type timeground:
+
+    :returns:
+    """
     print "================================="
     print "objective values of lifted: ", objlift, ", ground: ", objground, "\n\n"
     if (np.abs(objlift-objground) > 0.0001): exit("ERROR: Objective values of lifted and ground do not agree!")
@@ -234,34 +292,43 @@ def report(objlift, objground, xopt, xground, timelift, timeground):
     # print "rel: ", m, " at xground: ",xground[i], " xlift: ", xopt[i]
     print "ground time: ", timeground, " lifted time: ", timelift
     print "================================="
-
-
-## TODO
-#
-#
-#@param A
-#@param b
-#@param c
-#@param debug    
-#@param optiter
-#@param plot
-#@param save  
-#@param orbits
-#@param sumRefine                
+               
 def liftedLPCVXOPT(A,b,c,debug=False,optiter=200,plot=False,save=False, orbits=False, sumRefine=False):
-    # liftedLPCVXOPT: takes as input an LP in the form
-    #     max   c'x
-    #     s.t.  Ax <= b
-    # where A, b, x are numpy arrays of size (m,n), (m,1), (n,1) respectively and returns a vector solving
-    # the linear program. 
-    # By default, the linear program is preprocessed by color-passing, the smaller LP is solved in 
-    # CVXOPT and then the solution vector is recovered.
-    # One may additionally use the following optional arguments:
-    #   debug: when set to true, an uncompressed version of the LP is solved before solving the lifted one
-    #          in order to measure time gains and potentially differences between ground and lifted solutions.
-    #   optiter: limits CVXOPT iterations.
-    #   plot: produces matrix plots similar to those in the thesis (see the plot() function definition).
-    #   save: saves the lifted LP in CVS (see the save() function definition).  
+    """
+    liftedLPCVXOPT: takes as input an LP in the form
+         max   c'x
+         s.t.  Ax <= b
+     where A, b, x are numpy arrays of size (m,n), (m,1), (n,1) respectively and returns a vector solving
+     the linear program. 
+     By default, the linear program is preprocessed by color-passing, the smaller LP is solved in 
+     CVXOPT and then the solution vector is recovered.
+     One may additionally use the following optional arguments:
+       debug: when set to true, an uncompressed version of the LP is solved before solving the lifted one
+              in order to measure time gains and potentially differences between ground and lifted solutions.
+       optiter: limits CVXOPT iterations.
+       plot: produces matrix plots similar to those in the thesis (see the plot() function definition).
+       save: saves the lifted LP in CVS (see the save() function definition). 
+    :param A:
+    :type A:
+    :param b:
+    :type b:
+    :param c:
+    :type c:
+    :param debug:
+    :type debug:
+    :param optiter:
+    :type optiter:
+    :param plot:
+    :type plot:
+    :param save:
+    :type save:
+    :param orbits:
+    :type orbits:
+    :param sumRefine:
+    :type sumRefine:
+
+    :returns:
+    """
     A = np.matrix(A)
     b = np.matrix(b)
     c = np.matrix(c)

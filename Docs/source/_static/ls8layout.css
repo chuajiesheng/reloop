@@ -1,0 +1,10 @@
+img.intro-logo {
+    height: 45px;
+    margin-top: -13px;
+}
+@media (max-width: 767px) {
+    .navbar-ls8-title {
+        margin-top: 15px;
+        margin-bottom: 0px;
+    }
+}
