@@ -7,9 +7,9 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="http://www-ai.cs.uni-dortmund.de/weblab/index.html">
+        <a class="navbar-brand" href="{{ pathto(master_doc) }}">
           {%- block sidebarlogo %}
-            {%- if logo %}<img class="intro-logo" src="{{ pathto('_static/' + logo, 1) }}">{%- endif %}
+            {%- if logo %}<img class="intro-logo" src="http://www-ai.cs.uni-dortmund.de/weblab/index.html">{%- endif %}
           {%- endblock %}
         </a>
         <span class="navbar-text navbar-ls8-title">

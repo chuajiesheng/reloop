@@ -40,7 +40,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default ">
     <div class="container">
@@ -51,7 +51,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="index.html"><img class="intro-logo" src="_static/tulogo.svg">
+        <a class="navbar-brand" href="http://www-ai.cs.uni-dortmund.de/weblab/index.html"><img class="intro-logo" src="_static/tulogo.svg">
         </a>
         <span class="navbar-text navbar-ls8-title">
           Relational Linear Programming<span class="navbar-version"><b> (0.0.1)</b></span>
@@ -134,7 +134,7 @@
 <h2>Read<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-read"></span><dl class="function">
 <dt id="read.extract_matrix">
-<code class="descclassname">read.</code><code class="descname">extract_matrix</code><span class="sig-paren">(</span><em>lpmatrix</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/read.html#extract_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#read.extract_matrix" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">read.</tt><tt class="descname">extract_matrix</tt><big>(</big><em>lpmatrix</em><big>)</big><a class="reference internal" href="_modules/read.html#extract_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#read.extract_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extracts a coordinate matrix from a given array with exactly 4 rows</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -157,7 +157,7 @@ b &#8211; the corresponding data vector.</p>
 
 <dl class="function">
 <dt id="read.getMatrix_Equal">
-<code class="descclassname">read.</code><code class="descname">getMatrix_Equal</code><span class="sig-paren">(</span><em>scaled</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/read.html#getMatrix_Equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#read.getMatrix_Equal" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">read.</tt><tt class="descname">getMatrix_Equal</tt><big>(</big><em>scaled</em><big>)</big><a class="reference internal" href="_modules/read.html#getMatrix_Equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#read.getMatrix_Equal" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
 <dt>Computes the Equality constraints of given LP and returns it as a multi-dimensional array</dt>
 <dd>Ax = b</dd>
@@ -176,7 +176,7 @@ b &#8211; the corresponding data vector.</p>
 
 <dl class="function">
 <dt id="read.getMatrix_Lower">
-<code class="descclassname">read.</code><code class="descname">getMatrix_Lower</code><span class="sig-paren">(</span><em>scaled</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/read.html#getMatrix_Lower"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#read.getMatrix_Lower" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">read.</tt><tt class="descname">getMatrix_Lower</tt><big>(</big><em>scaled</em><big>)</big><a class="reference internal" href="_modules/read.html#getMatrix_Lower"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#read.getMatrix_Lower" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
 <dt>Computes the Lower Bounds for a given LP and returns it as a multi-dimensional array</dt>
 <dd>Ax &lt; b</dd>
@@ -195,7 +195,7 @@ b &#8211; the corresponding data vector.</p>
 
 <dl class="function">
 <dt id="read.getMatrix_Unbound">
-<code class="descclassname">read.</code><code class="descname">getMatrix_Unbound</code><span class="sig-paren">(</span><em>scaled</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/read.html#getMatrix_Unbound"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#read.getMatrix_Unbound" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">read.</tt><tt class="descname">getMatrix_Unbound</tt><big>(</big><em>scaled</em><big>)</big><a class="reference internal" href="_modules/read.html#getMatrix_Unbound"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#read.getMatrix_Unbound" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
 <dt>Computes Unbound variables of given LP</dt>
 <dd>Ax &lt; 0</dd>
@@ -214,7 +214,7 @@ b &#8211; the corresponding data vector.</p>
 
 <dl class="function">
 <dt id="read.getMatrix_Upper">
-<code class="descclassname">read.</code><code class="descname">getMatrix_Upper</code><span class="sig-paren">(</span><em>scaled</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/read.html#getMatrix_Upper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#read.getMatrix_Upper" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">read.</tt><tt class="descname">getMatrix_Upper</tt><big>(</big><em>scaled</em><big>)</big><a class="reference internal" href="_modules/read.html#getMatrix_Upper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#read.getMatrix_Upper" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
 <dt>Computes the Upper Bounds for a given LP and returns it as a multi-dimensional array</dt>
 <dd>Ax &gt; b</dd>
@@ -233,7 +233,7 @@ b &#8211; the corresponding data vector.</p>
 
 <dl class="function">
 <dt id="read.getObjective">
-<code class="descclassname">read.</code><code class="descname">getObjective</code><span class="sig-paren">(</span><em>scaled</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/read.html#getObjective"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#read.getObjective" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">read.</tt><tt class="descname">getObjective</tt><big>(</big><em>scaled</em><big>)</big><a class="reference internal" href="_modules/read.html#getObjective"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#read.getObjective" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calls the function getObjective from glpk2py.cpp and returns the objectives as one-dimensional array (see getObjective.cpp)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -249,7 +249,7 @@ b &#8211; the corresponding data vector.</p>
 
 <dl class="function">
 <dt id="read.openLP">
-<code class="descclassname">read.</code><code class="descname">openLP</code><span class="sig-paren">(</span><em>fname</em>, <em>ftype</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/read.html#openLP"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#read.openLP" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">read.</tt><tt class="descname">openLP</tt><big>(</big><em>fname</em>, <em>ftype</em><big>)</big><a class="reference internal" href="_modules/read.html#openLP"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#read.openLP" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calls C++ code which opens a linear Program to solve given problem in specified file.
 :param fname: The path of a specified file, which is subject to solving
 :type fname: str.
@@ -280,7 +280,7 @@ b &#8211; the corresponding data vector.</p>
     </p>
     <p>
         &copy; Copyright 2014, Martin Mladenov.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3b2.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
     </p>
   </div>
 </footer>
