@@ -22,8 +22,10 @@ Contents:
    :maxdepth: 1
 
    introduction
+   installation
    tutorial 
    code
+   examples
    contact
 
 Indices and tables

@@ -32,16 +32,16 @@
     <script type="text/javascript" src="_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="Relational Linear Programming 0.0.1a documentation" href="index.html" />
-    <link rel="up" title="Code" href="code.html" />
-    <link rel="next" title="Read" href="read.html" />
-    <link rel="prev" title="Code" href="code.html" />
+    <link rel="up" title="Python" href="python.html" />
+    <link rel="next" title="MaxFLow" href="python_maxflow.html" />
+    <link rel="prev" title="Read" href="python_read.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body>
+  <body role="document">
 
   <div id="navbar" class="navbar navbar-default ">
     <div class="container">
@@ -76,13 +76,16 @@
 <li class="toctree-l2"><a class="reference internal" href="introduction.html#heading-1">Heading 1</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="code.html">Code</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="">symLPExperiments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="read.html">Read</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="python.html">Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cython.html">Cython</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpp.html">CPlusPlus</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="code.html#indices-and-tables">Indices and tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
 </ul>
 </ul>
 </li>
@@ -97,7 +100,8 @@
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">symLPExperiments</a><ul>
-<li><a class="reference internal" href="#id1">symLPExperiments</a></li>
+<li><a class="reference internal" href="#summary">Summary</a></li>
+<li><a class="reference internal" href="#module-symLPExperiments">Documentation</a></li>
 </ul>
 </li>
 </ul>
@@ -131,14 +135,17 @@
       
   <div class="section" id="symlpexperiments">
 <h1>symLPExperiments<a class="headerlink" href="#symlpexperiments" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="id1">
-<h2>symLPExperiments<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
 <p>The script, which is called to run the given examples of Lifted Linear Programming.
 This module retrieves LPs from specified files and provides the necessary interface to solve given LPs.
 Calculation and Computation is done in the C/C++ core, where most of the work is done.</p>
-<span class="target" id="module-symLPExperiments"></span><dl class="function">
+</div>
+<div class="section" id="module-symLPExperiments">
+<span id="documentation"></span><h2>Documentation<a class="headerlink" href="#module-symLPExperiments" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
 <dt id="symLPExperiments.loadNsolve">
-<tt class="descclassname">symLPExperiments.</tt><tt class="descname">loadNsolve</tt><big>(</big><em>fname</em>, <em>scaled</em>, <em>ftype</em><big>)</big><a class="reference internal" href="_modules/symLPExperiments.html#loadNsolve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#symLPExperiments.loadNsolve" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">symLPExperiments.</code><code class="descname">loadNsolve</code><span class="sig-paren">(</span><em>fname</em>, <em>scaled</em>, <em>ftype</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/symLPExperiments.html#loadNsolve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#symLPExperiments.loadNsolve" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div>Loads and solves a given LP by lifting the data and then solving it with the GNU linear programming kit solver.</div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
@@ -176,7 +183,7 @@ shapeC1 --
 
 <dl class="function">
 <dt id="symLPExperiments.loadNsolveCVX">
-<tt class="descclassname">symLPExperiments.</tt><tt class="descname">loadNsolveCVX</tt><big>(</big><em>fname</em>, <em>scaled</em>, <em>ftype</em><big>)</big><a class="reference internal" href="_modules/symLPExperiments.html#loadNsolveCVX"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#symLPExperiments.loadNsolveCVX" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">symLPExperiments.</code><code class="descname">loadNsolveCVX</code><span class="sig-paren">(</span><em>fname</em>, <em>scaled</em>, <em>ftype</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/symLPExperiments.html#loadNsolveCVX"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#symLPExperiments.loadNsolveCVX" title="Permalink to this definition">¶</a></dt>
 <dd><p>Solves a specified LP file by assigning its contents to cvxopt and solving the created problem with the gklp solver.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -195,7 +202,7 @@ shapeC1 --
 
 <dl class="function">
 <dt id="symLPExperiments.runbatch">
-<tt class="descclassname">symLPExperiments.</tt><tt class="descname">runbatch</tt><big>(</big><em>path</em>, <em>output</em>, <em>type</em><big>)</big><a class="reference internal" href="_modules/symLPExperiments.html#runbatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#symLPExperiments.runbatch" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">symLPExperiments.</code><code class="descname">runbatch</code><span class="sig-paren">(</span><em>path</em>, <em>output</em>, <em>type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/symLPExperiments.html#runbatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#symLPExperiments.runbatch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Solves all given LP problems by iteratint over every specified file from the given path.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -235,7 +242,7 @@ shapeC1 --
     </p>
     <p>
         &copy; Copyright 2014, Martin Mladenov.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3b2.<br/>
     </p>
   </div>
 </footer>

@@ -66,7 +66,7 @@ def getMatrix_Lower(scaled):
     Computes the Lower Bounds for a given LP and returns it as a multi-dimensional array
         Ax < b
 
-    :param scaled:Flag, which indicates a scaled LP   
+    :param scaled: Flag, which indicates a scaled LP   
     :type scaled: int.
 
     :returns:
@@ -75,8 +75,9 @@ def getMatrix_Lower(scaled):
 
 def getMatrix_Equal(scaled):
     """
-    Computes the Equality constraints of given LP and returns it as a multi-dimensional array
+    TODO
         Ax = b
+
     :param scaled: Flag, which indicates a scaled LP   
     :type scaled: int.
 
@@ -90,7 +91,7 @@ def getMatrix_Unbound(scaled):
     Computes Unbound variables of given LP
         Ax < 0
 
-    :param scaled:Flag, which indicates a scaled LP   
+    :param scaled: Flag, which indicates a scaled LP   
     :type scaled: int.
 
     :returns:

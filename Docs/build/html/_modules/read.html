@@ -39,7 +39,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body>
+  <body role="document">
 
   <div id="navbar" class="navbar navbar-default ">
     <div class="container">
@@ -74,13 +74,16 @@
 <li class="toctree-l2"><a class="reference internal" href="../introduction.html#heading-1">Heading 1</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../code.html">Code</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../symLPExperiments.html">symLPExperiments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../read.html">Read</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python.html">Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cython.html">Cython</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cpp.html">CPlusPlus</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../code.html#indices-and-tables">Indices and tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
 </ul>
 </ul>
 </li>
@@ -190,7 +193,7 @@
 <span class="sd">    Computes the Lower Bounds for a given LP and returns it as a multi-dimensional array</span>
 <span class="sd">        Ax &lt; b</span>
 
-<span class="sd">    :param scaled:Flag, which indicates a scaled LP   </span>
+<span class="sd">    :param scaled: Flag, which indicates a scaled LP   </span>
 <span class="sd">    :type scaled: int.</span>
 
 <span class="sd">    :returns:</span>
@@ -199,8 +202,9 @@
 </div>
 <div class="viewcode-block" id="getMatrix_Equal"><a class="viewcode-back" href="../read.html#read.getMatrix_Equal">[docs]</a><span class="k">def</span> <span class="nf">getMatrix_Equal</span><span class="p">(</span><span class="n">scaled</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Computes the Equality constraints of given LP and returns it as a multi-dimensional array</span>
+<span class="sd">    TODO</span>
 <span class="sd">        Ax = b</span>
+
 <span class="sd">    :param scaled: Flag, which indicates a scaled LP   </span>
 <span class="sd">    :type scaled: int.</span>
 
@@ -214,7 +218,7 @@
 <span class="sd">    Computes Unbound variables of given LP</span>
 <span class="sd">        Ax &lt; 0</span>
 
-<span class="sd">    :param scaled:Flag, which indicates a scaled LP   </span>
+<span class="sd">    :param scaled: Flag, which indicates a scaled LP   </span>
 <span class="sd">    :type scaled: int.</span>
 
 <span class="sd">    :returns:</span>
@@ -254,7 +258,7 @@
     </p>
     <p>
         &copy; Copyright 2014, Martin Mladenov.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3b2.<br/>
     </p>
   </div>
 </footer>

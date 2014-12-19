@@ -6,18 +6,13 @@
 Code
 =========================================================
 
+Weclome to the documentation of our code. The documentation is divided into three subsections each representing a programming language, which was used to realize this project.
+
 Contents:
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
-   symLPExperiments
-   read
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
+   python
+   cython
+   cpp
