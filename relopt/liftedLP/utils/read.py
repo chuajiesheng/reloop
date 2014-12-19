@@ -12,6 +12,7 @@ EQUILIB = 7
 def openLP(fname,ftype):
     """
     Calls C++ code which opens a linear Program to solve given problem in specified file.
+    
     :param fname: The path of a specified file, which is subject to solving
     :type fname: str.
     :param ftype: A specified format as how to solve the given LP
