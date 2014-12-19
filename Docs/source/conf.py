@@ -131,10 +131,10 @@ html_logo = "tulogo.svg"
 # documentation.
 html_theme_options = {
     # Navigation bar title. (Default: ``project`` value)
-    #'navbar_title': "Demo",
+    #'navbar_title': "Index",
 
     # Tab name for entire site. (Default: "Site")
-    #'navbar_site_name': "Site",
+    'navbar_site_name': "Index",
 
     # A list of tuples containing pages or urls to link to.
     # Valid tuples should be in the following forms:
@@ -143,10 +143,12 @@ html_theme_options = {
     #    (name, "http://example.com", True) # arbitrary absolute url
     # Note the "1" or "True" value above as the third argument to indicate
     # an arbitrary url.
-    #'navbar_links': [
+    'navbar_links': [
+         ("Home","index"),
+         ("Download","download")
     #    ("Examples", "examples"),
     #    ("Link", "http://example.com", True),
-    #],
+    ],
 
     # Render the next and previous page links in navbar. (Default: true)
     'navbar_sidebarrel': False,
@@ -168,7 +170,7 @@ html_theme_options = {
     # will break.
     #
     # Values: "true" (default) or "false"
-    'globaltoc_includehidden': "false",
+    'globaltoc_includehidden': "true",
 
     # HTML navbar class (Default: "navbar") to attach to <div> element.
     # For black navbar, do "navbar navbar-inverse"
@@ -176,7 +178,7 @@ html_theme_options = {
 
     # Fix navigation bar to top of page?
     # Values: "true" (default) or "false"
-    'navbar_fixed_top': "false",
+    'navbar_fixed_top': "true",
 
     # Location of link to source.
     # Options are "nav" (default), "footer" or anything else to exclude.
