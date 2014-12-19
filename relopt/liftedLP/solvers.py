@@ -296,38 +296,35 @@ def report(objlift, objground, xopt, xground, timelift, timeground):
 def liftedLPCVXOPT(A,b,c,debug=False,optiter=200,plot=False,save=False, orbits=False, sumRefine=False):
     """
     liftedLPCVXOPT: takes as input an LP in the form
-         max   c'x
-         s.t.  Ax <= b
-     where A, b, x are numpy arrays of size (m,n), (m,1), (n,1) respectively and returns a vector solving
-     the linear program. 
-     By default, the linear program is preprocessed by color-passing, the smaller LP is solved in 
-     CVXOPT and then the solution vector is recovered.
-     One may additionally use the following optional arguments:
-       debug: when set to true, an uncompressed version of the LP is solved before solving the lifted one
-              in order to measure time gains and potentially differences between ground and lifted solutions.
-       optiter: limits CVXOPT iterations.
-       plot: produces matrix plots similar to those in the thesis (see the plot() function definition).
-       save: saves the lifted LP in CVS (see the save() function definition). 
-    :param A:
-    :type A:
-    :param b:
-    :type b:
-    :param c:
-    :type c:
-    :param debug:
-    :type debug:
-    :param optiter:
-    :type optiter:
-    :param plot:
-    :type plot:
-    :param save:
-    :type save:
+
+        max   c'x
+
+        s.t.  Ax <= b
+    where A, b, x are numpy arrays of size (m,n), (m,1), (n,1) respectively and returns a vector solving
+    the linear program. 
+    By default, the linear program is preprocessed by color-passing, the smaller LP is solved in 
+    CVXOPT and then the solution vector is recovered.
+
+    :param A: Numpy Array of size (m,n)
+    :type A: double.
+    :param b: Numpy Array of size (m,1) - the row vector
+    :type b: int.
+    :param c: Numpy Array of size (n,1) - the column vector
+    :type c: int.
+    :param debug: when set to true, an uncompressed version of the LP is solved before solving the lifted one in order to measure time gains and potentially differences between ground and lifted solutions. (Optional - Default = FALSE)
+    :type debug: bool.
+    :param optiter: limits CVXOPT iterations. (Optional - Default = 200)
+    :type optiter: int.
+    :param plot: produces matrix plots similar to those in the thesis (see the plot() function definition). (Optional - Default = FALSE)
+    :type plot: bool.
+    :param save: saves the lifted LP in CVS (see the save() function definition). (Optional - Default = FALSE)
+    :type save: bool.
     :param orbits:
     :type orbits:
     :param sumRefine:
     :type sumRefine:
 
-    :returns:
+    :returns: The solution vector as tuple : [xopt, (timeground), timelift, compresstime, Bcc.shape[0], Bcc.shape[1], A.shape[0], LA.shape[0]]
     """
     A = np.matrix(A)
     b = np.matrix(b)
