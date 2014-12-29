@@ -28,6 +28,7 @@ using namespace std;
 
 vector<size_t> equitablePartitionSaucyV2(const size_t mvertices, const size_t medges, const double data[], const size_t rown[], const size_t coln[], const size_t b[], int cIters, int coarsest)
 {
+    cout << "== SYMMETRIC INPUT ==\n" << "NODES: " << mvertices << "\n(2x) EDGES: " << medges << endl;
     size_t Aijd;
     double Aij;
     double bb;
@@ -74,7 +75,6 @@ vector<size_t> equitablePartitionSaucyV2(const size_t mvertices, const size_t me
     //printf("saucy: graph tmpe: %d, tmpn: %d \n", overestE, overestN);
     colorMap.clear();
     colorcount = 0;
-    int e = 0;
     for(p = 0; p < mvertices; ++p) {
         int tmpcol;
         tuple.clear();
@@ -89,13 +89,14 @@ vector<size_t> equitablePartitionSaucyV2(const size_t mvertices, const size_t me
         colors[p] = tmpcol;
 
     }
+    int e = 0;
     for(p = 0; p < medges; ++p) {
         int tmpcol;
         i = coln[p]; j = rown[p];
         if ( i == j ) {
             printf("WARNING! Your matrix has a diagonal element (%d,%d = %f). Diagonal elements are ignored, incorporate them in the b-vector.\n",i,j,data[p]);
          } else if (i<j) {
-            //printf("i,j,e : %d %d %d\n",j,i,e);
+            // printf("i,j,e : %d %d %d\n",j,i,e);
             tuple.clear();
             tuple.push_back(data[p]);
             colorsIter = colorMap.find(tuple);
@@ -106,7 +107,7 @@ vector<size_t> equitablePartitionSaucyV2(const size_t mvertices, const size_t me
                 tmpcol = colorMap[tuple];
             }
             colors[mvertices + e] = tmpcol;
-            //printf("edge i=%d j=%d: col=%d, e=%d, colorindex:%d\n",i,j,tmpcol,e,mvertices + e);
+            // printf("edge i=%d j=%d: col=%d, e=%d, colorindex:%d\n",i,j,tmpcol,e,mvertices + e);
             ++aout[i]; ++ain[mvertices + e];
             ++aout[mvertices + e]; ++ain[j];
             e++; 
@@ -142,7 +143,7 @@ vector<size_t> equitablePartitionSaucyV2(const size_t mvertices, const size_t me
     g->consumer = amorph_print_automorphism;
     g->free = amorph_graph_free;
     g->stats = NULL;
-    if (dupe_check(mvertices+e+1, aout, eout)) printf("dupe check failed?\n");
+    if (dupe_check(n, aout, eout)) printf("dupe check failed?\n");
     result = (int *) malloc(n * sizeof(int));
     saucy_with_graph(g, 1, 0, 1, coarsest, result);
 
