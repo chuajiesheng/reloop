@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Relational Linear Programming's documentation!
+Relational Linear Programming
 =========================================================
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent rhoncus tempor faucibus. Fusce sed ligula in turpis vestibulum viverra id a ipsum. Duis quis felis odio. Vivamus scelerisque vehicula nulla, at sagittis ex porta at. Maecenas auctor ante metus, nec consectetur arcu lobortis id. Suspendisse sit amet ex dictum lorem tincidunt congue. Donec risus orci, ultrices sit amet odio sit amet, aliquet sollicitudin augue. Duis tincidunt lectus elit, eu egestas mi vestibulum non. Integer at justo eleifend, aliquet arcu id, aliquam ipsum. Sed placerat vel augue vitae placerat. Maecenas vestibulum fermentum felis, a posuere est accumsan a. Phasellus eu velit vitae dolor vehicula bibendum. Curabitur ultricies hendrerit tristique.
@@ -19,6 +19,7 @@ Sed feugiat nisi leo, non condimentum ipsum aliquet quis. Suspendisse potenti. S
 Contents:
 
 .. toctree::
+   :hidden:
    :maxdepth: 1
 
    introduction

@@ -43,7 +43,7 @@
   </head>
   <body role="document">
 
-  <div id="navbar" class="navbar navbar-default ">
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
       <div class="navbar-header">
         <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
@@ -62,13 +62,17 @@
       <div class="collapse navbar-collapse nav-collapse navbar-right">
         <ul class="nav navbar-nav">
           
+              <li><a href="index.html">Home</a></li>
+              <li><a href="download.html">Download</a></li>
           
-            <li class="dropdown globaltoc-container">
+          
+            
+<li class="dropdown globaltoc-container">
   <a role="button"
      id="dLabelGlobalToc"
      data-toggle="dropdown"
      data-target="#"
-     href="index.html">Site <b class="caret"></b></a>
+     href="index.html">Index <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
@@ -76,7 +80,13 @@
 <li class="toctree-l2"><a class="reference internal" href="introduction.html#heading-1">Heading 1</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#faq">FAQ</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="code.html">Code</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="python.html">Python</a></li>
@@ -100,6 +110,8 @@
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Solvers</a></li>
+<li><a class="reference internal" href="#summary">Summary</a></li>
+<li><a class="reference internal" href="#module-solvers">Documentation</a></li>
 </ul>
 </ul>
 </li>
@@ -131,6 +143,211 @@
       
   <div class="section" id="solvers">
 <h1>Solvers<a class="headerlink" href="#solvers" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="summary">
+<h1>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h1>
+<p>TODO</p>
+</div>
+<div class="section" id="module-solvers">
+<span id="documentation"></span><h1>Documentation<a class="headerlink" href="#module-solvers" title="Permalink to this headline">¶</a></h1>
+<p>Created on Dec 28, 2010</p>
+<p>&#64;author: Martin Mladenov</p>
+<dl class="function">
+<dt id="solvers.col2matrix">
+<code class="descclassname">solvers.</code><code class="descname">col2matrix</code><span class="sig-paren">(</span><em>c</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/solvers.html#col2matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#solvers.col2matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>c</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="solvers.lift">
+<code class="descclassname">solvers.</code><code class="descname">lift</code><span class="sig-paren">(</span><em>Ar</em>, <em>br</em>, <em>cr</em>, <em>sparse=True</em>, <em>orbits=False</em>, <em>sumRefine=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/solvers.html#lift"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#solvers.lift" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>Ar</strong> &#8211; </li>
+<li><strong>br</strong> &#8211; </li>
+<li><strong>cr</strong> &#8211; </li>
+<li><strong>sparse</strong> &#8211; </li>
+<li><strong>orbits</strong> &#8211; </li>
+<li><strong>sumRefine</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:type sumRefine</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="solvers.liftedLPCVXOPT">
+<code class="descclassname">solvers.</code><code class="descname">liftedLPCVXOPT</code><span class="sig-paren">(</span><em>A</em>, <em>b</em>, <em>c</em>, <em>debug=False</em>, <em>optiter=200</em>, <em>plot=False</em>, <em>save=False</em>, <em>orbits=False</em>, <em>sumRefine=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/solvers.html#liftedLPCVXOPT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#solvers.liftedLPCVXOPT" title="Permalink to this definition">¶</a></dt>
+<dd><p>liftedLPCVXOPT: takes as input an LP in the form</p>
+<blockquote>
+<div><p>max   c&#8217;x</p>
+<p>s.t.  Ax &lt;= b</p>
+</div></blockquote>
+<p>where A, b, x are numpy arrays of size (m,n), (m,1), (n,1) respectively and returns a vector solving
+the linear program. 
+By default, the linear program is preprocessed by color-passing, the smaller LP is solved in 
+CVXOPT and then the solution vector is recovered.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>A</strong> (<em>double.</em>) &#8211; Numpy Array of size (m,n)</li>
+<li><strong>b</strong> (<em>int.</em>) &#8211; Numpy Array of size (m,1) - the row vector</li>
+<li><strong>c</strong> (<em>int.</em>) &#8211; Numpy Array of size (n,1) - the column vector</li>
+<li><strong>debug</strong> (<em>bool.</em>) &#8211; when set to true, an uncompressed version of the LP is solved before solving the lifted one in order to measure time gains and potentially differences between ground and lifted solutions. (Optional - Default = FALSE)</li>
+<li><strong>optiter</strong> (<em>int.</em>) &#8211; limits CVXOPT iterations. (Optional - Default = 200)</li>
+<li><strong>plot</strong> (<em>bool.</em>) &#8211; produces matrix plots similar to those in the thesis (see the plot() function definition). (Optional - Default = FALSE)</li>
+<li><strong>save</strong> (<em>bool.</em>) &#8211; saves the lifted LP in CVS (see the save() function definition). (Optional - Default = FALSE)</li>
+<li><strong>orbits</strong> &#8211; </li>
+<li><strong>sumRefine</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The solution vector as tuple : [xopt, (timeground), timelift, compresstime, Bcc.shape[0], Bcc.shape[1], A.shape[0], LA.shape[0]]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="solvers.report">
+<code class="descclassname">solvers.</code><code class="descname">report</code><span class="sig-paren">(</span><em>objlift</em>, <em>objground</em>, <em>xopt</em>, <em>xground</em>, <em>timelift</em>, <em>timeground</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/solvers.html#report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#solvers.report" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>xopt</strong> &#8211; </li>
+<li><strong>xground</strong> &#8211; </li>
+<li><strong>timelift</strong> &#8211; </li>
+<li><strong>timeground</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="solvers.rowUnique">
+<code class="descclassname">solvers.</code><code class="descname">rowUnique</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/solvers.html#rowUnique"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#solvers.rowUnique" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>a</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="solvers.sp_saveProblem">
+<code class="descclassname">solvers.</code><code class="descname">sp_saveProblem</code><span class="sig-paren">(</span><em>fname</em>, <em>A</em>, <em>b</em>, <em>c</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/solvers.html#sp_saveProblem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#solvers.sp_saveProblem" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fname</strong> &#8211; </li>
+<li><strong>A</strong> &#8211; </li>
+<li><strong>b</strong> &#8211; </li>
+<li><strong>c</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="solvers.sparse">
+<code class="descclassname">solvers.</code><code class="descname">sparse</code><span class="sig-paren">(</span><em>A</em>, <em>b</em>, <em>c</em>, <em>debug=False</em>, <em>optiter=200</em>, <em>plot=False</em>, <em>save=False</em>, <em>orbits=False</em>, <em>sumRefine=False</em>, <em>solver='cvxopt'</em>, <em>tol=1e-07</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/solvers.html#sparse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#solvers.sparse" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO
+:param A:
+:type A:
+:param b:
+:type b:
+:param c:
+:type c:
+:param optiter:
+:type optiter:
+:param plot:
+:type plot:
+:param save:
+:type save:
+:param orbits:
+:type orbits:
+:param sumRefine:
+:type sumRefine:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="solvers.sumRefinement">
+<code class="descclassname">solvers.</code><code class="descname">sumRefinement</code><span class="sig-paren">(</span><em>A</em>, <em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/solvers.html#sumRefinement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#solvers.sumRefinement" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>A</strong> &#8211; </li>
+<li><strong>b</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 
 

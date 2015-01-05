@@ -43,7 +43,7 @@
   </head>
   <body role="document">
 
-  <div id="navbar" class="navbar navbar-default ">
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
       <div class="navbar-header">
         <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
@@ -62,13 +62,17 @@
       <div class="collapse navbar-collapse nav-collapse navbar-right">
         <ul class="nav navbar-nav">
           
+              <li><a href="index.html">Home</a></li>
+              <li><a href="download.html">Download</a></li>
           
-            <li class="dropdown globaltoc-container">
+          
+            
+<li class="dropdown globaltoc-container">
   <a role="button"
      id="dLabelGlobalToc"
      data-toggle="dropdown"
      data-target="#"
-     href="index.html">Site <b class="caret"></b></a>
+     href="index.html">Index <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
@@ -76,7 +80,13 @@
 <li class="toctree-l2"><a class="reference internal" href="introduction.html#heading-1">Heading 1</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#faq">FAQ</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="code.html">Code</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="python.html">Python</a></li>
@@ -131,6 +141,53 @@
       
   <div class="section" id="glpk2py">
 <h1>Glpk2Py<a class="headerlink" href="#glpk2py" title="Permalink to this headline">¶</a></h1>
+<dl class="member">
+<dt id="_CPPN7glpk2py8filetypeE">
+enum <code class="descclassname">glpk2py::</code><code class="descname">filetype</code><a class="headerlink" href="#_CPPN7glpk2py8filetypeE" title="Permalink to this definition">¶</a></dt>
+<dd><table border="1" class="docutils">
+<colgroup>
+<col width="12%" />
+<col width="12%" />
+<col width="76%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Name</th>
+<th class="head">Value</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>MPS</td>
+<td>0</td>
+<td>Given file is in the MPS format</td>
+</tr>
+<tr class="row-odd"><td>LP</td>
+<td>1</td>
+<td>Given file is in the LP format</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPN7glpk2py6openLPERKNSt6stringEi">
+void <code class="descclassname">glpk2py::</code><code class="descname">openLP</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>fname</em>, int <em>format</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPN7glpk2py6openLPERKNSt6stringEi" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fname</strong> &#8211; The name of the file to be opened</li>
+<li><strong>format</strong> &#8211; The filetype of given file either MPS or LP are valid (see enum filetype)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Opens the LP by creating a glpk problem object and assigning the given file to it n
+Furthermore extracts the number of columns and rows of the opened LP and assigns the values to global variables</p>
+</dd></dl>
+
 </div>
 
 

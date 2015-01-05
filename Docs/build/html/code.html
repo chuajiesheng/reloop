@@ -42,7 +42,7 @@
   </head>
   <body role="document">
 
-  <div id="navbar" class="navbar navbar-default ">
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
       <div class="navbar-header">
         <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
@@ -61,13 +61,17 @@
       <div class="collapse navbar-collapse nav-collapse navbar-right">
         <ul class="nav navbar-nav">
           
+              <li><a href="index.html">Home</a></li>
+              <li><a href="download.html">Download</a></li>
           
-            <li class="dropdown globaltoc-container">
+          
+            
+<li class="dropdown globaltoc-container">
   <a role="button"
      id="dLabelGlobalToc"
      data-toggle="dropdown"
      data-target="#"
-     href="index.html">Site <b class="caret"></b></a>
+     href="index.html">Index <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
@@ -75,7 +79,13 @@
 <li class="toctree-l2"><a class="reference internal" href="introduction.html#heading-1">Heading 1</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#faq">FAQ</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Code</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="python.html">Python</a></li>
@@ -142,6 +152,8 @@
 <li class="toctree-l2"><a class="reference internal" href="python_shortestPath.html">ShortestPath</a></li>
 <li class="toctree-l2"><a class="reference internal" href="python_small_matrix.html">Small Matrix</a></li>
 <li class="toctree-l2"><a class="reference internal" href="python_solvers.html">Solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_solvers.html#summary">Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_solvers.html#module-solvers">Documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="cython.html">Cython</a><ul>

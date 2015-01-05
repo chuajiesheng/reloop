@@ -1,0 +1,548 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>solvers &mdash; Relational Linear Programming 0.0.1a documentation</title>
+    
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/ls8layout.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.1a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="Relational Linear Programming 0.0.1a documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="http://www-ai.cs.uni-dortmund.de/weblab/index.html"><img class="intro-logo" src="../_static/tulogo.svg">
+        </a>
+        <span class="navbar-text navbar-ls8-title">
+          Relational Linear Programming<span class="navbar-version"><b> (0.0.1)</b></span>
+        </span>
+      </div>
+
+      <div class="collapse navbar-collapse nav-collapse navbar-right">
+        <ul class="nav navbar-nav">
+          
+              <li><a href="../index.html">Home</a></li>
+              <li><a href="../download.html">Download</a></li>
+          
+          
+            
+<li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Index <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../introduction.html#heading-1">Heading 1</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#faq">FAQ</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code.html">Code</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../python.html">Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cython.html">Cython</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cpp.html">CPlusPlus</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
+</ul>
+</ul>
+</li>
+            
+              <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+            
+          
+          
+          
+          
+          
+        </ul>
+
+        
+          
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        
+      </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <h1>Source code for solvers</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/python</span>
+<span class="c">## @package liftedLP_glpk</span>
+<span class="c">#TODO</span>
+<span class="c">#</span>
+<span class="c">#</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Created on Dec 28, 2010</span>
+
+<span class="sd">@author: Martin Mladenov</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">scipy.io</span>
+<span class="kn">from</span> <span class="nn">cvxopt</span> <span class="kn">import</span> <span class="n">matrix</span><span class="p">,</span><span class="n">spmatrix</span>
+<span class="kn">from</span> <span class="nn">cvxopt</span> <span class="kn">import</span> <span class="n">solvers</span>
+<span class="kn">from</span> <span class="nn">cvxopt</span> <span class="kn">import</span> <span class="n">printing</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">argv</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">fabs</span><span class="p">,</span> <span class="n">log</span><span class="p">,</span> <span class="n">exp</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.sparse</span> <span class="kn">as</span> <span class="nn">sp</span>
+<span class="kn">import</span> <span class="nn">picos</span> <span class="kn">as</span> <span class="nn">pic</span>
+<span class="kn">import</span> <span class="nn">relopt.liftedLP.saucywrap</span> <span class="kn">as</span> <span class="nn">saucy</span>
+
+
+<div class="viewcode-block" id="rowUnique"><a class="viewcode-back" href="../python_solvers.html#solvers.rowUnique">[docs]</a><span class="k">def</span> <span class="nf">rowUnique</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    TODO</span>
+
+<span class="sd">    :param a:</span>
+<span class="sd">    :type a:</span>
+
+<span class="sd">    :returns:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">void</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">itemsize</span> <span class="o">*</span> <span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">return_inverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">idx</span>
+</div>
+<div class="viewcode-block" id="col2matrix"><a class="viewcode-back" href="../python_solvers.html#solvers.col2matrix">[docs]</a><span class="k">def</span> <span class="nf">col2matrix</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    TODO</span>
+
+<span class="sd">    :param c:</span>
+<span class="sd">    :type c:</span>
+
+<span class="sd">    :returns:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">brows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)))</span>
+    <span class="n">bdata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+    <span class="n">Bcc</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">((</span><span class="n">bdata</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">brows</span><span class="p">,</span><span class="n">c</span><span class="p">))),</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span><span class="o">.</span><span class="n">tocsr</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">Bcc</span>
+</div>
+<div class="viewcode-block" id="sumRefinement"><a class="viewcode-back" href="../python_solvers.html#solvers.sumRefinement">[docs]</a><span class="k">def</span> <span class="nf">sumRefinement</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    TODO</span>
+
+<span class="sd">    :param A:</span>
+<span class="sd">    :type A:</span>
+<span class="sd">    :param b:</span>
+<span class="sd">    :type b:</span>
+
+<span class="sd">    :returns:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">print</span> <span class="s">&quot;SumRef starting&quot;</span>
+    <span class="n">czero</span> <span class="o">=</span> <span class="n">b</span>
+    <span class="n">ncols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">ncolsold</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">ncols</span> <span class="o">!=</span> <span class="n">ncolsold</span><span class="p">:</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="n">col2matrix</span><span class="p">(</span><span class="n">czero</span><span class="p">)</span>
+        <span class="n">czero</span> <span class="o">=</span> <span class="n">rowUnique</span><span class="p">((</span><span class="n">A</span><span class="o">*</span><span class="n">B</span><span class="p">)</span><span class="o">.</span><span class="n">todense</span><span class="p">())</span>
+        <span class="n">ncolsold</span> <span class="o">=</span> <span class="n">ncols</span>
+        <span class="n">ncols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">czero</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">czero</span>
+</div>
+<div class="viewcode-block" id="lift"><a class="viewcode-back" href="../python_solvers.html#solvers.lift">[docs]</a><span class="k">def</span> <span class="nf">lift</span><span class="p">(</span><span class="n">Ar</span><span class="p">,</span> <span class="n">br</span><span class="p">,</span> <span class="n">cr</span><span class="p">,</span> <span class="n">sparse</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">orbits</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">sumRefine</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    TODO</span>
+
+<span class="sd">    :param Ar:</span>
+<span class="sd">    :type Ar:</span>
+<span class="sd">    :param br:</span>
+<span class="sd">    :type br:</span>
+<span class="sd">    :param cr:</span>
+<span class="sd">    :type cr:</span>
+<span class="sd">    :param sparse:</span>
+<span class="sd">    :type sparse:</span>
+<span class="sd">    :param orbits:</span>
+<span class="sd">    :type orbits:</span>
+<span class="sd">    :param sumRefine:</span>
+<span class="sd">    :type sumRefine</span>
+
+<span class="sd">    :returns:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">sparse</span><span class="p">:</span>
+        <span class="n">AC</span> <span class="o">=</span> <span class="n">Ar</span><span class="o">.</span><span class="n">tocoo</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">AC</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">(</span><span class="n">Ar</span><span class="p">)</span>
+    <span class="n">starttime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">clock</span><span class="p">()</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">sparse</span><span class="p">):</span>
+
+        <span class="n">_</span><span class="p">,</span> <span class="n">cmod</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cr</span><span class="p">),</span> <span class="n">return_inverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">bmod</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">br</span><span class="p">),</span> <span class="n">return_inverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">cmod</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cr</span><span class="o">.</span><span class="n">todense</span><span class="p">()),</span> <span class="n">return_inverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">bmod</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">br</span><span class="o">.</span><span class="n">todense</span><span class="p">()),</span> <span class="n">return_inverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="c"># cmod = cmod + np.max(bmod) + 1</span>
+    <span class="c"># b = sp.lil_matrix(bmod)</span>
+    <span class="c"># c = sp.lil_matrix(cmod)</span>
+
+    <span class="n">co</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">lil_matrix</span><span class="p">(</span><span class="n">cr</span><span class="p">)</span>
+    <span class="n">bo</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">lil_matrix</span><span class="p">(</span><span class="n">br</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span>  <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">AC</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span> <span class="n">return_inverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">o</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">orbits</span><span class="p">:</span> <span class="n">o</span> <span class="o">=</span> <span class="mi">0</span> 
+    <span class="k">if</span> <span class="n">sumRefine</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">orbits</span><span class="p">:</span> 
+        <span class="n">bcolsSaucy2</span> <span class="o">=</span> <span class="n">sumRefinement</span><span class="p">(</span><span class="n">AA</span><span class="p">,</span><span class="n">cc</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span> 
+        <span class="c"># bcolsSaucy = wrapper.epSaucy(T.data.round(6).astype(np.float), T.row.astype(np.uintp), T.col.astype(np.uintp), cc.astype(np.uintp), np.int32(0), np.int32(o));</span>
+        <span class="n">bcolsSaucy2</span> <span class="o">=</span> <span class="n">saucy</span><span class="o">.</span><span class="n">epSaucyBipartite</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uintp</span><span class="p">),</span> <span class="n">AC</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uintp</span><span class="p">),</span> <span class="n">AC</span><span class="o">.</span><span class="n">col</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uintp</span><span class="p">),</span> <span class="n">bmod</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uintp</span><span class="p">),</span> <span class="n">cmod</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uintp</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">o</span><span class="p">));</span>
+    <span class="k">print</span> <span class="s">&quot;refinement took: &quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">clock</span><span class="p">()</span> <span class="o">-</span> <span class="n">starttime</span><span class="p">,</span> <span class="s">&quot;seconds.&quot;</span>
+    <span class="c"># print bcolsSaucy2</span>
+    <span class="n">n</span> <span class="o">=</span>  <span class="n">cmod</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">bmod</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c"># _, bcols = np.unique(bcolsSaucy[0:n], return_inverse=True)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">bcols2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">bcolsSaucy2</span><span class="p">[</span><span class="n">m</span><span class="p">:</span><span class="n">n</span><span class="o">+</span><span class="n">m</span><span class="p">],</span> <span class="n">return_inverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="c"># print bcols</span>
+    <span class="c"># print bcols2</span>
+    <span class="c"># if (len( (bcolsSaucy-bcolsSaucy2).nonzero()[0] ) &gt; 0 ): exit(&quot;wrappers don&#39;t agree&quot;)</span>
+    
+    <span class="n">brows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+
+    <span class="n">bdata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+    <span class="c"># Bcc = sp.csr_matrix((bdata,np.vstack((brows,bcols))),dtype=np.int).tocsr()</span>
+    <span class="n">Bcc2</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">((</span><span class="n">bdata</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">brows</span><span class="p">,</span><span class="n">bcols2</span><span class="p">))),</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span><span class="o">.</span><span class="n">tocsr</span><span class="p">()</span>
+    <span class="c"># _, rcols = np.unique(bcolsSaucy[n:n+m], return_inverse=True)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">rcols2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">bcolsSaucy2</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">m</span><span class="p">],</span> <span class="n">return_inverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="n">_</span><span class="p">,</span> <span class="n">rowfilter2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">rcols2</span><span class="p">,</span> <span class="n">return_index</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="n">LA2</span> <span class="o">=</span> <span class="n">AC</span><span class="o">.</span><span class="n">tocsr</span><span class="p">()[</span><span class="n">rowfilter2</span><span class="p">,:]</span><span class="o">*</span><span class="n">Bcc2</span>
+
+    <span class="n">Lc</span> <span class="o">=</span> <span class="p">(</span><span class="n">co</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">Bcc2</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">Lb</span> <span class="o">=</span> <span class="n">bo</span><span class="p">[</span><span class="n">rowfilter2</span><span class="p">]</span><span class="o">.</span><span class="n">todense</span><span class="p">()</span>
+    <span class="n">compresstime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">clock</span><span class="p">()</span><span class="o">-</span><span class="n">starttime</span>
+    <span class="n">LA2</span> <span class="o">=</span> <span class="n">LA2</span><span class="o">.</span><span class="n">tocoo</span><span class="p">()</span>
+    <span class="n">Lc</span> <span class="o">=</span> <span class="n">Lc</span><span class="o">.</span><span class="n">todense</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">LA2</span><span class="p">,</span> <span class="n">Lb</span><span class="p">,</span> <span class="n">Lc</span><span class="p">,</span> <span class="n">compresstime</span><span class="p">,</span> <span class="n">Bcc2</span>
+
+
+
+</div>
+<div class="viewcode-block" id="sp_saveProblem"><a class="viewcode-back" href="../python_solvers.html#solvers.sp_saveProblem">[docs]</a><span class="k">def</span> <span class="nf">sp_saveProblem</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    TODO</span>
+
+<span class="sd">    :param fname:</span>
+<span class="sd">    :type fname:</span>
+<span class="sd">    :param A:</span>
+<span class="sd">    :type A:</span>
+<span class="sd">    :param b:</span>
+<span class="sd">    :type b:</span>
+<span class="sd">    :param c:</span>
+<span class="sd">    :type c:</span>
+
+<span class="sd">    :returns:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">prob</span> <span class="o">=</span> <span class="n">pic</span><span class="o">.</span><span class="n">Problem</span><span class="p">()</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">prob</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">,</span><span class="n">A</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vtype</span><span class="o">=</span><span class="s">&#39;continuous&#39;</span><span class="p">)</span>
+    <span class="n">prob</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">A</span><span class="o">*</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">b</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">prob</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="s">&#39;min&#39;</span><span class="p">,</span><span class="n">c</span><span class="o">.</span><span class="n">T</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">prob</span><span class="o">.</span><span class="n">write_to_file</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span><span class="n">writer</span><span class="o">=</span><span class="s">&#39;gurobi&#39;</span><span class="p">)</span>
+
+                             </div>
+<div class="viewcode-block" id="sparse"><a class="viewcode-back" href="../python_solvers.html#solvers.sparse">[docs]</a><span class="k">def</span> <span class="nf">sparse</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">debug</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">optiter</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span><span class="n">plot</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">orbits</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">sumRefine</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s">&#39;cvxopt&#39;</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    TODO</span>
+<span class="sd">    :param A:</span>
+<span class="sd">    :type A:</span>
+<span class="sd">    :param b:</span>
+<span class="sd">    :type b:</span>
+<span class="sd">    :param c:</span>
+<span class="sd">    :type c:</span>
+<span class="sd">    :param optiter:</span>
+<span class="sd">    :type optiter:</span>
+<span class="sd">    :param plot:</span>
+<span class="sd">    :type plot:</span>
+<span class="sd">    :param save:</span>
+<span class="sd">    :type save:</span>
+<span class="sd">    :param orbits:</span>
+<span class="sd">    :type orbits:</span>
+<span class="sd">    :param sumRefine:</span>
+<span class="sd">    :type sumRefine:</span>
+
+<span class="sd">    :returns:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c">#print &quot;================Original================&quot;</span>
+    <span class="c"># print  &quot;objsum: &quot;, np.sum(c.todense())</span>
+    <span class="n">solvers</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;abstol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tol</span>
+    <span class="k">if</span> <span class="n">debug</span> <span class="ow">or</span> <span class="p">(</span><span class="n">save</span> <span class="o">!=</span> <span class="bp">False</span><span class="p">):</span>
+        <span class="n">mc</span> <span class="o">=</span> <span class="o">-</span><span class="n">matrix</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">todense</span><span class="p">())</span>
+        <span class="c"># print np.max(A.tocoo().row)</span>
+        <span class="c"># exit()</span>
+        <span class="n">mA</span> <span class="o">=</span> <span class="n">spmatrix</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">tocoo</span><span class="p">()</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">A</span><span class="o">.</span><span class="n">tocoo</span><span class="p">()</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span><span class="n">A</span><span class="o">.</span><span class="n">tocoo</span><span class="p">()</span><span class="o">.</span><span class="n">col</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+        <span class="n">mb</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">todense</span><span class="p">())</span>
+        <span class="c"># sp_saveProblem(&quot;asdf.mps&quot;, mA, mb, mc)</span>
+        
+        <span class="n">probground</span> <span class="o">=</span> <span class="n">pic</span><span class="o">.</span><span class="n">Problem</span><span class="p">()</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">probground</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">,</span><span class="n">mA</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vtype</span><span class="o">=</span><span class="s">&#39;continuous&#39;</span><span class="p">)</span>
+        <span class="n">probground</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">mA</span><span class="o">*</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">mb</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="n">probground</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="s">&#39;min&#39;</span><span class="p">,</span><span class="n">mc</span><span class="o">.</span><span class="n">T</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>
+        <span class="c"># probground.write_to_file(fname,writer=&#39;gurobi&#39;)</span>
+
+
+        <span class="c"># if glpk:     </span>
+        <span class="n">solinfognd</span> <span class="o">=</span> <span class="n">probground</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="n">solver</span><span class="p">,</span><span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="c">#     sol = solvers.lp(mc, mA, mb, solver=&quot;glpk&quot;)</span>
+        <span class="c"># else: </span>
+        <span class="c">#     sol = solvers.lp(mc, mA, mb)</span>
+
+        <span class="n">xground</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">xground</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">xground</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+        <span class="n">timeground</span> <span class="o">=</span> <span class="n">solinfognd</span><span class="p">[</span><span class="s">&#39;time&#39;</span><span class="p">]</span>  
+        <span class="n">objground</span> <span class="o">=</span> <span class="n">solinfognd</span><span class="p">[</span><span class="s">&#39;obj&#39;</span><span class="p">]</span>  
+
+    <span class="n">LA</span><span class="p">,</span> <span class="n">Lb</span><span class="p">,</span> <span class="n">Lc</span><span class="p">,</span> <span class="n">compresstime</span><span class="p">,</span> <span class="n">Bcc</span> <span class="o">=</span> <span class="n">lift</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span> <span class="n">sparse</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">orbits</span><span class="o">=</span><span class="n">orbits</span><span class="p">)</span>
+    <span class="n">starttime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">clock</span><span class="p">()</span>
+
+    <span class="n">problifted</span> <span class="o">=</span> <span class="n">pic</span><span class="o">.</span><span class="n">Problem</span><span class="p">()</span>
+    <span class="n">lx</span> <span class="o">=</span>  <span class="n">problifted</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="s">&#39;lx&#39;</span><span class="p">,</span><span class="n">LA</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vtype</span><span class="o">=</span><span class="s">&#39;continuous&#39;</span><span class="p">)</span>
+    <span class="n">problifted</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">spmatrix</span><span class="p">(</span><span class="n">LA</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">LA</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span><span class="n">LA</span><span class="o">.</span><span class="n">col</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span><span class="o">*</span><span class="n">lx</span> <span class="o">&lt;</span> <span class="n">matrix</span><span class="p">(</span><span class="n">Lb</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">problifted</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="s">&#39;min&#39;</span><span class="p">,</span><span class="o">-</span><span class="n">matrix</span><span class="p">(</span><span class="n">Lc</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="o">*</span><span class="n">lx</span><span class="p">)</span>
+    <span class="n">solinfolifted</span> <span class="o">=</span> <span class="n">problifted</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="n">solver</span><span class="p">,</span><span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">xopt</span> <span class="o">=</span> <span class="n">lx</span><span class="o">.</span><span class="n">value</span>
+    <span class="c"># if glpk:</span>
+    <span class="c">#     sol = solvers.lp(-matrix(Lc),,matrix(Lb), solver=&quot;glpk&quot;)</span>
+    <span class="c"># else:</span>
+    <span class="c">#     sol = solvers.lp(-matrix(Lc),spmatrix(LA.data,LA.row.tolist(),LA.col.tolist()),matrix(Lb))</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">xopt</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+    <span class="n">xopt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">Bcc</span> <span class="o">*</span> <span class="n">r</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">todense</span><span class="p">())</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="n">timelift</span> <span class="o">=</span> <span class="n">solinfolifted</span><span class="p">[</span><span class="s">&#39;time&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">compresstime</span>  
+    <span class="n">objlift</span> <span class="o">=</span> <span class="n">solinfolifted</span><span class="p">[</span><span class="s">&#39;obj&#39;</span><span class="p">]</span>  
+    <span class="c"># timelift = time.clock() - starttime + compresstime</span>
+    <span class="c"># objlift = problifted.obj_value() </span>
+    <span class="k">print</span> <span class="s">&quot;lifting cols: &quot;</span><span class="p">,</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s">&quot; -&gt; &quot;</span><span class="p">,</span> <span class="n">LA</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">print</span> <span class="s">&quot;lifting rows: &quot;</span><span class="p">,</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">&quot; -&gt; &quot;</span><span class="p">,</span> <span class="n">LA</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> 
+        <span class="n">report</span><span class="p">(</span><span class="n">objlift</span><span class="p">,</span> <span class="n">objground</span><span class="p">,</span> <span class="n">xopt</span><span class="p">,</span> <span class="n">xground</span><span class="p">,</span> <span class="n">timelift</span><span class="p">,</span> <span class="n">timeground</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">xopt</span><span class="p">,</span> <span class="n">timeground</span><span class="p">,</span> <span class="n">timelift</span><span class="p">,</span> <span class="n">compresstime</span><span class="p">,</span> <span class="n">Bcc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Bcc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">LA</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">&quot;tlift: &quot;</span><span class="p">,</span> <span class="n">timelift</span><span class="p">,</span> <span class="s">&quot;timecomp: &quot;</span><span class="p">,</span> <span class="n">compresstime</span> 
+        <span class="k">return</span> <span class="p">[</span><span class="n">xopt</span><span class="p">,</span> <span class="n">timelift</span><span class="p">,</span> <span class="n">compresstime</span><span class="p">,</span> <span class="n">Bcc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Bcc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">LA</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    </div>
+<div class="viewcode-block" id="report"><a class="viewcode-back" href="../python_solvers.html#solvers.report">[docs]</a><span class="k">def</span> <span class="nf">report</span><span class="p">(</span><span class="n">objlift</span><span class="p">,</span> <span class="n">objground</span><span class="p">,</span> <span class="n">xopt</span><span class="p">,</span> <span class="n">xground</span><span class="p">,</span> <span class="n">timelift</span><span class="p">,</span> <span class="n">timeground</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    TODO</span>
+
+<span class="sd">    :param xopt:</span>
+<span class="sd">    :type xopt:</span>
+<span class="sd">    :param xground:</span>
+<span class="sd">    :type xground:</span>
+<span class="sd">    :param timelift:</span>
+<span class="sd">    :type timelift:</span>
+<span class="sd">    :param timeground:</span>
+<span class="sd">    :type timeground:</span>
+
+<span class="sd">    :returns:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;=================================&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;objective values of lifted: &quot;</span><span class="p">,</span> <span class="n">objlift</span><span class="p">,</span> <span class="s">&quot;, ground: &quot;</span><span class="p">,</span> <span class="n">objground</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\n\n</span><span class="s">&quot;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">objlift</span><span class="o">-</span><span class="n">objground</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.0001</span><span class="p">):</span> <span class="nb">exit</span><span class="p">(</span><span class="s">&quot;ERROR: Objective values of lifted and ground do not agree!&quot;</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot;difference with ground solution: &quot;</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">xopt</span> <span class="o">-</span> <span class="n">xground</span><span class="p">))</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">xopt</span> <span class="o">-</span> <span class="n">xground</span><span class="p">))</span>
+    <span class="k">print</span> <span class="s">&quot;abs: &quot;</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="s">&quot; at xground: &quot;</span><span class="p">,</span><span class="n">xground</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s">&quot; xlift: &quot;</span><span class="p">,</span> <span class="n">xopt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="c"># gg =  np.max(np.abs(xopt/xground))</span>
+    <span class="c"># hh =  np.max(np.abs(xground/xopt))</span>
+    <span class="c"># if gg&gt;hh:</span>
+    <span class="c">#     m = gg</span>
+    <span class="c">#     i = np.argmax(np.abs(xopt/xground))</span>
+    <span class="c"># else:</span>
+    <span class="c">#     m = hh</span>
+    <span class="c">#     i = np.argmax(np.abs(xground/xopt))</span>
+    <span class="c"># print &quot;rel: &quot;, m, &quot; at xground: &quot;,xground[i], &quot; xlift: &quot;, xopt[i]</span>
+    <span class="k">print</span> <span class="s">&quot;ground time: &quot;</span><span class="p">,</span> <span class="n">timeground</span><span class="p">,</span> <span class="s">&quot; lifted time: &quot;</span><span class="p">,</span> <span class="n">timelift</span>
+    <span class="k">print</span> <span class="s">&quot;=================================&quot;</span>
+               </div>
+<div class="viewcode-block" id="liftedLPCVXOPT"><a class="viewcode-back" href="../python_solvers.html#solvers.liftedLPCVXOPT">[docs]</a><span class="k">def</span> <span class="nf">liftedLPCVXOPT</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">debug</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">optiter</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span><span class="n">plot</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">save</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">orbits</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">sumRefine</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    liftedLPCVXOPT: takes as input an LP in the form</span>
+
+<span class="sd">        max   c&#39;x</span>
+
+<span class="sd">        s.t.  Ax &lt;= b</span>
+<span class="sd">    where A, b, x are numpy arrays of size (m,n), (m,1), (n,1) respectively and returns a vector solving</span>
+<span class="sd">    the linear program. </span>
+<span class="sd">    By default, the linear program is preprocessed by color-passing, the smaller LP is solved in </span>
+<span class="sd">    CVXOPT and then the solution vector is recovered.</span>
+
+<span class="sd">    :param A: Numpy Array of size (m,n)</span>
+<span class="sd">    :type A: double.</span>
+<span class="sd">    :param b: Numpy Array of size (m,1) - the row vector</span>
+<span class="sd">    :type b: int.</span>
+<span class="sd">    :param c: Numpy Array of size (n,1) - the column vector</span>
+<span class="sd">    :type c: int.</span>
+<span class="sd">    :param debug: when set to true, an uncompressed version of the LP is solved before solving the lifted one in order to measure time gains and potentially differences between ground and lifted solutions. (Optional - Default = FALSE)</span>
+<span class="sd">    :type debug: bool.</span>
+<span class="sd">    :param optiter: limits CVXOPT iterations. (Optional - Default = 200)</span>
+<span class="sd">    :type optiter: int.</span>
+<span class="sd">    :param plot: produces matrix plots similar to those in the thesis (see the plot() function definition). (Optional - Default = FALSE)</span>
+<span class="sd">    :type plot: bool.</span>
+<span class="sd">    :param save: saves the lifted LP in CVS (see the save() function definition). (Optional - Default = FALSE)</span>
+<span class="sd">    :type save: bool.</span>
+<span class="sd">    :param orbits:</span>
+<span class="sd">    :type orbits:</span>
+<span class="sd">    :param sumRefine:</span>
+<span class="sd">    :type sumRefine:</span>
+
+<span class="sd">    :returns: The solution vector as tuple : [xopt, (timeground), timelift, compresstime, Bcc.shape[0], Bcc.shape[1], A.shape[0], LA.shape[0]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="n">b</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">size</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">size</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot;shapes: &quot;</span><span class="p">,</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">solvers</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&quot;maxiters&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">optiter</span>
+    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>    
+        <span class="n">starttime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">clock</span><span class="p">()</span>
+        <span class="n">sol</span> <span class="o">=</span> <span class="n">solvers</span><span class="o">.</span><span class="n">lp</span><span class="p">(</span><span class="o">-</span><span class="n">matrix</span><span class="p">(</span><span class="n">c</span><span class="p">),</span><span class="n">matrix</span><span class="p">(</span><span class="n">A</span><span class="p">),</span><span class="n">matrix</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+        <span class="n">xground</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sol</span><span class="p">[</span><span class="s">&quot;x&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+        <span class="n">timeground</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">clock</span><span class="p">()</span> <span class="o">-</span> <span class="n">starttime</span>
+        <span class="n">objground</span> <span class="o">=</span> <span class="n">sol</span><span class="p">[</span><span class="s">&#39;primal objective&#39;</span><span class="p">]</span>
+        <span class="c"># print timeground</span>
+        <span class="c"># return</span>
+    
+    <span class="n">LA</span><span class="p">,</span> <span class="n">Lb</span><span class="p">,</span> <span class="n">Lc</span><span class="p">,</span> <span class="n">compresstime</span><span class="p">,</span> <span class="n">Bcc</span> <span class="o">=</span> <span class="n">lift</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span> <span class="n">sparse</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">orbits</span><span class="o">=</span><span class="n">orbits</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">save</span><span class="p">:</span> <span class="n">save</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">LA</span><span class="p">),</span><span class="n">Lb</span><span class="p">,</span><span class="n">Lc</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">plot</span><span class="p">:</span>
+        <span class="n">plotLP</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">A</span><span class="p">),</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">)</span>
+        <span class="n">plotLP</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">LA</span><span class="p">),</span><span class="n">Lb</span><span class="p">,</span><span class="n">Lc</span><span class="p">)</span>
+    
+    <span class="n">starttime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">clock</span><span class="p">()</span>
+    <span class="k">print</span> <span class="s">&quot;lshapes: &quot;</span><span class="p">,</span> <span class="n">LA</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">Lb</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">Lc</span><span class="o">.</span><span class="n">shape</span>
+    <span class="c"># sol = solvers.lp(-matrix(Lc),spmatrix(LA.data,LA.row.tolist(),LA.col.tolist()),matrix(Lb))</span>
+    <span class="n">sol</span> <span class="o">=</span> <span class="n">solvers</span><span class="o">.</span><span class="n">lp</span><span class="p">(</span><span class="o">-</span><span class="n">matrix</span><span class="p">(</span><span class="n">Lc</span><span class="p">),</span><span class="n">matrix</span><span class="p">(</span><span class="n">LA</span><span class="o">.</span><span class="n">todense</span><span class="p">()),</span><span class="n">matrix</span><span class="p">(</span><span class="n">Lb</span><span class="p">))</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sol</span><span class="p">[</span><span class="s">&#39;x&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="n">xopt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Bcc</span><span class="o">.</span><span class="n">todense</span><span class="p">(),</span><span class="n">r</span><span class="p">))</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="n">timelift</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">clock</span><span class="p">()</span> <span class="o">-</span> <span class="n">starttime</span> <span class="o">+</span> <span class="n">compresstime</span>
+    <span class="n">objlift</span> <span class="o">=</span> <span class="n">sol</span><span class="p">[</span><span class="s">&#39;primal objective&#39;</span><span class="p">]</span>
+    <span class="k">print</span> <span class="s">&quot;lifting cols: &quot;</span><span class="p">,</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s">&quot; -&gt; &quot;</span><span class="p">,</span> <span class="n">LA</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">print</span> <span class="s">&quot;lifting rows: &quot;</span><span class="p">,</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">&quot; -&gt; &quot;</span><span class="p">,</span> <span class="n">LA</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> 
+        <span class="n">report</span><span class="p">(</span><span class="n">objlift</span><span class="p">,</span> <span class="n">objground</span><span class="p">,</span> <span class="n">xopt</span><span class="p">,</span> <span class="n">xground</span><span class="p">,</span> <span class="n">timelift</span><span class="p">,</span> <span class="n">timeground</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">xopt</span><span class="p">,</span> <span class="n">timeground</span><span class="p">,</span> <span class="n">timelift</span><span class="p">,</span> <span class="n">compresstime</span><span class="p">,</span> <span class="n">Bcc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Bcc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">LA</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">&quot;tlift: &quot;</span><span class="p">,</span> <span class="n">timelift</span><span class="p">,</span> <span class="s">&quot;timecomp: &quot;</span><span class="p">,</span> <span class="n">compresstime</span> 
+        <span class="k">return</span> <span class="p">[</span><span class="n">xopt</span><span class="p">,</span> <span class="n">timelift</span><span class="p">,</span> <span class="n">compresstime</span><span class="p">,</span> <span class="n">Bcc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Bcc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">LA</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+</div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">countz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+    <span class="nb">vars</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>    
+    <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.4</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.6</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.8</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>    
+    <span class="n">zero</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">,</span> <span class="mf">1.04</span><span class="p">,</span> <span class="mf">1.09</span><span class="p">,</span> <span class="mf">1.16</span><span class="p">,</span> <span class="mf">1.25</span><span class="p">,</span> <span class="mf">1.36</span><span class="p">,</span> <span class="mf">1.49</span><span class="p">,</span> <span class="mf">1.64</span><span class="p">,</span> <span class="mf">1.81</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+    <span class="n">b</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">size</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">size</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">5</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="n">zero</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">A</span><span class="p">,</span><span class="n">zero</span><span class="p">)),</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">zero</span><span class="p">,</span><span class="n">A</span><span class="p">))))</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">b</span><span class="p">,</span><span class="n">b</span><span class="p">))</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">c</span><span class="p">,</span><span class="n">c</span><span class="p">))</span>
+
+    <span class="k">print</span> <span class="n">A</span>
+    <span class="k">print</span> <span class="n">sp_liftedLPCVXOPT</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">(</span><span class="n">A</span><span class="p">),</span><span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">(</span><span class="n">b</span><span class="p">),</span><span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, Martin Mladenov.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3b2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

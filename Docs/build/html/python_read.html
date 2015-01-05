@@ -43,7 +43,7 @@
   </head>
   <body role="document">
 
-  <div id="navbar" class="navbar navbar-default ">
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
       <div class="navbar-header">
         <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
@@ -62,13 +62,17 @@
       <div class="collapse navbar-collapse nav-collapse navbar-right">
         <ul class="nav navbar-nav">
           
+              <li><a href="index.html">Home</a></li>
+              <li><a href="download.html">Download</a></li>
           
-            <li class="dropdown globaltoc-container">
+          
+            
+<li class="dropdown globaltoc-container">
   <a role="button"
      id="dLabelGlobalToc"
      data-toggle="dropdown"
      data-target="#"
-     href="index.html">Site <b class="caret"></b></a>
+     href="index.html">Index <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
@@ -76,7 +80,13 @@
 <li class="toctree-l2"><a class="reference internal" href="introduction.html#heading-1">Heading 1</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#faq">FAQ</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="code.html">Code</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="python.html">Python</a></li>
@@ -259,11 +269,19 @@ b &#8211; the corresponding data vector.</p>
 <dl class="function">
 <dt id="read.openLP">
 <code class="descclassname">read.</code><code class="descname">openLP</code><span class="sig-paren">(</span><em>fname</em>, <em>ftype</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/read.html#openLP"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#read.openLP" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls C++ code which opens a linear Program to solve given problem in specified file.
-:param fname: The path of a specified file, which is subject to solving
-:type fname: str.
-:param ftype: A specified format as how to solve the given LP
-:type ftype: int.</p>
+<dd><p>Calls C++ code which opens a linear Program to solve given problem in specified file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fname</strong> (<em>str.</em>) &#8211; The path of a specified file, which is subject to solving</li>
+<li><strong>ftype</strong> (<em>int.</em>) &#8211; A specified format as how to solve the given LP</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
