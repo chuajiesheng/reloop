@@ -41,7 +41,7 @@
   </head>
   <body role="document">
 
-  <div id="navbar" class="navbar navbar-default ">
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
       <div class="navbar-header">
         <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
@@ -60,13 +60,17 @@
       <div class="collapse navbar-collapse nav-collapse navbar-right">
         <ul class="nav navbar-nav">
           
+              <li><a href="../index.html">Home</a></li>
+              <li><a href="../download.html">Download</a></li>
           
-            <li class="dropdown globaltoc-container">
+          
+            
+<li class="dropdown globaltoc-container">
   <a role="button"
      id="dLabelGlobalToc"
      data-toggle="dropdown"
      data-target="#"
-     href="../index.html">Site <b class="caret"></b></a>
+     href="../index.html">Index <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
@@ -74,7 +78,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../introduction.html#heading-1">Heading 1</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../installation.html">installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#faq">FAQ</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../code.html">Code</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../python.html">Python</a></li>
@@ -136,9 +145,10 @@
 <span class="n">GEOMMEAN</span> <span class="o">=</span> <span class="mi">6</span>
 <span class="n">EQUILIB</span> <span class="o">=</span> <span class="mi">7</span>
 
-<div class="viewcode-block" id="openLP"><a class="viewcode-back" href="../read.html#read.openLP">[docs]</a><span class="k">def</span> <span class="nf">openLP</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span><span class="n">ftype</span><span class="p">):</span>
+<div class="viewcode-block" id="openLP"><a class="viewcode-back" href="../python_read.html#read.openLP">[docs]</a><span class="k">def</span> <span class="nf">openLP</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span><span class="n">ftype</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calls C++ code which opens a linear Program to solve given problem in specified file.</span>
+<span class="sd">    </span>
 <span class="sd">    :param fname: The path of a specified file, which is subject to solving</span>
 <span class="sd">    :type fname: str.</span>
 <span class="sd">    :param ftype: A specified format as how to solve the given LP</span>
@@ -146,7 +156,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">glpkwrap</span><span class="o">.</span><span class="n">openLP_Py</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span><span class="n">ftype</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="extract_matrix"><a class="viewcode-back" href="../read.html#read.extract_matrix">[docs]</a><span class="k">def</span> <span class="nf">extract_matrix</span><span class="p">(</span><span class="n">lpmatrix</span><span class="p">):</span>
+<div class="viewcode-block" id="extract_matrix"><a class="viewcode-back" href="../python_read.html#read.extract_matrix">[docs]</a><span class="k">def</span> <span class="nf">extract_matrix</span><span class="p">(</span><span class="n">lpmatrix</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extracts a coordinate matrix from a given array with exactly 4 rows</span>
 
@@ -176,7 +186,7 @@
     <span class="n">A</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">((</span><span class="n">d</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)),</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">))</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">]</span>
  </div>
-<div class="viewcode-block" id="getMatrix_Upper"><a class="viewcode-back" href="../read.html#read.getMatrix_Upper">[docs]</a><span class="k">def</span> <span class="nf">getMatrix_Upper</span><span class="p">(</span><span class="n">scaled</span><span class="p">):</span>
+<div class="viewcode-block" id="getMatrix_Upper"><a class="viewcode-back" href="../python_read.html#read.getMatrix_Upper">[docs]</a><span class="k">def</span> <span class="nf">getMatrix_Upper</span><span class="p">(</span><span class="n">scaled</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computes the Upper Bounds for a given LP and returns it as a multi-dimensional array</span>
 <span class="sd">        Ax &gt; b</span>
@@ -188,7 +198,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">glpkwrap</span><span class="o">.</span><span class="n">getMatrix_Upper</span><span class="p">(</span><span class="n">scaled</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="getMatrix_Lower"><a class="viewcode-back" href="../read.html#read.getMatrix_Lower">[docs]</a><span class="k">def</span> <span class="nf">getMatrix_Lower</span><span class="p">(</span><span class="n">scaled</span><span class="p">):</span>
+<div class="viewcode-block" id="getMatrix_Lower"><a class="viewcode-back" href="../python_read.html#read.getMatrix_Lower">[docs]</a><span class="k">def</span> <span class="nf">getMatrix_Lower</span><span class="p">(</span><span class="n">scaled</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computes the Lower Bounds for a given LP and returns it as a multi-dimensional array</span>
 <span class="sd">        Ax &lt; b</span>
@@ -200,7 +210,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">glpkwrap</span><span class="o">.</span><span class="n">getMatrix_Lower</span><span class="p">(</span><span class="n">scaled</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="getMatrix_Equal"><a class="viewcode-back" href="../read.html#read.getMatrix_Equal">[docs]</a><span class="k">def</span> <span class="nf">getMatrix_Equal</span><span class="p">(</span><span class="n">scaled</span><span class="p">):</span>
+<div class="viewcode-block" id="getMatrix_Equal"><a class="viewcode-back" href="../python_read.html#read.getMatrix_Equal">[docs]</a><span class="k">def</span> <span class="nf">getMatrix_Equal</span><span class="p">(</span><span class="n">scaled</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    TODO</span>
 <span class="sd">        Ax = b</span>
@@ -213,7 +223,7 @@
 
     <span class="k">return</span> <span class="n">glpkwrap</span><span class="o">.</span><span class="n">getMatrix_Equal</span><span class="p">(</span><span class="n">scaled</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="getMatrix_Unbound"><a class="viewcode-back" href="../read.html#read.getMatrix_Unbound">[docs]</a><span class="k">def</span> <span class="nf">getMatrix_Unbound</span><span class="p">(</span><span class="n">scaled</span><span class="p">):</span>
+<div class="viewcode-block" id="getMatrix_Unbound"><a class="viewcode-back" href="../python_read.html#read.getMatrix_Unbound">[docs]</a><span class="k">def</span> <span class="nf">getMatrix_Unbound</span><span class="p">(</span><span class="n">scaled</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computes Unbound variables of given LP</span>
 <span class="sd">        Ax &lt; 0</span>
@@ -225,7 +235,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">glpkwrap</span><span class="o">.</span><span class="n">getMatrix_Unbound</span><span class="p">(</span><span class="n">scaled</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="getObjective"><a class="viewcode-back" href="../read.html#read.getObjective">[docs]</a><span class="k">def</span> <span class="nf">getObjective</span><span class="p">(</span><span class="n">scaled</span><span class="p">):</span>
+<div class="viewcode-block" id="getObjective"><a class="viewcode-back" href="../python_read.html#read.getObjective">[docs]</a><span class="k">def</span> <span class="nf">getObjective</span><span class="p">(</span><span class="n">scaled</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calls the function getObjective from glpk2py.cpp and returns the objectives as one-dimensional array (see getObjective.cpp)</span>
 
