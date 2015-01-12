@@ -179,6 +179,11 @@ The best way to install SciPy is to follow the installation instructions on the 
 </div>
 <p><strong>Picos</strong></p>
 <p>To install Picos you need to download it first and the install it in the python environment or via pip. A tutorial on how to install Picos can be found here: <a class="reference external" href="http://picos.zib.de/intro.html#installation">Picos</a></p>
+<p>Once you have successfully installed the above packages you can <a class="reference external" href="../saucywrapper/Docs/build/html/download.html">Download</a> the program and run:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ python setup.py install
+</pre></div>
+</div>
+<p>in the main folder. This will install the package on your system.</p>
 </div></blockquote>
 </div>
 <div class="section" id="for-developers">
@@ -197,6 +202,11 @@ The best way to install SciPy is to follow the installation instructions on the 
 </div>
 <div class="section" id="troubleshooting">
 <h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><strong>&#8220;No module named gklpkwrap in read.py line 1&#8221;</strong></p>
+<blockquote>
+<div>The documentation tool Shpinx prevents us from using relative imports in our project folder. To fix this problem simply replace &#8220;import glpkwrap&#8221; in ../relopt/liftedLP/utils/read.py with &#8220;from .. import glpkwrap&#8221; and run python setup.py install again in the main folder.</div></blockquote>
+</div></blockquote>
 </div>
 <div class="section" id="faq">
 <h2>FAQ<a class="headerlink" href="#faq" title="Permalink to this headline">¶</a></h2>
