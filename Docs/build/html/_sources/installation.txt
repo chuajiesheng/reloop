@@ -1,26 +1,8 @@
+.. _installation:
+
 ============
 Installation
 ============
-<<<<<<< HEAD
-
-To install RLP you first have to have the necessary packages installed. After that one would simply run the setup.py in the main folder and execute the examples from the examples folder.
-
-Requirements
-************
-
-
-
-Setup
-************
-
-
-Troubleshooting
-***************
-
-
-FAQ
-************
-=======
 Hello and thank you for your interest in our program. We are constantly making improvements to performance and adding features. If you want to help developing or just want to try out our program you first need to install some required packages. So to get started right away you will need to follow these steps to be able to run the code and develop new features.
 
 Setup
@@ -89,4 +71,3 @@ Troubleshooting
 
 FAQ
 ===
->>>>>>> 6d5883be2e095f15b03c5d9a5ca6f7b02d46c3ef

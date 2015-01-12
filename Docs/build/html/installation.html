@@ -64,13 +64,8 @@
           
               <li><a href="index.html">Home</a></li>
               <li><a href="download.html">Download</a></li>
-<<<<<<< HEAD
           
           
-=======
-          
-          
->>>>>>> 6d5883be2e095f15b03c5d9a5ca6f7b02d46c3ef
             
 <li class="dropdown globaltoc-container">
   <a role="button"
@@ -86,10 +81,6 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Installation</a><ul>
-<<<<<<< HEAD
-<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
-=======
->>>>>>> 6d5883be2e095f15b03c5d9a5ca6f7b02d46c3ef
 <li class="toctree-l2"><a class="reference internal" href="#setup">Setup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#faq">FAQ</a></li>
@@ -104,6 +95,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
 </ul>
 </ul>
 </li>
@@ -118,16 +110,11 @@
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Installation</a><ul>
-<<<<<<< HEAD
-<li><a class="reference internal" href="#requirements">Requirements</a></li>
-<li><a class="reference internal" href="#setup">Setup</a></li>
-=======
 <li><a class="reference internal" href="#setup">Setup</a><ul>
 <li><a class="reference internal" href="#for-users">For Users</a></li>
 <li><a class="reference internal" href="#for-developers">For Developers</a></li>
 </ul>
 </li>
->>>>>>> 6d5883be2e095f15b03c5d9a5ca6f7b02d46c3ef
 <li><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
 <li><a class="reference internal" href="#faq">FAQ</a></li>
 </ul>
@@ -162,15 +149,7 @@
     <div class="col-md-12">
       
   <div class="section" id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<<<<<<< HEAD
-<p>To install RLP you first have to have the necessary packages installed. After that one would simply run the setup.py in the main folder and execute the examples from the examples folder.</p>
-<div class="section" id="requirements">
-<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="setup">
-<h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
-=======
+<span id="id1"></span><h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
 <p>Hello and thank you for your interest in our program. We are constantly making improvements to performance and adding features. If you want to help developing or just want to try out our program you first need to install some required packages. So to get started right away you will need to follow these steps to be able to run the code and develop new features.</p>
 <div class="section" id="setup">
 <h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
@@ -182,25 +161,21 @@
 <p>First you will need to install SciPy, which provides data structures like arrays and matrices for Python in an efficient way.
 The best way to install SciPy is to follow the installation instructions on the official SciPy homepage, which can be found here : <a class="reference external" href="http://scipy.org">SciPy</a></p>
 <p>The easiest way to install SciPy, if you have the admin permissions to do so, is to run:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ sudo apt-get install python-numpy python-scipy python-matplotlib ipython ipython-notebook python-pandas python-sympy python-nose
-</pre></div>
+<div class="highlight-python"><pre>$ sudo apt-get install python-numpy python-scipy python-matplotlib ipython ipython-notebook python-pandas python-sympy python-nose</pre>
 </div>
 <p>for Linux Users.</p>
 <p><strong>GNU glpk</strong></p>
 <p>The GNU glpk is necessary in order to actually solve the calculated LP. You can follow the installation guide on the GLPK wikibooks if you like : <a class="reference external" href="http://en.wikibooks.org/wiki/GLPK/Linux_OS">glpk</a></p>
 <p>After you have successfully installed the packages you might need to adjust your library paths, because your system might not yet know where to find the new files. To do that as a superuser you can just run:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ sudo ldconfig
-</pre></div>
+<div class="highlight-python"><pre>$ sudo ldconfig</pre>
 </div>
 <p>If you do not have the permission to execute the above command you will need to adjust your library path manually by using:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ export LD_LIBRARY_PATH=&quot;/path/to/the/sharedlibaries/of/glpk&quot;
-</pre></div>
+<div class="highlight-python"><pre>$ export LD_LIBRARY_PATH="/path/to/the/sharedlibaries/of/glpk"</pre>
 </div>
 <p>In case you do not want to set a permanent path to the shared library we suggest to create a make file, which has to be executed before running the actual program. This will keep the shared libraries seperated from your system.</p>
 <p><strong>Z-LIB</strong></p>
 <p>The zlib1g-dev package is also necessary to run the program. It is installed by running:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ sudo apt-get install zlib1g-dev
-</pre></div>
+<div class="highlight-python"><pre>$ sudo apt-get install zlib1g-dev</pre>
 </div>
 <p><strong>Picos</strong></p>
 <p>To install Picos you need to download it first and the install it in the python environment or via pip. A tutorial on how to install Picos can be found here: <a class="reference external" href="http://picos.zib.de/intro.html#installation">Picos</a></p>
@@ -211,17 +186,14 @@ The best way to install SciPy is to follow the installation instructions on the 
 <blockquote>
 <div><p><strong>Cython</strong></p>
 <p>Cython is necessary, because it links the python code with our C++ code. It allows to call C++ functions from our python framework. As soon as you change C++ or C code in our program you will need Cython to recompile the whole code. If you have pip installed on your OS you can simply run:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ pip install cython
-</pre></div>
+<div class="highlight-python"><pre>$ pip install cython</pre>
 </div>
 <p>Otherwise you can download the tarball and install it using python, by unpacking the tarball and running:</p>
-<div class="highlight-python"><div class="highlight"><pre>$python setup.py install
-</pre></div>
+<div class="highlight-python"><pre>$python setup.py install</pre>
 </div>
 <p>in the specified folder. For more information about how to install cython see the <a class="reference external" href="http://docs.cython.org/src/quickstart/install.html">Cython_Documentation</a></p>
 </div></blockquote>
 </div>
->>>>>>> 6d5883be2e095f15b03c5d9a5ca6f7b02d46c3ef
 </div>
 <div class="section" id="troubleshooting">
 <h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
@@ -250,7 +222,7 @@ The best way to install SciPy is to follow the installation instructions on the 
       
     </p>
     <p>
-        &copy; Copyright 2014, Martin Mladenov.<br/>
+        &copy; Copyright .<br/>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
     </p>
   </div>
