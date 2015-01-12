@@ -3,24 +3,14 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+.. |br| raw:: html
+
+   <br />
+
 .. image:: images/reloop.svg
    :width:  50%
    :alt: woot!
    :align: right
-
-RELOOP: A Toolkit for Relational Convex Optimization 
-=========================================================
-
-Welcome to reloop! This is the web home of the Relational Optimization project of the Data Mining group at TU-Dortmund. Here you will find software packages and theory produced by our research efforts. 
-
-
-
-**News**
-
- * Tomorrow: **Reloop** -- first release!** |br|
-
-
-Contents:
 
 .. toctree::
    :hidden:
@@ -32,11 +22,25 @@ Contents:
    code
    examples
    contact
+   bibliography
 
-Indices and tables
-==================
+RELOOP: A Toolkit for Relational Convex Optimization 
+=========================================================
+|br| |br|
+Welcome to reloop! This is the web home of the Relational Optimization project of the Data Mining group at TU-Dortmund. Here you will find software and theory produced in our research efforts. 
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+From here you can:
 
+* get an overall picture of what RELOOP is about by checking out the :ref:`introduction <introduction>`;
+
+* get started with our code -- head over to :ref:`download <download>`, :ref:`installation <installation>` and then to our quickstart :ref:`tutorial <tutorial>`;
+
+* navigate the complete code :ref:`decumentation <code>`;
+
+* find a list of all related papers on our :ref:`bibliography <bibliography>` page. 
+
+|br| |br|
+
+News
+----
+ * Tomorrow: **Reloop** -- first release!

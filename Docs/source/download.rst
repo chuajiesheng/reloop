@@ -1,2 +1,4 @@
-Download RLP
-============
+.. _download:
+
+Download
+========
