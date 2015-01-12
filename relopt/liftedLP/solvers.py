@@ -276,7 +276,7 @@ def report(objlift, objground, xopt, xground, timelift, timeground):
     """
     print "================================="
     print "objective values of lifted: ", objlift, ", ground: ", objground, "\n\n"
-    if (np.abs(objlift-objground) > 0.0001): exit("ERROR: Objective values of lifted and ground do not agree!")
+    if (objError(objlift,objground) > 0.01): exit("ERROR: Objective values of lifted and ground do not agree!")  
     print "difference with ground solution: "
     g = np.max(np.abs(xopt - xground))
     i = np.argmax(np.abs(xopt - xground))
@@ -292,7 +292,27 @@ def report(objlift, objground, xopt, xground, timelift, timeground):
     # print "rel: ", m, " at xground: ",xground[i], " xlift: ", xopt[i]
     print "ground time: ", timeground, " lifted time: ", timelift
     print "================================="
-               
+      
+def objError(objlift,objground):
+    """
+    objError : calculates the error of the objective lifted and ground values
+
+    :param objlift: The objective value of lifted
+    :type objlift: double.
+    :param objground: The objective value of ground
+    :type ground: double.
+
+    :returns: The error of lifted and ground value as double.
+    """
+
+    #Is there any possible way that either one of the lift and ground values is negative while the other one is positive or vice versa?
+    if(objlift < 0 and objground < 0 ):
+        print "error of objective lifted and ground values" , (min(objlift,objground)/max(objlift,objground) -1 )*100 , "% \n\n"
+        return (min(objlift,objground)/max(objlift,objground) - 1)
+    else:
+        print "error of objective lifted and ground values" , (abs(max(objlift,objground))/min(objlift,objground) - 1)*100 , "% \n\n"
+        return (abs(max(objlift,objground)/min(objlift,objground)) - 1) 
+
 def liftedLPCVXOPT(A,b,c,debug=False,optiter=200,plot=False,save=False, orbits=False, sumRefine=False):
     """
     liftedLPCVXOPT: takes as input an LP in the form
