@@ -2,6 +2,9 @@
 Introduction
 ============
 
+The art and science of numerical optimization has left a deep imprint on virtually every branch of science and engineering. Today, numerical optimization is the go-to method to solve a wide varienty of problems, 
+ranging from the purely geometric (such as fitting an ellipsoid around a set of points) to the purely discrete (matchings, shortest paths). Despite the wide variety of problems, the "standard language" of numerical optimization is mostly an algebraic/geometric one, making heavy use of so-called "standard forms". Thus, to use existing optimization packages, the user may face challenges such as converting a set of constraints which talk about, say, the cycles and paths of a graph, to matrix-vector inequalities. This is typically not straightforward at all.
+
 Heading 1
 ^^^^^^^^^
 *Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi maximus at massa quis pretium. Nullam volutpat nibh nec mauris consectetur blandit facilisis nec sapien. Maecenas blandit erat vel cursus varius. Nulla metus dui, congue ut leo at, eleifend ultrices nibh. In tempor lorem in leo maximus, eget pellentesque risus finibus. Sed finibus nisi eu ligula commodo, ac luctus lectus aliquet. Curabitur nec mauris luctus ex fermentum molestie non quis nibh. Ut justo dolor, aliquam id porttitor eget, laoreet elementum tellus. Phasellus ut dapibus sapien. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.*
