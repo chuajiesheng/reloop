@@ -47,6 +47,12 @@ To be able to run RLP properly you will need to install some packages, which are
 
     To install Picos you need to download it first and the install it in the python environment or via pip. A tutorial on how to install Picos can be found here: `Picos <http://picos.zib.de/intro.html#installation>`_
 
+    Once you have successfully installed the above packages you can `Download <../saucywrapper/Docs/build/html/download.html>`_ the program and run::
+
+        $ python setup.py install
+
+    in the main folder. This will install the package on your system.
+ 
 For Developers
 **************
 
@@ -66,6 +72,9 @@ For Developers
 Troubleshooting
 ===============
 
+    **"No module named gklpkwrap in read.py line 1"**
+
+        The documentation tool Shpinx prevents us from using relative imports in our project folder. To fix this problem simply replace "import glpkwrap" in ../relopt/liftedLP/utils/read.py with "from .. import glpkwrap" and run python setup.py install again in the main folder.
 
 FAQ
 ===

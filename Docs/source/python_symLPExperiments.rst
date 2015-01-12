@@ -1,8 +1,9 @@
+================
 symLPExperiments
-****************
+================
 
 Summary
-=======================
+=======
 
 The script, which is called to run the given examples of Lifted Linear Programming.
 This module retrieves LPs from specified files and provides the necessary interface to solve given LPs.

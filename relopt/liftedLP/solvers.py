@@ -91,7 +91,7 @@ def lift(Ar, br, cr, sparse=True, orbits=False, sumRefine=False):
     :param orbits:
     :type orbits:
     :param sumRefine:
-    :type sumRefine
+    :type sumRefine:
 
     :returns:
     """
@@ -297,9 +297,9 @@ def liftedLPCVXOPT(A,b,c,debug=False,optiter=200,plot=False,save=False, orbits=F
     """
     liftedLPCVXOPT: takes as input an LP in the form
 
-        max   c'x
-
+        max   c'x \n
         s.t.  Ax <= b
+
     where A, b, x are numpy arrays of size (m,n), (m,1), (n,1) respectively and returns a vector solving
     the linear program. 
     By default, the linear program is preprocessed by color-passing, the smaller LP is solved in 

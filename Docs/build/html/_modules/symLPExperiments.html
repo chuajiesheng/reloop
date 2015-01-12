@@ -145,7 +145,7 @@
 <span class="kn">import</span> <span class="nn">scipy.sparse</span> <span class="kn">as</span> <span class="nn">sp</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
-<div class="viewcode-block" id="loadNsolve"><a class="viewcode-back" href="../symLPExperiments.html#symLPExperiments.loadNsolve">[docs]</a><span class="k">def</span> <span class="nf">loadNsolve</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">scaled</span><span class="p">,</span> <span class="n">ftype</span><span class="p">):</span>
+<div class="viewcode-block" id="loadNsolve"><a class="viewcode-back" href="../python_symLPExperiments.html#symLPExperiments.loadNsolve">[docs]</a><span class="k">def</span> <span class="nf">loadNsolve</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">scaled</span><span class="p">,</span> <span class="n">ftype</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">     Loads and solves a given LP by lifting the data and then solving it with the GNU linear programming kit solver.</span>
 
@@ -219,7 +219,7 @@
     <span class="c"># return liftedLPCVXOPT(A.todense(),b.todense(),c.todense(),debug=True,plot=False,orbits=False, sumRefine=False)</span>
     <span class="k">return</span> <span class="n">llpsolve</span><span class="o">.</span><span class="n">sparse</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">orbits</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">sumRefine</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s">&#39;cvxopt&#39;</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="loadNsolveCVX"><a class="viewcode-back" href="../symLPExperiments.html#symLPExperiments.loadNsolveCVX">[docs]</a><span class="k">def</span> <span class="nf">loadNsolveCVX</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">scaled</span><span class="p">,</span> <span class="n">ftype</span><span class="p">):</span>
+<div class="viewcode-block" id="loadNsolveCVX"><a class="viewcode-back" href="../python_symLPExperiments.html#symLPExperiments.loadNsolveCVX">[docs]</a><span class="k">def</span> <span class="nf">loadNsolveCVX</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">scaled</span><span class="p">,</span> <span class="n">ftype</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Solves a specified LP file by assigning its contents to cvxopt and solving the created problem with the gklp solver.</span>
 
@@ -242,7 +242,7 @@
     <span class="c"># return liftedLPCVXOPT(A.todense(),b.todense(),c.todense(),debug=True,plot=False,orbits=False, sumRefine=False)</span>
     <span class="k">return</span> <span class="n">sp_liftedLPCVXOPT</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">orbits</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">sumRefine</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="runbatch"><a class="viewcode-back" href="../symLPExperiments.html#symLPExperiments.runbatch">[docs]</a><span class="k">def</span> <span class="nf">runbatch</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+<div class="viewcode-block" id="runbatch"><a class="viewcode-back" href="../python_symLPExperiments.html#symLPExperiments.runbatch">[docs]</a><span class="k">def</span> <span class="nf">runbatch</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Solves all given LP problems by iteratint over every specified file from the given path.</span>
 
