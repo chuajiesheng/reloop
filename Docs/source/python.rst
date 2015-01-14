@@ -19,5 +19,5 @@ Contents:
    python_read
    python_shortestPath
    python_small_matrix
-   python_solvers
+   python_llp
    python_symLPExperiments

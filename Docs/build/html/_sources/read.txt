@@ -1,9 +1,0 @@
-Read
-****
-
-
-Documentation
-=============
-
-.. automodule:: read
-    :members:    

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>symLPExperiments &mdash; Relational Linear Programming 0.0.1a documentation</title>
+    <title>symLPExperiments &mdash; reloop 0.0.1a documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -31,7 +31,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Relational Linear Programming 0.0.1a documentation" href="../index.html" />
+    <link rel="top" title="reloop 0.0.1a documentation" href="../index.html" />
     <link rel="up" title="Module code" href="index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -39,7 +39,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -53,7 +53,7 @@
         <a class="navbar-brand" href="http://www-ai.cs.uni-dortmund.de/weblab/index.html"><img class="intro-logo" src="../_static/tulogo.svg">
         </a>
         <span class="navbar-text navbar-ls8-title">
-          Relational Linear Programming<span class="navbar-version"><b> (0.0.1)</b></span>
+          reloop<span class="navbar-version"><b> (0.0.1)</b></span>
         </span>
       </div>
 
@@ -74,38 +74,33 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
-<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../introduction.html#heading-1">Heading 1</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../installation.html#setup">Setup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../installation.html#troubleshooting">Troubleshooting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../installation.html#faq">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#main-dependencies">Main dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#optional-dependencies">Optional dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-reloop">Installing reloop</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#a-relational-linear-program-for-maximum-flow">A Relational Linear Program for Maximum Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#a-logical-knowledge-base-for-the-flow-rlp">A Logical Knowledge Base for the Flow RLP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#solving-instances-of-relational-flow-lp">Solving Instances of Relational Flow LP</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../RAMPL.html">RAMPL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../LLP.html">LLP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../code.html">Code</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../python.html">Python</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../cython.html">Cython</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../cpp.html">CPlusPlus</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
 </ul>
 </ul>
-</li>
-            
-              <li class="dropdown">
-  <a role="button"
-     id="dLabelLocalToc"
-     data-toggle="dropdown"
-     data-target="#"
-     href="#">Page <b class="caret"></b></a>
-  <ul class="dropdown-menu localtoc"
-      role="menu"
-      aria-labelledby="dLabelLocalToc"></ul>
 </li>
             
           
@@ -138,8 +133,9 @@
 <span class="c">#Module, which acts as a framework for the actual lifting.</span>
 <span class="c">#This module retrieves LPs from specified files and provides the necessary interface to solve given LPs.</span>
 <span class="c">#Calculation and Computation is done in the C/C++ core, where most of the work is done. </span>
-<span class="kn">import</span> <span class="nn">relopt.liftedLP.solvers</span> <span class="kn">as</span> <span class="nn">llpsolve</span>
-<span class="kn">import</span> <span class="nn">relopt.liftedLP.utils.read</span> <span class="kn">as</span> <span class="nn">lpread</span>
+
+<span class="kn">import</span> <span class="nn">reloop.utils.io.read</span> <span class="kn">as</span> <span class="nn">lpread</span>
+<span class="kn">import</span> <span class="nn">reloop.solvers.llp</span> <span class="kn">as</span> <span class="nn">llpsolve</span>
 <span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
 <span class="kn">import</span> <span class="nn">scipy.sparse</span> <span class="kn">as</span> <span class="nn">sp</span>
@@ -217,7 +213,7 @@
     <span class="c"># exit()</span>
     <span class="n">lpread</span><span class="o">.</span><span class="n">closeLP</span><span class="p">()</span>
     <span class="c"># return liftedLPCVXOPT(A.todense(),b.todense(),c.todense(),debug=True,plot=False,orbits=False, sumRefine=False)</span>
-    <span class="k">return</span> <span class="n">llpsolve</span><span class="o">.</span><span class="n">sparse</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">orbits</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">sumRefine</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s">&#39;cvxopt&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">llpsolve</span><span class="o">.</span><span class="n">sparse</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">orbits</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">sumrefine</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s">&#39;cvxopt&#39;</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="loadNsolveCVX"><a class="viewcode-back" href="../python_symLPExperiments.html#symLPExperiments.loadNsolveCVX">[docs]</a><span class="k">def</span> <span class="nf">loadNsolveCVX</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">scaled</span><span class="p">,</span> <span class="n">ftype</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -291,8 +287,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2014, Martin Mladenov.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3b2.<br/>
+        &copy; Copyright .<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
     </p>
   </div>
 </footer>

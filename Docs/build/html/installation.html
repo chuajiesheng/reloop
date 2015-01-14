@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 
 
@@ -7,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Installation &mdash; Relational Linear Programming 0.0.1a documentation</title>
+    <title>Installation &mdash; reloop 0.0.1a documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -18,7 +17,7 @@
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '0.0.1a',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -32,7 +31,7 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Relational Linear Programming 0.0.1a documentation" href="index.html" />
+    <link rel="top" title="reloop 0.0.1a documentation" href="index.html" />
     <link rel="next" title="Tutorial" href="tutorial.html" />
     <link rel="prev" title="Introduction" href="introduction.html" />
 <meta charset='utf-8'>
@@ -55,7 +54,7 @@
         <a class="navbar-brand" href="http://www-ai.cs.uni-dortmund.de/weblab/index.html"><img class="intro-logo" src="_static/tulogo.svg">
         </a>
         <span class="navbar-text navbar-ls8-title">
-          Relational Linear Programming<span class="navbar-version"><b> (0.0.1)</b></span>
+          reloop<span class="navbar-version"><b> (0.0.1)</b></span>
         </span>
       </div>
 
@@ -76,49 +75,31 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="introduction.html#heading-1">Heading 1</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#setup">Setup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#faq">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#main-dependencies">Main dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#optional-dependencies">Optional dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installing-reloop">Installing reloop</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#a-relational-linear-program-for-maximum-flow">A Relational Linear Program for Maximum Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#a-logical-knowledge-base-for-the-flow-rlp">A Logical Knowledge Base for the Flow RLP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#solving-instances-of-relational-flow-lp">Solving Instances of Relational Flow LP</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="RAMPL.html">RAMPL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LLP.html">LLP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="code.html">Code</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="python.html">Python</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cython.html">Cython</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cpp.html">CPlusPlus</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
-</ul>
-</ul>
-</li>
-            
-              <li class="dropdown">
-  <a role="button"
-     id="dLabelLocalToc"
-     data-toggle="dropdown"
-     data-target="#"
-     href="#">Page <b class="caret"></b></a>
-  <ul class="dropdown-menu localtoc"
-      role="menu"
-      aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">Installation</a><ul>
-<li><a class="reference internal" href="#setup">Setup</a><ul>
-<li><a class="reference internal" href="#for-users">For Users</a></li>
-<li><a class="reference internal" href="#for-developers">For Developers</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
-<li><a class="reference internal" href="#faq">FAQ</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
 </ul>
 </ul>
 </li>
@@ -150,66 +131,41 @@
       
   <div class="section" id="installation">
 <span id="id1"></span><h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<p>Hello and thank you for your interest in our program. We are constantly making improvements to performance and adding features. If you want to help developing or just want to try out our program you first need to install some required packages. So to get started right away you will need to follow these steps to be able to run the code and develop new features.</p>
-<div class="section" id="setup">
-<h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="for-users">
-<h3>For Users<a class="headerlink" href="#for-users" title="Permalink to this headline">¶</a></h3>
-<p>To be able to run RLP properly you will need to install some packages, which are being used by our program.</p>
-<blockquote>
-<div><p><strong>SciPy</strong></p>
-<p>First you will need to install SciPy, which provides data structures like arrays and matrices for Python in an efficient way.
-The best way to install SciPy is to follow the installation instructions on the official SciPy homepage, which can be found here : <a class="reference external" href="http://scipy.org">SciPy</a></p>
-<p>The easiest way to install SciPy, if you have the admin permissions to do so, is to run:</p>
-<div class="highlight-python"><pre>$ sudo apt-get install python-numpy python-scipy python-matplotlib ipython ipython-notebook python-pandas python-sympy python-nose</pre>
-</div>
-<p>for Linux Users.</p>
-<p><strong>GNU glpk</strong></p>
-<p>The GNU glpk is necessary in order to actually solve the calculated LP. You can follow the installation guide on the GLPK wikibooks if you like : <a class="reference external" href="http://en.wikibooks.org/wiki/GLPK/Linux_OS">glpk</a></p>
-<p>After you have successfully installed the packages you might need to adjust your library paths, because your system might not yet know where to find the new files. To do that as a superuser you can just run:</p>
-<div class="highlight-python"><pre>$ sudo ldconfig</pre>
-</div>
-<p>If you do not have the permission to execute the above command you will need to adjust your library path manually by using:</p>
-<div class="highlight-python"><pre>$ export LD_LIBRARY_PATH="/path/to/the/sharedlibaries/of/glpk"</pre>
-</div>
-<p>In case you do not want to set a permanent path to the shared library we suggest to create a make file, which has to be executed before running the actual program. This will keep the shared libraries seperated from your system.</p>
-<p><strong>Z-LIB</strong></p>
-<p>The zlib1g-dev package is also necessary to run the program. It is installed by running:</p>
-<div class="highlight-python"><pre>$ sudo apt-get install zlib1g-dev</pre>
-</div>
-<p><strong>Picos</strong></p>
-<p>To install Picos you need to download it first and the install it in the python environment or via pip. A tutorial on how to install Picos can be found here: <a class="reference external" href="http://picos.zib.de/intro.html#installation">Picos</a></p>
-<p>Once you have successfully installed the above packages you can <a class="reference external" href="../saucywrapper/Docs/build/html/download.html">Download</a> the program and run:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ python setup.py install
+<p>The first step is to download the latest reloop distribution from the <a class="reference internal" href="download.html#download"><em>download</em></a> section and unpack it in a directory of choice. E.g.:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ wget https://bitbucket.org/RELOPT/saucywrapper/get/release.tar.gz
+$ tar zxvf release.tar.gz
 </pre></div>
 </div>
-<p>in the main folder. This will install the package on your system.</p>
-</div></blockquote>
+<div class="section" id="main-dependencies">
+<h2>Main dependencies<a class="headerlink" href="#main-dependencies" title="Permalink to this headline">¶</a></h2>
+<p>Before you can build and run reloop, you need to take care of a bunch of dependencies. In particular, reloop depends on the following Python modules:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://pypi.python.org/pypi/Cython/">Cython</a></li>
+<li><a class="reference external" href="http://www.scipy.org/scipylib/download.html">scipy</a></li>
+<li><a class="reference external" href="http://www.scipy.org/scipylib/download.html">numpy</a></li>
+<li><a class="reference external" href="http://cvxopt.org/install/index.html">cvxopt</a></li>
+<li><a class="reference external" href="http://picos.zib.de/intro.html#installation">PICOS</a></li>
+<li><a class="reference external" href="http://www.coin-or.org/PuLP/main/installing_pulp_at_home.html">PuLP</a></li>
+<li><a class="reference external" href="https://sites.google.com/site/pydatalog/installation">pyDatalog</a></li>
+<li><a class="reference external" href="http://pyparsing.wikispaces.com/Download+and+Installation">pyparsing</a></li>
+</ul>
+<p>as well as libglpk. To simplify the installation of the Python modules, we provide a requirements file that can be installed with <a class="reference external" href="https://pip.pypa.io/en/latest/installing.html">pip</a>. To install the Python dependencies with pip, type</p>
+<div class="highlight-python"><div class="highlight"><pre>$ pip install -r requirements.txt --upgrade
+</pre></div>
 </div>
-<div class="section" id="for-developers">
-<h3>For Developers<a class="headerlink" href="#for-developers" title="Permalink to this headline">¶</a></h3>
-<blockquote>
-<div><p><strong>Cython</strong></p>
-<p>Cython is necessary, because it links the python code with our C++ code. It allows to call C++ functions from our python framework. As soon as you change C++ or C code in our program you will need Cython to recompile the whole code. If you have pip installed on your OS you can simply run:</p>
-<div class="highlight-python"><pre>$ pip install cython</pre>
+<p>in the directory where you extracted reloop.</p>
+<div class="admonition danger">
+<p class="first admonition-title">Danger</p>
+<p class="last">If you already have or want to install some of these packages with custom build parameters (e.g. numpy or cvxopt), doing the above is not advisable. If this is the case, install all packages one by one or remove the packages in question from requirements.txt and build them manually.</p>
 </div>
-<p>Otherwise you can download the tarball and install it using python, by unpacking the tarball and running:</p>
-<div class="highlight-python"><pre>$python setup.py install</pre>
+<p>To install libglpk, head on over to <a class="reference external" href="http://en.wikibooks.org/wiki/GLPK/Linux_OS">glpk</a>.</p>
 </div>
-<p>in the specified folder. For more information about how to install cython see the <a class="reference external" href="http://docs.cython.org/src/quickstart/install.html">Cython_Documentation</a></p>
-</div></blockquote>
+<div class="section" id="optional-dependencies">
+<h2>Optional dependencies<a class="headerlink" href="#optional-dependencies" title="Permalink to this headline">¶</a></h2>
+<p>Coming soon.</p>
 </div>
-</div>
-<div class="section" id="troubleshooting">
-<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div><p><strong>&#8220;No module named gklpkwrap in read.py line 1&#8221;</strong></p>
-<blockquote>
-<div>The documentation tool Shpinx prevents us from using relative imports in our project folder. To fix this problem simply replace &#8220;import glpkwrap&#8221; in ../relopt/liftedLP/utils/read.py with &#8220;from .. import glpkwrap&#8221; and run python setup.py install again in the main folder.</div></blockquote>
-</div></blockquote>
-</div>
-<div class="section" id="faq">
-<h2>FAQ<a class="headerlink" href="#faq" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="installing-reloop">
+<h2>Installing reloop<a class="headerlink" href="#installing-reloop" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -233,7 +189,7 @@ The best way to install SciPy is to follow the installation instructions on the 
     </p>
     <p>
         &copy; Copyright .<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
     </p>
   </div>
 </footer>

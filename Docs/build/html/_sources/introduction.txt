@@ -4,41 +4,39 @@
 Introduction
 ============
 
-The art and science of numerical optimization has left a deep imprint on virtually every branch of science and engineering. Today, numerical optimization is the go-to method to solve a wide varienty of problems, 
-ranging from the purely geometric (such as fitting an ellipsoid around a set of points) to the purely discrete (matchings, shortest paths). Despite the wide variety of problems, the "standard language" of numerical optimization is mostly an algebraic/geometric one, making heavy use of so-called "standard forms". Thus, to use existing optimization packages, the user may face challenges such as converting a set of constraints which talk about, say, the cycles and paths of a graph, to matrix-vector inequalities. This is typically not straightforward at all.
+Modern social and technological trends result in an enormous increase in the amount of accessible data,
+with a significant portion of the resources being interrelated in a complex way and having inherent uncertainty.
+Such data, to which we may refer to as relational data, arise for instance in social
+network and media mining, natural language processing, open information extraction,
+the web, bioinformatics, and robotics, among others, and typi- cally features substantial
+social and/or business value if become amenable to computing machinery. Therefore it is not
+surprising that probabilistic logical languages and **statistical relational learning** are currently provoking a lot of new AI research
+with tremendous theoretical and practical implications. By combining aspects of logic and probabilities
+— a dream of AI dating back to at least the late 1980s
+when Nils Nilsson introduced the term probabilistic logics — they help to effectively manage
+both complex interactions and uncertainty in the data.
 
-Heading 1
-^^^^^^^^^
-*Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi maximus at massa quis pretium. Nullam volutpat nibh nec mauris consectetur blandit facilisis nec sapien. Maecenas blandit erat vel cursus varius. Nulla metus dui, congue ut leo at, eleifend ultrices nibh. In tempor lorem in leo maximus, eget pellentesque risus finibus. Sed finibus nisi eu ligula commodo, ac luctus lectus aliquet. Curabitur nec mauris luctus ex fermentum molestie non quis nibh. Ut justo dolor, aliquam id porttitor eget, laoreet elementum tellus. Phasellus ut dapibus sapien. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.*
+However, instead of looking at AI through the glasses of probabilities over possible worlds, we may also approach
+it using optimization. That is, we have a preference relation over possible worlds, and we want a best possible
+world according to the preference. The preference is often to minimize some objective function. Consider for example
+a typical machine learning user in action solving a problem for some data. She selects a model for the underlying
+phenomenon to be learned (choosing a learning bias), formats the raw data according to the chosen model, and then
+tunes the model parameters by minimizing some objective function induced by the data and the model assumptions.
+In the process of model selection and validation, the core optimization problem in the last step may be solved many times.
+Ideally, the optimization problem solved in the last step falls within a class of mathematical programs for which efficient
+and robust solvers are available. For example, linear, semidefinite and quadratic programs, found at the heart of many popular AI
+and learning algorithms, can be solved efficiently by commercial-grade software packages.
 
-Code
-****
-``Aliquam erat volutpat. Nullam sit amet lacus tellus. Phasellus non mi ultrices, tempor lorem eu, gravida massa. Pellentesque nisi odio, consequat ut nisl id, tempus vulputate massa. Sed efficitur velit sed quam vulputate, quis placerat tortor varius. Nullam lorem enim, consequat vel turpis et, volutpat condimentum turpis. Pellentesque posuere tortor sed lobortis commodo. Maecenas non nulla semper, tempor augue sit amet, consequat nisl. Nullam id quam a erat tincidunt viverra eu volutpat augue. Praesent eu elit quis orci dignissim gravida consectetur ac quam. Mauris laoreet vel erat ut vehicula.``
+This is an instance of the declarative **“Model+Solver”** paradigm currently observed a lot in AI, machine learning and also data mining:
+instead of outlining how a solution should be computed, we specify what the problem is using some high-level modeling language and
+solve it using general solvers. Unfortunately, however, today’s solvers for mathematical programs typically require that the
+mathematical program is presented in some canonical algebraic form or offer only some very restricted modeling environment.
 
-#. Integer iaculis leo augue, id faucibus lacus fringilla vitae. Quisque consectetur cursus viverra. Praesent lectus ante, mollis vitae efficitur id, rutrum id magna. Phasellus non 
-#. dapibus sem, vel sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque non risus lorem. Sed volutpat finibus imperdiet.    Nulla id mauris est. Donec sed dolor eu est finibus dignissim. Nullam libero odio, sagittis eu lacinia in, sagittis sed mauris. Nam massa justo, fringilla eu rhoncus quis, posuere 
-#. nec quam. Maecenas vehicula ullamcorper dui et viverra.
+To overcome these downsides and triggered by the success of probabilistic logical languages, **relational optimization aims at lifting
+optimization to the relational level**, too. Using a Relational Mathematical Programming Language, **RAMPL** for short, mathematical programs can be modelled using relational languages that
+feature the notions of **objects** and **relations** among them.
 
-*Nam pretium urna sed ex finibus, quis porttitor libero lobortis. Nullam et quam nec sem tincidunt volutpat et vel elit. Nullam tristique lorem vel metus scelerisque
-
-*enim luctus. Aliquam augue elit, volutpat vitae erat nec, mollis ornare est. In gravida ex et volutpat tincidunt. Aenean consectetur quam diam, ac consequat est ultrices quis. Etiam eget mollis erat. Proin in nibh eget dui interdum semper.
-
-Aenean iaculis fermentum eros non gravida. Vivamus et laoreet elit. Nulla facilisi. Aliquam in sollicitudin metus. Aenean in egestas sapien, a ultricies ante. Phasellus accumsan porta sapien in porta. Proin iaculis felis id malesuada lobortis. Quisque in volutpat dui. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus in semper risus. Maecenas aliquet gravida libero quis dignissim. Donec in odio ac leo rutrum dictum vitae interdum purus. Nam viverra erat in egestas posuere. Sed vel nisi vitae mauris iaculis scelerisque. Aenean a volutpat risus. Aenean eu pellentesque nisl. 
-
-+------------------------+------------+----------+----------+
-| Header row, column 1   | Header 2   | Header 3 | Header 4 |
-| (header rows optional) |            |          |          |
-+========================+============+==========+==========+
-| body row 1, column 1   | column 2   | column 3 | column 4 |
-+------------------------+------------+----------+----------+
-| body row 2             | ...        | ...      |          |
-+------------------------+------------+----------+----------+
-
-=====  =====  =======
-A      B      A and B
-=====  =====  =======
-False  False  False
-True   False  False
-False  True   False
-True   True   True
-=====  =====  =======
+Indeed, the induced mathematical programs can become rather large. Next to exploiting efficient solvers, we could also try to
+exploit symmetries within the ground programs to reduce their dimensionalities, if possible. For linear programs, e.g.,
+the reduced program can be much smaller and still be solved using any off-the-shelf LP solver. This is sometimes called
+**lifted optimization** or **compressed optimization**.

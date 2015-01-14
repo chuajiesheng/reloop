@@ -7,10 +7,6 @@
 
    <br />
 
-.. image:: images/reloop.svg
-   :width:  50%
-   :alt: woot!
-   :align: right
 
 .. toctree::
    :hidden:
@@ -19,10 +15,20 @@
    introduction
    installation
    tutorial 
-   code
+   RAMPL
+   LLP
    examples
-   contact
+   code
    bibliography
+   download
+   contact
+
+|br| |br|
+
+.. image:: images/reloop.svg
+   :width:  50%
+   :alt: woot!
+   :align: right
 
 RELOOP: A Toolkit for Relational Convex Optimization 
 =========================================================
@@ -35,7 +41,7 @@ From here you can:
 
 * get started with our code -- head over to :ref:`download <download>`, :ref:`installation <installation>` and then to our quickstart :ref:`tutorial <tutorial>`;
 
-* navigate the complete code :ref:`decumentation <code>`;
+* navigate the complete code :ref:`documentation <code>`;
 
 * find a list of all related papers on our :ref:`bibliography <bibliography>` page. 
 

@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 
 
@@ -7,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Glpk2Py &mdash; Relational Linear Programming 0.0.1a documentation</title>
+    <title>Glpk2Py &mdash; reloop 0.0.1a documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -18,7 +17,7 @@
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '0.0.1a',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -32,9 +31,9 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Relational Linear Programming 0.0.1a documentation" href="index.html" />
+    <link rel="top" title="reloop 0.0.1a documentation" href="index.html" />
     <link rel="up" title="CPlusPlus" href="cpp.html" />
-    <link rel="next" title="Examples" href="examples.html" />
+    <link rel="next" title="Bibliography" href="bibliography.html" />
     <link rel="prev" title="Fc" href="cpp_fc.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -56,7 +55,7 @@
         <a class="navbar-brand" href="http://www-ai.cs.uni-dortmund.de/weblab/index.html"><img class="intro-logo" src="_static/tulogo.svg">
         </a>
         <span class="navbar-text navbar-ls8-title">
-          Relational Linear Programming<span class="navbar-version"><b> (0.0.1)</b></span>
+          reloop<span class="navbar-version"><b> (0.0.1)</b></span>
         </span>
       </div>
 
@@ -76,59 +75,32 @@
      href="index.html">Index <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
-      aria-labelledby="dLabelGlobalToc"><ul>
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="introduction.html#heading-1">Heading 1</a></li>
-</ul>
-</li>
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#setup">Setup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#troubleshooting">Troubleshooting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#faq">FAQ</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="code.html">Code</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#a-relational-linear-program-for-maximum-flow">A Relational Linear Program for Maximum Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#a-logical-knowledge-base-for-the-flow-rlp">A Logical Knowledge Base for the Flow RLP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#solving-instances-of-relational-flow-lp">Solving Instances of Relational Flow LP</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="RAMPL.html">RAMPL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LLP.html">LLP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="code.html">Code</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="python.html">Python</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cython.html">Cython</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cpp.html">CPlusPlus</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="cpp.html">CPlusPlus</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
-</ul>
-</ul>
-</li>
-            
-              <li class="dropdown">
-  <a role="button"
-     id="dLabelLocalToc"
-     data-toggle="dropdown"
-     data-target="#"
-     href="#">Page <b class="caret"></b></a>
-  <ul class="dropdown-menu localtoc"
-      role="menu"
-      aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">Glpk2Py</a><ul>
-<li><a class="reference internal" href="#members">Members</a><ul>
-<li><a class="reference internal" href="#filetype">Filetype</a></li>
-<li><a class="reference internal" href="#bounds">Bounds</a></li>
-<li><a class="reference internal" href="#scaling">Scaling</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#functions">Functions</a><ul>
-<li><a class="reference internal" href="#openlp">openLP</a></li>
-<li><a class="reference internal" href="#closelp">closeLP</a></li>
-<li><a class="reference internal" href="#getmatrix">getMatrix</a></li>
-<li><a class="reference internal" href="#getobjective">getObjective</a></li>
-<li><a class="reference internal" href="#doscaling">doScaling</a></li>
-<li><a class="reference internal" href="#solve">Solve</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#source">Source</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
 </ul>
 </ul>
 </li>
@@ -430,14 +402,14 @@ void <tt class="descclassname">glpk2py::</tt><tt class="descname">solve</tt><big
 
 <span class="c1">/// Opens the LP by creating a glpk problem object and assigning the given file to it \n</span>
 <span class="c1">/// Furthermore extracts the number of columns and rows of the opened LP and assigns the values to global variables</span>
-<span class="kt">void</span> <span class="n">openLP</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">fname</span><span class="p">,</span> <span class="kt">int</span> <span class="n">format</span><span class="p">)</span> <span class="p">{</span>
+<span class="kt">void</span> <span class="nf">openLP</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">fname</span><span class="p">,</span> <span class="kt">int</span> <span class="n">format</span><span class="p">)</span> <span class="p">{</span>
   <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">fname</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
   <span class="n">lp</span> <span class="o">=</span> <span class="n">glp_create_prob</span><span class="p">();</span>
   <span class="k">switch</span> <span class="p">(</span><span class="n">format</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">case</span> <span class="nl">MPS:</span>
+    <span class="k">case</span> <span class="nl">MPS</span><span class="p">:</span>
       <span class="n">glp_read_mps</span><span class="p">(</span><span class="n">lp</span><span class="p">,</span> <span class="n">GLP_MPS_FILE</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span> <span class="n">fname</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
       <span class="k">break</span><span class="p">;</span>
-    <span class="k">case</span> <span class="nl">LP:</span>
+    <span class="k">case</span> <span class="nl">LP</span><span class="p">:</span>
       <span class="n">glp_read_lp</span><span class="p">(</span><span class="n">lp</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span> <span class="n">fname</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
       <span class="k">break</span><span class="p">;</span>
   <span class="p">}</span>
@@ -449,7 +421,7 @@ void <tt class="descclassname">glpk2py::</tt><tt class="descname">solve</tt><big
 <span class="c1">/// Closes LP by calling the destructor of glpk, which deallocates all memory used by the corresponding problem object iff the constructor was called in openLP\n</span>
 <span class="c1">/// The call of glp_free_env() frees all resources used by GLPK routines</span>
 <span class="c1">///</span>
-<span class="kt">void</span> <span class="n">closeLP</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+<span class="kt">void</span> <span class="nf">closeLP</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">if</span> <span class="p">(</span><span class="n">lp</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">glp_delete_prob</span><span class="p">(</span><span class="n">lp</span><span class="p">);</span>
     <span class="n">glp_free_env</span><span class="p">();</span>
@@ -627,7 +599,7 @@ void <tt class="descclassname">glpk2py::</tt><tt class="descname">solve</tt><big
     </p>
     <p>
         &copy; Copyright .<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
     </p>
   </div>
 </footer>

@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 
 
@@ -7,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Tutorial &mdash; Relational Linear Programming 0.0.1a documentation</title>
+    <title>Tutorial &mdash; reloop 0.0.1a documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -18,7 +17,7 @@
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '0.0.1a',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -32,8 +31,8 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Relational Linear Programming 0.0.1a documentation" href="index.html" />
-    <link rel="next" title="Code" href="code.html" />
+    <link rel="top" title="reloop 0.0.1a documentation" href="index.html" />
+    <link rel="next" title="RAMPL" href="RAMPL.html" />
     <link rel="prev" title="Installation" href="installation.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -55,7 +54,7 @@
         <a class="navbar-brand" href="http://www-ai.cs.uni-dortmund.de/weblab/index.html"><img class="intro-logo" src="_static/tulogo.svg">
         </a>
         <span class="navbar-text navbar-ls8-title">
-          Relational Linear Programming<span class="navbar-version"><b> (0.0.1)</b></span>
+          reloop<span class="navbar-version"><b> (0.0.1)</b></span>
         </span>
       </div>
 
@@ -76,40 +75,31 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="introduction.html#heading-1">Heading 1</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#setup">Setup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#troubleshooting">Troubleshooting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#faq">FAQ</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#a-relational-linear-program-for-maximum-flow">A Relational Linear Program for Maximum Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#a-logical-knowledge-base-for-the-flow-rlp">A Logical Knowledge Base for the Flow RLP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#solving-instances-of-relational-flow-lp">Solving Instances of Relational Flow LP</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="RAMPL.html">RAMPL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LLP.html">LLP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="code.html">Code</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="python.html">Python</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cython.html">Cython</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cpp.html">CPlusPlus</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
-</ul>
-</ul>
-</li>
-            
-              <li class="dropdown">
-  <a role="button"
-     id="dLabelLocalToc"
-     data-toggle="dropdown"
-     data-target="#"
-     href="#">Page <b class="caret"></b></a>
-  <ul class="dropdown-menu localtoc"
-      role="menu"
-      aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
 </ul>
 </ul>
 </li>
@@ -139,9 +129,231 @@
   <div class="row">
     <div class="col-md-12">
       
-  <div class="section" id="tutorial">
-<span id="id1"></span><h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
-<p>How to install</p>
+  <div class="section" id="id1">
+<h1>Tutorial<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>Mathematical programs (MPs) are often specified using algebraic modelling languages such as AMPL. They simplify MP definition by allowing to use algebraic
+notation instead of matrices and define an objective and constraints through parameters whose domains are defined in a separate file,
+thus enabling separating the model from its instances. That is, algebraic modeling languages such as AMPL allow one to write down the problem description
+in a declarative way. They free the user from engineering instance specific MPs while capturing the general properties of the problem class at hand.
+However, they do not provide logically parameterized definitions for the arithmetic expressions and for the index sets. RAMPL, which we will introduce now,
+feature exactly this.</p>
+<p>Let&#8217;s consider a traffic flow problem, i.e., we want to send as much flow as possible
+through a traffic network. This is linear programming task.</p>
+<div class="section" id="a-relational-linear-program-for-maximum-flow">
+<h2>A Relational Linear Program for Maximum Flow<a class="headerlink" href="#a-relational-linear-program-for-maximum-flow" title="Permalink to this headline">¶</a></h2>
+<p>The start of your file will import reloop’s functions for use in your code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">reloop</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+<p>A variable called model (although its name is not important) is created using the reloopProblem function. It has two parameters, the first being the
+arbitrary name of this problem (as a string), and the second parameter being either LpMinimize or LpMaximize depending on the type of LP you are trying to solve:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">model</span> <span class="o">=</span> <span class="n">reloopProblem</span><span class="p">(</span><span class="s">&quot;Traffic Flow LP&quot;</span><span class="p">,</span> <span class="n">lp</span><span class="o">.</span><span class="n">LpMaximize</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The variable model now begins collecting problem specifications with the += operator. For instance in a maximum flow problem, the flow out of the source node must be the total flow through the
+network, which is to be maximized:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">model</span> <span class="o">+=</span> <span class="n">reloopConstraint</span><span class="p">(</span><span class="s">&quot;sum{ X,Y in source(X) &amp; edge(X,Y) } : { cost[X,Y]*flow(X,Y) }&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Since there is no (in)equality symbol involed, this specified the objective of our relational LP. It says that we want
+to sum all cost[X,Y]*flow(X,Y) terms for which X is a source node and there is an edge between X and Y. Note the difference types
+of brackets for cost/2 and flow/2. This says that cost/2 actually yields a continuous value, a parameter of the relational LP.</p>
+<p>Next we encode
+the preservation of in- and outflows for all nodes that are not the source resp. target nodes:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">model</span> <span class="o">+=</span> <span class="n">reloopConstraint</span><span class="p">(</span><span class="s">&quot;forall{ X in node(X) &amp; ~source(X) &amp; ~target(X)} : { 1.0*inFlow(X) - 1.0*outFlow(X) = 0}&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The constraint says that except for the entrance and exit, the flow into each intersection
+equals the flow out. Note that we have made use of negation in the query of the forall quantification using ~. Furthermore, we have not introduce yet what the logically
+parameterized LP variables inFlow/1 and outFlow/2 are. For that, we add the following constraints:</p>
+<div class="highlight-python"><div class="highlight"><pre>model += = reloopConstraint(&quot;forall{ Y in node(Y) &amp; ~source(Y) } : { sum{ X in edge(X,Y) } : { 1.0*flow(X,Y) } - 1.0*inFlow(Y) = 0}&quot;)
+model += = reloopConstraint(&quot;forall{ X in node(X) &amp; ~target(X) } : { sum{ Y in edge(X,Y) } : { 1.0*flow(X,Y) } - 1.0*outFlow(X) = 0}&quot;)
+</pre></div>
+</div>
+<p>Next, the capacity and traffic load are defined for each road:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">model</span> <span class="o">+=</span> <span class="n">reloopConstraint</span><span class="p">(</span><span class="s">&quot;forall{ X,Y in edge(X,Y) } : { 1.0*flow(X,Y) - 1*cost[X,Y] &lt;= 0}&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Again, we have used cost/2 to refer to the corresponding values. The relational constraint essentially introduces upper bounds for
+all flow/2 variables. Finally, we include also the lower bounds:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">model</span> <span class="o">+=</span> <span class="n">reloopConstraint</span><span class="p">(</span><span class="s">&quot;forall{ X,Y in edge(X,Y) } : { 1.0*flow(X,Y) &gt;= 0&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now that all the model is specified, we still have to add the definitions of the logical predicates and parameters. When we have done this, we could print the induced
+LP using the &#8220;print model&#8221;. We could even use the writeLP() to copy this information into a .lp file into the directory
+that your code-block is running from. Once your code runs successfully, you can open this .lp file with a text editor to see what the above steps were doing.</p>
+<p>This allows one to express LPs relationally for a varying number of individuals and relations among them without enumerating them.
+Together with a logical knowledge base, effectively a logical program consisting of logical facts and rules, it induces a ground LP as we will show next.</p>
+</div>
+<div class="section" id="a-logical-knowledge-base-for-the-flow-rlp">
+<h2>A Logical Knowledge Base for the Flow RLP<a class="headerlink" href="#a-logical-knowledge-base-for-the-flow-rlp" title="Permalink to this headline">¶</a></h2>
+<p>Fist we define the node/1 predicate, i.e., the set of nodes in the flow network. To do so, we use pyDatalog and its decorator:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@pyDatalog.predicate</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">node1</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">)</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">)</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;c&#39;</span><span class="p">)</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">)</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;e&#39;</span><span class="p">)</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;f&#39;</span><span class="p">)</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;g&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In the same way we next define the roads resp. edges of the traffic networks as well as the source and target nodes resp. intersections</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@pyDatalog.predicate</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">edge2</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">):</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">,</span><span class="s">&#39;b&#39;</span><span class="p">)</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">,</span><span class="s">&#39;c&#39;</span><span class="p">)</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">,</span><span class="s">&#39;d&#39;</span><span class="p">)</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">,</span><span class="s">&#39;e&#39;</span><span class="p">)</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;c&#39;</span><span class="p">,</span><span class="s">&#39;d&#39;</span><span class="p">)</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;c&#39;</span><span class="p">,</span><span class="s">&#39;f&#39;</span><span class="p">)</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span><span class="s">&#39;e&#39;</span><span class="p">)</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span><span class="s">&#39;f&#39;</span><span class="p">)</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;e&#39;</span><span class="p">,</span><span class="s">&#39;g&#39;</span><span class="p">)</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;f&#39;</span><span class="p">,</span><span class="s">&#39;g&#39;</span><span class="p">)</span>
+
+
+
+<span class="nd">@pyDatalog.predicate</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">source1</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">)</span>
+
+<span class="nd">@pyDatalog.predicate</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">target1</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;g&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally, we still habe to define the capacities of all roads. To so so, we specify the cost(X,Y,Z) predicate econcoding
+costs[X,Y]=Z:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@pyDatalog.predicate</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">cost3</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">Z</span><span class="p">):</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">,</span><span class="s">&#39;b&#39;</span><span class="p">,</span><span class="mi">50</span><span class="p">)</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">,</span><span class="s">&#39;c&#39;</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">,</span><span class="s">&#39;d&#39;</span><span class="p">,</span><span class="mi">40</span><span class="p">)</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">,</span><span class="s">&#39;e&#39;</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;c&#39;</span><span class="p">,</span><span class="s">&#39;d&#39;</span><span class="p">,</span><span class="mi">60</span><span class="p">)</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;c&#39;</span><span class="p">,</span><span class="s">&#39;f&#39;</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span><span class="s">&#39;e&#39;</span><span class="p">,</span><span class="mi">50</span><span class="p">)</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span><span class="s">&#39;f&#39;</span><span class="p">,</span><span class="mi">60</span><span class="p">)</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;e&#39;</span><span class="p">,</span><span class="s">&#39;g&#39;</span><span class="p">,</span><span class="mi">70</span><span class="p">)</span>
+    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;f&#39;</span><span class="p">,</span><span class="s">&#39;g&#39;</span><span class="p">,</span><span class="mi">70</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="solving-instances-of-relational-flow-lp">
+<h2>Solving Instances of Relational Flow LP<a class="headerlink" href="#solving-instances-of-relational-flow-lp" title="Permalink to this headline">¶</a></h2>
+<p>To obtain the solution to this instance of the relational flow linear program, we could just call the solve() function.
+It calls PuLP&#8217; solver. Since everything is embedded within Python, we could also use Python to process
+the solution even further:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">model</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+
+<span class="k">print</span> <span class="s">&quot;The model has been solved: &quot;</span> <span class="o">+</span> <span class="n">model</span><span class="o">.</span><span class="n">status</span><span class="p">()</span>
+
+<span class="n">sol</span> <span class="o">=</span>  <span class="n">model</span><span class="o">.</span><span class="n">getSolution</span><span class="p">()</span>
+
+<span class="k">print</span> <span class="s">&quot;The solutions for the flow variables are:</span><span class="se">\n</span><span class="s">&quot;</span>
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">sol</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+    <span class="k">if</span> <span class="s">&quot;flow&quot;</span> <span class="ow">in</span> <span class="n">key</span> <span class="ow">and</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">print</span> <span class="n">key</span><span class="o">+</span><span class="s">&quot; = &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">sol</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+    <span class="k">if</span> <span class="s">&quot;flow&quot;</span> <span class="ow">in</span> <span class="n">key</span> <span class="ow">and</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">total</span> <span class="o">+=</span> <span class="n">value</span>
+
+<span class="k">print</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">Thus, the maximum flow entering the traffic network at node a is &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">sol</span><span class="p">[</span><span class="s">&quot;flow(&#39;a&#39;,&#39;b&#39;)&quot;</span><span class="p">]</span><span class="o">+</span><span class="n">sol</span><span class="p">[</span><span class="s">&quot;flow(&#39;a&#39;,&#39;c&#39;)&quot;</span><span class="p">])</span><span class="o">+</span><span class="s">&quot; cars per hour.&quot;</span>
+<span class="k">print</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">The total flow in the traffic network is &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">total</span><span class="p">)</span><span class="o">+</span><span class="s">&quot; cars per hour.&quot;</span>
+</pre></div>
+</div>
+<p>This produces the following output:</p>
+<div class="highlight-python"><div class="highlight"><pre>The model has been solved: Optimal
+The solutions for the flow variables are:
+
+flow(&#39;f&#39;,&#39;g&#39;) = 60.0
+flow(&#39;e&#39;,&#39;g&#39;) = 70.0
+flow(&#39;c&#39;,&#39;d&#39;) = 60.0
+flow(&#39;d&#39;,&#39;e&#39;) = 50.0
+flow(&#39;b&#39;,&#39;d&#39;) = 30.0
+flow(&#39;a&#39;,&#39;c&#39;) = 80.0
+flow(&#39;b&#39;,&#39;e&#39;) = 20.0
+flow(&#39;c&#39;,&#39;f&#39;) = 20.0
+flow(&#39;d&#39;,&#39;f&#39;) = 40.0
+flow(&#39;a&#39;,&#39;b&#39;) = 50.0
+
+Thus, the maximum flow entering the traffic network at node a is 130.0 cars per hour.
+
+The total flow in the traffic network is 480.0 cars per hour.
+</pre></div>
+</div>
+<p>Of course, changing the knowledge base will result in different solutions. The corresponding .lp file (produced e.g. by PuLP) would look like this:</p>
+<div class="highlight-python"><div class="highlight"><pre>MAXIMIZE
+50.0*flow(&#39;a&#39;,&#39;b&#39;) + 100.0*flow(&#39;a&#39;,&#39;c&#39;) + 0
+SUBJECT TO
+_C1: flow(&#39;c&#39;,&#39;f&#39;) + flow(&#39;d&#39;,&#39;f&#39;) - inFlow(&#39;f&#39;) = 0
+_C2: flow(&#39;e&#39;,&#39;g&#39;) + flow(&#39;f&#39;,&#39;g&#39;) - inFlow(&#39;g&#39;) = 0
+_C3: flow(&#39;b&#39;,&#39;d&#39;) + flow(&#39;c&#39;,&#39;d&#39;) - inFlow(&#39;d&#39;) = 0
+_C4: flow(&#39;b&#39;,&#39;e&#39;) + flow(&#39;d&#39;,&#39;e&#39;) - inFlow(&#39;e&#39;) = 0
+_C5: flow(&#39;a&#39;,&#39;b&#39;) - inFlow(&#39;b&#39;) = 0
+_C6: flow(&#39;a&#39;,&#39;c&#39;) - inFlow(&#39;c&#39;) = 0
+_C7: flow(&#39;e&#39;,&#39;g&#39;) - outFlow(&#39;e&#39;) = 0
+_C8: flow(&#39;d&#39;,&#39;e&#39;) + flow(&#39;d&#39;,&#39;f&#39;) - outFlow(&#39;d&#39;) = 0
+_C9: flow(&#39;c&#39;,&#39;d&#39;) + flow(&#39;c&#39;,&#39;f&#39;) - outFlow(&#39;c&#39;) = 0
+_C10: flow(&#39;b&#39;,&#39;d&#39;) + flow(&#39;b&#39;,&#39;e&#39;) - outFlow(&#39;b&#39;) = 0
+_C11: flow(&#39;a&#39;,&#39;b&#39;) + flow(&#39;a&#39;,&#39;c&#39;) - outFlow(&#39;a&#39;) = 0
+_C12: flow(&#39;f&#39;,&#39;g&#39;) - outFlow(&#39;f&#39;) = 0
+_C13: inFlow(&#39;b&#39;) - outFlow(&#39;b&#39;) = 0
+_C14: inFlow(&#39;e&#39;) - outFlow(&#39;e&#39;) = 0
+_C15: inFlow(&#39;c&#39;) - outFlow(&#39;c&#39;) = 0
+_C16: inFlow(&#39;f&#39;) - outFlow(&#39;f&#39;) = 0
+_C17: inFlow(&#39;d&#39;) - outFlow(&#39;d&#39;) = 0
+_C18: flow(&#39;f&#39;,&#39;g&#39;) &gt;= 0
+_C19: flow(&#39;d&#39;,&#39;e&#39;) &gt;= 0
+_C20: flow(&#39;a&#39;,&#39;c&#39;) &gt;= 0
+_C21: flow(&#39;c&#39;,&#39;d&#39;) &gt;= 0
+_C22: flow(&#39;b&#39;,&#39;e&#39;) &gt;= 0
+_C23: flow(&#39;c&#39;,&#39;f&#39;) &gt;= 0
+_C24: flow(&#39;e&#39;,&#39;g&#39;) &gt;= 0
+_C25: flow(&#39;d&#39;,&#39;f&#39;) &gt;= 0
+_C26: flow(&#39;a&#39;,&#39;b&#39;) &gt;= 0
+_C27: flow(&#39;b&#39;,&#39;d&#39;) &gt;= 0
+_C28: flow(&#39;a&#39;,&#39;c&#39;) &lt;= 100
+_C29: flow(&#39;f&#39;,&#39;g&#39;) &lt;= 70
+_C30: flow(&#39;c&#39;,&#39;f&#39;) &lt;= 20
+_C31: flow(&#39;e&#39;,&#39;g&#39;) &lt;= 70
+_C32: flow(&#39;d&#39;,&#39;f&#39;) &lt;= 60
+_C33: flow(&#39;b&#39;,&#39;d&#39;) &lt;= 40
+_C34: flow(&#39;b&#39;,&#39;e&#39;) &lt;= 20
+_C35: flow(&#39;d&#39;,&#39;e&#39;) &lt;= 50
+_C36: flow(&#39;c&#39;,&#39;d&#39;) &lt;= 60
+_C37: flow(&#39;a&#39;,&#39;b&#39;) &lt;= 50
+
+VARIABLES
+flow(&#39;a&#39;,&#39;b&#39;) free Continuous
+flow(&#39;a&#39;,&#39;c&#39;) free Continuous
+flow(&#39;b&#39;,&#39;d&#39;) free Continuous
+flow(&#39;b&#39;,&#39;e&#39;) free Continuous
+flow(&#39;c&#39;,&#39;d&#39;) free Continuous
+flow(&#39;c&#39;,&#39;f&#39;) free Continuous
+flow(&#39;d&#39;,&#39;e&#39;) free Continuous
+flow(&#39;d&#39;,&#39;f&#39;) free Continuous
+flow(&#39;e&#39;,&#39;g&#39;) free Continuous
+flow(&#39;f&#39;,&#39;g&#39;) free Continuous
+inFlow(&#39;b&#39;) free Continuous
+inFlow(&#39;c&#39;) free Continuous
+inFlow(&#39;d&#39;) free Continuous
+inFlow(&#39;e&#39;) free Continuous
+inFlow(&#39;f&#39;) free Continuous
+inFlow(&#39;g&#39;) free Continuous
+outFlow(&#39;a&#39;) free Continuous
+outFlow(&#39;b&#39;) free Continuous
+outFlow(&#39;c&#39;) free Continuous
+outFlow(&#39;d&#39;) free Continuous
+outFlow(&#39;e&#39;) free Continuous
+outFlow(&#39;f&#39;) free Continuous
+</pre></div>
+</div>
+</div>
 </div>
 
 
@@ -164,7 +376,7 @@
     </p>
     <p>
         &copy; Copyright .<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
     </p>
   </div>
 </footer>

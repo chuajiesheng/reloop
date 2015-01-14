@@ -21,15 +21,13 @@ import sphinx_bootstrap_theme
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath('.'))
 sys.path.append(os.path.abspath('../../examples'))
-sys.path.append(os.path.abspath('../../relopt/liftedLP'))
-sys.path.append(os.path.abspath('../../relopt/liftedLP/utils'))
-sys.path.append(os.path.abspath('../../relopt/liftedLP/saucy'))
-sys.path.append(os.path.abspath('../../liftedLP/saucy/'))
-sys.path.append(os.path.abspath('../../build/lib.linux-x86_64-2.7/relopt/liftedLP/'))
-sys.path.append(os.path.abspath('../../build/lib.linux-x86_64-2.7/relopt/liftedLP/utils/'))
-sys.path.append(os.path.abspath('../../build/lib.linux-x86_64-2.7/liftedLP/'))
-sys.path.append('../../build/..')
-sys.path.append('../../libs/..')
+sys.path.append(os.path.abspath('../../reloop/solvers/llp.py'))
+# sys.path.append(os.path.abspath('../../reloop'))
+sys.path.append(os.path.abspath('../../reloop/languages'))
+sys.path.append(os.path.abspath('../../reloop/utils'))
+sys.path.append(os.path.abspath('../../reloop/utils/saucy'))
+sys.path.append(os.path.abspath('../../reloop/utils/io'))
+
 
 # -- General configuration ------------------------------------------------
 
@@ -61,7 +59,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Relational Linear Programming'
+project = u'reloop'
 #copyright = u'2014, Martin Mladenov'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -154,7 +152,7 @@ html_theme_options = {
     'navbar_sidebarrel': False,
 
     # Render the current pages TOC in the navbar. (Default: true)
-    'navbar_pagenav': True,
+    'navbar_pagenav': False,
 
     # Tab name for the current pages TOC. (Default: "Page")
     #'navbar_pagenav_name': "Page",

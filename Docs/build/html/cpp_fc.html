@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 
 
@@ -7,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Fc &mdash; Relational Linear Programming 0.0.1a documentation</title>
+    <title>Fc &mdash; reloop 0.0.1a documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -18,7 +17,7 @@
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '0.0.1a',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -32,7 +31,7 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="Relational Linear Programming 0.0.1a documentation" href="index.html" />
+    <link rel="top" title="reloop 0.0.1a documentation" href="index.html" />
     <link rel="up" title="CPlusPlus" href="cpp.html" />
     <link rel="next" title="Glpk2Py" href="cpp_glpk2py.html" />
     <link rel="prev" title="CPlusPlus" href="cpp.html" />
@@ -56,7 +55,7 @@
         <a class="navbar-brand" href="http://www-ai.cs.uni-dortmund.de/weblab/index.html"><img class="intro-logo" src="_static/tulogo.svg">
         </a>
         <span class="navbar-text navbar-ls8-title">
-          Relational Linear Programming<span class="navbar-version"><b> (0.0.1)</b></span>
+          reloop<span class="navbar-version"><b> (0.0.1)</b></span>
         </span>
       </div>
 
@@ -76,46 +75,32 @@
      href="index.html">Index <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
-      aria-labelledby="dLabelGlobalToc"><ul>
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="introduction.html#heading-1">Heading 1</a></li>
-</ul>
-</li>
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#setup">Setup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#troubleshooting">Troubleshooting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#faq">FAQ</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="code.html">Code</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#a-relational-linear-program-for-maximum-flow">A Relational Linear Program for Maximum Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#a-logical-knowledge-base-for-the-flow-rlp">A Logical Knowledge Base for the Flow RLP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#solving-instances-of-relational-flow-lp">Solving Instances of Relational Flow LP</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="RAMPL.html">RAMPL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LLP.html">LLP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="code.html">Code</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="python.html">Python</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cython.html">Cython</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cpp.html">CPlusPlus</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="cpp.html">CPlusPlus</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
-</ul>
-</ul>
-</li>
-            
-              <li class="dropdown">
-  <a role="button"
-     id="dLabelLocalToc"
-     data-toggle="dropdown"
-     data-target="#"
-     href="#">Page <b class="caret"></b></a>
-  <ul class="dropdown-menu localtoc"
-      role="menu"
-      aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">Fc</a><ul>
-<li><a class="reference internal" href="#members">Members</a></li>
-<li><a class="reference internal" href="#functions">Functions</a></li>
-<li><a class="reference internal" href="#source">Source</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
 </ul>
 </ul>
 </li>
@@ -153,8 +138,8 @@
 <div class="section" id="functions">
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
-<dt>
-<tt class="descname">vector&lt;double&gt; fc::fc( int N, const double a[], const long int b[], const long int c[], double z[] )</tt></dt>
+<dt id="fc::fc__i.doubleCA.lCA.lCA.doubleA">
+vector&lt;double&gt; <tt class="descclassname">fc::</tt><tt class="descname">fc</tt><big>(</big>int <em>N</em>, const double <em>a</em>[], const long <em>b</em>[], const long <em>c</em>[], double <em>z</em>[]<big>)</big><a class="headerlink" href="#fc::fc__i.doubleCA.lCA.lCA.doubleA" title="Permalink to this definition">¶</a></dt>
 <dd><p>TODO</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -306,40 +291,40 @@ vector&lt;size_t&gt; <tt class="descclassname">fc::</tt><tt class="descname">equ
 <span class="cp">#include &lt;cassert&gt;</span>
 <span class="cp">#include &lt;math.h&gt;</span>
 <span class="cp">#include &lt;algorithm&gt;</span>
-<span class="cp">// #include &quot;_generate.h&quot;</span>
+<span class="c1">// #include &quot;_generate.h&quot;</span>
 <span class="cp">#include &quot;saucy.h&quot;</span>
 <span class="cp">#include &quot;amorph.h&quot;</span>
 <span class="cp">#include &quot;util.h&quot;</span>
 <span class="cp">#include &quot;platform.h&quot;</span>
-<span class="k">extern</span> <span class="kt">void</span> <span class="n">add_edge</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">adj</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">edg</span><span class="p">);</span>
-<span class="k">extern</span> <span class="kt">int</span> <span class="n">dupe_check</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">adj</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">edg</span><span class="p">);</span>
-<span class="k">extern</span> <span class="kt">void</span> <span class="n">amorph_print_automorphism</span><span class="p">(</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="o">*</span><span class="n">gamma</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nsupp</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="o">*</span><span class="n">support</span><span class="p">,</span>
+<span class="k">extern</span> <span class="kt">void</span> <span class="nf">add_edge</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">adj</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">edg</span><span class="p">);</span>
+<span class="k">extern</span> <span class="kt">int</span> <span class="nf">dupe_check</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">adj</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">edg</span><span class="p">);</span>
+<span class="k">extern</span> <span class="kt">void</span> <span class="nf">amorph_print_automorphism</span><span class="p">(</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="o">*</span><span class="n">gamma</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nsupp</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="o">*</span><span class="n">support</span><span class="p">,</span>
         <span class="k">struct</span> <span class="n">amorph_graph</span> <span class="o">*</span><span class="n">g</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">marks</span><span class="p">);</span>
-<span class="k">extern</span> <span class="kt">void</span> <span class="n">amorph_graph_free</span><span class="p">(</span><span class="k">struct</span> <span class="n">amorph_graph</span> <span class="o">*</span><span class="n">g</span><span class="p">);</span>
-<span class="k">extern</span> <span class="kt">int</span> <span class="n">saucy_with_graph</span><span class="p">(</span><span class="k">struct</span> <span class="n">amorph_graph</span> <span class="o">*</span><span class="n">g</span><span class="p">,</span> <span class="kt">int</span> <span class="n">smode</span><span class="p">,</span> <span class="kt">int</span> <span class="n">qmode</span><span class="p">,</span> <span class="kt">int</span> <span class="n">rep</span><span class="p">,</span> <span class="kt">int</span> <span class="n">coarsest</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">result</span><span class="p">);</span>
-<span class="k">extern</span> <span class="kt">int</span> <span class="n">init_fixadj1</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">adj</span><span class="p">);</span>
-<span class="k">extern</span> <span class="kt">void</span> <span class="n">init_fixadj2</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">e</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">adj</span><span class="p">);</span>
+<span class="k">extern</span> <span class="kt">void</span> <span class="nf">amorph_graph_free</span><span class="p">(</span><span class="k">struct</span> <span class="n">amorph_graph</span> <span class="o">*</span><span class="n">g</span><span class="p">);</span>
+<span class="k">extern</span> <span class="kt">int</span> <span class="nf">saucy_with_graph</span><span class="p">(</span><span class="k">struct</span> <span class="n">amorph_graph</span> <span class="o">*</span><span class="n">g</span><span class="p">,</span> <span class="kt">int</span> <span class="n">smode</span><span class="p">,</span> <span class="kt">int</span> <span class="n">qmode</span><span class="p">,</span> <span class="kt">int</span> <span class="n">rep</span><span class="p">,</span> <span class="kt">int</span> <span class="n">coarsest</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">result</span><span class="p">);</span>
+<span class="k">extern</span> <span class="kt">int</span> <span class="nf">init_fixadj1</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">adj</span><span class="p">);</span>
+<span class="k">extern</span> <span class="kt">void</span> <span class="nf">init_fixadj2</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">e</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">adj</span><span class="p">);</span>
 
 <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
 
-<span class="n">vector</span><span class="o">&lt;</span><span class="n">size_t</span><span class="o">&gt;</span> <span class="n">equitablePartitionSaucyV2</span><span class="p">(</span><span class="k">const</span> <span class="n">size_t</span> <span class="n">mvertices</span><span class="p">,</span> <span class="k">const</span> <span class="n">size_t</span> <span class="n">medges</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">data</span><span class="p">[],</span> <span class="k">const</span> <span class="n">size_t</span> <span class="n">rown</span><span class="p">[],</span> <span class="k">const</span> <span class="n">size_t</span> <span class="n">coln</span><span class="p">[],</span> <span class="k">const</span> <span class="n">size_t</span> <span class="n">b</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">cIters</span><span class="p">,</span> <span class="kt">int</span> <span class="n">coarsest</span><span class="p">)</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">equitablePartitionSaucyV2</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">mvertices</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">medges</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">data</span><span class="p">[],</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">rown</span><span class="p">[],</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">coln</span><span class="p">[],</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">b</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">cIters</span><span class="p">,</span> <span class="kt">int</span> <span class="n">coarsest</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;== SYMMETRIC INPUT ==</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;NODES: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">mvertices</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">(2x) EDGES: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">medges</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="n">size_t</span> <span class="n">Aijd</span><span class="p">;</span>
+    <span class="kt">size_t</span> <span class="n">Aijd</span><span class="p">;</span>
     <span class="kt">double</span> <span class="n">Aij</span><span class="p">;</span>
     <span class="kt">double</span> <span class="n">bb</span><span class="p">;</span>
-    <span class="n">size_t</span> <span class="n">ncols</span><span class="p">;</span>
-    <span class="kt">bool</span> <span class="n">diagfound</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">size_t</span><span class="o">&gt;</span> <span class="n">row</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">size_t</span><span class="o">&gt;</span> <span class="n">tmpdiag</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">size_t</span><span class="o">&gt;</span> <span class="n">diag</span><span class="p">;</span>
+    <span class="kt">size_t</span> <span class="n">ncols</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">diagfound</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">row</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">tmpdiag</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">diag</span><span class="p">;</span>
     <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">tuple</span><span class="p">;</span>
     <span class="kt">int</span><span class="o">*</span> <span class="n">result</span><span class="p">;</span>
 
     <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">colorMap</span><span class="p">;</span>
     <span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;::</span><span class="n">iterator</span> <span class="n">colorsIter</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">size_t</span><span class="p">,</span> <span class="n">size_t</span><span class="o">&gt;</span> <span class="n">varRepr</span><span class="p">;</span>
-    <span class="n">map</span><span class="o">&lt;</span><span class="n">size_t</span><span class="p">,</span> <span class="n">size_t</span> <span class="o">&gt;::</span><span class="n">iterator</span> <span class="n">mapIter</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">,</span> <span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">varRepr</span><span class="p">;</span>
+    <span class="n">map</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">,</span> <span class="kt">size_t</span> <span class="o">&gt;::</span><span class="n">iterator</span> <span class="n">mapIter</span><span class="p">;</span>
 
     <span class="c1">//scan once to find the values for the diagonal entries and keep them in a dense vector</span>
     <span class="c1">//if this turns out to be too much memory, there are other options</span>
@@ -445,12 +430,12 @@ vector&lt;size_t&gt; <tt class="descclassname">fc::</tt><tt class="descname">equ
 
 
     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;building block matrix&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">size_t</span><span class="o">&gt;</span> <span class="n">res</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">res</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
     <span class="n">varRepr</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
     <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="k">for</span> <span class="p">(</span><span class="n">p</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">p</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">p</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">size_t</span> <span class="n">hashval</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">p</span><span class="p">];</span>
-        <span class="n">size_t</span> <span class="n">newcol</span><span class="p">;</span>
+        <span class="kt">size_t</span> <span class="n">hashval</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">p</span><span class="p">];</span>
+        <span class="kt">size_t</span> <span class="n">newcol</span><span class="p">;</span>
         <span class="n">mapIter</span> <span class="o">=</span> <span class="n">varRepr</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">hashval</span><span class="p">);</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">mapIter</span> <span class="o">==</span> <span class="n">varRepr</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
             <span class="n">varRepr</span><span class="p">[</span><span class="n">hashval</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
@@ -463,12 +448,12 @@ vector&lt;size_t&gt; <tt class="descclassname">fc::</tt><tt class="descname">equ
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
                         <span class="p">}</span>
-<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">equitablePartitionSaucyBipartite</span><span class="p">(</span><span class="k">const</span> <span class="n">size_t</span> <span class="n">nrows</span><span class="p">,</span> <span class="k">const</span> <span class="n">size_t</span> <span class="n">ncols</span><span class="p">,</span> <span class="k">const</span> <span class="n">size_t</span> <span class="n">medges</span><span class="p">,</span> <span class="k">const</span> <span class="n">size_t</span> <span class="n">data</span><span class="p">[],</span> <span class="k">const</span> <span class="n">size_t</span> <span class="n">rowind</span><span class="p">[],</span> <span class="k">const</span> <span class="n">size_t</span> <span class="n">colind</span><span class="p">[],</span> <span class="k">const</span> <span class="n">size_t</span> <span class="n">b</span><span class="p">[],</span> <span class="k">const</span> <span class="n">size_t</span> <span class="n">c</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">cIters</span><span class="p">,</span> <span class="kt">int</span> <span class="n">coarsest</span><span class="p">)</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">equitablePartitionSaucyBipartite</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">nrows</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">ncols</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">medges</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">data</span><span class="p">[],</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">rowind</span><span class="p">[],</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">colind</span><span class="p">[],</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">b</span><span class="p">[],</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">c</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">cIters</span><span class="p">,</span> <span class="kt">int</span> <span class="n">coarsest</span><span class="p">)</span>
     <span class="c1">//Attention: here b is supposed to indicate a coloring, i.e. it should contain all integers 0...p</span>
      <span class="p">{</span>
 
     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;entring wrapper with &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">nrows</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; rows, &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">ncols</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; cols and &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">medges</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; entries.&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="n">size_t</span> <span class="n">mvertices</span> <span class="o">=</span> <span class="n">nrows</span> <span class="o">+</span> <span class="n">ncols</span><span class="p">;</span>
+    <span class="kt">size_t</span> <span class="n">mvertices</span> <span class="o">=</span> <span class="n">nrows</span> <span class="o">+</span> <span class="n">ncols</span><span class="p">;</span>
 
     <span class="c1">//printf(&quot;saucy: ping 1\n&quot;);</span>
     <span class="k">struct</span> <span class="n">amorph_graph</span> <span class="o">*</span><span class="n">g</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
@@ -605,7 +590,7 @@ vector&lt;size_t&gt; <tt class="descclassname">fc::</tt><tt class="descname">equ
     </p>
     <p>
         &copy; Copyright .<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
     </p>
   </div>
 </footer>

@@ -22,22 +22,22 @@ os.environ["CC"] = "g++"
 
 ext_modules = [
     Extension(
-    name="relopt.liftedLP.saucywrap",
-    sources=["relopt/liftedLP/saucy/saucywrap.pyx",\
-             "relopt/liftedLP/saucy/fc.cpp", \
-             "relopt/liftedLP/saucy/saucy.c",\
-             "relopt/liftedLP/saucy/main.c",\
-             "relopt/liftedLP/saucy/saucyio.c",\
-             "relopt/liftedLP/saucy/util.c"],
+    name="reloop.utils.saucy",
+    sources=["reloop/utils/saucy.pyx",\
+             "reloop/utils/saucy/fc.cpp", \
+             "reloop/utils/saucy/saucy.c",\
+             "reloop/utils/saucy/main.c",\
+             "reloop/utils/saucy/saucyio.c",\
+             "reloop/utils/saucy/util.c"],
     include_dirs = [numpy.get_include()],  # .../site-packages/numpy/core/include
     language="c++",
     extra_compile_args = "-ansi -fpermissive -Wall -O0 -ggdb -fPIC".split(),
         # extra_link_args = "...".split()
     ),
     Extension(
-    name="relopt.liftedLP.glpkwrap",
-    sources=["relopt/liftedLP/utils/glpkwrap.pyx",\
-             "relopt/liftedLP/utils/glpk2py.cpp"],
+    name="reloop.utils.io.glpkwrap",
+    sources=["reloop/utils/io/glpkwrap.pyx",\
+             "reloop/utils/io/glpk2py.cpp"],
     include_dirs = [numpy.get_include()],  # .../site-packages/numpy/core/include
     libraries=["glpk"],
     language="c++",
@@ -48,16 +48,9 @@ ext_modules = [
 ]
 
 setup(
-    name = 'relopt',
+    name = 'reloop',
     version = "0.0",
-    packages = ['relopt', 'relopt.liftedLP', 'relopt.liftedLP.utils','relopt.reloop'],
+    packages = ['reloop', 'reloop.solvers', 'reloop.utils', 'reloop.utils.io','reloop.languages'],
     cmdclass = {'build_ext': build_ext},
     ext_modules = ext_modules,
-        # ext_modules = cythonize(ext_modules)  ? not in 0.14.1
-    # version=
-    # description=
-    # author=
-    # author_email=
     )
-
-# test: import f
