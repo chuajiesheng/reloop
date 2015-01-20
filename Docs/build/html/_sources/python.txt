@@ -13,11 +13,8 @@ Contents:
 
 .. toctree::
    :maxdepth: 1
-
-   python_maxflow
-   python_mymaxflow
+   
    python_read
    python_shortestPath
    python_small_matrix
    python_llp
-   python_symLPExperiments

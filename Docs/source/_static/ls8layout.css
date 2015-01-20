@@ -8,3 +8,8 @@ img.intro-logo {
         margin-bottom: 0px;
     }
 }
+div.math {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
