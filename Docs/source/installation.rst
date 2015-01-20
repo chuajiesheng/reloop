@@ -37,7 +37,7 @@ as well as libglpk. To simplify the installation of the Python modules, we provi
 in the directory where you extracted reloop. 
 
 .. DANGER::
-   If you already have or want to install some of these packages with custom build parameters (e.g. numpy or cvxopt), doing the above is not advisable. If this is the case, install all packages one by one or remove the packages in question from requirements.txt and build them manually.
+   If you already have or want to install some of these packages with custom build parameters (e.g. numpy or cvxopt), doing the above is not advisable. In this case, install all packages one by one or remove the packages in question from requirements.txt and build them manually.
 
 To install libglpk, head on over to `glpk <http://en.wikibooks.org/wiki/GLPK/Linux_OS>`_.
 
@@ -52,4 +52,6 @@ Once all the requirements are taken care of run ::
 
     $ pip install .
 
+Upon successful completion, reloop should be installed. To verify that reloop is running correctly, run ::
 
+    $ something

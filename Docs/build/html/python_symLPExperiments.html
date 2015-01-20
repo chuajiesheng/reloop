@@ -78,14 +78,14 @@
       aria-labelledby="dLabelGlobalToc"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#preliminaries">Preliminaries</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#for-developers">For Developers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#main-dependencies">Main dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#optional-dependencies">Optional dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installing-reloop">Installing reloop</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tutorial.html#a-relational-linear-program-for-maximum-flow">A Relational Linear Program for Maximum Flow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial.html#a-logical-knowledge-base-for-the-flow-rlp">A Logical Knowledge Base for the Flow RLP</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial.html#solving-instances-of-relational-flow-lp">Solving Instances of Relational Flow LP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#relational-linear-programming">Relational Linear Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#lifted-linear-programming">Lifted Linear Programming</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="RAMPL.html">RAMPL</a></li>
@@ -137,84 +137,8 @@
 This module retrieves LPs from specified files and provides the necessary interface to solve given LPs.
 Calculation and Computation is done in the C/C++ core, where most of the work is done.</p>
 </div>
-<div class="section" id="module-symLPExperiments">
-<span id="documentation"></span><h2>Documentation<a class="headerlink" href="#module-symLPExperiments" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="symLPExperiments.loadNsolve">
-<tt class="descclassname">symLPExperiments.</tt><tt class="descname">loadNsolve</tt><big>(</big><em>fname</em>, <em>scaled</em>, <em>ftype</em><big>)</big><a class="reference internal" href="_modules/symLPExperiments.html#loadNsolve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#symLPExperiments.loadNsolve" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div>Loads and solves a given LP by lifting the data and then solving it with the GNU linear programming kit solver.</div></blockquote>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>fname</strong> (<em>str.</em>) &#8211; The name of a given file, which contains the LP</li>
-<li><strong>scaled</strong> (<em>int.</em>) &#8211; scaled An integeftype The type of the given problem (mostly LPs)r value, which indicates a scaling/scaled LP (?)</li>
-<li><strong>ftype</strong> (<em>str.</em>) &#8211; ftype The type of the given problem (mostly LPs)</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>The n-tuple  [xopt, timeground, timelift, compresstime, shapeR0, shapeR1,shapeC0, shapeC1]:</p>
-<div class="highlight-python"><div class="highlight"><pre>xopt --
-timeground -- 
-timelift --
-compresstime --
-shapeR0 --
-shapeR1 --
-shapeC0 --
-shapeC1 --
-</pre></div>
-</div>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">loadNsolve</span><span class="p">(</span><span class="s">&#39;aircraft.gz.mts.lp&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="s">&#39;LP&#39;</span><span class="p">)</span>
-<span class="go">aircraft.gz.mts.lp :  [4.140719000000001, 0.393192, 0.37750799999999973, 7517, 57, 15025, 105]</span>
-</pre></div>
-</div>
-</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="symLPExperiments.loadNsolveCVX">
-<tt class="descclassname">symLPExperiments.</tt><tt class="descname">loadNsolveCVX</tt><big>(</big><em>fname</em>, <em>scaled</em>, <em>ftype</em><big>)</big><a class="reference internal" href="_modules/symLPExperiments.html#loadNsolveCVX"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#symLPExperiments.loadNsolveCVX" title="Permalink to this definition">¶</a></dt>
-<dd><p>Solves a specified LP file by assigning its contents to cvxopt and solving the created problem with the gklp solver.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>fname</strong> (<em>str.</em>) &#8211; The name of a given file, which contains the LP</li>
-<li><strong>scaled</strong> (<em>int.</em>) &#8211; scaled An integeftype The type of the given problem (mostly LPs)r value, which indicates a scaling/scaled LP (?)</li>
-<li><strong>ftype</strong> (<em>str.</em>) &#8211; ftype The type of the given problem (mostly LPs)</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="symLPExperiments.runbatch">
-<tt class="descclassname">symLPExperiments.</tt><tt class="descname">runbatch</tt><big>(</big><em>path</em>, <em>output</em>, <em>type</em><big>)</big><a class="reference internal" href="_modules/symLPExperiments.html#runbatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#symLPExperiments.runbatch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Solves all given LP problems by iteratint over every specified file from the given path.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>path</strong> (<em>str.</em>) &#8211; The path, which contains the LPs to solve.</li>
-<li><strong>output</strong> (<em>str.</em>) &#8211; The output file</li>
-<li><strong>type</strong> (<em>int.</em>) &#8211; The type of given problem (Here always type = LP = 1)</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 

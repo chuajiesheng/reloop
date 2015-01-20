@@ -1,8 +1,18 @@
 .. _tutorial:
 .. highlight:: python
 
+
 Tutorial
 ========
+
+TODO: intro
+
+.. contents:: Contents
+	:depth: 3
+	:local:
+
+Relational Linear Programming
+-----------------------------
 
 Mathematical programs (MPs) are often specified using algebraic modelling languages such as AMPL. They simplify MP definition by allowing to use algebraic
 notation instead of matrices and define an objective and constraints through parameters whose domains are defined in a separate file,
@@ -11,27 +21,80 @@ in a declarative way. They free the user from engineering instance specific MPs 
 However, they do not provide logically parameterized definitions for the arithmetic expressions and for the index sets. RAMPL, which we will introduce now,
 feature exactly this.
 
+Let's consider a traffic flow problem, i.e., we are given a transportation network consisting of a source (S), sink (T), and
+intermediate nodes connected with links of certain capacity. For example, consider the following network. 
 
-Let's consider a traffic flow problem, i.e., we want to send as much flow as possible
-through a traffic network. This is linear programming task.
+
+.. figure:: images/flownetwork.svg
+   :scale: 45 %
+   :alt: transportation network
+   :align: center
+
+   Transportation network for the flow LP. Numbers indicate capacities of the links.
 
 
-A Relational Linear Program for Maximum Flow
----------------------------------------------
+Our task is to find a way to route as much goods from the source to the sink as the network allows. One popular way to do this is using a linear program. Let us briefly describe what an LP for the max flow problem could look like. The first step to a linear programming model of the flow problem is to assign a continuous variable to each edge in the network. Our intention is that in the LP solution, these variables will hold the amount of goods flowing on the edges. In order to get an admissible flow, however, we need to constrain these variables. Clearly, the amount of goods flowing on an edge must not exceed its capacity. This is a linear constraint on the flow variables. Another linear constraint is that a flow must be nonnegative (by convention). Finally, we have to need to introduce flow conservation: the amount of goods flowing in each node must be equal to the amount of goods flowing out (except for the source and sink nodes). The LP we end up with is as follows:
+
+	.. math::
+	   \operatorname*{maximize}\limits_{{\bf f} \in \mathbb{R}^{|E|}}  &\quad \sum_{v: (s,v)\in E} f_{sv} \\
+	             \text{s.t.} &\quad \forall v\in V\setminus \{s, t\} : \sum\nolimits_{u: (u,v) \in E} f_{uv} = \sum\nolimits_{u: (v,u) \in E} f_{vu} \;,\\
+	             & \quad \forall e \in E: \quad 0 \leq f_e \leq c_e\;.
+
+To add structure to this LP, let us make the following definitions:
+
+    .. math::
+           \operatorname*{inFlow}(X) := \sum\nolimits_{u: (u,X) \in E} f_{uX}\; ,\\
+           \operatorname*{outFlow}(X) := \sum\nolimits_{u: (X,u) \in E} f_{Xu}\;.\\
+
+
+We thus end up with:
+
+    .. math::
+       \operatorname*{maximize}\limits_{{\bf f} \in \mathbb{R}^{|E|}}  &\quad \sum_{v: (s,v)\in E} f_{sv} \\
+                 \text{s.t.} &\quad \forall v\in V\setminus \{s, t\} : \operatorname*{inFlow}(v) = \operatorname*{outFlow}(v)\;,\\
+                 & \quad \forall e \in E: \quad 0 \leq f_e \leq c_e\;.
+
+
+We will now show how to use reloop's RLP language to construct and solve this model.
+
+
+A Relational Linear Program for Maximum Flow: Operator Notation
+***************************************************************
 
 The start of your file will import reloop’s functions for use in your code::
 
-    from reloop import *
+    from reloop.languages.rlp import *    
 
 A variable called model (although its name is not important) is created using the reloopProblem function. It has two parameters, the first being the
-arbitrary name of this problem (as a string), and the second parameter being either LpMinimize or LpMaximize depending on the type of LP you are trying to solve: ::
+arbitrary name of this problem (as a string), and the second parameter being either LpMinimize or LpMaximize depending on the type of LP we are trying to solve: ::
 
     model = reloopProblem("Traffic Flow LP", lp.LpMaximize)
 
-The variable model now begins collecting problem specifications with the += operator. For instance in a maximum flow problem, the flow out of the source node must be the total flow through the
-network, which is to be maximized: ::
+Before we start defining constraints, we will declare our predicates. In this case we have 2 of them: ``flow`` -- our variable predicate, and ``cap``, which stores the capacities of the edges. We declare them as follows ::
 
-    model += reloopConstraint("sum{ X,Y in source(X) & edge(X,Y) } : { cost[X,Y]*flow(X,Y) }")
+    flow = model.predicate("flow", 2, var = True)
+    cap = model.predicate("cap", 2)
+
+The function ``predicate()`` takes as arguments the predicate name, the arity and optionally whether the predicate will be used to store the LP variables (by default assumed false). 
+
+We will now illustrate the concept of substitutions to define ``outFlow`` and ``inFlow``. ::
+
+    inFlow = Substitution("inFlow", 1)
+    outFlow = Substitution("outFlow", 1)
+
+
+
+
+    outFlow <<= [ "X", psum("Y in edge(X,Y)", flow("X","Y")) ]
+    inFlow  <<= [ "Y", psum("X in edge(X,Y)", flow('X','Y')) ]
+
+
+
+The variable ``model`` now begins collecting problem specifications with the += operator.
+, namely that the flow out of the source node must be maximized: ::
+
+    model += reloopConstraint("sum{ X,Y in source(X) & edge(X,Y) } : { cost(X,Y)*flow(X,Y) }")
+    model += 
 
 Since there is no (in)equality symbol involed, this specified the objective of our relational LP. It says that we want
 to sum all cost[X,Y]*flow(X,Y) terms for which X is a source node and there is an edge between X and Y. Note the difference types
@@ -40,7 +103,7 @@ of brackets for cost/2 and flow/2. This says that cost/2 actually yields a conti
 Next we encode
 the preservation of in- and outflows for all nodes that are not the source resp. target nodes: ::
 
-    model += reloopConstraint("forall{ X in node(X) & ~source(X) & ~target(X)} : { 1.0*inFlow(X) - 1.0*outFlow(X) = 0}")
+    model += reloopConstraint("forall{ X in node(X) & ~source(X) & ~target(X) } : { 1.0*inFlow(X) - 1.0*outFlow(X) = 0 }")
 
 The constraint says that except for the entrance and exit, the flow into each intersection
 equals the flow out. Note that we have made use of negation in the query of the forall quantification using ~. Furthermore, we have not introduce yet what the logically
@@ -67,7 +130,7 @@ Together with a logical knowledge base, effectively a logical program consisting
 
 
 A Logical Knowledge Base for the Flow RLP
------------------------------------------
+*****************************************
 
 Fist we define the node/1 predicate, i.e., the set of nodes in the flow network. To do so, we use pyDatalog and its decorator: ::
 
@@ -124,7 +187,7 @@ costs[X,Y]=Z: ::
 
 
 Solving Instances of Relational Flow LP
----------------------------------------
+***************************************
 
 To obtain the solution to this instance of the relational flow linear program, we could just call the solve() function.
 It calls PuLP' solver. Since everything is embedded within Python, we could also use Python to process
@@ -237,4 +300,9 @@ Of course, changing the knowledge base will result in different solutions. The c
     outFlow('e') free Continuous
     outFlow('f') free Continuous
 
+
+Lifted Linear Programming
+-------------------------
+
+asdf
 

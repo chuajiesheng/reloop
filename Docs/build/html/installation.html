@@ -156,7 +156,7 @@ $ tar zxvf release.tar.gz
 <p>in the directory where you extracted reloop.</p>
 <div class="admonition danger">
 <p class="first admonition-title">Danger</p>
-<p class="last">If you already have or want to install some of these packages with custom build parameters (e.g. numpy or cvxopt), doing the above is not advisable. If this is the case, install all packages one by one or remove the packages in question from requirements.txt and build them manually.</p>
+<p class="last">If you already have or want to install some of these packages with custom build parameters (e.g. numpy or cvxopt), doing the above is not advisable. In this case, install all packages one by one or remove the packages in question from requirements.txt and build them manually.</p>
 </div>
 <p>To install libglpk, head on over to <a class="reference external" href="http://en.wikibooks.org/wiki/GLPK/Linux_OS">glpk</a>.</p>
 </div>
@@ -166,6 +166,14 @@ $ tar zxvf release.tar.gz
 </div>
 <div class="section" id="installing-reloop">
 <h2>Installing reloop<a class="headerlink" href="#installing-reloop" title="Permalink to this headline">¶</a></h2>
+<p>Once all the requirements are taken care of run</p>
+<div class="highlight-python"><div class="highlight"><pre>$ pip install .
+</pre></div>
+</div>
+<p>Upon successful completion, reloop should be installed. To verify that reloop is running correctly, run</p>
+<div class="highlight-python"><div class="highlight"><pre>$ something
+</pre></div>
+</div>
 </div>
 </div>
 

@@ -1,14 +1,6 @@
-__author__ = 'kersting'
+from reloop.languages.rlp import *
 
-from reloop import *
 
-#----------------------------------------------------------
-# Reloop Model
-
-#----------------------------------------------------------
-# The datalog part
-
-#pyDatalog.create_terms('constraint,Value')
 
 @pyDatalog.predicate()
 def node1(X):
@@ -46,8 +38,8 @@ def target1(X):
 
 
 @pyDatalog.predicate()
-def cost3(X,Y,Z):
-    yield('a','b',50)
+def cap3(X,Y,Z):
+    yield('a','b',50) # cap(a,b) = 50
     yield('a','c',100)
     yield('b','d',40)
     yield('b','e',20)
@@ -60,49 +52,36 @@ def cost3(X,Y,Z):
 
 
 #----------------------------------------------------------
-# the LP part
+# Linear Program definition
 
 model = reloopProblem("traffic flow LP in the spirit of page 329 in http://ampl.com/BOOK/CHAPTERS/18-network.pdf", lp.LpMaximize)
 
 print "\nBuilding a relational variant of the " + model.name
 
-# the objective function is added to relational LP first
+#declarations
+flow = model.predicate("flow", 2, var = True)
+cap = model.predicate("cap", 2)
+outFlow = model.predicate("outFlow",1,var = True)
+inFlow = Substitution("inFlow", 1)
+outFlow = Substitution("outFlow", 1)
 
-# model += reloopVariable("flow/2")
-# constraints defining inflow are added
-input = "forall{ Y in node(Y) & ~source(Y) } : { sum{ X in edge(X,Y) } : { 1.0*flow(X,Y)} - 1.0*inFlow(Y) = 0}"
-c = reloopConstraint(input)
-model += c
-c = reloopConstraint("sum{ X,Y in source(X) & edge(X,Y) } : { cost[X,Y]*flow(X,Y) }")
-model += c
-# constraints defining outflow are added
-input = "forall{ X in node(X) & ~target(X) } : { sum{ Y in edge(X,Y) } : { 1.0*flow(X,Y) } - 1.0*outFlow(X) = 0}"
-c = reloopConstraint(input)
-model += c
+#definitions for substitutions
+outFlow <<= [ "X", psum("Y in edge(X,Y)", flow("X","Y")) ]
+inFlow  <<= [ "Y", psum("X in edge(X,Y)", flow('X','Y')) ]
 
-# constraints defining preservation of flow are added
-input = "forall{ X in node(X) & ~source(X) & ~target(X)} : { 1.0*inFlow(X) - 1.0*outFlow(X) = 0}"
-c = reloopConstraint(input)
-model += c
+#objective
+model += pobj(psum("X,Y in source(X) & edge(X,Y)", flow("X","Y"))) 
+#constraints for flow preservation
+model += pall("Z in node(Z) & ~source(Z) & ~target(Z)", inFlow("Z") == outFlow("Z"))
+#upper and lower bound constraints
+model += pall("X,Y in edge(X,Y)", flow("X","Y") >= 0)
+model += pall("X,Y in edge(X,Y)", flow("X","Y") <= cap("X","Y") )
 
-
-# constraints defining lower and upper bounds are added
-input = "forall{ X,Y in edge(X,Y) } : { 1.0*flow(X,Y) >= 0}"
-c = reloopConstraint(input)
-model += c
-
-input = "forall{ X,Y in edge(X,Y) } : { 1.0*flow(X,Y) - 1*cost[X,Y] <= 0}"
-c = reloopConstraint(input)
-model += c
-
-
-print "The model has been build."
-
-#print model
-
+print "The model has been built."
 model.solve()
 
-print "The model has been solved: " + model.status()
+
+print "The model has been solved: " + model.status() + "."
 
 sol =  model.getSolution()
 
@@ -116,5 +95,5 @@ for key, value in sol.iteritems():
     if "flow" in key and value > 0:
         total += value
 
-print "\nThus, the maximum flow entering the traffic network at node a is "+str(sol["flow('a','b')"]+sol["flow('a','c')"])+" cars per hour."
+print "\nThus, the maximum flow entering the traffic network at node a is "+str(sol["flow(a,b)"]+sol["flow(a,c)"])+" cars per hour."
 print "\nThe total flow in the traffic network is "+str(total)+" cars per hour."
