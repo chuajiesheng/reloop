@@ -22,8 +22,8 @@ os.environ["CC"] = "g++"
 
 ext_modules = [
     Extension(
-    name="reloop.utils.saucy",
-    sources=["reloop/utils/saucy.pyx",\
+    name="reloop.utils.saucywrapper",
+    sources=["reloop/utils/saucywrapper.pyx",\
              "reloop/utils/saucy/fc.cpp", \
              "reloop/utils/saucy/saucy.c",\
              "reloop/utils/saucy/main.c",\

@@ -58,9 +58,9 @@ We thus end up with:
 We will now show how to use reloop's RLP language to construct and solve this model.
 
 
-A Relational Linear Program for Maximum Flow: Operator Notation
-***************************************************************
-(This section is based on :ref:`maxflow_operator.py<maxflowOperator>`)
+A Relational Linear Program for Maximum Flow: Modelling in Operator Notation
+****************************************************************************
+(The running code for this example can be found in :ref:`maxflow_operator.py<maxflowOperator>`.)
 
 The start of your file will import reloop’s functions for use in your code::
 
@@ -69,7 +69,7 @@ The start of your file will import reloop’s functions for use in your code::
 A variable called model (although its name is not important) is created using the reloopProblem function. It has two parameters, the first being the
 arbitrary name of this problem (as a string), and the second parameter being either LpMinimize or LpMaximize depending on the type of LP we are trying to solve: ::
 
-    model = reloopProblem("traffic flow LP in the spirit of page 329 in http://ampl.com/BOOK/CHAPTERS/18-network.pdf", lp.LpMaximize)
+    model = reloopProblem("flow LP", lp.LpMaximize)
 
 
 Before we start defining constraints, we will declare our predicates. In this case we have 2 of them: ``flow`` -- our variable predicate, and ``cap``, which stores the capacities of the edges. We declare them as follows ::
@@ -77,19 +77,25 @@ Before we start defining constraints, we will declare our predicates. In this ca
     flow = model.predicate("flow", 2, var = True)
     cap = model.predicate("cap", 2)
 
-The function ``predicate()`` takes as arguments the predicate name, the arity and optionally whether the predicate will be used to store the LP variables (by default assumed false). 
+The function ``predicate()`` takes as arguments the predicate name, the arity and optionally whether the predicate is an LP variable (by default assumed false). 
 
 We will now illustrate the concept of substitutions to define ``outFlow`` and ``inFlow``. A substitution is essentially a preprocessor instruction to replace one piece of text with another. In particular we want the atoms ``inFlow`` and ``outFlow`` to always be replaced by the sums defined above. We first declare the two predicates as substitutions ::
 
     inFlow = Substitution("inFlow", 1)
     outFlow = Substitution("outFlow", 1)
 
-Next we define them, ::
+Next we define them ::
 
     outFlow <<= [ "X", psum("Y in edge(X,Y)", flow("X","Y")) ]
     inFlow  <<= [ "Y", psum("X in edge(X,Y)", flow('X','Y')) ]
 
-Hence, whenever something like ``outFlow(A)`` is encountered in our model, ``A`` will be bound to ``X`` and ``outFlow(A)`` will be replaced by ``psum("Y in edge(A,Y)", flow("A","Y"))``.   
+where the definition takes a list of a varlist and expression. In essence, the above is roughly equivalent to the C directive
+
+.. code-block:: c
+
+	#define outFlow(X) psum("Y in edge(X,Y)", flow("X","Y"))
+
+I.e., whenever something like ``outFlow(A)`` is encountered in our model, ``A`` will be bound to ``X`` and ``outFlow(A)`` will be replaced by ``psum("Y in edge(A,Y)", flow("A","Y"))``. Substitutions with multiple variables are also possible.    
 
 
 Now we start collecting our model specification in the ``model`` variable using the += operator.
@@ -232,7 +238,7 @@ This produces the following output: ::
 
 Of course, changing the knowledge base will result in different solutions. The corresponding .lp file (produced e.g. by PuLP) would look like this: ::
 
-	traffic flow LP in the spirit of page 329 in http://ampl.com/BOOK/CHAPTERS/18-network.pdf:
+	flow LP:
 	MAXIMIZE
 	1.0*flow(a,b) + 1.0*flow(a,c) + 0
 	SUBJECT TO
@@ -274,8 +280,145 @@ Of course, changing the knowledge base will result in different solutions. The c
 	flow(e,g) free Continuous
 	flow(f,g) free Continuous
 
-Lifted Linear Programming
--------------------------
 
-asdf
+The complete running example can be found :ref:`here<maxflowOperator>`.
+
+
+Modeling in Text Notation 
+****************************************************************************
+
+The RLP envirnonment allows the user to also enter the equations in text form, as introduced in (TODO: paper).
+To illustrate, we will show how the flow LP looks like in text form :: 
+
+	model = reloopProblem("flow LP", lp.LpMaximize)
+
+	# declarations
+	model.predicate("flow", 2, var = True)
+	model.predicate("cap", 2)
+	model.predicate("inFlow", 1, var = True)
+	model.predicate("outFlow", 1, var = True)
+	# the objective function is added to relational LP first
+	model += reloopConstraint("sum{ X,Y in source(X) & edge(X,Y) } : { flow(X,Y) }")
+	# constraints defining inflow are added
+	input = "forall{ Y in node(Y) & ~source(Y) } : { sum{ X in edge(X,Y) } : { 1.0*flow(X,Y)} = inFlow(Y)}"
+	model += reloopConstraint(input)
+	# constraints defining outflow are added
+	input = "forall{ X in node(X) & ~target(X) } : { sum{ Y in edge(X,Y) } : { 1.0*flow(X,Y) }  = outFlow(X)}"
+	model += reloopConstraint(input)
+	# constraints defining preservation of flow are added
+	input = "forall{ X in node(X) & ~source(X) & ~target(X)} : { inFlow(X) = outFlow(X) }"
+	model += reloopConstraint(input)
+	# constraints defining lower and upper bounds are added
+	input = "forall{ X,Y in edge(X,Y) } : { flow(X,Y) >= 0}"
+	model += reloopConstraint(input)
+	input = "forall{ X,Y in edge(X,Y) } : { flow(X,Y) <= cap(X,Y)}"
+	model += reloopConstraint(input)
+
+You can find the running code in :ref:`maxflow_text.py<maxflowText>`. 
+
+.. CAUTION::
+    Substitutions are not yet implemented in text mode. As you can see, we have implemented ``inFlow`` and ``outFlow`` as LP variables and their definitions as LP constraints.
+
+
+Equitable Partitions and Lifted Linear Programming
+--------------------------------------------------
+
+Next to modeling languages, reloop offers tools for efficiently lifting and solving optimization problems produced by these languages (and not only). In the lifted solvers provided, efficiency is gained by exploiting redundancy in the structure of the problem. Our main tool for redundancy discovery are the so-called equitable partitions of matrices. In the following, we will look at computing equitable partitions of matrices with the tools of reloop, as well as solving linear equations and linear programs in a lifted fashion.   
+
+Equitable Partitions of Matrices
+********************************
+
+Suppose we have a matrix, say 
+
+.. math::
+    \mathbf{A}^0 = \begin{bmatrix}
+           1 & 1 & 1           \\[0.3em]
+           -1 & 0 & 0            \\[0.3em]
+           0 & -1 & 0            \\[0.3em]
+           1 & 1 & -1            \\[0.3em]
+         \end{bmatrix}\;.
+
+In the following we will assume a graphical view of matrices, where we will see a matrix as a weighted bipartite graph specifying how two sets (the rows and the colums) are connected. In the case of :math:`\mathbf{A}`, we connect the set of rows :math:`R = \{r_1, r_2, r_3, r_4\}` to the set of columns :math:`C = \{c_1, c_2, c_3\}`. Thus, the connection of :math:`r_4` to :math:`c_3` has weight :math:`\mathbf{A}_{43} = -1`.
+
+In addition, we may wish to supply weights to the "nodes" of :math:`\mathbf{A}` by supplying two additional vectors, say :math:`\mathbf{b}` and :math:`\mathbf{c}`. For example, if we wish to specify that row :math:`r_4` has weight :math:`-1`, we set :math:`\mathbf{b}_4 = -1`. Smilarly, :math:`\mathbf{c}_3 = 1` indicates that the weight of column :math:`c_3` is :math:`1`. It will shortly become clear why these weights are useful. For now, let's say that we have
+
+.. math::
+
+        \mathbf{b}^0 = \begin{bmatrix}
+       1\\
+       0\\
+       0\\
+       -1\\
+     \end{bmatrix} \text{ and } \mathbf{c}^0 =       \begin{bmatrix}
+       0\\
+       0\\
+       1\\
+     \end{bmatrix}\; . 
+
+Now, we say that a partition :math:`{\cal P} = \{P_1,\ldots,P_p; Q_1,\ldots,Q_q\}` of :math:`L=(\mathbf{A},\mathbf{b},\mathbf{c})` is **equitable** if the following conditions hold. 
+
+* For any two columns :math:`i,\; j` in the same class :math:`P`, :math:`\mathbf{c}_i = \mathbf{c}_j`. For any two rows :math:`i,\; j` in the same class :math:`Q`, :math:`\mathbf{b}_i = \mathbf{b}_j`;
+
+* For any two columns :math:`i,\; j` in the same class :math:`P`, and for any constraint class :math:`Q` and real number :math:`r`: 
+
+.. math::
+    |\{k \in Q\ :\ \mathbf{A}_{ik} = r \}| = |\{l \in Q\ :\ \mathbf{A}_{jl} = r \}|\;.
+
+* Analogously,  for any two rows :math:`i,\; j` in the same class :math:`Q`, and for any constraint class :math:`P` and real number :math:`r`:
+
+.. math::
+    |\{k \in P :\ \mathbf{A}_{ki} = r \}| = |\{l \in P :\ \mathbf{A}_{lj} = r \}|\;.
+
+
+It can be verified that an equitable partition of :math:`L^0 = (\mathbf{A}^0,\mathbf{b}^0,\mathbf{c}^0)` is :math:`{\cal P}^0 = \{\{1,2\},\{3\};\{1\}\{2,3\}\{4\} \}` --- meaning that :math:`c_1` is equivalent to :math:`c_2` but not to :math:`c_3` and :math:`r_2` and :math:`r_3` are equivalent, but not :math:`r_1` and :math:`r_4`.
+
+Reloop provides an interface to the highly efficient code of `Saucy <http://vlsicad.eecs.umich.edu/BK/SAUCY/>`_ for the computation of equitable partitions of matrices. Currently, we can compute the coarsest equitable partition of a matrix, as well as its orbit partition. We will now show how to compute equitable partitions of :math:`L^0`.
+
+We begin by importing the Saucy wrapper from reloop ::
+
+    import reloop.utils.saucy as saucy
+
+
+We will also need ``scipy.sparse`` and ``numpy``: ::
+
+    import scipy.sparse as sp
+    import numpy as np
+
+
+Next we enter our input. All our data needs to be in coo_matrix format, and ``b`` and ``c`` must be column vectors:  ::
+
+    A = sp.coo_matrix([[1, 1, 1], [-1, 0, 0], [0, -1, 0], [1, 1, -1]])
+    b = sp.coo_matrix([1,0,0,-1]).T
+    c = sp.coo_matrix([0,0,-1]).T
+
+
+We can now call the equitable partition function and print the result: ::
+
+    [rowpart, colpart] = saucy.epBipartite(A, b, c, 1)
+
+    print "row classes: ", rowpart
+    print "column classes: ", colpart 
+
+Note that the ``1`` in the last argument of ``epBipartite()`` indicates we are computing the coarsest equitable partition. To compute orbits, we use ``0``.
+When ran, this python code (also found at :ref:`equitablePartition_Abc.py<epAbc>`) outputs the following: ::
+
+    entring wrapper with 4 rows, 3 cols and 8 entries.
+    row colors: 3
+    col colors: 5
+    nodes 15
+    edges 16
+    input file = (null)
+    vertices = 15
+    edges = 16
+    group size = 1.000000e0
+    levels = 0
+    nodes = 1
+    generators = 0
+    total support = 0
+    average support = -nan
+    nodes per generator = inf
+    bad nodes = 0
+    cpu time (s) = 0.00
+    row classes:  [2 1 1 0]
+    column classes:  [1 1 0]
 

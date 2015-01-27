@@ -99,15 +99,6 @@ def lift(Ar, br, cr, sparse=True, orbits=False, sumrefine=False):
     else:
         AC = sp.coo_matrix(Ar)
     starttime = time.clock()
-    if (not sparse):
-
-        _, cmod = np.unique(np.array(cr), return_inverse=True)
-        _, bmod = np.unique(np.array(br), return_inverse=True)
-
-    else:
-        _, cmod = np.unique(np.array(cr.todense()), return_inverse=True)
-        _, bmod = np.unique(np.array(br.todense()), return_inverse=True)
-
     co = sp.lil_matrix(cr)
     bo = sp.lil_matrix(br)
     _, data = np.unique(AC.data.round(6), return_inverse=True)
@@ -117,18 +108,16 @@ def lift(Ar, br, cr, sparse=True, orbits=False, sumrefine=False):
     if sumrefine and not orbits:
         saucycolors = sumRefinement(AA, cc)
     else:
-        saucycolors = saucy.epSaucyBipartite(
-            data.astype(np.uintp), AC.row.astype(np.uintp),
-            AC.col.astype(np.uintp), bmod.astype(np.uintp),
-            cmod.astype(np.uintp), np.int32(0), np.int32(o))
+        [rcols2, bcols2] = saucy.epBipartite(Ar, br, cr, o)
+        
     print "refinement took: ", time.clock() - starttime, "seconds."
-    n = cmod.shape[0]
-    m = bmod.shape[0]
-    _, bcols2 = np.unique(saucycolors[m:n + m], return_inverse=True)
+    
+    n = cr.shape[0]
+    m = br.shape[0]
     brows = np.array(range(n))
     bdata = np.ones(n, dtype=np.int)
     Bcc2 = sp.csr_matrix((bdata, np.vstack((brows, bcols2))), dtype=np.int).tocsr()
-    _, rcols2 = np.unique(saucycolors[0:m], return_inverse=True)
+
     _, rowfilter2 = np.unique(rcols2, return_index=True)
 
     LA2 = AC.tocsr()[rowfilter2, :] * Bcc2
@@ -232,7 +221,7 @@ def sparse(A, b, c, debug=False, optiter=200, plot=False, save=False, orbits=Fal
     objlift = solinfolifted['obj']
     if debug:
         report(objlift, objground, xopt, xground, timelift, timeground,
-               A.shape[0], LA.shape[0], A.shape[1], LA.shape[1])
+                LA.shape[0], A.shape[0], LA.shape[1], A.shape[1])
         return [xopt, timeground, timelift, compresstime,
                 Bcc.shape[0], Bcc.shape[1], A.shape[0], LA.shape[0]]
     else:

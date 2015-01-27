@@ -7,3 +7,4 @@ Examples
 
    python_maxflow_operator
    python_maxflow_text
+   python_equitablePartition_Abc
