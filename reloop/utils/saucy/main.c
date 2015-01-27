@@ -10,6 +10,9 @@
  * See the LICENSE file for details.
  */
 
+/* This file contains modifications 
+ * by Martin Mladenov <martin.mladenov@cs.tu-dortmund.de>
+ */
 #include <stdlib.h>
 #include <stdio.h>
 #include <signal.h>

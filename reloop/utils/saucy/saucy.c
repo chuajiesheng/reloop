@@ -10,6 +10,10 @@
  * See the LICENSE file for details.
  */
 
+/* This file contains modifications 
+ * by Martin Mladenov <martin.mladenov@cs.tu-dortmund.de>
+ */
+ 
 #include <stdlib.h> /* malloc, calloc, and free */
 #include <string.h> /* memcpy */
 #include <stdio.h>
