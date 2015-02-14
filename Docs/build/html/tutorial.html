@@ -93,7 +93,8 @@
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="python_maxflow_operator.html">maxflow_operator.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="python_maxflow_text.html">maxflow_text.py</a></li>
-<li class="toctree-l2"><a class="reference internal" href="python_equitablePartition_Abc.html">equitablePartition_Abc.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_lift_factorgraph.html">lift_factorgraph.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_lift_Abc.html">lift_Abc.py</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="code.html">Code</a><ul>
@@ -149,6 +150,8 @@
 </li>
 <li><a class="reference internal" href="#equitable-partitions-and-lifted-linear-programming" id="id7">Equitable Partitions and Lifted Linear Programming</a><ul>
 <li><a class="reference internal" href="#equitable-partitions-of-matrices" id="id8">Equitable Partitions of Matrices</a></li>
+<li><a class="reference internal" href="#lifting-an-mrf-factor-graph" id="id9">Lifting an MRF Factor Graph</a></li>
+<li><a class="reference internal" href="#lifting-linear-programs" id="id10">Lifting Linear Programs</a></li>
 </ul>
 </li>
 </ul>
@@ -429,31 +432,10 @@ To illustrate, we will show how the flow LP looks like in text form</p>
 </div>
 <div class="section" id="equitable-partitions-and-lifted-linear-programming">
 <h2><a class="toc-backref" href="#id7">Equitable Partitions and Lifted Linear Programming</a><a class="headerlink" href="#equitable-partitions-and-lifted-linear-programming" title="Permalink to this headline">¶</a></h2>
-<p>Next to modeling languages, reloop offers tools for efficiently lifting and solving optimization problems produced by these languages (and not only). In the lifted solvers provided, efficiency is gained by exploiting redundancy in the structure of the problem. Our main tool for redundancy discovery are the so-called equitable partitions of matrices. In the following, we will look at computing equitable partitions of matrices with the tools of reloop, as well as solving linear equations and linear programs in a lifted fashion.</p>
+<p>Next to modeling languages, reloop offers tools for efficiently lifting and solving optimization problems produced by these languages (and not only). In the lifted solvers provided, efficiency is gained by exploiting redundancy in the structure of the problem. Our main tool for redundancy discovery are the so-called equitable partitions of matrices. In the following, we will look at computing equitable partitions of matrices with the tools of reloop, as well as  lifting factor graphs, solving linear equations and linear programs in a lifted fashion.</p>
 <div class="section" id="equitable-partitions-of-matrices">
 <h3><a class="toc-backref" href="#id8">Equitable Partitions of Matrices</a><a class="headerlink" href="#equitable-partitions-of-matrices" title="Permalink to this headline">¶</a></h3>
-<p>Suppose we have a matrix, say</p>
-<div class="math">
-\[\begin{split}\mathbf{A}^0 = \begin{bmatrix}
-       1 &amp; 1 &amp; 1           \\[0.3em]
-       -1 &amp; 0 &amp; 0            \\[0.3em]
-       0 &amp; -1 &amp; 0            \\[0.3em]
-       1 &amp; 1 &amp; -1            \\[0.3em]
-     \end{bmatrix}\;.\end{split}\]</div>
-<p>In the following we will assume a graphical view of matrices, where we will see a matrix as a weighted bipartite graph specifying how two sets (the rows and the colums) are connected. In the case of <span class="math">\(\mathbf{A}\)</span>, we connect the set of rows <span class="math">\(R = \{r_1, r_2, r_3, r_4\}\)</span> to the set of columns <span class="math">\(C = \{c_1, c_2, c_3\}\)</span>. Thus, the connection of <span class="math">\(r_4\)</span> to <span class="math">\(c_3\)</span> has weight <span class="math">\(\mathbf{A}_{43} = -1\)</span>.</p>
-<p>In addition, we may wish to supply weights to the &#8220;nodes&#8221; of <span class="math">\(\mathbf{A}\)</span> by supplying two additional vectors, say <span class="math">\(\mathbf{b}\)</span> and <span class="math">\(\mathbf{c}\)</span>. For example, if we wish to specify that row <span class="math">\(r_4\)</span> has weight <span class="math">\(-1\)</span>, we set <span class="math">\(\mathbf{b}_4 = -1\)</span>. Smilarly, <span class="math">\(\mathbf{c}_3 = 1\)</span> indicates that the weight of column <span class="math">\(c_3\)</span> is <span class="math">\(1\)</span>. It will shortly become clear why these weights are useful. For now, let&#8217;s say that we have</p>
-<div class="math">
-\[\begin{split}   \mathbf{b}^0 = \begin{bmatrix}
-  1\\
-  0\\
-  0\\
-  -1\\
-\end{bmatrix} \text{ and } \mathbf{c}^0 =       \begin{bmatrix}
-  0\\
-  0\\
-  1\\
-\end{bmatrix}\; .\end{split}\]</div>
-<p>Now, we say that a partition <span class="math">\({\cal P} = \{P_1,\ldots,P_p; Q_1,\ldots,Q_q\}\)</span> of <span class="math">\(L=(\mathbf{A},\mathbf{b},\mathbf{c})\)</span> is <strong>equitable</strong> if the following conditions hold.</p>
+<p>Given is a tuple <span class="math">\(L=(\mathbf{A},\mathbf{b},\mathbf{c})\)</span>, where <span class="math">\(\mathbf{A}\in \mathbb{R}^{m\times n}, \mathbf{b}\in \mathbb{R}^{m}\)</span> and <span class="math">\(\mathbf{c}\in \mathbb{R}^{n}\)</span>. We say that a partition <span class="math">\({\cal P} = \{P_1,\ldots,P_p; Q_1,\ldots,Q_q\}\)</span> of <span class="math">\(L=(\mathbf{A},\mathbf{b},\mathbf{c})\)</span> is <strong>equitable</strong> if the following conditions hold.</p>
 <ul class="simple">
 <li>For any two columns <span class="math">\(i,\; j\)</span> in the same class <span class="math">\(P\)</span>, <span class="math">\(\mathbf{c}_i = \mathbf{c}_j\)</span>. For any two rows <span class="math">\(i,\; j\)</span> in the same class <span class="math">\(Q\)</span>, <span class="math">\(\mathbf{b}_i = \mathbf{b}_j\)</span>;</li>
 <li>For any two columns <span class="math">\(i,\; j\)</span> in the same class <span class="math">\(P\)</span>, and for any constraint class <span class="math">\(Q\)</span> and real number <span class="math">\(r\)</span>:</li>
@@ -465,8 +447,15 @@ To illustrate, we will show how the flow LP looks like in text form</p>
 </ul>
 <div class="math">
 \[|\{k \in P :\ \mathbf{A}_{ki} = r \}| = |\{l \in P :\ \mathbf{A}_{lj} = r \}|\;.\]</div>
-<p>It can be verified that an equitable partition of <span class="math">\(L^0 = (\mathbf{A}^0,\mathbf{b}^0,\mathbf{c}^0)\)</span> is <span class="math">\({\cal P}^0 = \{\{1,2\},\{3\};\{1\}\{2,3\}\{4\} \}\)</span> &#8212; meaning that <span class="math">\(c_1\)</span> is equivalent to <span class="math">\(c_2\)</span> but not to <span class="math">\(c_3\)</span> and <span class="math">\(r_2\)</span> and <span class="math">\(r_3\)</span> are equivalent, but not <span class="math">\(r_1\)</span> and <span class="math">\(r_4\)</span>.</p>
-<p>Reloop provides an interface to the highly efficient code of <a class="reference external" href="http://vlsicad.eecs.umich.edu/BK/SAUCY/">Saucy</a> for the computation of equitable partitions of matrices. Currently, we can compute the coarsest equitable partition of a matrix, as well as its orbit partition. We will now show how to compute equitable partitions of <span class="math">\(L^0\)</span>.</p>
+<p>Reloop provides an interface to the highly efficient code of <a class="reference external" href="http://vlsicad.eecs.umich.edu/BK/SAUCY/">Saucy</a> for the computation of equitable partitions of matrices. Currently, we can compute the coarsest equitable partition of a matrix, as well as its orbit partition. We will now show how to compute equitable partitions. We will now illustrate the basic concepts by lifting a factor graph so we can later run lifted belief propagation.</p>
+</div>
+<div class="section" id="lifting-an-mrf-factor-graph">
+<h3><a class="toc-backref" href="#id9">Lifting an MRF Factor Graph</a><a class="headerlink" href="#lifting-an-mrf-factor-graph" title="Permalink to this headline">¶</a></h3>
+<p>Suppose we are given the following factor graph (to the right).</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/factorgraph1.svg"><img alt="factor graph" src="_images/factorgraph1.svg" width="45%" /></a>
+</div>
+<p>We have two factors with identical tables, two observed variables (<span class="math">\(A\)</span> and <span class="math">\(B\)</span>) and one unobserved variable. Our aim is to compute a lifted factor graph (on the right) so we can run lifted belief propagation. We will now show how this is done in reloop.</p>
 <p>We begin by importing the Saucy wrapper from reloop</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">reloop.utils.saucy</span> <span class="kn">as</span> <span class="nn">saucy</span>
 </pre></div>
@@ -476,22 +465,134 @@ To illustrate, we will show how the flow LP looks like in text form</p>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 </pre></div>
 </div>
-<p>Next we enter our input. All our data needs to be in coo_matrix format, and <tt class="docutils literal"><span class="pre">b</span></tt> and <tt class="docutils literal"><span class="pre">c</span></tt> must be column vectors:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">A</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
-<span class="n">b</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
-<span class="n">c</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+<p>Now we must figure out how to represent our factor graph in a way that Saucy can understand. Let us make a few observations.</p>
+<p>First, it is a bipartite graph. This suggest that we can encode it in a rectangular matrix, where the rows represent factors and the columns represent variables. I.e., we have <span class="math">\(\mathbf{A}_{fX} \neq 0\)</span> if variable <span class="math">\(X\)</span> is connected to factor <span class="math">\(f\)</span> and <span class="math">\(\mathbf{A}_{fX} = 0\)</span> otherwise. Now we need to figure out what the actual entry for an edge would be. The subtlety lies in the fact that our factor tables are not symmetric: <span class="math">\(f_1(A = \mathrm{True}, B = \mathrm{False}) \neq f_1(A = \mathrm{False}, B = \mathrm{True})\)</span>. In other words, the first and second positions of the factor are not exchangeable. To reflect this in the representation, we will set <span class="math">\(\mathbf{A}_{fX} = 1\)</span> if <span class="math">\(X\)</span> is connected to the first position of <span class="math">\(f\)</span> and <span class="math">\(2\)</span> if it is in the second position. Since these numbers are internally intepreted as colors, the actual choice of numbers is not important, as long as compatible positions (arguments of the factor that can be permuted) receive the same numbers, and incompatible positions receive different numbers.</p>
+<p>Second, two of the variables are observced, one is not. We do not want to group observed and unobserved variables, so we need to distinguish them. We can do so by using the <span class="math">\(\mathbf{c}\)</span>-vector (depending on the possible states that the variables can take, we may need to use even more colors &#8212; this depends on the MRF; for now we assume they are binary), assigning a different value for <span class="math">\(B\)</span>. Also, in this case our two factor tables are identical, but were they different, we would need to prevent the factors for being grouped together. We could accomplish this in the same manner, by using the <span class="math">\(\mathbf{b}\)</span>-vector.</p>
+<p>We thus end up with the following representation of the factor graph:</p>
+<div class="math">
+\[\begin{split} \mathbf{A}^F = \begin{bmatrix}
+      1 &amp; 2 &amp; 0           \\[0.3em]
+      0 &amp; 2 &amp; 1            \\[0.3em]
+      \end{bmatrix}\;,
+   \mathbf{b}^F = \begin{bmatrix}
+  0\\
+  0\\
+\end{bmatrix} \text{ and } \mathbf{c}^F =       \begin{bmatrix}
+  1\\
+  0\\
+  1\\
+\end{bmatrix}\; .\end{split}\]</div>
+<p>We can now input this in saucy. All our data needs to be in coo_matrix format, and <tt class="docutils literal"><span class="pre">b</span></tt> and <tt class="docutils literal"><span class="pre">c</span></tt> must be column vectors:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">A</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
 </pre></div>
 </div>
 <p>We can now call the equitable partition function and print the result:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">rowpart</span><span class="p">,</span> <span class="n">colpart</span><span class="p">]</span> <span class="o">=</span> <span class="n">saucy</span><span class="o">.</span><span class="n">epBipartite</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-
+<span class="k">print</span> <span class="s">&quot;===&quot;</span>
 <span class="k">print</span> <span class="s">&quot;row classes: &quot;</span><span class="p">,</span> <span class="n">rowpart</span>
 <span class="k">print</span> <span class="s">&quot;column classes: &quot;</span><span class="p">,</span> <span class="n">colpart</span>
 </pre></div>
 </div>
 <p>Note that the <tt class="docutils literal"><span class="pre">1</span></tt> in the last argument of <tt class="docutils literal"><span class="pre">epBipartite()</span></tt> indicates we are computing the coarsest equitable partition. To compute orbits, we use <tt class="docutils literal"><span class="pre">0</span></tt>.
-When ran, this python code (also found at <a class="reference internal" href="python_equitablePartition_Abc.html#epabc"><em>equitablePartition_Abc.py</em></a>) outputs the following:</p>
-<div class="highlight-python"><div class="highlight"><pre>entring wrapper with 4 rows, 3 cols and 8 entries.
+When ran, this python code (also found at <a class="reference internal" href="python_lift_factorgraph.html#epfg"><em>lift_factorgraph.py</em></a>) outputs the following:</p>
+<div class="highlight-python"><div class="highlight"><pre>entring wrapper with 2 rows, 3 cols and 4 entries.
+row colors: 1
+col colors: 3
+nodes 9
+edges 8
+input file = (null)
+vertices = 9
+edges = 8
+group size = 1.000000e0
+levels = 0
+nodes = 1
+generators = 0
+total support = 0
+average support = -nan
+nodes per generator = inf
+bad nodes = 0
+cpu time (s) = 0.00
+===
+row classes:  [0 0]
+column classes:  [1 0 1]
+</pre></div>
+</div>
+<p>After the debug output of Saucy we can read off the partition. For the variable (column classes)  <span class="math">\(A\)</span> and <span class="math">\(C\)</span> are placed in class <span class="math">\(1\)</span>, while <span class="math">\(B\)</span> is placed in class <span class="math">\(0\)</span>. Also, both factors (row classes) are in the same class. This is exactly what we expected from the example.</p>
+<p>The actual lifted factor graph construction having the colors follows as in (TODO: Babak&#8217;s paper).</p>
+<p>Note that the actual numbering of the classes is not guaranteed to follow any particular convention.</p>
+</div>
+<div class="section" id="lifting-linear-programs">
+<h3><a class="toc-backref" href="#id10">Lifting Linear Programs</a><a class="headerlink" href="#lifting-linear-programs" title="Permalink to this headline">¶</a></h3>
+<p>Let us consider the following LP:</p>
+<div class="math">
+\[\begin{split}\operatorname*{minimize}_{[x,y,z]^T \in \mathbb{R}^3}\quad  &amp;\; 0x + 0y + 1z\\
+\text{subject to}\quad &amp; \begin{bmatrix}
+   1 &amp; 1 &amp; 1           \\[0.3em]
+   -1 &amp; 0 &amp; 0            \\[0.3em]
+   0 &amp; -1 &amp; 0            \\[0.3em]
+   1 &amp; 1 &amp; -1            \\[0.3em]
+ \end{bmatrix}
+  \begin{bmatrix}
+   x\\
+   y\\
+   z\\
+ \end{bmatrix} \leq
+       \begin{bmatrix}
+   1\\
+   0\\
+   0\\
+   -1\\
+ \end{bmatrix}\;.\end{split}\]</div>
+<p>It can be verified that an equitable partition of the above LP is <span class="math">\({\cal P}^0 = \{\{1,2\},\{3\};\{1\}\{2,3\}\{4\} \}\)</span> &#8212; meaning that column <span class="math">\(c_1\)</span> is equivalent to <span class="math">\(c_2\)</span> but not to <span class="math">\(c_3\)</span> and rows <span class="math">\(r_2\)</span> and <span class="math">\(r_3\)</span> are equivalent, but not rows <span class="math">\(r_1\)</span> and <span class="math">\(r_4\)</span>. Using this equitable partition, we can derive a new LP, smaller in size, whose set of solutions is a subset of the solutions of the original one. The method of this reduction is described in detail in (TODO: RLP). In short, we reduce the number of rows by leaving only one row per row-class. Then, we reduce the number of columns by removing all columns in the same class from the LP, then inserting back a single representative column which is their sum.  The lifted LP is thus</p>
+<div class="math">
+\[\begin{split}\operatorname*{minimize}_{[{\mathfrak x},z]^T \in \mathbb{R}^2}\quad  &amp;\; 0 {\mathfrak x} + 1z\\
+\text{subject to}\quad &amp; \begin{bmatrix}
+   2 &amp;  1           \\[0.3em]
+   -1  &amp; 0             \\[0.3em]
+   2 &amp; -1            \\[0.3em]
+ \end{bmatrix}
+  \begin{bmatrix}
+  {\mathfrak x}\\
+   z\\
+ \end{bmatrix} \leq
+       \begin{bmatrix}
+   1\\
+   0\\
+   -1\\
+ \end{bmatrix}\;.\end{split}\]</div>
+<p>Within reloop, lifting LPs is achieved through the <tt class="docutils literal"><span class="pre">utils.liftAbc()</span></tt> function. The following code snippet shows how.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">A</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+
+<span class="k">print</span> <span class="s">&quot;input LP:&quot;</span>
+<span class="k">print</span> <span class="s">&quot;c: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">todense</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;b: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">todense</span><span class="p">())</span>
+<span class="k">print</span> <span class="s">&quot;A: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">todense</span><span class="p">())</span>
+
+<span class="n">LA</span><span class="p">,</span> <span class="n">Lb</span><span class="p">,</span> <span class="n">Lc</span><span class="p">,</span> <span class="n">compresstime</span><span class="p">,</span> <span class="n">Bcc</span> <span class="o">=</span> <span class="n">saucy</span><span class="o">.</span><span class="n">liftAbc</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">sparse</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">orbits</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="s">&quot;lifted LP:&quot;</span>
+<span class="k">print</span> <span class="s">&quot;lifted c: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">Lc</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;Lb: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">Lb</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;LA: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">LA</span><span class="o">.</span><span class="n">todense</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>(TODO: fix sparsity of b and c)
+The minimal working example is found at <a class="reference internal" href="python_lift_Abc.html#liftabc"><em>lift_Abc.py</em></a>. Executing this code yields</p>
+<div class="highlight-python"><div class="highlight"><pre>input LP:
+c: [[0 0 1]]
+b: [[ 1]
+ [ 0]
+ [ 0]
+ [-1]]
+A: [[ 1  1  1]
+ [-1  0  0]
+ [ 0 -1  0]
+ [ 1  1 -1]]
+entring wrapper with 4 rows, 3 cols and 8 entries.
 row colors: 3
 col colors: 5
 nodes 15
@@ -508,10 +609,18 @@ average support = -nan
 nodes per generator = inf
 bad nodes = 0
 cpu time (s) = 0.00
-row classes:  [2 1 1 0]
-column classes:  [1 1 0]
+refinement took:  0.01 seconds.
+lifted LP:
+lifted c: [[0 1]]
+Lb: [[-1]
+ [ 0]
+ [ 1]]
+LA: [[ 2 -1]
+ [-1  0]
+ [ 2  1]]
 </pre></div>
 </div>
+<p>We can read off the lifted LP at the bottom of the output. Note that while the LP agrees with what we expected, the order of the inequalities is different (first and third are switched). This is an artifact of the implementation. It does not, however, change the feasible region of the LP.</p>
 </div>
 </div>
 </div>

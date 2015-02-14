@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# @package liftedLP_glpk
+# @package reloop.solvers
 # TODO
 #
 #
@@ -74,63 +74,6 @@ def sumRefinement(A, b):
         ncols = np.max(czero) + 1
     return czero
 
-
-def lift(Ar, br, cr, sparse=True, orbits=False, sumrefine=False):
-    """
-    TODO
-
-    :param Ar:
-    :type Ar:
-    :param br:
-    :type br:
-    :param cr:
-    :type cr:
-    :param sparse:
-    :type sparse:
-    :param orbits:
-    :type orbits:
-    :param sumrefine:
-    :type sumrefine:
-
-    :returns:
-    """
-    if sparse:
-        AC = Ar.tocoo()
-    else:
-        AC = sp.coo_matrix(Ar)
-    starttime = time.clock()
-    co = sp.lil_matrix(cr)
-    bo = sp.lil_matrix(br)
-    _, data = np.unique(AC.data.round(6), return_inverse=True)
-    o = 1
-    if orbits:
-        o = 0
-    if sumrefine and not orbits:
-        saucycolors = sumRefinement(AA, cc)
-    else:
-        [rcols2, bcols2] = saucy.epBipartite(Ar, br, cr, o)
-        
-    print "refinement took: ", time.clock() - starttime, "seconds."
-    
-    n = cr.shape[0]
-    m = br.shape[0]
-    brows = np.array(range(n))
-    bdata = np.ones(n, dtype=np.int)
-    Bcc2 = sp.csr_matrix((bdata, np.vstack((brows, bcols2))), dtype=np.int).tocsr()
-
-    _, rowfilter2 = np.unique(rcols2, return_index=True)
-
-    LA2 = AC.tocsr()[rowfilter2, :] * Bcc2
-
-    Lc = (co.T * Bcc2).T
-    Lb = bo[rowfilter2].todense()
-    compresstime = time.clock() - starttime
-    LA2 = LA2.tocoo()
-    Lc = Lc.todense()
-
-    return LA2, Lb, Lc, compresstime, Bcc2
-
-
 def sp_saveProblem(fname, A, b, c):
     """
     TODO
@@ -204,7 +147,7 @@ def sparse(A, b, c, debug=False, optiter=200, plot=False, save=False, orbits=Fal
         timeground = solinfognd['time']
         objground = solinfognd['obj']
 
-    LA, Lb, Lc, compresstime, Bcc = lift(A, b, c, sparse=True, orbits=orbits)
+    LA, Lb, Lc, compresstime, Bcc = saucy.liftAbc(A, b, c, sparse=True, orbits=orbits)
     starttime = time.clock()
 
     problifted = pic.Problem()

@@ -323,39 +323,13 @@ You can find the running code in :ref:`maxflow_text.py<maxflowText>`.
 Equitable Partitions and Lifted Linear Programming
 --------------------------------------------------
 
-Next to modeling languages, reloop offers tools for efficiently lifting and solving optimization problems produced by these languages (and not only). In the lifted solvers provided, efficiency is gained by exploiting redundancy in the structure of the problem. Our main tool for redundancy discovery are the so-called equitable partitions of matrices. In the following, we will look at computing equitable partitions of matrices with the tools of reloop, as well as solving linear equations and linear programs in a lifted fashion.   
+Next to modeling languages, reloop offers tools for efficiently lifting and solving optimization problems produced by these languages (and not only). In the lifted solvers provided, efficiency is gained by exploiting redundancy in the structure of the problem. Our main tool for redundancy discovery are the so-called equitable partitions of matrices. In the following, we will look at computing equitable partitions of matrices with the tools of reloop, as well as  lifting factor graphs, solving linear equations and linear programs in a lifted fashion.   
+
 
 Equitable Partitions of Matrices
 ********************************
 
-Suppose we have a matrix, say 
-
-.. math::
-    \mathbf{A}^0 = \begin{bmatrix}
-           1 & 1 & 1           \\[0.3em]
-           -1 & 0 & 0            \\[0.3em]
-           0 & -1 & 0            \\[0.3em]
-           1 & 1 & -1            \\[0.3em]
-         \end{bmatrix}\;.
-
-In the following we will assume a graphical view of matrices, where we will see a matrix as a weighted bipartite graph specifying how two sets (the rows and the colums) are connected. In the case of :math:`\mathbf{A}`, we connect the set of rows :math:`R = \{r_1, r_2, r_3, r_4\}` to the set of columns :math:`C = \{c_1, c_2, c_3\}`. Thus, the connection of :math:`r_4` to :math:`c_3` has weight :math:`\mathbf{A}_{43} = -1`.
-
-In addition, we may wish to supply weights to the "nodes" of :math:`\mathbf{A}` by supplying two additional vectors, say :math:`\mathbf{b}` and :math:`\mathbf{c}`. For example, if we wish to specify that row :math:`r_4` has weight :math:`-1`, we set :math:`\mathbf{b}_4 = -1`. Smilarly, :math:`\mathbf{c}_3 = 1` indicates that the weight of column :math:`c_3` is :math:`1`. It will shortly become clear why these weights are useful. For now, let's say that we have
-
-.. math::
-
-        \mathbf{b}^0 = \begin{bmatrix}
-       1\\
-       0\\
-       0\\
-       -1\\
-     \end{bmatrix} \text{ and } \mathbf{c}^0 =       \begin{bmatrix}
-       0\\
-       0\\
-       1\\
-     \end{bmatrix}\; . 
-
-Now, we say that a partition :math:`{\cal P} = \{P_1,\ldots,P_p; Q_1,\ldots,Q_q\}` of :math:`L=(\mathbf{A},\mathbf{b},\mathbf{c})` is **equitable** if the following conditions hold. 
+Given is a tuple :math:`L=(\mathbf{A},\mathbf{b},\mathbf{c})`, where :math:`\mathbf{A}\in \mathbb{R}^{m\times n}, \mathbf{b}\in \mathbb{R}^{m}` and :math:`\mathbf{c}\in \mathbb{R}^{n}`. We say that a partition :math:`{\cal P} = \{P_1,\ldots,P_p; Q_1,\ldots,Q_q\}` of :math:`L=(\mathbf{A},\mathbf{b},\mathbf{c})` is **equitable** if the following conditions hold. 
 
 * For any two columns :math:`i,\; j` in the same class :math:`P`, :math:`\mathbf{c}_i = \mathbf{c}_j`. For any two rows :math:`i,\; j` in the same class :math:`Q`, :math:`\mathbf{b}_i = \mathbf{b}_j`;
 
@@ -370,9 +344,20 @@ Now, we say that a partition :math:`{\cal P} = \{P_1,\ldots,P_p; Q_1,\ldots,Q_q\
     |\{k \in P :\ \mathbf{A}_{ki} = r \}| = |\{l \in P :\ \mathbf{A}_{lj} = r \}|\;.
 
 
-It can be verified that an equitable partition of :math:`L^0 = (\mathbf{A}^0,\mathbf{b}^0,\mathbf{c}^0)` is :math:`{\cal P}^0 = \{\{1,2\},\{3\};\{1\}\{2,3\}\{4\} \}` --- meaning that :math:`c_1` is equivalent to :math:`c_2` but not to :math:`c_3` and :math:`r_2` and :math:`r_3` are equivalent, but not :math:`r_1` and :math:`r_4`.
+Reloop provides an interface to the highly efficient code of `Saucy <http://vlsicad.eecs.umich.edu/BK/SAUCY/>`_ for the computation of equitable partitions of matrices. Currently, we can compute the coarsest equitable partition of a matrix, as well as its orbit partition. We will now show how to compute equitable partitions. We will now illustrate the basic concepts by lifting a factor graph so we can later run lifted belief propagation. 
 
-Reloop provides an interface to the highly efficient code of `Saucy <http://vlsicad.eecs.umich.edu/BK/SAUCY/>`_ for the computation of equitable partitions of matrices. Currently, we can compute the coarsest equitable partition of a matrix, as well as its orbit partition. We will now show how to compute equitable partitions of :math:`L^0`.
+Lifting an MRF Factor Graph
+***************************
+
+Suppose we are given the following factor graph (to the right).  
+
+.. figure:: images/factorgraph1.svg
+   :width: 45%
+   :alt: factor graph
+   :align: center
+
+We have two factors with identical tables, two observed variables (:math:`A` and :math:`B`) and one unobserved variable. Our aim is to compute a lifted factor graph (on the right) so we can run lifted belief propagation. We will now show how this is done in reloop.
+
 
 We begin by importing the Saucy wrapper from reloop ::
 
@@ -385,23 +370,152 @@ We will also need ``scipy.sparse`` and ``numpy``: ::
     import numpy as np
 
 
-Next we enter our input. All our data needs to be in coo_matrix format, and ``b`` and ``c`` must be column vectors:  ::
+Now we must figure out how to represent our factor graph in a way that Saucy can understand. Let us make a few observations. 
 
-    A = sp.coo_matrix([[1, 1, 1], [-1, 0, 0], [0, -1, 0], [1, 1, -1]])
-    b = sp.coo_matrix([1,0,0,-1]).T
-    c = sp.coo_matrix([0,0,-1]).T
+First, it is a bipartite graph. This suggest that we can encode it in a rectangular matrix, where the rows represent factors and the columns represent variables. I.e., we have :math:`\mathbf{A}_{fX} \neq 0` if variable :math:`X` is connected to factor :math:`f` and :math:`\mathbf{A}_{fX} = 0` otherwise. Now we need to figure out what the actual entry for an edge would be. The subtlety lies in the fact that our factor tables are not symmetric: :math:`f_1(A = \mathrm{True}, B = \mathrm{False}) \neq f_1(A = \mathrm{False}, B = \mathrm{True})`. In other words, the first and second positions of the factor are not exchangeable. To reflect this in the representation, we will set :math:`\mathbf{A}_{fX} = 1` if :math:`X` is connected to the first position of :math:`f` and :math:`2` if it is in the second position. Since these numbers are internally intepreted as colors, the actual choice of numbers is not important, as long as compatible positions (arguments of the factor that can be permuted) receive the same numbers, and incompatible positions receive different numbers.
+
+Second, two of the variables are observced, one is not. We do not want to group observed and unobserved variables, so we need to distinguish them. We can do so by using the :math:`\mathbf{c}`-vector (depending on the possible states that the variables can take, we may need to use even more colors --- this depends on the MRF; for now we assume they are binary), assigning a different value for :math:`B`. Also, in this case our two factor tables are identical, but were they different, we would need to prevent the factors for being grouped together. We could accomplish this in the same manner, by using the :math:`\mathbf{b}`-vector.
+
+We thus end up with the following representation of the factor graph:
+
+.. math::
+
+      \mathbf{A}^F = \begin{bmatrix}
+           1 & 2 & 0           \\[0.3em]
+           0 & 2 & 1            \\[0.3em]
+           \end{bmatrix}\;,
+        \mathbf{b}^F = \begin{bmatrix}
+       0\\
+       0\\
+     \end{bmatrix} \text{ and } \mathbf{c}^F =       \begin{bmatrix}
+       1\\
+       0\\
+       1\\
+     \end{bmatrix}\; . 
+
+We can now input this in saucy. All our data needs to be in coo_matrix format, and ``b`` and ``c`` must be column vectors:  ::
+
+    A = sp.coo_matrix([[1, 2, 0], [0, 2, 1]])
+    b = sp.coo_matrix([0,0]).T
+    c = sp.coo_matrix([1,0,1]).T
 
 
 We can now call the equitable partition function and print the result: ::
 
     [rowpart, colpart] = saucy.epBipartite(A, b, c, 1)
-
+    print "==="
     print "row classes: ", rowpart
     print "column classes: ", colpart 
 
 Note that the ``1`` in the last argument of ``epBipartite()`` indicates we are computing the coarsest equitable partition. To compute orbits, we use ``0``.
-When ran, this python code (also found at :ref:`equitablePartition_Abc.py<epAbc>`) outputs the following: ::
+When ran, this python code (also found at :ref:`lift_factorgraph.py<epFg>`) outputs the following: ::
 
+    entring wrapper with 2 rows, 3 cols and 4 entries.
+    row colors: 1
+    col colors: 3
+    nodes 9
+    edges 8
+    input file = (null)
+    vertices = 9
+    edges = 8
+    group size = 1.000000e0
+    levels = 0
+    nodes = 1
+    generators = 0
+    total support = 0
+    average support = -nan
+    nodes per generator = inf
+    bad nodes = 0
+    cpu time (s) = 0.00
+    ===
+    row classes:  [0 0]
+    column classes:  [1 0 1]
+
+
+After the debug output of Saucy we can read off the partition. For the variable (column classes)  :math:`A` and :math:`C` are placed in class :math:`1`, while :math:`B` is placed in class :math:`0`. Also, both factors (row classes) are in the same class. This is exactly what we expected from the example. 
+
+The actual lifted factor graph construction having the colors follows as in (TODO: Babak's paper).
+
+
+Note that the actual numbering of the classes is not guaranteed to follow any particular convention. 
+
+Lifting Linear Programs
+********************************
+
+Let us consider the following LP:
+
+.. math::
+    \operatorname*{minimize}_{[x,y,z]^T \in \mathbb{R}^3}\quad  &\; 0x + 0y + 1z\\ 
+    \text{subject to}\quad & \begin{bmatrix}
+       1 & 1 & 1           \\[0.3em]
+       -1 & 0 & 0            \\[0.3em]
+       0 & -1 & 0            \\[0.3em]
+       1 & 1 & -1            \\[0.3em]
+     \end{bmatrix} 
+      \begin{bmatrix}
+       x\\
+       y\\
+       z\\
+     \end{bmatrix} \leq 
+           \begin{bmatrix}
+       1\\
+       0\\
+       0\\
+       -1\\
+     \end{bmatrix}\;.
+
+It can be verified that an equitable partition of the above LP is :math:`{\cal P}^0 = \{\{1,2\},\{3\};\{1\}\{2,3\}\{4\} \}` --- meaning that column :math:`c_1` is equivalent to :math:`c_2` but not to :math:`c_3` and rows :math:`r_2` and :math:`r_3` are equivalent, but not rows :math:`r_1` and :math:`r_4`. Using this equitable partition, we can derive a new LP, smaller in size, whose set of solutions is a subset of the solutions of the original one. The method of this reduction is described in detail in (TODO: RLP). In short, we reduce the number of rows by leaving only one row per row-class. Then, we reduce the number of columns by removing all columns in the same class from the LP, then inserting back a single representative column which is their sum.  The lifted LP is thus 
+
+.. math::
+
+    \operatorname*{minimize}_{[{\mathfrak x},z]^T \in \mathbb{R}^2}\quad  &\; 0 {\mathfrak x} + 1z\\ 
+    \text{subject to}\quad & \begin{bmatrix}
+       2 &  1           \\[0.3em]
+       -1  & 0             \\[0.3em]
+       2 & -1            \\[0.3em]
+     \end{bmatrix} 
+      \begin{bmatrix}
+      {\mathfrak x}\\
+       z\\
+     \end{bmatrix} \leq 
+           \begin{bmatrix}
+       1\\
+       0\\
+       -1\\
+     \end{bmatrix}\;.
+
+
+Within reloop, lifting LPs is achieved through the ``utils.liftAbc()`` function. The following code snippet shows how. ::
+
+    A = sp.coo_matrix([[1, 1, 1], [-1, 0, 0], [0, -1, 0], [1, 1, -1]])
+    b = sp.coo_matrix([1,0,0,-1]).T
+    c = sp.coo_matrix([0,0,1]).T
+
+    print "input LP:"
+    print "c: " + str(c.todense().T)
+    print "b: " + str(b.todense())
+    print "A: " + str(A.todense())
+
+    LA, Lb, Lc, compresstime, Bcc = saucy.liftAbc(A, b, c, sparse=True, orbits=False)
+
+    print "lifted LP:"
+    print "lifted c: " + str(Lc.T)
+    print "Lb: " + str(Lb)
+    print "LA: " + str(LA.todense())
+
+(TODO: fix sparsity of b and c)
+The minimal working example is found at :ref:`lift_Abc.py<liftAbc>`. Executing this code yields ::
+
+    input LP:
+    c: [[0 0 1]]
+    b: [[ 1]
+     [ 0]
+     [ 0]
+     [-1]]
+    A: [[ 1  1  1]
+     [-1  0  0]
+     [ 0 -1  0]
+     [ 1  1 -1]]
     entring wrapper with 4 rows, 3 cols and 8 entries.
     row colors: 3
     col colors: 5
@@ -419,6 +533,14 @@ When ran, this python code (also found at :ref:`equitablePartition_Abc.py<epAbc>
     nodes per generator = inf
     bad nodes = 0
     cpu time (s) = 0.00
-    row classes:  [2 1 1 0]
-    column classes:  [1 1 0]
+    refinement took:  0.01 seconds.
+    lifted LP:
+    lifted c: [[0 1]]
+    Lb: [[-1]
+     [ 0]
+     [ 1]]
+    LA: [[ 2 -1]
+     [-1  0]
+     [ 2  1]]
 
+We can read off the lifted LP at the bottom of the output. Note that while the LP agrees with what we expected, the order of the inequalities is different (first and third are switched). This is an artifact of the implementation. It does not, however, change the feasible region of the LP.
