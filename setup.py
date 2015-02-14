@@ -32,6 +32,7 @@ ext_modules = [
     include_dirs = [numpy.get_include()],  # .../site-packages/numpy/core/include
     language="c++",
     extra_compile_args = "-ansi -fpermissive -Wall -O0 -ggdb -fPIC".split(),
+    extra_link_args = "-lz".split()
         # extra_link_args = "...".split()
     ),
     Extension(
