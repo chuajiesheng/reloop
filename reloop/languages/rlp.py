@@ -135,7 +135,7 @@ class Substitution(Predicate):
         return self
     def __call__(self, *args):
         if len(args) != self.arity:
-            raise TypeError("{} takes exactly {} arguments, you supplied {}.".format(self.name, self.arity, len(self.args)))
+            raise TypeError("{} takes exactly {} arguments, you supplied {}.".format(self.name, self.arity, len(args)))
         subdict = {}
         for ind in range(0,self.arity):
             subdict[str(self.args[ind])] = str(args[ind])
@@ -165,7 +165,7 @@ class Atom(Term):
             return monomial.parseString("*".join([str(a),str(b)]),parseAll=True)[0]
         else: return NotImplemented
     def ask(self):
-        value = pyDatalog.ask(self.predicate[0] + "(" + ",".join([str(u) for u in self.args]) +',Value)')
+        value = pyDatalog.ask(self.predicate[0] + "(" + ",".join(["'"+str(u)+"'" for u in self.args]) +',Value)')
         if value:
             val = value.answers[0]
             self.val = str(val[0])
