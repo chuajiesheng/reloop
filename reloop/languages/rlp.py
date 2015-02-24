@@ -135,7 +135,7 @@ class Substitution(Predicate):
         return self
     def __call__(self, *args):
         if len(args) != self.arity:
-            raise TypeError("{} takes exactly {} arguments, you supplied {}.".format(self.name, self.arity, len(self.args)))
+            raise TypeError("{} takes exactly {} arguments, you supplied {}.".format(self.name, self.arity, len(args)))
         subdict = {}
         for ind in range(0,self.arity):
             subdict[str(self.args[ind])] = str(args[ind])
