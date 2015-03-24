@@ -98,7 +98,7 @@ def sp_saveProblem(fname, A, b, c):
 
 
 def sparse(A, b, c, debug=False, optiter=200, plot=False, save=False, orbits=False,
-           sumrefine=False, solver='cvxopt', tol=1e-7):
+           sumrefine=False, solver='cvxopt', tol=1e-7, faildiff=1e-6):
     """
     TODO
     :param A:
@@ -164,7 +164,7 @@ def sparse(A, b, c, debug=False, optiter=200, plot=False, save=False, orbits=Fal
     objlift = solinfolifted['obj']
     if debug:
         report(objlift, objground, xopt, xground, timelift, timeground,
-                LA.shape[0], A.shape[0], LA.shape[1], A.shape[1])
+                LA.shape[0], A.shape[0], LA.shape[1], A.shape[1],faildiff)
         return [xopt, timeground, timelift, compresstime,
                 Bcc.shape[0], Bcc.shape[1], A.shape[0], LA.shape[0]]
     else:
@@ -174,7 +174,7 @@ def sparse(A, b, c, debug=False, optiter=200, plot=False, save=False, orbits=Fal
 
 
 def report(objlift, objground, xopt, xground, timelift,
-           timeground, rlift, rground, clift, cground):
+           timeground, rlift, rground, clift, cground, faildiff):
     """
     TODO
 
@@ -193,7 +193,7 @@ def report(objlift, objground, xopt, xground, timelift,
     print "column reduction: ", cground, " -> ", clift
     print "row reduction: ", rground, " -> ", rlift
     print "objective values lifted: ", objlift, " ground: ", objground
-    if objError(objlift, objground) > 0.01:
+    if np.abs(objError(objlift, objground)) > faildiff:
         exit("ERROR: Objective values of lifted and ground do not agree!")
     g = np.max(np.abs(xopt - xground))
     i = np.argmax(np.abs(xopt - xground))

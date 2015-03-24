@@ -75,10 +75,10 @@ def epSaucyBipartite(
     np.ndarray[itype_t,ndim=1] rowcolor,
     np.ndarray[itype_t,ndim=1] colcolor,
     cIters = 0,
-    coarsest = True):
+    orbits = False):
 
     # Pass references to c++ function to guarantee correct memory access
-    cdef vector[int] res = equitablePartitionSaucyBipartite(rowcolor.shape[0], colcolor.shape[0], A.shape[0], &A[0], &rows[0], &cols[0], &rowcolor[0], &colcolor[0], cIters, 1 if coarsest else 0)
+    cdef vector[int] res = equitablePartitionSaucyBipartite(rowcolor.shape[0], colcolor.shape[0], A.shape[0], &A[0], &rows[0], &cols[0], &rowcolor[0], &colcolor[0], cIters, 0 if orbits else 1)
     
     #Get size of result and copy elements into numpy array
     i = res.size()

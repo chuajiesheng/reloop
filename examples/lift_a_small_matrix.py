@@ -13,6 +13,6 @@ print np.unique(evid)
 print evid.shape
 
 
-colors = saucy.epSaucy(M.data.round(6).astype(np.float), M.row.astype(np.uintp), M.col.astype(np.uintp), evid.astype(np.uintp), np.int32(0), np.int32(1));
+colors = saucy.epSaucy(M.data.round(6).astype(np.float), M.row.astype(np.uintp), M.col.astype(np.uintp), evid.astype(np.uintp), np.int32(0));
 print "var colors: ", colors[0:M.shape[0]]
 print "edge colors: ", colors[M.shape[0]:]

@@ -3,16 +3,19 @@ import scipy.sparse as sp
 import numpy as np
 import time
 
-def epBipartite(A, b, c, orb):
+def epBipartite(A, b, c, orbits=False):
 	_, cmod = np.unique(np.array(c.todense()), return_inverse=True)
 	_, bmod = np.unique(np.array(b.todense()), return_inverse=True)
 	_, data = np.unique(A.data.round(6), return_inverse=True)
 	colors = saucywrapper.epSaucyBipartite(
             data.astype(np.uintp), A.row.astype(np.uintp),
             A.col.astype(np.uintp), bmod.astype(np.uintp),
-            cmod.astype(np.uintp), np.int32(0), np.int32(orb))
+            cmod.astype(np.uintp), np.int32(0), orbits)
 	n = c.shape[0]
 	m = b.shape[0]
+	# print m
+	# print n
+	# print colors
 	_, bcols2 = np.unique(colors[m:n + m], return_inverse=True)
 	_, rcols2 = np.unique(colors[0:m], return_inverse=True)
 	return [rcols2, bcols2]
@@ -45,13 +48,10 @@ def liftAbc(Ar, br, cr, sparse=True, orbits=False, sumrefine=False):
 	co = sp.lil_matrix(cr)
 	bo = sp.lil_matrix(br)
 	_, data = np.unique(AC.data.round(6), return_inverse=True)
-	o = 1
-	if orbits:
-	    o = 0
 	if sumrefine and not orbits:
 	    saucycolors = sumRefinement(AA, cc)
 	else:
-	    [rcols2, bcols2] = epBipartite(Ar, br, cr, o)
+	    [rcols2, bcols2] = epBipartite(Ar, br, cr, orbits)
 	    
 	print "refinement took: ", time.clock() - starttime, "seconds."
 
