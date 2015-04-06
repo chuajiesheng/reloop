@@ -1,20 +1,52 @@
 from sympy import *
 from pyDatalog import pyDatalog, pyEngine
 
+class ReloopProblem(PyDatalog.Mixin):
+    pass
+
 ## PredicateFactory, is the same as
 
 #class specificPredicate(rlpPred):
 #    name = "specificPredicate"
 #    arity = 2
-def PredicateFactory(name, arity):
-    predicateClass = type(name + "\\" + str(arity), (RlpPredicate,),{"arity": arity, "name" : name})
-    return predicateClass
+
 
 # to allow strings in predicate params
 class SubstitutionSymbol(Symbol):
     pass
 
-class RlpPredicate(Function):
+class RlpPredicate(Expr):
+    
+    #is_Relational = True
+    
+    def __new__(cls, *args):
+        if len(args) > cls.arity:
+            raise Exception("Too many arguments.")
+        
+        if len(args) < cls.arity:
+            raise Exception("Not enough arguments")
+        
+        for arg in args:
+            if isinstance(arg, SubstitutionSymbol):
+                return Expr.__new__(cls, *args)
+            
+        query = cls.name + "("
+        query += ','.join(["'" + str(a) + "'" for a in args])
+        query += ")"
+        
+        print("Log: pyDatalog query: " + query)
+        answer = pyDatalog.ask(query)
+        if answer is None:
+            return False
+        
+        return True
+    
+    @staticmethod
+    def rlpFunction(name, arity):
+        predicateClass = type(name + "\\" + str(arity), (RlpFunction,),{"arity": arity, "name" : name})
+        return predicateClass
+
+class RlpFunction(Function):
     
     @classmethod
     def eval(cls, *args):
@@ -48,6 +80,7 @@ class RlpPredicate(Function):
         return '%s/%s' % (self.name, self.arity)
 
     __repr__ = __str__
+
     
 class RlpSum(Expr):
     
