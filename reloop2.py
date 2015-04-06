@@ -1,8 +1,15 @@
 from sympy import *
 from pyDatalog import pyDatalog, pyEngine
 
-class ReloopProblem(PyDatalog.Mixin):
-    pass
+#class Problem(pyDatalog.Mixin):
+    
+#    def addConstraint(self, constraint):
+#        pass
+    
+#class Constraint:
+    
+#   def __init__(self, 
+    
 
 ## PredicateFactory, is the same as
 
@@ -15,10 +22,18 @@ class ReloopProblem(PyDatalog.Mixin):
 class SubstitutionSymbol(Symbol):
     pass
 
+def rlpFunction(name, arity):
+    predicateClass = type(name + "\\" + str(arity), (RlpFunction,),{"arity": arity, "name" : name})
+    return predicateClass
+
+def rlpPredicate(name, arity):
+    predicateClass = type(name + "\\" + str(arity), (RlpPredicate,),{"arity": arity, "name" : name})
+    return predicateClass
+
 class RlpPredicate(Expr):
     
-    #is_Relational = True
-    
+    #is_Boolean = true
+        
     def __new__(cls, *args):
         if len(args) > cls.arity:
             raise Exception("Too many arguments.")
@@ -41,11 +56,6 @@ class RlpPredicate(Expr):
         
         return True
     
-    @staticmethod
-    def rlpFunction(name, arity):
-        predicateClass = type(name + "\\" + str(arity), (RlpFunction,),{"arity": arity, "name" : name})
-        return predicateClass
-
 class RlpFunction(Function):
     
     @classmethod
@@ -81,10 +91,13 @@ class RlpFunction(Function):
 
     __repr__ = __str__
 
+def rlpSum(symbols, query, expression):
+    return RlpSum(symbols, query, expression).doit()
     
 class RlpSum(Expr):
     
     def doit(self, **hints):
+        
         symbols, query, expression = self.args
             
         helperPredicate = 'helper(' + ','.join([str(v) for v in symbols]) + ')'
@@ -95,19 +108,18 @@ class RlpSum(Expr):
             
         result = 0
         for a in answer.answers:
-                result += expression.subs(symbols[0], int(a[0]))
-        
+                expression_eval_subs = expression
+                for index, symbol in enumerate(symbols):
+                    expression_eval_subs = expression_eval_subs.subs(symbol, int(a[index]))
+                result += expression_eval_subs
         return result
-        
-def rlpSum(symbols, query, expression):
-    return RlpSum(symbols, query, expression).doit()
 
 ## Relational Program starts here
 
 @pyDatalog.predicate()
-def attribute3(X,Y,Z):
-    yield("1","1","2")
-    yield("1","2","2")
+def attribute3(X,Y,Z): #(x,y) ->z
+    yield("1","1","2") 
+    yield("1","2","2") #1:(2,2)
     yield("2","1","2")
     yield("2","2","1")
     yield("3","1","3")
@@ -121,15 +133,16 @@ def attribute3(X,Y,Z):
 x = SubstitutionSymbol('x')
 y = SubstitutionSymbol('y')
 X = SubstitutionSymbol('X')
+A = SubstitutionSymbol('A')
 
 
-attribute = PredicateFactory("attribute", 2)
+attribute = rlpFunction("attribute", 2)
 print(attribute)
 print(type(attribute))
 
 print(attribute("1","2"))
 
-simpleSum = rlpSum([X,], "attribute(X,'1',Y)", attribute(X, '1')*y*y)
+simpleSum = rlpSum([X,], "attribute(X,'1',Y)", attribute(X, 1)*y*y)
 simpleSum.subs(y, 1)
 
 
