@@ -8,7 +8,8 @@ class RlpProblem(pyDatalog.Mixin):
     def __init__(self, name="noname", sense=0):
         self.lpmodel = lp.LpProblem(name, sense)
         self.name = name
-        
+        self.reloop_variables = set([])
+
     def add_constraint(self, relation):
         pass
     
@@ -17,6 +18,12 @@ class RlpProblem(pyDatalog.Mixin):
     
     def set_objective(self, objective):
         pass
+
+    def add_variable(self, predicate):
+        self.reloop_variables |= set([(predicate.name, predicate.arity)])
+
+    def get_variables(self):
+        return self.reloop_variables
 
     def __ilshift__(self, objective):
         self.set_objective(objective)
@@ -33,7 +40,7 @@ class Constraint:
 
 class ForAll:
     
-    def __init__(self, symbols, query, constraint):
+    def __init__(self, kb_symbols, query, constraint):
         pass
 
 
@@ -42,42 +49,36 @@ class ForAll:
 class SubstitutionSymbol(Symbol):
     pass
 
+class RlpQuery:
 
-def rlp_function(name, arity):
-    predicate_class = type(name + "\\" + str(arity), (RlpFunction,), {"arity": arity, "name": name})
-    return predicate_class
+    def __init__(self, query_symbols, query):
+        self._query_symbols = query_symbols
+        self._query = simplify(query)
+
+    @property
+    def query_symbols(self):
+        return self._query_symbols
+
+    @property
+    def query(self):
+        return self._query
+
+class RlpAtom(Function):
+
+    @classmethod
+    def eval(cls, *args):
+        return None
+
+# def rlp_function(name, arity):
+#     predicate_class = type(name + "\\" + str(arity), (RlpFunction,), {"arity": arity, "name": name})
+#     return predicate_class
 
 
 def rlp_predicate(name, arity):
     predicate_class = type(name + "\\" + str(arity), (RlpPredicate,), {"arity": arity, "name": name})
     return predicate_class
 
-
-class RlpPredicate(Expr):
-           
-    def __new__(cls, *args):
-        if len(args) > cls.arity:
-            raise Exception("Too many arguments.")
-        
-        if len(args) < cls.arity:
-            raise Exception("Not enough arguments")
-        
-        for argument in args:
-            if isinstance(argument, SubstitutionSymbol):
-                return Expr.__new__(cls, *args)
-            
-        query = cls.name + "("
-        query += ','.join(["'" + str(a) + "'" for a in args])
-        query += ")"
-        
-        print("Log: pyDatalog query: " + query)
-        answer = pyDatalog.ask(query)
-        if answer is None:
-            return False
-        
-        return True
-    
-class RlpFunction(Function):
+class RlpPredicate(RlpAtom):
     
     @classmethod
     def eval(cls, *args):
@@ -94,17 +95,18 @@ class RlpFunction(Function):
         query = cls.name + "("
         query += ','.join(["'" + str(a) + "'" for a in args])
         query += ", X)"
-        
+
         print("Log: pyDatalog query: " + query)
         answer = pyDatalog.ask(query)
         if answer is None:
             raise ValueError('Predicate is not defined or no result!')
-        
+
         if len(answer.answers) == 1:
             result = answer.answers.pop()
             return float(result[0])
-            
+
         raise ValueError("PyDatalog gives multiple results. Oh!")
+
         
     @classmethod
     def __str__(cls):
@@ -116,26 +118,39 @@ class RlpFunction(Function):
 #    return RlpSum(symbols, query, expression)
 
 
-class RlpSum(Expr):
-    
-    def doit(self, **hints):
-        
-        sum_symbols, query, expression = self.args
-        
-        helper_predicate = 'helper(' + ','.join([str(v) for v in sum_symbols]) + ')'
-        pyDatalog.load(helper_predicate + " <= " + query)
-        
-        answer = pyDatalog.ask(helper_predicate)
-        pyEngine.Pred.reset_clauses(pyEngine.Pred("helper", len(sum_symbols)))
-            
-        result = 0
-        for a in answer.answers:
-                expression_eval_subs = expression
-                for index, symbol in enumerate(sum_symbols):
-                    expression_eval_subs = expression_eval_subs.subs(symbol, int(a[index]))
-                result += expression_eval_subs
-        return result
-    
+class RlpSubstitution(RlpAtom):
+    pass
+
+
+class RlpSum(Expr, RlpQuery):
+
+    def __init__(self, query_symbols, query, expression):
+        RlpQuery.__init(self, query_symbols, query)
+
+
+# class RlpPredicate(Expr):
+#
+#     def __new__(cls, *args):
+#         if len(args) > cls.arity:
+#             raise Exception("Too many arguments.")
+#
+#         if len(args) < cls.arity:
+#             raise Exception("Not enough arguments")
+#
+#         for argument in args:
+#             if isinstance(argument, SubstitutionSymbol):
+#                 return Expr.__new__(cls, *args)
+#
+#         query = cls.name + "("
+#         query += ','.join(["'" + str(a) + "'" for a in args])
+#         query += ")"
+#
+#         print("Log: pyDatalog query: " + query)
+#         answer = pyDatalog.ask(query)
+#         if answer is None:
+#             return False
+#
+#         return True
 
 
 

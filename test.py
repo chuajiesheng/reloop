@@ -1,6 +1,4 @@
-
 from reloop2 import *
-from pyDatalog import pyDatalog
 
 # Relational Program tests start here
 
@@ -25,15 +23,27 @@ y = SubstitutionSymbol('y')
 X = SubstitutionSymbol('X')
 A = SubstitutionSymbol('A')
 
+attribute = rlp_predicate("attribute", 2)
+label = rlp_predicate("label", 1)
 
-attribute = rlp_function("attribute", 2)
-print(attribute)
-print(type(attribute))
+slack = rlp_predicate("slack", 1)
+weight = rlp_predicate("weight", 1)
+b = rlp_predicate("b", 0)
+r = rlp_predicate("r", 0)
 
-print(attribute("1", "2"))
-
-simpleSum = RlpSum([X, ], "attribute(X,'1',Y)", attribute(X, 1)*y*y)
-print(srepr(simpleSum))
-simpleSum.subs(y, 1)
+# print(attribute)
+# print(type(attribute))
+#
+# print(attribute("1", "2"))
+#
+# simpleSum = RlpSum([X, ], "attribute(X,'1',Y)", attribute(X, 1)*y*y)
+# print(srepr(simpleSum))
+# simpleSum.subs(y, 1)
 
 model = RlpProblem("LP-SVM", lp.LpMinimize)
+model.add_variable(slack)
+model.add_variable(weight)
+model.add_variable(b)
+model.add_variable(r)
+
+print(model.get_variables())
