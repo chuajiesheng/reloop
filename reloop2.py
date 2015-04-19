@@ -10,16 +10,14 @@ class RlpProblem():
         self.name = name
         self._reloop_variables = set([])
         self._constraints = []
+        self.objective = None
 
     def add_constraint(self, constraint):
-        """Constraints are relations or forallConstraints
-        """
-        if (constraint is not Rel) | (constraint is not ForAllConstraint):
-            raise ValueError("'constraint' must be either an instance of sympy.Re or an instance of ForallConstraint!")
+        """Constraints are relations or forallConstraints"""
         self._constraints += [constraint]
 
     def set_objective(self, objective):
-        pass
+        self.objective = objective
 
     def add_variable(self, predicate):
         self._reloop_variables |= set([(predicate.name, predicate.arity)])
@@ -28,11 +26,40 @@ class RlpProblem():
     def reloop_variables(self):
         return self._reloop_variables
 
-    def __ilshift__(self, objective):
-        self.set_objective(objective)
+    def __iadd__(self, rhs):
+        if isinstance(rhs, Rel) | isinstance(rhs, ForAllConstraint):
+            self.add_constraint(rhs)
+        elif isinstance(rhs, Expr):
+            self.set_objective(rhs)
+        else:
+            raise ValueError("'rhs' must be either an instance of sympy.Rel, sympy.Expr or an instance of "
+                             "ForallConstraint!")
 
-    def __iadd__(self, constraint):
-        self.add_constraint(constraint)
+        return self
+
+    def solve(self):
+        self.ground_into_lp()
+        self.lpmodel.solve()
+
+    def status(self):
+        return lp.LpStatus[self.lpmodel.status]
+
+    def get_solution(self):
+        # return {x: self.myLpVars[x].value() for x in self.myLpVars}
+        pass
+
+    def ground_into_lp(self):
+        pass
+
+    def __str__(self):
+        str = "OBJECTIVE: "
+        str += srepr(self.objective)
+        str += "\n\n"
+        str += "Subject to:\n"
+        for c in self._constraints:
+            str += srepr(c)
+            str += "\n"
+        return str
 
 
 class RlpQuery:
@@ -51,19 +78,16 @@ class RlpQuery:
 
 class ForAllConstraint(RlpQuery):
     def __init__(self, query_symbols, query, relation):
-        RlpQuery.__init__(query_symbols, query)
+        RlpQuery.__init__(self, query_symbols, query)
         self.relation = relation
 
+    def __str__(self):
+        return "FORALL: " + str(self.query_symbols) + " in " + str(self.query) + ": " + repr(self.relation)
 
 class SubstitutionSymbol(Symbol):
     """Just a sympy.Symbol, but inherited to be able to define symbols explicitly
     """
     pass
-
-
-# def rlp_function(name, arity):
-# predicate_class = type(name + "\\" + str(arity), (RlpFunction,), {"arity": arity, "name": name})
-#     return predicate_class
 
 
 def rlp_predicate(name, arity, boolean=false):
@@ -116,7 +140,7 @@ class RlpPredicate(Function):
     __repr__ = __str__
 
 
-class RlpBooleanPredicate(BooleanFunction):
+class RlpBooleanPredicate(BooleanAtom, Function):
     def ask(cls):
         args = cls.args
         if len(args) > cls.arity:
@@ -135,71 +159,16 @@ class RlpBooleanPredicate(BooleanFunction):
             return S.false
         return S.true
 
+    # @classmethod
+    # def _eval_simplify(cls, ratio, measure):
+    #     return cls
+
 
 class RlpSum(Expr, RlpQuery):
     def __init__(self, query_symbols, query, expression):
         RlpQuery.__init__(self, query_symbols, query)
         self.expression = expression
 
-
-# class RlpPredicate(Expr):
-#
-#     def __new__(cls, *args):
-#         if len(args) > cls.arity:
-#             raise Exception("Too many arguments.")
-#
-#         if len(args) < cls.arity:
-#             raise Exception("Not enough arguments")
-#
-#         for argument in args:
-#             if isinstance(argument, SubstitutionSymbol):
-#                 return Expr.__new__(cls, *args)
-#
-#         query = cls.name + "("
-#         query += ','.join(["'" + str(a) + "'" for a in args])
-#         query += ")"
-#
-#         print("Log: pyDatalog query: " + query)
-#         answer = pyDatalog.ask(query)
-#         if answer is None:
-#             return False
-#
-#         return True
-
-
-# class RlpPredicate(Function):
-#
-#     @classmethod
-#     def eval(cls, *args):
-#         if len(args) > cls.arity:
-#             raise Exception("Too many arguments.")
-#
-#         if len(args) < cls.arity:
-#             raise Exception("Not enough arguments")
-#
-#         for argument in args:
-#             if isinstance(argument, SubstitutionSymbol):
-#                 return None
-#
-#         query = cls.name + "("
-#         query += ','.join(["'" + str(a) + "'" for a in args])
-#         query += ", X)"
-#
-#         print("Log: pyDatalog query: " + query)
-#         answer = pyDatalog.ask(query)
-#         if answer is None:
-#             raise ValueError('Predicate is not defined or no result!')
-#
-#         if len(answer.answers) == 1:
-#             result = answer.answers.pop()
-#             return float(result[0])
-#
-#         raise ValueError("PyDatalog gives multiple results. Oh!")
-#
-#     @classmethod
-#     def __str__(cls):
-#         return '%s/%s' % (cls.name, cls.arity)
-#
-#     __repr__ = __str__
-
-
+    @property
+    def is_number(self):
+        return False
