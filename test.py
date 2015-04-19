@@ -30,6 +30,7 @@ slack = rlp_predicate("slack", 1)
 weight = rlp_predicate("weight", 1)
 b = rlp_predicate("b", 0)
 r = rlp_predicate("r", 0)
+booltest = rlp_predicate("booltest", 1, true)
 
 # print(attribute)
 # print(type(attribute))
@@ -46,4 +47,16 @@ model.add_variable(weight)
 model.add_variable(b)
 model.add_variable(r)
 
-print(model.get_variables())
+print(model.reloop_variables)
+print(b)
+print(r)
+print(booltest)
+
+z = booltest(x) & booltest(y)
+print(srepr(z))
+z = slack(1) * 4
+print(srepr(z))
+#z = r() * 4
+#print(srepr(z))
+
+model.add_constraint(5 >= slack('1'))
