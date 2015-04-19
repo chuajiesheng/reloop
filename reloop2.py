@@ -5,12 +5,14 @@ import pulp as lp
 
 
 class RlpProblem():
-    def __init__(self, name="noname", sense=0):
+    def __init__(self, logkb, name="noname", sense=0):
         self.lpmodel = lp.LpProblem(name, sense)
+        self.logkb = logkb
         self.name = name
         self._reloop_variables = set([])
         self._constraints = []
         self.objective = None
+        self._lp_variables = {}
 
     def add_constraint(self, constraint):
         """Constraints are relations or forallConstraints"""
@@ -19,12 +21,16 @@ class RlpProblem():
     def set_objective(self, objective):
         self.objective = objective
 
-    def add_variable(self, predicate):
+    def add_reloop_variable(self, predicate):
         self._reloop_variables |= set([(predicate.name, predicate.arity)])
 
     @property
     def reloop_variables(self):
         return self._reloop_variables
+
+    @property
+    def constraints(self):
+        return self._constraints
 
     def __iadd__(self, rhs):
         if isinstance(rhs, Rel) | isinstance(rhs, ForAllConstraint):
@@ -36,6 +42,14 @@ class RlpProblem():
                              "ForallConstraint!")
 
         return self
+
+    def add_lp_variable(self, x_name):
+        # TODO review this code
+        if x_name in self._lp_variables:
+            return self._lp_variables[x_name]
+        else:
+            self._lp_variables[x_name] = lp.LpVariable(x_name)
+        return self._lp_variables[x_name]
 
     def solve(self):
         self.ground_into_lp()
@@ -49,17 +63,47 @@ class RlpProblem():
         pass
 
     def ground_into_lp(self):
+        self.add_to_lp(self.ground_expression(self.objective))
+
+        for constraint in self.constraints:
+            if isinstance(constraint, Rel):
+                raise NotImplementedError
+            else:
+                # maybe pr ground here?
+                # result = self.ground_expression(constraint.relation, bound=constraint.query_symbols)
+                result = constraint.ground(self.logkb)
+                for expr in result:
+                    ground = self.ground_expression(expr)
+                    self.add_to_lp(ground)
+
+    def ground_expression(self, expr):
+        if expr.func is RlpSum:
+            result = expr.ground(self.logkb)
+            return self.ground_expression(result)
+
+        if expr.func is RlpPredicate:
+            if set([(expr.name, expr.arity)]) not in self.reloop_variables:
+                return expr.ground(self.logkb)
+
+        if expr.func is RlpBooleanPredicate:
+            # TODO Evaluate to 0 or 1? Did Martin say: that would be cool?
+            raise ValueError("RlpBooleanPredicate is invalid here!")
+
+        return expr
+
+    @staticmethod
+    def add_to_lp(expr, rhs=None):
         pass
 
     def __str__(self):
-        str = "OBJECTIVE: "
-        str += srepr(self.objective)
-        str += "\n\n"
-        str += "Subject to:\n"
+        asstr = "Objective: "
+        asstr += srepr(self.objective)
+        asstr += "\n\n"
+        asstr += "Subject to:\n"
         for c in self._constraints:
-            str += srepr(c)
-            str += "\n"
-        return str
+            asstr += srepr(c)
+            asstr += "\n"
+        return asstr
 
 
 class RlpQuery:
@@ -80,11 +124,26 @@ class ForAllConstraint(RlpQuery):
     def __init__(self, query_symbols, query, relation):
         RlpQuery.__init__(self, query_symbols, query)
         self.relation = relation
+        self.result = []
+        self.grounded = False
+
+    def ground(self, logkb):
+        answer = logkb.ask(self.query_symbols, self.query)
+        result = []
+        for a in answer.answers:
+                expression_eval_subs = self.expression
+                for index, symbol in enumerate(self.query_symbols):
+                    expression_eval_subs = expression_eval_subs.subs(symbol, int(a[index]))
+                result += expression_eval_subs
+        self.result = result
+        self.grounded = True
+        return self.result
 
     def __str__(self):
-        return "FORALL: " + str(self.query_symbols) + " in " + str(self.query) + ": " + repr(self.relation)
+        return "FORALL " + str(self.query_symbols) + " in " + str(self.query) + ": " + srepr(self.relation)
 
-class SubstitutionSymbol(Symbol):
+
+class SubSymbol(Symbol):
     """Just a sympy.Symbol, but inherited to be able to define symbols explicitly
     """
     pass
@@ -97,41 +156,43 @@ def rlp_predicate(name, arity, boolean=false):
         predicate_type = RlpBooleanPredicate
     else:
         predicate_type = RlpPredicate
-    predicate_class = type(name + "\\" + str(arity), (predicate_type,), {"arity": arity, "name": name})
+    predicate_class = type(name + "\\" + str(arity), (predicate_type,), {"arity": arity, "name": name, "result": None,
+                                                                         "grounded": False})
     return predicate_class
 
 
 class RlpPredicate(Function):
+
     @classmethod
     def eval(cls, *args):
-        return None
+        if not cls.grounded:
+            return None
+        return cls.result
 
-    def ask(cls):
-        args = cls.args
-        if len(args) > cls.arity:
+    def ground(self, logkb):
+        args = self.args
+        if len(args) > self.arity:
             raise Exception("Too many arguments.")
 
-        if len(args) < cls.arity:
+        if len(args) < self.arity:
             raise Exception("Not enough arguments")
 
         for argument in args:
-            if isinstance(argument, SubstitutionSymbol):
-                return None
+            if isinstance(argument, SubSymbol):
+                raise ValueError("Found free symbols while grounding: " + str(self))
 
-        query = cls.name + "("
-        query += ','.join(["'" + str(a) + "'" for a in args])
-        query += ", X)"
-
-        print("Log: pyDatalog query: " + query)
-        answer = pyDatalog.ask(query)
+        answer = logkb.ask(self)
         if answer is None:
             raise ValueError('Predicate is not defined or no result!')
 
-        if len(answer.answers) == 1:
-            result = answer.answers.pop()
-            return float(result[0])
+        if len(answer.answers) != 1:
+            raise ValueError("The LogKb gives multiple results. Oh!")
 
-        raise ValueError("PyDatalog gives multiple results. Oh!")
+        result = answer.answers.pop()
+        self.result = result
+        self.grounded = True
+        return float(result[0])
+
 
     @classmethod
     def __str__(cls):
@@ -148,7 +209,7 @@ class RlpBooleanPredicate(BooleanAtom, Function):
         if len(args) < cls.arity:
             raise Exception("Not enough arguments")
         for argument in args:
-            if isinstance(argument, SubstitutionSymbol):
+            if isinstance(argument, SubSymbol):
                 return Expr.__new__(cls, *args)
         query = cls.name + "("
         query += ','.join(["'" + str(a) + "'" for a in args])
@@ -165,10 +226,31 @@ class RlpBooleanPredicate(BooleanAtom, Function):
 
 
 class RlpSum(Expr, RlpQuery):
+
     def __init__(self, query_symbols, query, expression):
         RlpQuery.__init__(self, query_symbols, query)
         self.expression = expression
+        self.result = None
+        self.grounded = False
+
+    def ground(self, logkb):
+        answer = logkb.ask(self.query_symbols, self.query)
+        result = 0
+        for a in answer.answers:
+                expression_eval_subs = self.expression
+                for index, symbol in enumerate(self.query_symbols):
+                    expression_eval_subs = expression_eval_subs.subs(symbol, int(a[index]))
+                result += expression_eval_subs
+        self.result = result
+        self.grounded = True
+        return self.result
 
     @property
     def is_number(self):
         return False
+
+    def _sympyrepr(self, printer, *args):
+        if not self.grounded:
+            return "RlpSum(" + str(self.query_symbols) + " in " + str(self.query) + ", " + srepr(self.expression) + ")"
+        return srepr(self.result)
+

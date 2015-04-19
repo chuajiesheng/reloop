@@ -70,9 +70,9 @@ model = RlpProblem("traffic flow LP in the spirit of page 329 in http://ampl.com
 print "\nBuilding a relational variant of the " + model.name
 
 # declarations
-X = SubstitutionSymbol('X')
-Y = SubstitutionSymbol('Y')
-Z = SubstitutionSymbol('Z')
+X = SubSymbol('X')
+Y = SubSymbol('Y')
+Z = SubSymbol('Z')
 
 flow = rlp_predicate("flow", 2)
 cost = rlp_predicate("cost", 2)
@@ -80,8 +80,8 @@ outFlow = rlp_predicate("outFlow", 1)
 inFlow = rlp_predicate("inFlow", 1)
 
 
-model.add_variable(flow)
-model.add_variable(outFlow)
+model.add_reloop_variable(flow)
+model.add_reloop_variable(outFlow)
 
 source = rlp_predicate("source", 1, boolean=True)
 target = rlp_predicate("target", 1, boolean=True)
