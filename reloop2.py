@@ -135,6 +135,7 @@ class RlpProblem():
         self.lpmodel += lp.LpConstraint(c, sense, None, b)
 
     def get_affine(self, expr):
+        # TODO rewrite
         x_name = []
         x_value = []
         xnames = []
@@ -164,14 +165,19 @@ class RlpProblem():
             else:
                 value = expr.args[1]
                 name = srepr(expr.args[0])
+
+            x_name.append(name)
+            x_value.append(float(value))
         elif isinstance(expr, RlpPredicate):
             value = 1
             name = srepr(expr)
+
+            x_name.append(name)
+            x_value.append(float(value))
         else:
             raise NotImplementedError
 
-        x_name.append(name)
-        x_value.append(float(value))
+
 
         y = np.zeros(len(x_name))
         for j in range(len(x_name)):

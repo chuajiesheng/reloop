@@ -127,12 +127,8 @@ Z = SubSymbol('Z')
 
 flow = rlp_predicate("flow", 2)
 cost = rlp_predicate("cost", 2)
-outFlow = rlp_predicate("outFlow", 1)
-inFlow = rlp_predicate("inFlow", 1)
-
 
 model.add_reloop_variable(flow)
-model.add_reloop_variable(outFlow)
 
 source = rlp_predicate("source", 1, boolean=True)
 target = rlp_predicate("target", 1, boolean=True)
@@ -148,7 +144,6 @@ outFlow = RlpSum([X, ], edge(X, Z), flow(X, Z))
 inFlow = RlpSum([Y, ], edge(Z, Y), flow(Z, Y))
 
 model += ForAllConstraint([Z, ], node(Z) & ~source(Z) & ~target(Z), Eq(inFlow, outFlow))
-
 
 # upper and lower bound constraints
 model += ForAllConstraint([X, Y], edge(X, Y), flow(X, Y) >= 0)
