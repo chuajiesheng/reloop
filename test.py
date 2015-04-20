@@ -1,5 +1,6 @@
 from reloop2 import *
 from logkb import *
+from lp import *
 
 # Relational Program tests start here
 
@@ -117,7 +118,7 @@ def cost3(X, Y, Z):
 # Linear Program definition
 
 model = RlpProblem("traffic flow LP in the spirit of page 329 in http://ampl.com/BOOK/CHAPTERS/18-network.pdf",
-                   lp.LpMaximize, PyDatalogLogKb())
+                   LpMaximize, PyDatalogLogKb(), Pulp)
 
 print "\nBuilding a relational variant of the " + model.name
 

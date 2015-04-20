@@ -1,13 +1,12 @@
 from sympy import *
 from sympy.logic.boolalg import *
 from pyDatalog import pyDatalog, pyEngine
-import pulp as lp
 import numpy as np
 
 
 class RlpProblem():
-    def __init__(self, name, sense, logkb):
-        self.lpmodel = lp.LpProblem(name, sense)
+    def __init__(self, name, sense, logkb, lp):
+        self.lpmodel = lp(name, sense)
         self.logkb = logkb
         self.name = name
         self._reloop_variables = set([])
@@ -53,7 +52,7 @@ class RlpProblem():
         if x_name in self._lp_variables:
             return self._lp_variables[x_name]
         else:
-            self._lp_variables[x_name] = lp.LpVariable(x_name)
+            self._lp_variables[x_name] = self.lpmodel.lp_variable(x_name)
         return self._lp_variables[x_name]
 
     def solve(self):
@@ -61,7 +60,7 @@ class RlpProblem():
         self.lpmodel.solve()
 
     def status(self):
-        return lp.LpStatus[self.lpmodel.status]
+        return self.lpmodel.status()
 
     def get_solution(self):
         return {x: self.lp_variables[x].value() for x in self.lp_variables}
@@ -79,7 +78,7 @@ class RlpProblem():
                 for expr in result:
                     ground = self.ground_expression(expr)
                     ground_result = ground.__class__(self.ground_expression(ground.lhs), ground.rhs)
-                    self.add_constraint_to_lp( ground_result)
+                    self.add_constraint_to_lp(ground_result)
 
     def ground_expression(self, expr):
         if expr.func is Add:
@@ -132,7 +131,7 @@ class RlpProblem():
             sense = 0
         if constraint.func is Le:
             sense = -1
-        self.lpmodel += lp.LpConstraint(c, sense, None, b)
+        self.lpmodel += (c, sense, None, b)
 
     def get_affine(self, expr):
         # TODO rewrite
@@ -177,8 +176,6 @@ class RlpProblem():
         else:
             raise NotImplementedError
 
-
-
         y = np.zeros(len(x_name))
         for j in range(len(x_name)):
             xx = self.add_lp_variable(x_name[j])
@@ -188,7 +185,7 @@ class RlpProblem():
                 x.append(xx)
                 xnames.append(x_name[j])
                 y[xnames.index(x_name[j])] = x_value[xnames.index(x_name[j])]
-        c = lp.LpAffineExpression([ (x[i],y[i]) for i in range(len(x))])
+        c = self.lpmodel.affine_expression(x, y)
 
         return c
 
@@ -340,4 +337,3 @@ class RlpSum(Expr, RlpQuery):
         if not self.grounded:
             return "RlpSum(" + str(self.query_symbols) + " in " + str(self.query) + ", " + srepr(self.expression) + ")"
         return srepr(self.result)
-    
