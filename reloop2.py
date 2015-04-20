@@ -2,6 +2,7 @@ from sympy import *
 from sympy.logic.boolalg import *
 from pyDatalog import pyDatalog, pyEngine
 import pulp as lp
+import numpy as np
 
 
 class RlpProblem():
@@ -91,7 +92,7 @@ class RlpProblem():
             result = expr.ground(self.logkb)
             return self.ground_expression(result)
 
-        if isinstance(expr,RlpPredicate):
+        if isinstance(expr, RlpPredicate):
             if (expr.name, expr.arity) not in self.reloop_variables:
                 return expr.ground(self.logkb)
 
@@ -102,11 +103,90 @@ class RlpProblem():
         return expr
 
     def add_objective_to_lp(self, objective):
-        print "Add objective: " + str(objective) + "\n" + srepr(objective)
+        print "Add objective: " + str(objective)
+        # + "\n" + srepr(objective)
+        expr = objective
+        if objective.func is Add:
+            for s in objective.args:
+                if s.is_Atom:
+                    expr -= s
+
+        c = self.get_affine(expr)
+        self.lpmodel += c
 
 
     def add_constraint_to_lp(self, constraint):
-        print "Add constraint: " + str(constraint) + "\n" + srepr(constraint)
+        print "Add constraint: " + str(constraint)
+        # + "\n" + srepr(constraint)
+        lhs = constraint.lhs
+        b = constraint.rhs
+        if constraint.lhs.func is Add:
+            for s in constraint.lhs.args:
+                if s.is_Atom:
+                    lhs -= s
+                    b += s
+
+        c = self.get_affine(lhs)
+        if constraint.func is Ge:
+            sense = 1
+        if constraint.func is Eq:
+            sense = 0
+        if constraint.func is Le:
+            sense = -1
+        self.lpmodel += lp.LpConstraint(c, sense, None, b)
+
+    def get_affine(self, expr):
+        x_name = []
+        x_value = []
+        xnames = []
+        x = []
+        if expr.func is Add:
+            for s in expr.args:
+                if s.func is Mul:
+                    if s.args[0].is_Atom:
+                        value = s.args[0]
+                        name = srepr(s.args[1])
+                    else:
+                        value = s.args[1]
+                        name = srepr(s.args[0])
+                elif isinstance(s, RlpPredicate):
+                    value = 1
+                    name = srepr(s)
+                else:
+                    raise NotImplementedError
+
+                x_name.append(name)
+                x_value.append(float(value))
+
+        elif expr.func is Mul:
+            if expr.args[0].is_Atom:
+                value = expr.args[0]
+                name = srepr(expr.args[1])
+            else:
+                value = expr.args[1]
+                name = srepr(expr.args[0])
+        elif isinstance(expr, RlpPredicate):
+            value = 1
+            name = srepr(expr)
+        else:
+            raise NotImplementedError
+
+            x_name.append(name)
+            x_value.append(float(value))
+
+        y = np.zeros(len(x_name))
+        for j in range(len(x_name)):
+            xx = self.add_lp_variable(x_name[j])
+            if(x_name[j] in xnames):
+                y[xnames.index(x_name[j])] += x_value[j]
+            else:
+                x.append(xx)
+                xnames.append(x_name[j])
+                y[xnames.index(x_name[j])] = x_value[xnames.index(x_name[j])]
+        c = lp.LpAffineExpression([ (x[i],y[i]) for i in range(len(x))])
+
+        return c
+
 
     def __str__(self):
         asstr = "Objective: "
