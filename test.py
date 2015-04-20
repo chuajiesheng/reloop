@@ -3,19 +3,19 @@ from reloop2 import *
 # Relational Program tests start here
 
 
-@pyDatalog.predicate()
-def attribute3(index, axis, value):
-    # (x,y) ->z
-    yield("1", "1", "2")
-    yield("1", "2", "2")
-    yield("2", "1", "2")
-    yield("2", "2", "1")
-    yield("3", "1", "3")
-    yield("3", "2", "4")
-    yield("4", "1", "4")
-    yield("4", "2", "3")
-    yield("7", "2", "3")
-    yield("7", "2", "5")
+# @pyDatalog.predicate()
+# def attribute3(index, axis, value):
+#     # (x,y) ->z
+#     yield("1", "1", "2")
+#     yield("1", "2", "2")
+#     yield("2", "1", "2")
+#     yield("2", "2", "1")
+#     yield("3", "1", "3")
+#     yield("3", "2", "4")
+#     yield("4", "1", "4")
+#     yield("4", "2", "3")
+#     yield("7", "2", "3")
+#     yield("7", "2", "5")
 
 # # define symbols
 # x = SubstitutionSymbol('x')
@@ -61,11 +61,62 @@ def attribute3(index, axis, value):
 #
 # model.add_constraint(5 >= slack('1'))
 
+
+@pyDatalog.predicate()
+def node1(X):
+    yield('a')
+    yield('b')
+    yield('c')
+    yield('d')
+    yield('e')
+    yield('f')
+    yield('g')
+
+
+@pyDatalog.predicate()
+def edge2(X, Y):
+    yield('a', 'b')
+    yield('a', 'c')
+    yield('b', 'd')
+    yield('b', 'e')
+    yield('c', 'd')
+    yield('c', 'f')
+    yield('d', 'e')
+    yield('d', 'f')
+    yield('e', 'g')
+    yield('f', 'g')
+
+
+
+@pyDatalog.predicate()
+def source1(X):
+    yield('a')
+
+@pyDatalog.predicate()
+def target1(X):
+    yield('g')
+
+
+@pyDatalog.predicate()
+def cost3(X, Y, Z):
+    yield('a', 'b', 50) # cost(a,b) = 50
+    yield('a', 'c', 100)
+    yield('b', 'd', 40)
+    yield('b', 'e', 20)
+    yield('c', 'd', 60)
+    yield('c', 'f', 20)
+    yield('d', 'e', 50)
+    yield('d', 'f', 60)
+    yield('e', 'g', 70)
+    yield('f', 'g', 70)
+
+
+
 #----------------------------------------------------------
 # Linear Program definition
 
 model = RlpProblem("traffic flow LP in the spirit of page 329 in http://ampl.com/BOOK/CHAPTERS/18-network.pdf",
-                   lp.LpMaximize)
+                   lp.LpMaximize, PyDatalogLogKb())
 
 print "\nBuilding a relational variant of the " + model.name
 

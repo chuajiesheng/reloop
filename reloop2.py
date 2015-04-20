@@ -5,7 +5,7 @@ import pulp as lp
 
 
 class RlpProblem():
-    def __init__(self, logkb, name="noname", sense=0):
+    def __init__(self, name, sense, logkb):
         self.lpmodel = lp.LpProblem(name, sense)
         self.logkb = logkb
         self.name = name
@@ -22,11 +22,15 @@ class RlpProblem():
         self.objective = objective
 
     def add_reloop_variable(self, predicate):
-        self._reloop_variables |= set([(predicate.name, predicate.arity)])
+        self._reloop_variables |= {(predicate.name, predicate.arity)}
 
     @property
     def reloop_variables(self):
         return self._reloop_variables
+
+    @property
+    def lp_variables(self):
+        return self._lp_variables
 
     @property
     def constraints(self):
@@ -59,30 +63,36 @@ class RlpProblem():
         return lp.LpStatus[self.lpmodel.status]
 
     def get_solution(self):
-        # return {x: self.myLpVars[x].value() for x in self.myLpVars}
-        pass
+        return {x: self.lp_variables[x].value() for x in self.lp_variables}
 
     def ground_into_lp(self):
-        self.add_to_lp(self.ground_expression(self.objective))
+        self.add_objective_to_lp(self.ground_expression(self.objective))
 
         for constraint in self.constraints:
             if isinstance(constraint, Rel):
                 raise NotImplementedError
             else:
-                # maybe pr ground here?
+                # maybe pre-ground here?
                 # result = self.ground_expression(constraint.relation, bound=constraint.query_symbols)
                 result = constraint.ground(self.logkb)
                 for expr in result:
                     ground = self.ground_expression(expr)
-                    self.add_to_lp(ground)
+                    ground_result = ground.__class__(self.ground_expression(ground.lhs), ground.rhs)
+                    self.add_constraint_to_lp( ground_result)
 
     def ground_expression(self, expr):
+        if expr.func is Add:
+            return Add(*map(lambda x: self.ground_expression(x), expr.args))
+
+        if expr.func is Mul:
+            return Mul(*map(lambda x: self.ground_expression(x), expr.args))
+
         if expr.func is RlpSum:
             result = expr.ground(self.logkb)
             return self.ground_expression(result)
 
-        if expr.func is RlpPredicate:
-            if set([(expr.name, expr.arity)]) not in self.reloop_variables:
+        if isinstance(expr,RlpPredicate):
+            if (expr.name, expr.arity) not in self.reloop_variables:
                 return expr.ground(self.logkb)
 
         if expr.func is RlpBooleanPredicate:
@@ -91,9 +101,12 @@ class RlpProblem():
 
         return expr
 
-    @staticmethod
-    def add_to_lp(expr, rhs=None):
-        pass
+    def add_objective_to_lp(self, objective):
+        print "Add objective: " + str(objective) + "\n" + srepr(objective)
+
+
+    def add_constraint_to_lp(self, constraint):
+        print "Add constraint: " + str(constraint) + "\n" + srepr(constraint)
 
     def __str__(self):
         asstr = "Objective: "
@@ -129,12 +142,16 @@ class ForAllConstraint(RlpQuery):
 
     def ground(self, logkb):
         answer = logkb.ask(self.query_symbols, self.query)
-        result = []
-        for a in answer.answers:
-                expression_eval_subs = self.expression
-                for index, symbol in enumerate(self.query_symbols):
-                    expression_eval_subs = expression_eval_subs.subs(symbol, int(a[index]))
-                result += expression_eval_subs
+
+        result = set([])
+        if answer is not None:
+            lhs = self.relation.lhs - self.relation.rhs
+            for a in answer.answers:
+                    expression_eval_subs = lhs
+                    for index, symbol in enumerate(self.query_symbols):
+                        expression_eval_subs = expression_eval_subs.subs(symbol, a[index])
+                    result |= {self.relation.__class__(expression_eval_subs, 0.0)}
+
         self.result = result
         self.grounded = True
         return self.result
@@ -181,7 +198,7 @@ class RlpPredicate(Function):
             if isinstance(argument, SubSymbol):
                 raise ValueError("Found free symbols while grounding: " + str(self))
 
-        answer = logkb.ask(self)
+        answer = logkb.ask_predicate(self)
         if answer is None:
             raise ValueError('Predicate is not defined or no result!')
 
@@ -202,27 +219,7 @@ class RlpPredicate(Function):
 
 
 class RlpBooleanPredicate(BooleanAtom, Function):
-    def ask(cls):
-        args = cls.args
-        if len(args) > cls.arity:
-            raise Exception("Too many arguments.")
-        if len(args) < cls.arity:
-            raise Exception("Not enough arguments")
-        for argument in args:
-            if isinstance(argument, SubSymbol):
-                return Expr.__new__(cls, *args)
-        query = cls.name + "("
-        query += ','.join(["'" + str(a) + "'" for a in args])
-        query += ")"
-        print("Log: pyDatalog query: " + query)
-        answer = pyDatalog.ask(query)
-        if answer is None:
-            return S.false
-        return S.true
-
-    # @classmethod
-    # def _eval_simplify(cls, ratio, measure):
-    #     return cls
+    pass
 
 
 class RlpSum(Expr, RlpQuery):
@@ -239,7 +236,7 @@ class RlpSum(Expr, RlpQuery):
         for a in answer.answers:
                 expression_eval_subs = self.expression
                 for index, symbol in enumerate(self.query_symbols):
-                    expression_eval_subs = expression_eval_subs.subs(symbol, int(a[index]))
+                    expression_eval_subs = expression_eval_subs.subs(symbol, a[index])
                 result += expression_eval_subs
         self.result = result
         self.grounded = True
@@ -249,8 +246,57 @@ class RlpSum(Expr, RlpQuery):
     def is_number(self):
         return False
 
+    def _hashable_content(self):
+        """We need to overwrite this: The first parameter is a list and because of that the base
+        implementation does not work."""
+        return tuple(self.query_symbols) + self._args[1:]
+
     def _sympyrepr(self, printer, *args):
         if not self.grounded:
             return "RlpSum(" + str(self.query_symbols) + " in " + str(self.query) + ", " + srepr(self.expression) + ")"
         return srepr(self.result)
 
+
+
+class LogKb:
+    def ask(self, query_symbols, query):
+        raise NotImplementedError
+
+    def ask_predicate(self, predicate):
+        raise NotImplementedError
+
+class PyDatalogLogKb(LogKb):
+
+    def ask(self, query_symbols, query):
+
+        helper_predicate = 'helper(' + ','.join([str(v) for v in query_symbols]) + ')'
+        tmp = helper_predicate + " <= " + self.transform_query(query)
+        pyDatalog.load(tmp)
+
+        answer = pyDatalog.ask(helper_predicate)
+        pyEngine.Pred.reset_clauses(pyEngine.Pred("helper", len(query_symbols)))
+
+        return answer
+
+    def ask_predicate(self, predicate):
+
+        query = predicate.name + "("
+        query += ','.join(["'" + str(a) + "'" for a in predicate.args])
+        query += ", X)"
+
+        answer = pyDatalog.ask(query)
+        return answer
+
+    @staticmethod
+    def transform_query(query):
+        if query.func is And:
+            return " &".join([PyDatalogLogKb.transform_query(arg) for arg in query.args])
+
+        if query.func is Not:
+            return " ~" + PyDatalogLogKb.transform_query(query.args[0])
+
+        if isinstance(query, RlpBooleanPredicate):
+            join = ",".join([str(arg) if isinstance(arg, SubSymbol) else "'" + str(arg) + "'" for arg in query.args])
+            return " " + query.name + "(" + join + ")"
+
+        raise NotImplementedError
