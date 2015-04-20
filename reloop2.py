@@ -114,7 +114,6 @@ class RlpProblem():
         c = self.get_affine(expr)
         self.lpmodel += c
 
-
     def add_constraint_to_lp(self, constraint):
         print "Add constraint: " + str(constraint)
         # + "\n" + srepr(constraint)
@@ -124,7 +123,7 @@ class RlpProblem():
             for s in constraint.lhs.args:
                 if s.is_Atom:
                     lhs -= s
-                    b += s
+                    b -= s
 
         c = self.get_affine(lhs)
         if constraint.func is Ge:
@@ -171,13 +170,13 @@ class RlpProblem():
         else:
             raise NotImplementedError
 
-            x_name.append(name)
-            x_value.append(float(value))
+        x_name.append(name)
+        x_value.append(float(value))
 
         y = np.zeros(len(x_name))
         for j in range(len(x_name)):
             xx = self.add_lp_variable(x_name[j])
-            if(x_name[j] in xnames):
+            if x_name[j] in xnames:
                 y[xnames.index(x_name[j])] += x_value[j]
             else:
                 x.append(xx)
