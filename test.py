@@ -1,4 +1,5 @@
 from reloop2 import *
+from logkb import *
 
 # Relational Program tests start here
 
