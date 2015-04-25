@@ -2,69 +2,8 @@ from reloop2 import *
 from logkb import *
 from lp import *
 
-# Relational Program tests start here
-
-
-# @pyDatalog.predicate()
-# def attribute3(index, axis, value):
-#     # (x,y) ->z
-#     yield("1", "1", "2")
-#     yield("1", "2", "2")
-#     yield("2", "1", "2")
-#     yield("2", "2", "1")
-#     yield("3", "1", "3")
-#     yield("3", "2", "4")
-#     yield("4", "1", "4")
-#     yield("4", "2", "3")
-#     yield("7", "2", "3")
-#     yield("7", "2", "5")
-
-# # define symbols
-# x = SubstitutionSymbol('x')
-# y = SubstitutionSymbol('y')
-# X = SubstitutionSymbol('X')
-# A = SubstitutionSymbol('A')
-#
-# attribute = rlp_predicate("attribute", 2)
-# label = rlp_predicate("label", 1)
-#
-# slack = rlp_predicate("slack", 1)
-# weight = rlp_predicate("weight", 1)
-# b = rlp_predicate("b", 0)
-# r = rlp_predicate("r", 0)
-# booltest = rlp_predicate("booltest", 1, true)
-#
-# # print(attribute)
-# # print(type(attribute))
-# #
-# # print(attribute("1", "2"))
-# #
-# # simpleSum = RlpSum([X, ], "attribute(X,'1',Y)", attribute(X, 1)*y*y)
-# # print(srepr(simpleSum))
-# # simpleSum.subs(y, 1)
-#
-# model = RlpProblem("LP-SVM", lp.LpMinimize)
-# model.add_variable(slack)
-# model.add_variable(weight)
-# model.add_variable(b)
-# model.add_variable(r)
-#
-# print(model.reloop_variables)
-# print(b)
-# print(r)
-# print(booltest)
-#
-# z = booltest(x) & booltest(y)
-# print(srepr(z))
-# z = slack(1) * 4
-# print(srepr(z))
-# #z = r() * 4
-# #print(srepr(z))
-#
-# model.add_constraint(5 >= slack('1'))
-
 @pyDatalog.predicate()
-def node1(X):
+def node1(x):
     yield('a')
     yield('b')
     yield('c')
@@ -73,9 +12,8 @@ def node1(X):
     yield('f')
     yield('g')
 
-
 @pyDatalog.predicate()
-def edge2(X, Y):
+def edge2(x, y):
     yield('a', 'b')
     yield('a', 'c')
     yield('b', 'd')
@@ -87,20 +25,18 @@ def edge2(X, Y):
     yield('e', 'g')
     yield('f', 'g')
 
-
-
 @pyDatalog.predicate()
-def source1(X):
+def source1(x):
     yield('a')
 
 @pyDatalog.predicate()
-def target1(X):
+def target1(x):
     yield('g')
 
-
 @pyDatalog.predicate()
-def cost3(X, Y, Z):
-    yield('a', 'b', 50) # cost(a,b) = 50
+def cost3(x, y, z):
+    # cost(a,b) = 50
+    yield('a', 'b', 50)
     yield('a', 'c', 100)
     yield('b', 'd', 40)
     yield('b', 'e', 20)
@@ -111,9 +47,6 @@ def cost3(X, Y, Z):
     yield('e', 'g', 70)
     yield('f', 'g', 70)
 
-
-
-#----------------------------------------------------------
 # Linear Program definition
 
 model = RlpProblem("traffic flow LP in the spirit of page 329 in http://ampl.com/BOOK/CHAPTERS/18-network.pdf",
@@ -138,7 +71,6 @@ node = boolean_predicate("node", 1)
 model += Sum([X, Y], source(X) & edge(X, Y), flow(X, Y))
 
 # constraints for flow preservation
-# model += ForAllConstraint([Z, ], node(Z) & ~source(Z) & ~target(Z), inFlow(Z) == outFlow(Z))
 outFlow = Sum([X, ], edge(X, Z), flow(X, Z))
 inFlow = Sum([Y, ], edge(Z, Y), flow(Z, Y))
 
@@ -148,9 +80,9 @@ model += ForAll([Z, ], node(Z) & ~source(Z) & ~target(Z), Eq(inFlow, outFlow))
 model += ForAll([X, Y], edge(X, Y), flow(X, Y) >= 0)
 model += ForAll([X, Y], edge(X, Y), flow(X, Y) <= cost(X, Y))
 
-
 print "The model has been built:"
 print(model)
+
 model.solve()
 
 print "\nThe model has been solved: " + model.status() + "."
