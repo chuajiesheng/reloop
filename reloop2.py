@@ -47,13 +47,13 @@ class RlpProblem():
 
         return self
 
-    def add_lp_variable(self, x_name):
+    def add_lp_variable(self, name):
         # TODO review this code
-        if x_name in self._lp_variables:
-            return self._lp_variables[x_name]
+        if name in self._lp_variables:
+            return self._lp_variables[name]
         else:
-            self._lp_variables[x_name] = self.lpmodel.lp_variable(x_name)
-        return self._lp_variables[x_name]
+            self._lp_variables[name] = self.lpmodel.lp_variable(name)
+        return self._lp_variables[name]
 
     def solve(self):
         self.ground_into_lp()
@@ -132,28 +132,37 @@ class RlpProblem():
         self.lpmodel += (c, sense, None, b)
 
     def get_affine(self, expr):
-        # TODO rewrite
-        x_name = []
-        x_value = []
-        xnames = []
-        x = []
+        pred_names, factors = self.get_predicate_names(expr)
+
+        length = len(pred_names)
+        factor_vector = np.zeros(length)
+
+        lp_variables = []
+        used_lp_variables = []
+
+        for j in range(length):
+            lp_variable = self.add_lp_variable(pred_names[j])
+
+            if pred_names[j] in used_lp_variables:
+                factor_vector[used_lp_variables.index(pred_names[j])] += factors[j]
+            else:
+                lp_variables.append(lp_variable)
+                used_lp_variables.append(pred_names[j])
+                factor_vector[used_lp_variables.index(pred_names[j])] = factors[used_lp_variables.index(pred_names[j])]
+
+        c = self.lpmodel.affine_expression(lp_variables, factor_vector)
+        return c
+
+    @staticmethod
+    def get_predicate_names(expr):
+        pred_names = []
+        factors = []
+
         if expr.func is Add:
             for s in expr.args:
-                if s.func is Mul:
-                    if s.args[0].is_Atom:
-                        value = s.args[0]
-                        name = srepr(s.args[1])
-                    else:
-                        value = s.args[1]
-                        name = srepr(s.args[0])
-                elif isinstance(s, RlpPredicate):
-                    value = 1
-                    name = srepr(s)
-                else:
-                    raise NotImplementedError
-
-                x_name.append(name)
-                x_value.append(float(value))
+                p, f = RlpProblem.get_predicate_names(s)
+                pred_names += p
+                factors += f
 
         elif expr.func is Mul:
             if expr.args[0].is_Atom:
@@ -163,29 +172,21 @@ class RlpProblem():
                 value = expr.args[1]
                 name = srepr(expr.args[0])
 
-            x_name.append(name)
-            x_value.append(float(value))
+            return [name, ], [float(value), ]
+
         elif isinstance(expr, RlpPredicate):
             value = 1
             name = srepr(expr)
 
-            x_name.append(name)
-            x_value.append(float(value))
+            return [name, ], [float(value), ]
+
+        elif expr.func is Pow:
+            raise ValueError("Found non-linear constraint!")
+
         else:
             raise NotImplementedError
 
-        y = np.zeros(len(x_name))
-        for j in range(len(x_name)):
-            xx = self.add_lp_variable(x_name[j])
-            if x_name[j] in xnames:
-                y[xnames.index(x_name[j])] += x_value[j]
-            else:
-                x.append(xx)
-                xnames.append(x_name[j])
-                y[xnames.index(x_name[j])] = x_value[xnames.index(x_name[j])]
-        c = self.lpmodel.affine_expression(x, y)
-
-        return c
+        return pred_names, factors
 
     def __str__(self):
         asstr = "Objective: "
