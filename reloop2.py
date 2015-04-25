@@ -245,6 +245,9 @@ class SubSymbol(Symbol):
     """
     pass
 
+def sub_symbols(*symbols):
+    return tuple(map(lambda s: SubSymbol(s), symbols))
+
 def boolean_predicate(name, arity):
     return rlp_predicate(name, arity, boolean=true)
 

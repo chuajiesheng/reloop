@@ -122,9 +122,7 @@ model = RlpProblem("traffic flow LP in the spirit of page 329 in http://ampl.com
 print "\nBuilding a relational variant of the " + model.name
 
 # declarations
-X = SubSymbol('X')
-Y = SubSymbol('Y')
-Z = SubSymbol('Z')
+X, Y, Z = sub_symbols('X', 'Y', 'Z')
 
 flow = numeric_predicate("flow", 2)
 cost = numeric_predicate("cost", 2)
