@@ -63,7 +63,6 @@ from lp import *
 #
 # model.add_constraint(5 >= slack('1'))
 
-
 @pyDatalog.predicate()
 def node1(X):
     yield('a')
@@ -127,15 +126,15 @@ X = SubSymbol('X')
 Y = SubSymbol('Y')
 Z = SubSymbol('Z')
 
-flow = rlp_predicate("flow", 2)
-cost = rlp_predicate("cost", 2)
+flow = numeric_predicate("flow", 2)
+cost = numeric_predicate("cost", 2)
 
 model.add_reloop_variable(flow)
 
-source = rlp_predicate("source", 1, boolean=True)
-target = rlp_predicate("target", 1, boolean=True)
-edge = rlp_predicate("edge", 2, boolean=True)
-node = rlp_predicate("node", 1, boolean=True)
+source = boolean_predicate("source", 1)
+target = boolean_predicate("target", 1)
+edge = boolean_predicate("edge", 2)
+node = boolean_predicate("node", 1)
 
 # objective
 model += RlpSum([X, Y], source(X) & edge(X, Y), flow(X, Y))
@@ -145,11 +144,12 @@ model += RlpSum([X, Y], source(X) & edge(X, Y), flow(X, Y))
 outFlow = RlpSum([X, ], edge(X, Z), flow(X, Z))
 inFlow = RlpSum([Y, ], edge(Z, Y), flow(Z, Y))
 
-model += ForAllConstraint([Z, ], node(Z) & ~source(Z) & ~target(Z), Eq(inFlow, outFlow))
+model += ForAll([Z, ], node(Z) & ~source(Z) & ~target(Z), Eq(inFlow, outFlow))
 
 # upper and lower bound constraints
-model += ForAllConstraint([X, Y], edge(X, Y), flow(X, Y) >= 0)
-model += ForAllConstraint([X, Y], edge(X, Y), flow(X, Y) <= cost(X, Y))
+model += ForAll([X, Y], edge(X, Y), flow(X, Y) >= 0)
+model += ForAll([X, Y], edge(X, Y), flow(X, Y) <= cost(X, Y))
+
 
 print "The model has been built:"
 print(model)

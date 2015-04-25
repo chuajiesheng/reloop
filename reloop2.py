@@ -37,7 +37,7 @@ class RlpProblem():
         return self._constraints
 
     def __iadd__(self, rhs):
-        if isinstance(rhs, Rel) | isinstance(rhs, ForAllConstraint):
+        if isinstance(rhs, Rel) | isinstance(rhs, ForAll):
             self.add_constraint(rhs)
         elif isinstance(rhs, Expr):
             self.set_objective(rhs)
@@ -215,7 +215,7 @@ class RlpQuery:
         return self._query
 
 
-class ForAllConstraint(RlpQuery):
+class ForAll(RlpQuery):
     def __init__(self, query_symbols, query, relation):
         RlpQuery.__init__(self, query_symbols, query)
         self.relation = relation
@@ -247,8 +247,14 @@ class SubSymbol(Symbol):
     """
     pass
 
+def boolean_predicate(name, arity):
+    return rlp_predicate(name, arity, boolean=true)
 
-def rlp_predicate(name, arity, boolean=false):
+def numeric_predicate(name, arity):
+    return rlp_predicate(name, arity, boolean=false)
+
+
+def rlp_predicate(name, arity, boolean):
     if arity < 1:
         raise ValueError("Arity must not be less than 1. Dude!")
     if boolean:
@@ -337,3 +343,4 @@ class RlpSum(Expr, RlpQuery):
         if not self.grounded:
             return "RlpSum(" + str(self.query_symbols) + " in " + str(self.query) + ", " + srepr(self.expression) + ")"
         return srepr(self.result)
+
