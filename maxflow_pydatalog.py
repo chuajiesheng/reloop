@@ -1,4 +1,3 @@
-from reloop2 import *
 from logkb import *
 from lp import *
 

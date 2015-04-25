@@ -70,7 +70,7 @@ class RlpProblem():
 
         for constraint in self.constraints:
             if isinstance(constraint, Rel):
-                raise NotImplementedError
+                raise NotImplementedError()
             else:
                 # maybe pre-ground here?
                 # result = self.ground_expression(constraint.relation, bound=constraint.query_symbols)
@@ -166,11 +166,20 @@ class RlpProblem():
 
         elif expr.func is Mul:
             if expr.args[0].is_Atom:
-                value = expr.args[0]
-                name = srepr(expr.args[1])
-            else:
-                value = expr.args[1]
-                name = srepr(expr.args[0])
+                if isinstance(expr.args[1], NumericPredicate):
+                    value = expr.args[0]
+                    name = srepr(expr.args[1])
+                else:
+                    raise NotImplementedError()
+
+            elif isinstance(expr.args[0], NumericPredicate):
+                if expr.args[1].is_Atom:
+                    value = expr.args[1]
+                    name = srepr(expr.args[0])
+                elif isinstance(expr.args[1], NumericPredicate):
+                    raise ValueError("Found non-linear constraint!")
+                else:
+                    raise NotImplementedError()
 
             return [name, ], [float(value), ]
 
@@ -184,7 +193,7 @@ class RlpProblem():
             raise ValueError("Found non-linear constraint!")
 
         else:
-            raise NotImplementedError
+            raise NotImplementedError()
 
         return pred_names, factors
 
