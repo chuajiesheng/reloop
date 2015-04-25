@@ -81,11 +81,9 @@ class RlpProblem():
                     self.add_constraint_to_lp(ground_result)
 
     def ground_expression(self, expr):
-        if expr.func is Add:
-            return Add(*map(lambda x: self.ground_expression(x), expr.args))
 
-        if expr.func is Mul:
-            return Mul(*map(lambda x: self.ground_expression(x), expr.args))
+        if expr.func in [Mul, Add, Pow]:
+            return expr.func(*map(lambda a: self.ground_expression(a), expr.args))
 
         if expr.func is RlpSum:
             result = expr.ground(self.logkb)
@@ -188,7 +186,6 @@ class RlpProblem():
         c = self.lpmodel.affine_expression(x, y)
 
         return c
-
 
     def __str__(self):
         asstr = "Objective: "
