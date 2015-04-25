@@ -1,4 +1,6 @@
 from reloop2 import *
+from pyDatalog import pyDatalog, pyEngine
+
 
 class LogKb:
     def ask(self, query_symbols, query):
@@ -37,7 +39,7 @@ class PyDatalogLogKb(LogKb):
         if query.func is Not:
             return " ~" + PyDatalogLogKb.transform_query(query.args[0])
 
-        if isinstance(query, RlpBooleanPredicate):
+        if isinstance(query, BooleanPredicate):
             join = ",".join([str(arg) if isinstance(arg, SubSymbol) else "'" + str(arg) + "'" for arg in query.args])
             return " " + query.name + "(" + join + ")"
 

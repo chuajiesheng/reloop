@@ -1,6 +1,6 @@
-from sympy import *
+from sympy import srepr, simplify
+from sympy.core import *
 from sympy.logic.boolalg import *
-from pyDatalog import pyDatalog, pyEngine
 import numpy as np
 
 
@@ -85,15 +85,15 @@ class RlpProblem():
         if expr.func in [Mul, Add, Pow]:
             return expr.func(*map(lambda a: self.ground_expression(a), expr.args))
 
-        if expr.func is RlpSum:
+        if expr.func is Sum:
             result = expr.ground(self.logkb)
             return self.ground_expression(result)
 
-        if isinstance(expr, RlpPredicate):
+        if isinstance(expr, NumericPredicate):
             if (expr.name, expr.arity) not in self.reloop_variables:
                 return expr.ground(self.logkb)
 
-        if expr.func is RlpBooleanPredicate:
+        if expr.func is BooleanPredicate:
             # TODO Evaluate to 0 or 1? Did Martin say: that would be cool?
             raise ValueError("RlpBooleanPredicate is invalid here!")
 
@@ -174,7 +174,7 @@ class RlpProblem():
 
             return [name, ], [float(value), ]
 
-        elif isinstance(expr, RlpPredicate):
+        elif isinstance(expr, NumericPredicate):
             value = 1
             name = srepr(expr)
 
@@ -199,7 +199,7 @@ class RlpProblem():
         return asstr
 
 
-class RlpQuery:
+class Query:
     def __init__(self, query_symbols, query):
         self._query_symbols = query_symbols
         self._query = simplify(query)
@@ -213,9 +213,9 @@ class RlpQuery:
         return self._query
 
 
-class ForAll(RlpQuery):
+class ForAll(Query):
     def __init__(self, query_symbols, query, relation):
-        RlpQuery.__init__(self, query_symbols, query)
+        Query.__init__(self, query_symbols, query)
         self.relation = relation
         self.result = []
         self.grounded = False
@@ -256,15 +256,15 @@ def rlp_predicate(name, arity, boolean):
     if arity < 1:
         raise ValueError("Arity must not be less than 1. Dude!")
     if boolean:
-        predicate_type = RlpBooleanPredicate
+        predicate_type = BooleanPredicate
     else:
-        predicate_type = RlpPredicate
+        predicate_type = NumericPredicate
     predicate_class = type(name + "\\" + str(arity), (predicate_type,), {"arity": arity, "name": name, "result": None,
                                                                          "grounded": False})
     return predicate_class
 
 
-class RlpPredicate(Function):
+class NumericPredicate(Function):
 
     @classmethod
     def eval(cls, *args):
@@ -304,14 +304,14 @@ class RlpPredicate(Function):
     __repr__ = __str__
 
 
-class RlpBooleanPredicate(BooleanAtom, Function):
+class BooleanPredicate(BooleanAtom, Function):
     pass
 
 
-class RlpSum(Expr, RlpQuery):
+class Sum(Expr, Query):
 
     def __init__(self, query_symbols, query, expression):
-        RlpQuery.__init__(self, query_symbols, query)
+        Query.__init__(self, query_symbols, query)
         self.expression = expression
         self.result = None
         self.grounded = False
@@ -341,4 +341,3 @@ class RlpSum(Expr, RlpQuery):
         if not self.grounded:
             return "RlpSum(" + str(self.query_symbols) + " in " + str(self.query) + ", " + srepr(self.expression) + ")"
         return srepr(self.result)
-
