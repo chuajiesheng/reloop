@@ -1,4 +1,4 @@
-from sympy import srepr, simplify
+from sympy import srepr, simplify, sstr
 from sympy.core import *
 from sympy.logic.boolalg import *
 import numpy as np
@@ -168,26 +168,23 @@ class RlpProblem():
             if expr.args[0].is_Atom:
                 if isinstance(expr.args[1], NumericPredicate):
                     value = expr.args[0]
-                    name = srepr(expr.args[1])
+                    pred = expr.args[1]
                 else:
                     raise NotImplementedError()
 
             elif isinstance(expr.args[0], NumericPredicate):
                 if expr.args[1].is_Atom:
                     value = expr.args[1]
-                    name = srepr(expr.args[0])
+                    pred = expr.args[0]
                 elif isinstance(expr.args[1], NumericPredicate):
                     raise ValueError("Found non-linear constraint!")
                 else:
                     raise NotImplementedError()
 
-            return [name, ], [float(value), ]
+            return [sstr(pred), ], [float(value), ]
 
         elif isinstance(expr, NumericPredicate):
-            value = 1
-            name = srepr(expr)
-
-            return [name, ], [float(value), ]
+            return [sstr(expr), ], [float(1), ]
 
         elif expr.func is Pow:
             raise ValueError("Found non-linear constraint!")
@@ -254,11 +251,14 @@ class SubSymbol(Symbol):
     """
     pass
 
+
 def sub_symbols(*symbols):
     return tuple(map(lambda s: SubSymbol(s), symbols))
 
+
 def boolean_predicate(name, arity):
     return rlp_predicate(name, arity, boolean=true)
+
 
 def numeric_predicate(name, arity):
     return rlp_predicate(name, arity, boolean=false)
@@ -271,7 +271,7 @@ def rlp_predicate(name, arity, boolean):
         predicate_type = BooleanPredicate
     else:
         predicate_type = NumericPredicate
-    predicate_class = type(name + "\\" + str(arity), (predicate_type,), {"arity": arity, "name": name, "result": None,
+    predicate_class = type(name, (predicate_type,), {"arity": arity, "name": name, "result": None,
                                                                          "grounded": False})
     return predicate_class
 

@@ -98,5 +98,5 @@ for key, value in sol.iteritems():
     if "flow" in key and value > 0:
         total += value
 
-print "\nThus, the maximum flow entering the traffic network at node a is "+str(sol["flow\\2(Symbol('a'), Symbol('b'))"]+sol["flow\\2(Symbol('a'), Symbol('c'))"])+" cars per hour."
+print "\nThus, the maximum flow entering the traffic network at node a is "+str(sol["flow(a, b)"]+sol["flow(a, c)"])+" cars per hour."
 print "\nThe total flow in the traffic network is "+str(total)+" cars per hour."
