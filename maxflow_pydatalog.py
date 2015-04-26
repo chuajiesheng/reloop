@@ -67,11 +67,11 @@ edge = boolean_predicate("edge", 2)
 node = boolean_predicate("node", 1)
 
 # objective
-model += Sum([X, Y], source(X) & edge(X, Y), flow(X, Y))
+model += RlpSum([X, Y], source(X) & edge(X, Y), flow(X, Y))
 
 # constraints for flow preservation
-outFlow = Sum([X, ], edge(X, Z), flow(X, Z))
-inFlow = Sum([Y, ], edge(Z, Y), flow(Z, Y))
+outFlow = RlpSum([X, ], edge(X, Z), flow(X, Z))
+inFlow = RlpSum([Y, ], edge(Z, Y), flow(Z, Y))
 
 model += ForAll([Z, ], node(Z) & ~source(Z) & ~target(Z), Eq(inFlow, outFlow))
 

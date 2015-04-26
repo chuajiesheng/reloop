@@ -21,8 +21,9 @@ class RlpProblem():
     def set_objective(self, objective):
         self.objective = objective
 
-    def add_reloop_variable(self, predicate):
-        self._reloop_variables |= {(predicate.name, predicate.arity)}
+    def add_reloop_variable(self, *predicates):
+        for predicate in predicates:
+            self._reloop_variables |= {(predicate.name, predicate.arity)}
 
     @property
     def reloop_variables(self):
@@ -70,14 +71,16 @@ class RlpProblem():
 
         for constraint in self.constraints:
             if isinstance(constraint, Rel):
-                raise NotImplementedError()
+                lhs = constraint.lhs - constraint.rhs
+                ground_result = constraint.__class__(expand(self.ground_expression(lhs)), 0.0)
+                self.add_constraint_to_lp(ground_result)
             else:
                 # maybe pre-ground here?
                 # result = self.ground_expression(constraint.relation, bound=constraint.query_symbols)
                 result = constraint.ground(self.logkb)
                 for expr in result:
                     ground = self.ground_expression(expr)
-                    ground_result = ground.__class__(self.ground_expression(ground.lhs), ground.rhs)
+                    ground_result = ground.__class__(expand(self.ground_expression(ground.lhs)), ground.rhs)
                     self.add_constraint_to_lp(ground_result)
 
     def ground_expression(self, expr):
@@ -85,7 +88,7 @@ class RlpProblem():
         if expr.func in [Mul, Add, Pow]:
             return expr.func(*map(lambda a: self.ground_expression(a), expr.args))
 
-        if expr.func is Sum:
+        if expr.func is RlpSum:
             result = expr.ground(self.logkb)
             return self.ground_expression(result)
 
@@ -123,6 +126,7 @@ class RlpProblem():
                     b -= s
 
         c = self.get_affine(lhs)
+        # TODO handle Lt and Gt
         if constraint.func is Ge:
             sense = 1
         if constraint.func is Eq:
@@ -166,24 +170,27 @@ class RlpProblem():
 
         elif expr.func is Mul:
             if expr.args[0].is_Atom:
-                if isinstance(expr.args[1], NumericPredicate):
+                if isinstance(expr.args[1], RlpPrediate):
                     value = expr.args[0]
                     pred = expr.args[1]
                 else:
                     raise NotImplementedError()
 
-            elif isinstance(expr.args[0], NumericPredicate):
+            elif isinstance(expr.args[0], RlpPrediate):
                 if expr.args[1].is_Atom:
                     value = expr.args[1]
                     pred = expr.args[0]
-                elif isinstance(expr.args[1], NumericPredicate):
+                elif isinstance(expr.args[1], RlpPrediate):
                     raise ValueError("Found non-linear constraint!")
                 else:
                     raise NotImplementedError()
 
+            else:
+                raise NotImplementedError()
+
             return [sstr(pred), ], [float(value), ]
 
-        elif isinstance(expr, NumericPredicate):
+        elif isinstance(expr, RlpPrediate):
             return [sstr(expr), ], [float(1), ]
 
         elif expr.func is Pow:
@@ -265,9 +272,14 @@ def numeric_predicate(name, arity):
 
 
 def rlp_predicate(name, arity, boolean):
-    if arity < 1:
-        raise ValueError("Arity must not be less than 1. Dude!")
-    if boolean:
+    if arity < 0:
+        raise ValueError("Arity must not be less than 0. Dude!")
+    if arity == 0 & boolean:
+        raise ValueError("Arity must not be less than 1, if boolean is true. Dude!")
+
+    if arity == 0:
+        predicate_type = RlpPrediate
+    elif boolean:
         predicate_type = BooleanPredicate
     else:
         predicate_type = NumericPredicate
@@ -275,8 +287,10 @@ def rlp_predicate(name, arity, boolean):
                                                                          "grounded": False})
     return predicate_class
 
+class RlpPrediate(Expr):
+    pass
 
-class NumericPredicate(Function):
+class NumericPredicate(RlpPrediate, Function):
 
     @classmethod
     def eval(cls, *args):
@@ -320,7 +334,7 @@ class BooleanPredicate(BooleanAtom, Function):
     pass
 
 
-class Sum(Expr, Query):
+class RlpSum(Expr, Query):
 
     def __init__(self, query_symbols, query, expression):
         Query.__init__(self, query_symbols, query)
