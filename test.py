@@ -1,6 +1,7 @@
 from reloop2 import *
 from logkb import *
 from lp import *
+import psycopg2
 
 # Relational Program tests start here
 
