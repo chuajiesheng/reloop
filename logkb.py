@@ -47,20 +47,19 @@ class PyDatalogLogKb(LogKb):
 
 class PostgreSQLKb (LogKb):
 
-    def __init__(self,dbname,user,password):
+    def __init__(self, dbname, user, password):
         connection = psycopg2.connect("dbname="+ dbname + " user="+user + " password="+password)
         self.cursor = connection.cursor()
 
-    def generateSelectClause(self,query_symbols, predicate):
+    def generate_select_clause(self, query_symbols, predicate):
 
-        selectClause = ",".join([predicate + "." + symbol for symbol in query_symbols])
-        return selectClause
+        select_clause = ",".join([predicate + "." + symbol for symbol in query_symbols])
+        return select_clause
 
-
-    def generateFromClause(self,predicate):
+    def generate_from_clause(self, predicate):
         raise NotImplementedError
 
-    def generateWhereClause(self,query):
+    def generate_where_clause(self, query):
         raise NotImplementedError
 
     def ask_predicate(self, predicate):
@@ -68,30 +67,28 @@ class PostgreSQLKb (LogKb):
         self.cursor.execute("SELECT column_name FROM information_schema.columns where table_name=" + "\'" + predicate.name + "'\'")
         columns = self.cursor.fetchall()
 
-        #Assume desired Values of grounded variables are in the last column of the table
-        select_Clause = columns.pop()[0].toUpper()
+        # Assume desired Values of grounded variables are in the last column of the table
+        select_clause = columns.pop()[0].toUpper()
         columns = zip(columns,predicate.args)
         tempquery = []
 
         for column in columns:
             tempquery.append(str(column[0][0]) + " = " + "\'" +str(column[1][0]) + "\'")
 
-        where_Clause = " AND ".join([str(a) for a in predicate.args])
-        query = "SELECT " + select_Clause + " FROM " + predicate.name + " WHERE " + where_Clause
+        where_clause = " AND ".join([str(a) for a in predicate.args])
+        query = "SELECT " + select_clause + " FROM " + predicate.name + " WHERE " + where_clause
         self.cursor.execute(query)
         return self.cursor.fetchall()
-
 
     def ask(self, query_symbols, query):
 
         predicate = "edge2"
-        select_Clause = self.generateSelectClause(query_symbols, predicate)
-        from_Clause   = self.generateFromClause(predicate)
-        where_Clause  = self.generateWhereClause(query)
-        query = "SELECT " + select_Clause + " FROM " + from_Clause + " WHERE " + where_Clause
+        select_clause = self.generate_select_clause(query_symbols, predicate)
+        from_clause = self.generate_from_clause(predicate)
+        where_clause = self.generate_where_clause(query)
+        query = "SELECT " + select_clause + " FROM " + from_clause + " WHERE " + where_clause
 
-
-    def transform_query(self,query):
+    def transform_query(self, query):
 
         if query.func is And:
             return " AND ".join([PostgreSQLKb.transform_query(arg) for arg in query.args])
@@ -107,7 +104,7 @@ class PostgreSQLKb (LogKb):
                     return columns[position] + " != " + "\'" + str(arg) + "\'"
                 position += 1
 
-        if isinstance(query, RlpBooleanPredicate):
+        if isinstance(query, BooleanPredicate):
             position = 0
             self.cursor.execute("SELECT column_name FROM information_schema.columns where table_name=" + "\'" + query.name + "'\'")
             columns = self.cursor.fetchall()
