@@ -2,6 +2,7 @@ from sympy import srepr, simplify, sstr
 from sympy.core import *
 from sympy.logic.boolalg import *
 import numpy as np
+from infix import or_infix
 
 
 class RlpProblem():
@@ -367,3 +368,15 @@ class RlpSum(Expr, Query):
         if not self.grounded:
             return "RlpSum(" + str(self.query_symbols) + " in " + str(self.query) + ", " + srepr(self.expression) + ")"
         return srepr(self.result)
+
+@or_infix
+def eq(a, b):
+    return Eq(a, b)
+
+@or_infix
+def ge(a, b):
+    return Ge(a, b)
+
+@or_infix
+def le(a, b):
+    return Le(a, b)

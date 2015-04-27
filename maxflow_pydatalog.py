@@ -73,11 +73,11 @@ model += RlpSum([X, Y], source(X) & edge(X, Y), flow(X, Y))
 outFlow = RlpSum([X, ], edge(X, Z), flow(X, Z))
 inFlow = RlpSum([Y, ], edge(Z, Y), flow(Z, Y))
 
-model += ForAll([Z, ], node(Z) & ~source(Z) & ~target(Z), Eq(inFlow, outFlow))
+model += ForAll([Z, ], node(Z) & ~source(Z) & ~target(Z), inFlow |eq| outFlow)
 
 # upper and lower bound constraints
-model += ForAll([X, Y], edge(X, Y), flow(X, Y) >= 0)
-model += ForAll([X, Y], edge(X, Y), flow(X, Y) <= cost(X, Y))
+model += ForAll([X, Y], edge(X, Y), flow(X, Y) |ge| 0)
+model += ForAll([X, Y], edge(X, Y), flow(X, Y) |le| cost(X, Y))
 
 print "The model has been built:"
 print(model)
