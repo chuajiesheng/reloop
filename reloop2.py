@@ -39,6 +39,8 @@ class RlpProblem():
         return self._constraints
 
     def __iadd__(self, rhs):
+        if isinstance(rhs, Gt) | isinstance(rhs, Lt):
+            raise NotImplementedError("StrictGreaterThan and StricLessThan is not implemented!")
         if isinstance(rhs, Rel) | isinstance(rhs, ForAll):
             self.add_constraint(rhs)
         elif isinstance(rhs, Expr):
