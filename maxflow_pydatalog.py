@@ -49,7 +49,7 @@ def cost3(x, y, z):
 # Linear Program definition
 
 model = RlpProblem("traffic flow LP in the spirit of page 329 in http://ampl.com/BOOK/CHAPTERS/18-network.pdf",
-                   LpMaximize, PyDatalogLogKb(), Pulp)
+                   LpMaximize, PyDatalogLogKb(), LiftedLinear)
 
 print "\nBuilding a relational variant of the " + model.name
 

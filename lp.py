@@ -7,6 +7,7 @@ from reloop2 import *
 LpMinimize = 1
 LpMaximize = -1
 
+from reloop.solvers.llp import *
 
 class LpProblem():
 
@@ -27,7 +28,7 @@ class LpProblem():
         elif isinstance(other, Expr):
             self.add_objective(other)
         else:
-            raise ValueError("Tuple (Objective) or Expr was expected.")
+            raise ValueError("Tuple (Objective) or Expr (Constraint) was expected.")
 
         return self
 
@@ -51,29 +52,6 @@ class LpProblem():
             self._lp_variables[name] = self.lp_variable(name)
         return self._lp_variables[name]
 
-
-class Pulp(LpProblem):
-    def __init__(self, name, sense):
-        LpProblem.__init__(self, name, sense)
-        self.lpmodel = pulp.LpProblem(name, sense)
-
-    def lp_variable(self, name):
-        return pulp.LpVariable(name)
-
-    def solve(self):
-        self.lpmodel.solve()
-
-    def status(self):
-        return pulp.LpStatus[self.lpmodel.status]
-
-    def add_constraint(self, constraint_tuple):
-        lhs, b, sense = constraint_tuple
-        c = self.get_affine(lhs)
-        self.lpmodel += pulp.LpConstraint(c, sense, None, b)
-
-    def add_objective(self, expr):
-        self.lpmodel += self.get_affine(expr)
-
     def get_affine(self, expr):
         pred_names, factors = get_predicate_names(expr)
 
@@ -93,27 +71,138 @@ class Pulp(LpProblem):
                 used_lp_variables.append(pred_names[j])
                 factor_vector[used_lp_variables.index(pred_names[j])] = factors[used_lp_variables.index(pred_names[j])]
 
-        c = pulp.LpAffineExpression([(contained_lp_variables[i], factor_vector[i]) for i in range(len(contained_lp_variables))])
-        return c
+        return [(contained_lp_variables[i], factor_vector[i]) for i in range(len(contained_lp_variables))]
 
-
-class LiftedLinear(LpProblem):
+class Pulp(LpProblem):
     def __init__(self, name, sense):
         LpProblem.__init__(self, name, sense)
         self.lpmodel = pulp.LpProblem(name, sense)
 
+    def lp_variable(self, name):
+        return pulp.LpVariable(name)
+
     def solve(self):
-        raise NotImplementedError
+        self.lpmodel.solve()
+
+    def status(self):
+        return pulp.LpStatus[self.lpmodel.status]
+
+    def add_constraint(self, constraint_tuple):
+        lhs, b, sense = constraint_tuple
+        c = self.get_affine_expression(lhs)
+        self.lpmodel += pulp.LpConstraint(c, sense, None, b)
+
+    def add_objective(self, expr):
+        self.lpmodel += self.get_affine_expression(expr)
+
+    def get_affine_expression(self, expr):
+        variable_factors = self.get_affine(expr)
+        c = pulp.LpAffineExpression(variable_factors)
+        return c
+
+    def get_solution(self):
+        return {x: self.lp_variables[x].value() for x in self.lp_variables}
+
+class LiftedLinear(LpProblem):
+    def __init__(self, name, sense):
+        LpProblem.__init__(self, name, sense)
+        self._index = 0
+        self._objective = ()
+        self._constraints = {}
+        self._constraints[-1] = []
+        self._constraints[1] = []
+        self._constraints[0] = []
+        self._result = None
+        # more here
+
+    def solve(self):
+        # import reloop.solvers.llp as solver
+
+        ineq_constraint_count = len(self._constraints[1]) + len(self._constraints[-1])
+        eq_constraint_count = len(self._constraints[0])
+
+        typet = numpy.double
+        a = numpy.zeros((eq_constraint_count, self._index), dtype=typet)
+        b = numpy.zeros((eq_constraint_count, 1), dtype=typet)
+
+        g = numpy.zeros((ineq_constraint_count, self._index), dtype=typet)
+        h = numpy.zeros((ineq_constraint_count, 1), dtype=typet)
+
+        c = numpy.zeros((self._index, 1), dtype=typet)
+
+        i = 0
+        for constraint in self._constraints[0]:
+            for variable, factor in constraint[0]:
+                a[i][variable[0]] = factor
+            b[i] = constraint[1]
+            i += 1
+
+        i = 0
+        for constraint in self._constraints[-1]:
+            for variable, factor in constraint[0]:
+                g[i][variable[0]] = factor
+            h[i] = constraint[1]
+            i += 1
+
+        for constraint in self._constraints[1]:
+            for variable, factor in constraint[0]:
+                g[i][variable[0]] = -factor
+            h[i] = -constraint[1]
+            i += 1
+
+        for variable in self._objective:
+            c[variable[0][0]] = variable[1]
+
+
+        #a = sp.coo_matrix(numpy.matrix(a))
+        #b = sp.coo_matrix(numpy.matrix(b))
+        #c = sp.coo_matrix(numpy.matrix(c))
+
+        # self._result = sparse(a, b, c)
+
+        c = self.sense * c
+
+        print(a)
+        print(b)
+        print(g)
+        print(h)
+
+        solvers.options['abstol'] = 0
+        #solvers.options['reltol'] = 0
+        solvers.options['feastol'] = 1e-7
+        solvers.options['maxiters'] = 350
+
+        primalst = {}
+        primalst['x'] = matrix(numpy.array([40.0, 70.0, 60.0, 30.0, 20.0, 60.0, 20.0, 50.0, 50.0, 80.0]))
+        see = numpy.ones((20, 1))
+        print(see)
+        primalst['s'] = matrix(1e-100*see)
+        self._result = solvers.conelp(c = matrix(c), G =  matrix(g), h = matrix(h), A = matrix(a), b = matrix(b), primalstart=primalst)
+        i = 0
+        for variable in self._lp_variables:
+            var_index = self._lp_variables[variable][0]
+            var_opt_sol = self._result['x'][var_index]
+            self._lp_variables[variable] = (var_index, var_opt_sol)
+            i += 1
 
     def status(self):
         return "Not Available for LiftedLinearSolver"
 
-
     def lp_variable(self, name):
-        raise NotImplementedError
+        curr_index = self._index
+        self._index += 1
+        return curr_index, "undefined"
 
-    def affine_expression(self, x, y):
-        raise NotImplementedError
+    def add_constraint(self, constraint_tuple):
+        lhs, b, sense = constraint_tuple
+        variable_factors = self.get_affine(lhs)
+        self._constraints[sense].append((variable_factors, b))
+
+    def add_objective(self, expr):
+        self._objective = self.get_affine(expr)
+
+    def get_solution(self):
+        return {name: self.lp_variables[name][1] for name in self.lp_variables}
 
 
 def get_predicate_names(expr):

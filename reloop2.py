@@ -53,7 +53,7 @@ class RlpProblem():
         return self.lpmodel.status()
 
     def get_solution(self):
-        return {x: self.lpmodel.lp_variables[x].value() for x in self.lpmodel.lp_variables}
+        return self.lpmodel.get_solution()
 
     def ground_into_lp(self):
         self.add_objective_to_lp(self.ground_expression(self.objective))
@@ -116,9 +116,9 @@ class RlpProblem():
         # TODO handle Lt and Gt
         if constraint.func is Ge:
             sense = 1
-        if constraint.func is Eq:
+        elif constraint.func is Eq:
             sense = 0
-        if constraint.func is Le:
+        elif constraint.func is Le:
             sense = -1
         self.lpmodel += (lhs, b, sense)
 
