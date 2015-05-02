@@ -1,7 +1,6 @@
 from sympy import srepr, simplify, sstr
 from sympy.core import *
 from sympy.logic.boolalg import *
-import numpy as np
 from infix import or_infix
 
 
@@ -13,7 +12,6 @@ class RlpProblem():
         self._reloop_variables = set([])
         self._constraints = []
         self.objective = None
-        self._lp_variables = {}
 
     def add_constraint(self, constraint):
         """Constraints are relations or forallConstraints"""
@@ -29,10 +27,6 @@ class RlpProblem():
     @property
     def reloop_variables(self):
         return self._reloop_variables
-
-    @property
-    def lp_variables(self):
-        return self._lp_variables
 
     @property
     def constraints(self):
@@ -51,14 +45,6 @@ class RlpProblem():
 
         return self
 
-    def add_lp_variable(self, name):
-        # TODO review this code
-        if name in self._lp_variables:
-            return self._lp_variables[name]
-        else:
-            self._lp_variables[name] = self.lpmodel.lp_variable(name)
-        return self._lp_variables[name]
-
     def solve(self):
         self.ground_into_lp()
         self.lpmodel.solve()
@@ -67,7 +53,7 @@ class RlpProblem():
         return self.lpmodel.status()
 
     def get_solution(self):
-        return {x: self.lp_variables[x].value() for x in self.lp_variables}
+        return {x: self.lpmodel.lp_variables[x].value() for x in self.lpmodel.lp_variables}
 
     def ground_into_lp(self):
         self.add_objective_to_lp(self.ground_expression(self.objective))
@@ -114,8 +100,7 @@ class RlpProblem():
                 if s.is_Atom:
                     expr -= s
 
-        c = self.get_affine(expr)
-        self.lpmodel += c
+        self.lpmodel += expr
 
     def add_constraint_to_lp(self, constraint):
         print "Add constraint: " + str(constraint)
@@ -128,7 +113,6 @@ class RlpProblem():
                     lhs -= s
                     b -= s
 
-        c = self.get_affine(lhs)
         # TODO handle Lt and Gt
         if constraint.func is Ge:
             sense = 1
@@ -136,73 +120,7 @@ class RlpProblem():
             sense = 0
         if constraint.func is Le:
             sense = -1
-        self.lpmodel += (c, sense, None, b)
-
-    def get_affine(self, expr):
-        pred_names, factors = self.get_predicate_names(expr)
-
-        length = len(pred_names)
-        factor_vector = np.zeros(length)
-
-        lp_variables = []
-        used_lp_variables = []
-
-        for j in range(length):
-            lp_variable = self.add_lp_variable(pred_names[j])
-
-            if pred_names[j] in used_lp_variables:
-                factor_vector[used_lp_variables.index(pred_names[j])] += factors[j]
-            else:
-                lp_variables.append(lp_variable)
-                used_lp_variables.append(pred_names[j])
-                factor_vector[used_lp_variables.index(pred_names[j])] = factors[used_lp_variables.index(pred_names[j])]
-
-        c = self.lpmodel.affine_expression(lp_variables, factor_vector)
-        return c
-
-    @staticmethod
-    def get_predicate_names(expr):
-        pred_names = []
-        factors = []
-
-        if expr.func is Add:
-            for s in expr.args:
-                p, f = RlpProblem.get_predicate_names(s)
-                pred_names += p
-                factors += f
-
-        elif expr.func is Mul:
-            if expr.args[0].is_Atom:
-                if isinstance(expr.args[1], RlpPrediate):
-                    value = expr.args[0]
-                    pred = expr.args[1]
-                else:
-                    raise NotImplementedError()
-
-            elif isinstance(expr.args[0], RlpPrediate):
-                if expr.args[1].is_Atom:
-                    value = expr.args[1]
-                    pred = expr.args[0]
-                elif isinstance(expr.args[1], RlpPrediate):
-                    raise ValueError("Found non-linear constraint!")
-                else:
-                    raise NotImplementedError()
-
-            else:
-                raise NotImplementedError()
-
-            return [sstr(pred), ], [float(value), ]
-
-        elif isinstance(expr, RlpPrediate):
-            return [sstr(expr), ], [float(1), ]
-
-        elif expr.func is Pow:
-            raise ValueError("Found non-linear constraint!")
-
-        else:
-            raise NotImplementedError()
-
-        return pred_names, factors
+        self.lpmodel += (lhs, b, sense)
 
     def __str__(self):
         asstr = "Objective: "
@@ -382,3 +300,4 @@ def ge(a, b):
 @or_infix
 def le(a, b):
     return Le(a, b)
+
