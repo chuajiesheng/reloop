@@ -151,7 +151,8 @@ class PostgreSQLKb (LogKb):
         query = conjunction + negation
 
         print query
-        return query
+        self.cursor.execute(query)
+        return self.cursor.fetchall()
 
     def transform_query(self, query):
 
