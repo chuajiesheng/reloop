@@ -48,24 +48,54 @@ class PyDatalogLogKb(LogKb):
 
 class PostgreSQLKb (LogKb):
 
-    def __init__(self, dbname, user, password):
-        connection = psycopg2.connect("dbname="+ dbname + " user="+user + " password="+password)
+    def __init__(self, dbname, user, password=None):
+        connection = psycopg2.connect("dbname="+ str(dbname) + " user="+ str(user) + " password="+ str(password))
         self.cursor = connection.cursor()
 
-    def generate_select_clause(self, query_symbols, predicate):
+    def get_query(self,query,anchor):
+        print "SELECT column_name FROM information_schema.columns where table_name=" + "\'" +str(query.name) + "\'"
+        self.cursor.execute("SELECT column_name FROM information_schema.columns where table_name=" + "\'" +str(query.name) + "\'")
+        columns = self.cursor.fetchall()
+        self.cursor.execute("SELECT column_name FROM information_schema.columns where table_name=" + "\'" +str(anchor.name) + "\'")
+        anchor_columns = self.cursor.fetchall()
 
-        select_clause = ",".join([predicate + "." + symbol for symbol in query_symbols])
-        return select_clause
+        index = 0
+        select = []
+        where = []
+        inner_join = []
+        where_join = []
+        anchor_clause=[]
 
-    def generate_from_clause(self, predicate):
-        raise NotImplementedError
+        assert isinstance(query, BooleanPredicate)
+        gen_query = ""
+        if columns:
+            if query.equals(anchor):
+                for symbol in anchor.args:
+                    if isinstance(symbol, SubSymbol):
+                        select.append(query.name + "." + anchor_columns[index][0] + " AS " + str(symbol))
+                    else:
+                        where.append(str(anchor_columns[index][0]) + " = " + str(symbol))
+                    index += 1
 
-    def generate_where_clause(self, query):
-        raise NotImplementedError
+                anchor_clause = "SELECT DISTINCT " + ",".join([arg for arg in select]) + " FROM " + anchor.name
+                index = 0
+            else:
+                for symbol in query.args:
+                    if isinstance(symbol, SubSymbol):
+                        inner_index = 0
+                        for anchor_symbol in anchor.args:
+                            if anchor_symbol.equals(symbol):
+                                inner_join.append(anchor.name + "." + anchor_columns[index][0] + " = " + query.name + "." + columns[index][0])
+                                inner_index += 1
+                    else:
+                        inner_join.append(query.name + "." + columns[index][0] + " = " + str(symbol))
 
-    def generate_right_join(self, predicate, query_symbols):
-        right_join = " RIGHT JOIN " + predicate + " ON ( SELECT "
-        return right_join
+
+        if anchor_clause:
+            return (anchor_clause,where)
+        else:
+            gen_query = query.name + " ON (" + "AND".join(arg for arg in inner_join) + ")"
+            return (gen_query,)
 
     def ask_predicate(self, predicate):
 
@@ -91,35 +121,37 @@ class PostgreSQLKb (LogKb):
         right_joins = []
         inner_joins = []
         if query.func is And:
-           for arg in query.args[0]:
-               if arg.func is Not:
-                   right_joins.append(arg)
-               elif isinstance(arg,BooleanPredicate):
-                   inner_joins.append(arg)
-               else:
-                    raise NotImplementedError
+            for arg in query.args:
+                if arg.func is Not:
+                    right_joins.append(arg)
+                elif isinstance(arg, BooleanPredicate):
+                    inner_joins.append(arg)
+                else:
+                    raise NotImplementedError('The given argument is neither a negation nor a boolean predicate')
         elif query.func is Not:
             raise ValueError
         elif isinstance(query,BooleanPredicate):
             return self.ask_predicate(query)
         else:
-            raise NotImplementedError
+            raise NotImplementedError('The given function of the query has not been implemented yet or is not valid')
 
-        query = "SELECT DISTINCT "
+        if inner_joins:
+            anchor = inner_joins[0]
+            query_anchor = self.get_query(anchor,anchor)
+            conjunction = " INNER JOIN ".join([self.get_query(arg,anchor)[0] for arg in inner_joins])
+            if query_anchor[1]:
+                conjunction = conjunction + " WHERE " + " AND ".join(arg for arg in query_anchor[1])
+            print conjunction
 
-        for query in inner_joins:
-            if isinstance(query,BooleanPredicate):
-                for symbol in query.args:
-                    if isinstance(symbol,SubSymbol):
-                        if query_symbols.contains(symbol):
-                            query = query + symbol.name + "." + symbol
+        negation = ""
+        if right_joins:
+            negation = " EXCEPT( " + " UNION ".join([self.get_query(arg.anchor) for arg in right_joins]) + ")"
+            print negation
 
-        query = query + " FROM "
+        query = conjunction + negation
 
-        # RIGHT JOINS
-
-        # WHERE
-
+        print query
+        return query
 
     def transform_query(self, query):
 
