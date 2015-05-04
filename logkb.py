@@ -1,4 +1,3 @@
-from twisted.internet.tcp import _AbortingMixin
 from reloop2 import *
 from pyDatalog import pyDatalog, pyEngine
 import psycopg2
@@ -52,7 +51,7 @@ class PostgreSQLKb (LogKb):
         connection = psycopg2.connect("dbname="+ str(dbname) + " user="+ str(user) + " password="+ str(password))
         self.cursor = connection.cursor()
 
-    def get_query(self,query,anchor):
+    def get_query(self, query, anchor):
         print "SELECT column_name FROM information_schema.columns where table_name=" + "\'" +str(query.name) + "\'"
         self.cursor.execute("SELECT column_name FROM information_schema.columns where table_name=" + "\'" +str(query.name) + "\'")
         columns = self.cursor.fetchall()
@@ -64,7 +63,7 @@ class PostgreSQLKb (LogKb):
         where = []
         inner_join = []
         where_join = []
-        anchor_clause=[]
+        anchor_clause = []
 
         assert isinstance(query, BooleanPredicate)
         gen_query = ""
@@ -152,7 +151,9 @@ class PostgreSQLKb (LogKb):
 
         print query
         self.cursor.execute(query)
-        return self.cursor.fetchall()
+        values = self.cursor.fetchall()
+        print values
+        return values
 
     def transform_query(self, query):
 
