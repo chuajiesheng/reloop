@@ -13,11 +13,11 @@ cursor = connection.cursor()
 
 #----------------------------------------------------------
 # Close Connection and Drop Tables
-cursor.execute("DROP TABLE nodes")
-cursor.execute("DROP TABLE edge")
-cursor.execute("DROP TABLE cost")
-cursor.execute("DROP TABLE source")
-cursor.execute("DROP TABLE target")
+cursor.execute("DROP TABLE IF EXISTS nodes ")
+cursor.execute("DROP TABLE IF EXISTS edge")
+cursor.execute("DROP TABLE IF EXISTS cost")
+cursor.execute("DROP TABLE IF EXISTS source")
+cursor.execute("DROP TABLE IF EXISTS target")
 connection.commit()
 
 cursor.execute("CREATE TABLE nodes (x varchar(5));")
@@ -129,12 +129,7 @@ cursor.execute(query)
 print cursor.fetchall()
 
 #----------------------------------------------------------
-# Close Connection and Drop Tables
-cursor.execute("DROP TABLE nodes")
-cursor.execute("DROP TABLE edges")
-cursor.execute("DROP TABLE cost")
-cursor.execute("DROP TABLE source")
-cursor.execute("DROP TABLE target")
+# Close Connection
 connection.commit()
 cursor.close()
 connection.close()

@@ -155,15 +155,15 @@ class ForAll(Query):
         self.grounded = False
 
     def ground(self, logkb):
-        answer = logkb.ask(self.query_symbols, self.query)
+        answers = logkb.ask(self.query_symbols, self.query)
 
         result = set([])
-        if answer is not None:
+        if answers is not None:
             lhs = self.relation.lhs - self.relation.rhs
-            for a in answer.answers:
+            for answer in answers:
                     expression_eval_subs = lhs
                     for index, symbol in enumerate(self.query_symbols):
-                        expression_eval_subs = expression_eval_subs.subs(symbol, a[index])
+                        expression_eval_subs = expression_eval_subs.subs(symbol, answer[index])
                     result |= {self.relation.__class__(expression_eval_subs, 0.0)}
 
         self.result = result
@@ -231,14 +231,14 @@ class NumericPredicate(RlpPrediate, Function):
             if isinstance(argument, SubSymbol):
                 raise ValueError("Found free symbols while grounding: " + str(self))
 
-        answer = logkb.ask_predicate(self)
-        if answer is None:
+        answers = logkb.ask_predicate(self)
+        if answers is None:
             raise ValueError('Predicate is not defined or no result!')
 
-        if len(answer.answers) != 1:
+        if len(answers) != 1:
             raise ValueError("The LogKb gives multiple results. Oh!")
 
-        result = answer.answers.pop()
+        result = answers.pop()
         self.result = result
         self.grounded = True
         return float(result[0])
@@ -264,12 +264,12 @@ class RlpSum(Expr, Query):
         self.grounded = False
 
     def ground(self, logkb):
-        answer = logkb.ask(self.query_symbols, self.query)
+        answers = logkb.ask(self.query_symbols, self.query)
         result = 0
-        for a in answer.answers:
+        for answer in answers:
                 expression_eval_subs = self.expression
                 for index, symbol in enumerate(self.query_symbols):
-                    expression_eval_subs = expression_eval_subs.subs(symbol, a[index])
+                    expression_eval_subs = expression_eval_subs.subs(symbol, answer[index])
                 result += expression_eval_subs
         self.result = result
         self.grounded = True

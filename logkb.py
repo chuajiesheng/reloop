@@ -20,7 +20,7 @@ class PyDatalogLogKb(LogKb):
         answer = pyDatalog.ask(helper_predicate)
         pyEngine.Pred.reset_clauses(pyEngine.Pred("helper", len(query_symbols)))
 
-        return answer
+        return answer.answers
 
     def ask_predicate(self, predicate):
 
@@ -29,7 +29,7 @@ class PyDatalogLogKb(LogKb):
         query += ", X)"
 
         answer = pyDatalog.ask(query)
-        return answer
+        return answer.answers
 
     @staticmethod
     def transform_query(query):
