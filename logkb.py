@@ -33,6 +33,7 @@ class PyDatalogLogKb(LogKb):
         query += ", X)"
 
         answer = pyDatalog.ask(query)
+        print "PREDICATE : " + str(predicate) + " QUERY " + str(query) + " ANSWER " + str(answer)
         return answer.answers
 
     @staticmethod
@@ -111,10 +112,10 @@ class PostgreSQLKb (LogKb):
 
                 query += ")"
 
-        print query
+        print "QUERY : " + query
         self.cursor.execute(query)
         values = self.cursor.fetchall()
-        print values
+        print "VALUES : " + str(values)
         return values
 
     def ask_predicate(self, predicate):
@@ -122,17 +123,9 @@ class PostgreSQLKb (LogKb):
         self.cursor.execute("SELECT column_name FROM information_schema.columns where table_name=" + "\'" + predicate.name + "\'")
         columns = self.cursor.fetchall()
 
-        # Assume desired Values of grounded variables are in the last column of the table
-        # TODO Compare columns to the symbols of the predicate and query according to their order instaed of assuming the above
-        select_clause = columns.pop()[0].toUpper()
-        columns = zip(columns,predicate.args)
-        tempquery = []
+        query = "SELECT " + str(columns[len(columns)-1][0]) + " FROM "  + str(predicate.name) + " WHERE " + " AND ".join([str(columns[index][0]) + "="  + "'" + str(arg) + "'" for index, arg in enumerate(predicate.args) ])
+        print query
 
-        for column in columns:
-            tempquery.append(str(column[0][0]) + " = " + "\'" +str(column[1][0]) + "\'")
-
-        where_clause = " AND ".join([str(a) for a in tempquery])
-        query = "SELECT " + select_clause + " FROM " + predicate.name + " WHERE " + where_clause
         self.cursor.execute(query)
         return self.cursor.fetchall()
 
@@ -162,7 +155,6 @@ class PostgreSQLKb (LogKb):
 
     def get_column_names(self, relation_name):
         query = "SELECT column_name FROM information_schema.columns where table_name=" + "'" + relation_name + "'"
-        print(query)
         self.cursor.execute(query)
         return [item[0] for item in self.cursor.fetchall()]
 
