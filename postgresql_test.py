@@ -13,15 +13,15 @@ cursor = connection.cursor()
 
 #----------------------------------------------------------
 # Close Connection and Drop Tables
-cursor.execute("DROP TABLE IF EXISTS nodes ")
+cursor.execute("DROP TABLE IF EXISTS node ")
 cursor.execute("DROP TABLE IF EXISTS edge")
 cursor.execute("DROP TABLE IF EXISTS cost")
 cursor.execute("DROP TABLE IF EXISTS source")
 cursor.execute("DROP TABLE IF EXISTS target")
 connection.commit()
 
-cursor.execute("CREATE TABLE nodes (x varchar(5));")
-cursor.execute("INSERT INTO nodes values('a'),('b'),('c'),('d'),('e'),('f'),('g');")
+cursor.execute("CREATE TABLE node (x varchar(5));")
+cursor.execute("INSERT INTO node values('a'),('b'),('c'),('d'),('e'),('f'),('g');")
 
 cursor.execute("CREATE TABLE edge (x varchar(5), y varchar(5));")
 cursor.execute("INSERT INTO edge values('a','b'),('a','c'),('b','d'),('b','e'),('c','d'),('c','f'),('d','e'),('d','f'),('e','g'),('f','g');")

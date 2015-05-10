@@ -1,5 +1,8 @@
+from numpy.numarray.functions import and_
+from openpyxl.cell import column_index_from_string
 from reloop2 import *
 from pyDatalog import pyDatalog, pyEngine
+from sets import Set
 import psycopg2
 
 class LogKb:
@@ -8,6 +11,7 @@ class LogKb:
 
     def ask_predicate(self, predicate):
         raise NotImplementedError
+
 
 class PyDatalogLogKb(LogKb):
 
@@ -51,54 +55,71 @@ class PostgreSQLKb (LogKb):
         connection = psycopg2.connect("dbname="+ str(dbname) + " user="+ str(user) + " password="+ str(password))
         self.cursor = connection.cursor()
 
-    def get_query(self, query, anchor):
-        print "SELECT column_name FROM information_schema.columns where table_name=" + "\'" +str(query.name) + "\'"
-        self.cursor.execute("SELECT column_name FROM information_schema.columns where table_name=" + "\'" +str(query.name) + "\'")
-        columns = self.cursor.fetchall()
-        self.cursor.execute("SELECT column_name FROM information_schema.columns where table_name=" + "\'" +str(anchor.name) + "\'")
-        anchor_columns = self.cursor.fetchall()
-
-        index = 0
-        select = []
-        where = []
-        inner_join = []
-        where_join = []
-        anchor_clause = []
-
-        assert isinstance(query, BooleanPredicate)
-        gen_query = ""
-        if columns:
-            if query.equals(anchor):
-                for symbol in anchor.args:
-                    if isinstance(symbol, SubSymbol):
-                        select.append(query.name + "." + anchor_columns[index][0] + " AS " + str(symbol))
-                    else:
-                        where.append(str(anchor_columns[index][0]) + " = " + str(symbol))
-                    index += 1
-
-                anchor_clause = "SELECT DISTINCT " + ",".join([arg for arg in select]) + " FROM " + anchor.name
-                index = 0
-            else:
-                for symbol in query.args:
-                    if isinstance(symbol, SubSymbol):
-                        inner_index = 0
-                        for anchor_symbol in anchor.args:
-                            if anchor_symbol.equals(symbol):
-                                inner_join.append(anchor.name + "." + anchor_columns[index][0] + " = " + query.name + "." + columns[index][0])
-                                inner_index += 1
-                    else:
-                        inner_join.append(query.name + "." + columns[index][0] + " = " + str(symbol))
-
-
-        if anchor_clause:
-            return (anchor_clause,where)
+    def ask(self, query_symbols, query):
+        negated_predicates = []
+        predicates = []
+        if query.func is And:
+            for arg in query.args:
+                if arg.func is Not:
+                    negated_predicates.append(arg.args[0])
+                elif isinstance(arg, BooleanPredicate):
+                    predicates.append(arg)
+                else:
+                    raise ValueError('The given query is not in DNF')
+        elif query.func is Not:
+            raise ValueError("This nothing! Or the universe! We don't know!")
+        elif query.func is Or:
+            raise NotImplementedError("Next version")
+        elif isinstance(query, BooleanPredicate):
+            predicates.append(query)
         else:
-            gen_query = query.name + " ON (" + "AND".join(arg for arg in inner_join) + ")"
-            return (gen_query,)
+            raise NotImplementedError('The given function of the query has not been implemented yet or is not valid')
+
+        column_for_symbols_where = self.get_columns_for_symbols(query_symbols, predicates)
+        column_for_symbols_notexists = self.get_columns_for_symbols(query_symbols, negated_predicates)
+
+        query = "SELECT DISTINCT " + ", ".join([value[0][0] + "." + value[0][1] + " AS " + str(key) for key, value in column_for_symbols_where.items()])
+        tables = Set([value[0][0] for key, value in column_for_symbols_where.items()])
+        query += " FROM " + ", ".join([str(value) for value in tables])
+
+        and_clause = False
+        query += " WHERE "
+        for symbol, value in column_for_symbols_where.items():
+            if and_clause:
+                query += " AND "
+
+            if len(value) > 0:
+                and_clause = True
+            else:
+                and_clause = False
+            reference_column = value[0][0] + "." + value[0][1]
+            query += " AND ".join([reference_column + " = " + rel + "." + col for rel, col in value])
+
+        query += self.and_clause_for_constants(predicates, and_clause)
+
+        and_clause = False
+        for symbol, value in column_for_symbols_notexists.items():
+            for rel, col in value:
+                if len(value) > 0:
+                    and_clause = True
+                else:
+                    and_clause = False
+                query += " AND NOT EXISTS (SELECT * FROM " + rel + " WHERE "
+                reference_column = column_for_symbols_where[symbol][0][0]
+                query += " AND ".join([reference_column + "." + col + " = " + reltmp + "." + col for reltmp, col in value if reltmp == rel])
+                query += self.and_clause_for_constants(negated_predicates, and_clause)
+
+                query += ")"
+
+        print query
+        self.cursor.execute(query)
+        values = self.cursor.fetchall()
+        print values
+        return values
 
     def ask_predicate(self, predicate):
 
-        self.cursor.execute("SELECT column_name FROM information_schema.columns where table_name=" + "\'" + predicate.name + "'\'")
+        self.cursor.execute("SELECT column_name FROM information_schema.columns where table_name=" + "\'" + predicate.name + "\'")
         columns = self.cursor.fetchall()
 
         # Assume desired Values of grounded variables are in the last column of the table
@@ -115,68 +136,33 @@ class PostgreSQLKb (LogKb):
         self.cursor.execute(query)
         return self.cursor.fetchall()
 
-    def ask(self, query_symbols, query):
-
-        right_joins = []
-        inner_joins = []
-        if query.func is And:
-            for arg in query.args:
-                if arg.func is Not:
-                    right_joins.append(arg)
-                elif isinstance(arg, BooleanPredicate):
-                    inner_joins.append(arg)
-                else:
-                    raise NotImplementedError('The given argument is neither a negation nor a boolean predicate')
-        elif query.func is Not:
-            raise ValueError
-        elif isinstance(query,BooleanPredicate):
-            return self.ask_predicate(query)
-        else:
-            raise NotImplementedError('The given function of the query has not been implemented yet or is not valid')
-
-        if inner_joins:
-            anchor = inner_joins[0]
-            query_anchor = self.get_query(anchor,anchor)
-            conjunction = " INNER JOIN ".join([self.get_query(arg,anchor)[0] for arg in inner_joins])
-            if query_anchor[1]:
-                conjunction = conjunction + " WHERE " + " AND ".join(arg for arg in query_anchor[1])
-            print conjunction
-
-        negation = ""
-        if right_joins:
-            negation = " EXCEPT( " + " UNION ".join([self.get_query(arg.anchor) for arg in right_joins]) + ")"
-            print negation
-
-        query = conjunction + negation
-
-        print query
-        self.cursor.execute(query)
-        values = self.cursor.fetchall()
-        print values
-        return values
-
-    def transform_query(self, query):
-
-        if query.func is And:
-            return " AND ".join([PostgreSQLKb.transform_query(arg) for arg in query.args])
-
-        if query.func is Not:
-            position = 0
-            self.cursor.execute("SELECT column_name FROM information_schema.columns where table_name=" + "\'" + query.name + "'\'")
-            columns = self.cursor.fetchall()
-
-            for arg in query.args:
-                if isinstance(arg, SubSymbol):
-                    # X != 'a' , Y != 'b'
-                    return columns[position] + " != " + "\'" + str(arg) + "\'"
-                position += 1
-
-        if isinstance(query, BooleanPredicate):
-            position = 0
-            self.cursor.execute("SELECT column_name FROM information_schema.columns where table_name=" + "\'" + query.name + "'\'")
-            columns = self.cursor.fetchall()
-            for arg in query.args:
+    def and_clause_for_constants(self, predicates, and_clause_added):
+        query = ""
+        for predicate in predicates:
+            for index, arg in enumerate(predicate.args):
                 if not isinstance(arg, SubSymbol):
-                    # X != 'a' , Y != 'b'
-                    return columns[position] + " = " + "\'" + str(arg) + "\'"
-                position += 1
+                    if and_clause_added:
+                        query += " AND "
+                    else:
+                        and_clause_added = True
+                    query += predicate.name + "." + self.get_column_names(predicate.name)[index] + " = " + "'" +str(arg) + "'"
+
+        return query
+
+    def get_columns_for_symbols(self, query_symbol, predicates):
+        column_for_symbols = {key: [] for key in query_symbol}
+        for predicate in predicates:
+            column_names = self.get_column_names(predicate.name)
+
+            for index, arg in enumerate(predicate.args):
+                if isinstance(arg, SubSymbol):
+                    column_for_symbols[arg].append((predicate.name, column_names[index]))
+
+        return column_for_symbols
+
+    def get_column_names(self, relation_name):
+        query = "SELECT column_name FROM information_schema.columns where table_name=" + "'" + relation_name + "'"
+        print(query)
+        self.cursor.execute(query)
+        return [item[0] for item in self.cursor.fetchall()]
+
