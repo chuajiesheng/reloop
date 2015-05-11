@@ -90,6 +90,8 @@ class PyDatalogLogKb(LogKb):
         raise NotImplementedError
 
 class PostgreSQLKb (LogKb):
+    """
+    """
 
     def __init__(self, dbname, user, password=None):
         """

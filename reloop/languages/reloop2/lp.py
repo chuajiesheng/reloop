@@ -19,12 +19,25 @@ class LpProblem():
         self._lp_variables = {}
 
     def solve(self):
+        """
+        Solves the lp
+        """
         raise NotImplementedError()
 
     def status(self):
+        """
+        :return: The solution status of the LP.
+        """
         raise NotImplementedError()
 
     def __iadd__(self, other):
+        """
+        Adds a constraint or objective to the lp.
+
+        :param other: Constraint: Tuple of (lhs, b, sense), where lhs is an expression, b an atom (like an integer)
+        and sense either -1, 0 or 1; Objective: An object of type :class:`sympy.core.Expr`
+        :return: self
+        """
         if isinstance(other, tuple):
             self.add_constraint(other)
         elif isinstance(other, Expr):
@@ -35,12 +48,29 @@ class LpProblem():
         return self
 
     def add_constraint(self, constraint_tuple):
+        """
+        To be implemented by the actual solver.
+
+        :param constraint_tuple: Constraint: Tuple of (lhs, b, sense), where lhs is an expression, b an atom (like an integer)
+        and sense either -1, 0 or 1
+        """
         raise NotImplementedError()
 
     def add_objective(self, expr):
+        """
+        To be implemented by the actual solver.
+
+        :param expr: An object of type :class:`sympy.core.Expr`
+        """
         raise NotImplementedError()
 
     def lp_variable(self, name):
+        """
+        Creates some kind of lp variable, to be implemented by the solver.
+
+        :param name: name of a lp variable
+        :return: Some kind of lp variable
+        """
         raise NotImplementedError()
 
     @property

@@ -347,7 +347,7 @@ class NumericPredicate(RlpPredicate, Function):
 
 class BooleanPredicate(BooleanAtom, Function):
     """
-    A Predicate to use in boolean expressions; can be used like a function.
+    A Predicate to use in boolean expressions; can be used like a function inside boolean terms.
     """
     pass
 
