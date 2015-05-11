@@ -8,8 +8,13 @@ from lp import *
 
 #----------------------------------------------------------
 # Initialize Database with necessary Tables and Values
-connection =  psycopg2.connect("dbname=danny user=danny")
+dbname = raw_input("Please specifiy the name of your Database: ")
+dbname = "dbname=" + str(dbname)
+user = "user="+ raw_input("Pease specify the Username for the Database: ")
+password = "password=" + raw_input("Specify the password if applicable: ")
+connection =  psycopg2.connect(dbname + " " + user + " " + password)
 cursor = connection.cursor()
+
 
 #----------------------------------------------------------
 # Close Connection and Drop Tables
