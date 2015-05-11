@@ -5,8 +5,6 @@
 Tutorial
 ========
 
-TODO: intro
-
 .. contents:: Contents
     :depth: 3
     :local:
@@ -74,32 +72,32 @@ With the third parameter one can specify a LogKB, with the third one an LP-Solve
 
 
 Before we start defining constraints, we will declare our predicates and symbols. 
-We need three different symbols for the constraint definition. So we define them with 
+We need three different symbols for the constraint definition. So we define them with ::
     
     X, Y, Z = sub_symbols('X', 'Y', 'Z')
 
 Reloop has two different kinds of predicates: 
-*Numeric predicates that will return a numeric value, e.g. cap('a', 'b') -> 100
-*Boolean predicate that will return a boolean value, e.g. cap('a', 'b', 100) -> True
+ - Numeric predicates that will return a numeric value, e.g. cap('a', 'b') -> 100
+ - Boolean predicate that will return a boolean value, e.g. cap('a', 'b', 100) -> True
 
 In this case we have two numeric predicates: ``flow`` -- our variable predicate, and ``cap``, which stores the capacities of the edges. We declare them as follows ::
   
     flow = numeric_predicate("flow", 2)
     cap = numeric_predicate("cap", 2)
 
-The function ``numeric_predicate()`` takes as arguments the predicate name and the arity.
-To introduce a numeric predicate as a variable to the model, use
+The function ``numeric_predicate()`` has two arguments: The predicate name and the arity.
+Next we want to introduce the ``flow`` predicate as a variable to the model, use ::
 
     model.add_reloop_variable(flow)
 
-Beside the numeric predicates, the flow problem also has 4 boolean predicates:
+Beside the numeric predicates, the flow problem also has 4 boolean predicates: ::
 
     source = boolean_predicate("source", 1)
     target = boolean_predicate("target", 1)
     edge = boolean_predicate("edge", 2)
     node = boolean_predicate("node", 1)
 
-Because the reloop language builds on top of sympy [add link here], one can use almost all of sympy's features, such as substitutions, functions and the expression syntax.
+Because the reloop language builds on top of `sympy <http://www.sympy.org/en/index.html>`_, one can use almost all of sympy's features, such as substitutions, functions and the expression syntax.
 Reloop extends sympy with ``RlpSum``, an expression that represents the sum over an arbitrary logical query. 
 
 Now we start collecting our model specification in the ``model`` variable using the += operator.
@@ -111,13 +109,22 @@ This says that we want to sum all ``flow(X,Y)`` terms for which ``X`` is a sourc
  
 Next, we encode the preservation of in- and outflows for all nodes that are not the source resp. target nodes: ::
 
+    outFlow = RlpSum([X, ], edge(X, Z), flow(X, Z))
+    inFlow = RlpSum([Y, ], edge(Z, Y), flow(Z, Y))
+
     model += ForAll([Z, ], node(Z) & ~source(Z) & ~target(Z), inFlow |eq| outFlow)
 
-The class ``ForAll`` takes similar to RlpSum a list of symbols, a query for these symbols and a sympy relation as arguments. It represents a ground constraint for every variable in the answer of the query. 
-This constraint says that except for the entrance and exit, the flow into each intersection
-equals the flow out. Note that we have made use of negation in the query of the forall quantification using ~. 
+The class ``ForAll`` has similar arguments as RlpSum a list of symbols, a query for these symbols and a sympy relation. It represents a ground constraint for every variable in the answer of the query. 
 
-Besides ``ForAll`` constraints it is also possible to just have sympy relations. This is useful, when you don't want to query the LogKB. It is possible to use either ``Eq()``, ``Ge()`` and ``Le()`` directly or the infix notation with ``|eq|``, ``|ge|``/``>=``  and ``|le|``/``<=``. 
+This constraint expresses that except for the entrance and exit, the flow into each intersection
+equals the flow out.
+
+*Notice:* You may want to use the ``outFlow`` and ``inFlow`` definitions with another symbol (differing from ``Z``).
+To archieve this, use `subs() <http://docs.sympy.org/dev/tutorial/basic_operations.html#substitution>`_ from sympy.
+
+Besides ``ForAll`` constraints one can use also sympy relations as constraints.
+This is useful, when you don't want to query the LogKB. 
+It is possible to use either ``Eq()``, ``Ge()`` and ``Le()`` directly or the infix notation with ``|eq|``, ``|ge|``/``>=``  and ``|le|``/``<=``. 
 
 Next, the capacity and traffic load are defined for each link: ::
 
