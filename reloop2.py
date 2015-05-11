@@ -13,14 +13,12 @@ class RlpProblem():
         self._constraints = []
         self.objective = None
 
-    def add_constraint(self, constraint):
-        """Constraints are relations or forallConstraints"""
-        self._constraints += [constraint]
-
-    def set_objective(self, objective):
-        self.objective = objective
-
     def add_reloop_variable(self, *predicates):
+        """
+
+        :param predicates:
+        :return:
+        """
         for predicate in predicates:
             self._reloop_variables |= {(predicate.name, predicate.arity)}
 
@@ -33,12 +31,17 @@ class RlpProblem():
         return self._constraints
 
     def __iadd__(self, rhs):
+        """
+        Adds the objective or a constraint to the model.
+        :param rhs: Either an instance of :class :`Expr` (objective) or an instance of Rel or ForAllConstraint (constraint)
+        :return:
+        """
         if isinstance(rhs, Gt) | isinstance(rhs, Lt):
-            raise NotImplementedError("StrictGreaterThan and StricLessThan is not implemented!")
+            raise NotImplementedError("StrictGreaterThan and StrictLessThan is not implemented!")
         if isinstance(rhs, Rel) | isinstance(rhs, ForAll):
-            self.add_constraint(rhs)
+            self._constraints += [rhs]
         elif isinstance(rhs, Expr):
-            self.set_objective(rhs)
+            self.objective = rhs
         else:
             raise ValueError("'rhs' must be either an instance of sympy.Rel, sympy.Expr or an instance of "
                              "ForallConstraint!")
