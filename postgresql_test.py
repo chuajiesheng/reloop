@@ -13,15 +13,15 @@ cursor = connection.cursor()
 
 #----------------------------------------------------------
 # Close Connection and Drop Tables
-cursor.execute("DROP TABLE IF EXISTS nodes ")
+cursor.execute("DROP TABLE IF EXISTS node ")
 cursor.execute("DROP TABLE IF EXISTS edge")
 cursor.execute("DROP TABLE IF EXISTS cost")
 cursor.execute("DROP TABLE IF EXISTS source")
 cursor.execute("DROP TABLE IF EXISTS target")
 connection.commit()
 
-cursor.execute("CREATE TABLE nodes (x varchar(5));")
-cursor.execute("INSERT INTO nodes values('a'),('b'),('c'),('d'),('e'),('f'),('g');")
+cursor.execute("CREATE TABLE node (x varchar(5));")
+cursor.execute("INSERT INTO node values('a'),('b'),('c'),('d'),('e'),('f'),('g');")
 
 cursor.execute("CREATE TABLE edge (x varchar(5), y varchar(5));")
 cursor.execute("INSERT INTO edge values('a','b'),('a','c'),('b','d'),('b','e'),('c','d'),('c','f'),('d','e'),('d','f'),('e','g'),('f','g');")
@@ -41,7 +41,7 @@ connection.commit()
 # Linear Program definition
 
 model = RlpProblem("traffic flow LP in the spirit of page 329 in http://ampl.com/BOOK/CHAPTERS/18-network.pdf",
-                   LpMaximize, PostgreSQLKb("danny","danny"), LiftedLinear)
+                   LpMaximize, PostgreSQLKb("danny","danny"), Pulp)
 
 print "\nBuilding a relational variant of the " + model.name
 
@@ -96,37 +96,37 @@ print "\nThe total flow in the traffic network is "+str(total)+" cars per hour."
 #----------------------------------------------------------
 # Actual Testing
 
-cursor.execute("""SELECT * FROM cost""")
-name = "cost"
-rows = cursor.fetchall()
-print rows
-for row in rows:
-    print "  ", row[0] , row[1] , row[2]
+#cursor.execute("""SELECT * FROM cost""")
+#name = "cost"
+#rows = cursor.fetchall()
+#print rows
+#for row in rows:
+#    print "  ", row[0] , row[1] , row[2]
+#
+#query = "SELECT column_name FROM information_schema.columns where table_name=" + name
+#cursor.execute("""SELECT column_name FROM information_schema.columns where table_name=\'cost\'""")
+#
+#columns = cursor.fetchall()
+#print columns
+#rlpvar = columns.pop()
 
-query = "SELECT column_name FROM information_schema.columns where table_name=" + name
-cursor.execute("""SELECT column_name FROM information_schema.columns where table_name=\'cost\'""")
+#print rlpvar[0]
+#
+#args = [('a',),('b',)]
 
-columns = cursor.fetchall()
-print columns
-rlpvar = columns.pop()
+#columns = zip(columns,args)
+#tmpquery = []
+#print columns
+#for column in columns:
+#    tmpquery.append(str(column[0][0]) + " = " + "\'" +str(column[1][0]) + "\'")
 
-print rlpvar[0]
+#print tmpquery
 
-args = [('a',),('b',)]
+#tmpquery = " AND ".join([ str(a) for a in tmpquery])
 
-columns = zip(columns,args)
-tmpquery = []
-print columns
-for column in columns:
-    tmpquery.append(str(column[0][0]) + " = " + "\'" +str(column[1][0]) + "\'")
-
-print tmpquery
-
-tmpquery = " AND ".join([ str(a) for a in tmpquery])
-
-query = "SELECT " + rlpvar[0] + " FROM " + name + " WHERE " +   tmpquery
-cursor.execute(query)
-print cursor.fetchall()
+#query = "SELECT " + rlpvar[0] + " FROM " + name + " WHERE " +   tmpquery
+#cursor.execute(query)
+#print cursor.fetchall()
 
 #----------------------------------------------------------
 # Close Connection
