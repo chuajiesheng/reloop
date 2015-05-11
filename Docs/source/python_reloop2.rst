@@ -10,6 +10,7 @@ Documentation
 
 .. automodule:: reloop2
     :members:
+    :special-members: __iadd__, __init__
 
 .. automodule:: logkb
     :members:

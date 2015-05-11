@@ -10,7 +10,9 @@ LpMaximize = -1
 from reloop.solvers.llp import *
 
 class LpProblem():
-
+    """
+    Representation of a linear program. Intended to be inherited by multiple LP solver implementations.
+    """
     def __init__(self, name, sense):
         self.name = name
         self.sense = sense
@@ -117,6 +119,7 @@ class LiftedLinear(LpProblem):
 
     def solve(self):
         # import reloop.solvers.llp as solver
+        raise NotImplementedError("Lifted Linear solving is still not implemented!")
 
         ineq_constraint_count = len(self._constraints[1]) + len(self._constraints[-1])
         eq_constraint_count = len(self._constraints[0])
@@ -217,17 +220,17 @@ def get_predicate_names(expr):
 
     elif expr.func is Mul:
         if expr.args[0].is_Atom:
-            if isinstance(expr.args[1], RlpPrediate):
+            if isinstance(expr.args[1], RlpPredicate):
                 value = expr.args[0]
                 pred = expr.args[1]
             else:
                 raise NotImplementedError()
 
-        elif isinstance(expr.args[0], RlpPrediate):
+        elif isinstance(expr.args[0], RlpPredicate):
             if expr.args[1].is_Atom:
                 value = expr.args[1]
                 pred = expr.args[0]
-            elif isinstance(expr.args[1], RlpPrediate):
+            elif isinstance(expr.args[1], RlpPredicate):
                 raise ValueError("Found non-linear constraint!")
             else:
                 raise NotImplementedError()
@@ -237,7 +240,7 @@ def get_predicate_names(expr):
 
         return [sstr(pred), ], [float(value), ]
 
-    elif isinstance(expr, RlpPrediate):
+    elif isinstance(expr, RlpPredicate):
         return [sstr(expr), ], [float(1), ]
 
     elif expr.func is Pow:

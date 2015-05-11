@@ -1,5 +1,3 @@
-from numpy.numarray.functions import and_
-from openpyxl.cell import column_index_from_string
 from reloop2 import *
 from pyDatalog import pyDatalog, pyEngine
 from sets import Set
@@ -23,6 +21,7 @@ class LogKb:
         """
         Queries the LogKB for a specific Value for given constants.
         For Example : cost('a','b') = 50
+
         :param predicate: The predicate to be queried for
         :return: The Value associated with the predicate
         """
@@ -34,6 +33,7 @@ class PyDatalogLogKb(LogKb):
     def ask(self, query_symbols, logical_query):
         """
         Builds a pyDataLog program from the logical_query and loads it. Then executes the query for the query_symbols.
+
         :param query_symbols: The symbols to be queried.
         :type query_symbols: list(SubSymbol)
         :param logical_query:
@@ -53,6 +53,7 @@ class PyDatalogLogKb(LogKb):
     def ask_predicate(self, predicate):
         """
         Queries PyDataLog for the given predicate by constructing a query fitting the pyDataLog Syntax.
+
         :param predicate: The predicate to be quried for
         :return: The Value of the given predicate if it exists in the Database, None otherwise.
         """
@@ -68,6 +69,7 @@ class PyDatalogLogKb(LogKb):
     def transform_query(logical_query):
         """
         Recursively builds the logical_query string from the given logical logical_query,by evaluating
+
         :param logical_query: Type changes depending on the recursive depth and the depth of the expression.
                               The logical query, needed for the pyDataLog program string.
         :type logical_query: Boolean, BooleanPredicate
@@ -104,7 +106,6 @@ class PostgreSQLKb (LogKb):
     def ask(self, query_symbols, logical_query):
         """
         Builds a PostgreSQL query from a given logical query and its query_symbols by implicitly joining over all given predicates.
-
 
         :param query_symbols: see :func:`~logkb.LogKB.ask`
         :param query:         see :func:`~logkb.LogKB.ask`
@@ -178,6 +179,7 @@ class PostgreSQLKb (LogKb):
         The predicate only has constants as symbols and the value per definition has to be in the last column of the table.
         Such that a query "cost('a','b') implicitly queries for SELECT z FROM cost WHERE x = 'a' AND y = 'b'
         with z here being the third column of the table.
+
         :param predicate: The predicate to be queried for
         :type predicate: BooleanPredicate
         :return: The Value associated with the predicate taken from the database
@@ -195,6 +197,7 @@ class PostgreSQLKb (LogKb):
     def and_clause_for_constants(self, predicates, and_clause_added):
         """
         Iterates over a list of given predicates and returns the where-clause for constants.
+
         :param predicates: The given predicates. E.g. : edge(X,'a'), edge ('a','c')
         :type predicate: List(BooleanPredicate)
         :param and_clause_added: Indicates if there was been an and-clause beforehand to correctly concantenate the querystring
@@ -235,6 +238,7 @@ class PostgreSQLKb (LogKb):
     def get_column_names(self, relation_name):
         """
         Convenience function to get the name of the columns for a given table.
+
         :param relation_name: The name of the table
         :type relation_name: str
         :return: A list consisting of the column names.

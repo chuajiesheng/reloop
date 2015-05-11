@@ -5,7 +5,18 @@ from infix import or_infix
 
 
 class RlpProblem():
+    """
+    The model of a Relational Linear Program.
+    """
     def __init__(self, name, sense, logkb, lp):
+        """
+        Instantiates the model
+
+        :param name: The name of the problem, describing it
+        :param sense: LpMaximize or LpMinimize
+        :param logkb: An instance of :class:`.logkb.LogKB`
+        :param lp: A type of :class:`lp.LpProblem`
+        """
         self.lpmodel = lp(name, sense)
         self.logkb = logkb
         self.name = name
@@ -15,9 +26,9 @@ class RlpProblem():
 
     def add_reloop_variable(self, *predicates):
         """
+        Introduces predicates as lp variables. These predicate wont be grounded.
 
-        :param predicates:
-        :return:
+        :param predicates: A tuple of predicates to be added to the model
         """
         for predicate in predicates:
             self._reloop_variables |= {(predicate.name, predicate.arity)}
@@ -33,8 +44,9 @@ class RlpProblem():
     def __iadd__(self, rhs):
         """
         Adds the objective or a constraint to the model.
+
         :param rhs: Either an instance of :class :`Expr` (objective) or an instance of Rel or ForAllConstraint (constraint)
-        :return:
+        :return: The class instance itself
         """
         if isinstance(rhs, Gt) | isinstance(rhs, Lt):
             raise NotImplementedError("StrictGreaterThan and StrictLessThan is not implemented!")
@@ -49,16 +61,32 @@ class RlpProblem():
         return self
 
     def solve(self):
+        """
+        Grounds and solves the logical programm.
+        """
         self.ground_into_lp()
         self.lpmodel.solve()
 
     def status(self):
+        """
+        Passes the call to self.lpmodel
+        :return: The solution status of the LP.
+
+        """
         return self.lpmodel.status()
 
     def get_solution(self):
+        """
+        Passes the call to self.lpmodel
+
+        :return: The solution of the LP
+        """
         return self.lpmodel.get_solution()
 
     def ground_into_lp(self):
+        """
+        Ground the RLP by grounding the objective and each constraint.
+        """
         self.add_objective_to_lp(self.ground_expression(self.objective))
 
         for constraint in self.constraints:
@@ -76,7 +104,12 @@ class RlpProblem():
                     self.add_constraint_to_lp(ground_result)
 
     def ground_expression(self, expr):
+        """
+        Recursively grounds any sympy expression, :class:`.RlpSum`, :class:`.RlpPredicate`, ...
 
+        :param expr: The expression which is to be grounded
+        :return: A grounded expression
+        """
         if expr.func in [Mul, Add, Pow]:
             return expr.func(*map(lambda a: self.ground_expression(a), expr.args))
 
@@ -95,6 +128,11 @@ class RlpProblem():
         return expr
 
     def add_objective_to_lp(self, objective):
+        """
+        Adds a grounded objective to the LP
+
+        :param objective: A grounded expression (the objective)
+        """
         print "Add objective: " + str(objective)
         # + "\n" + srepr(objective)
         expr = objective
@@ -106,6 +144,11 @@ class RlpProblem():
         self.lpmodel += expr
 
     def add_constraint_to_lp(self, constraint):
+        """
+        Adds a grounded constraint to the LP
+
+        :param constraint: The grounded constraint.
+        """
         print "Add constraint: " + str(constraint)
         # + "\n" + srepr(constraint)
         lhs = constraint.lhs
@@ -137,7 +180,14 @@ class RlpProblem():
 
 
 class Query:
+    """
+    Internal representation of a logical query.
+    """
     def __init__(self, query_symbols, query):
+        """
+        :param query_symbols: List of type :class:`SubSymbol`
+        :param query: A logical query
+        """
         self._query_symbols = query_symbols
         self._query = simplify(query)
 
@@ -151,6 +201,9 @@ class Query:
 
 
 class ForAll(Query):
+    """
+    Wraps a :class:`.Query` and a :class:`.Rel` to represent a set of constraints.
+    """
     def __init__(self, query_symbols, query, relation):
         Query.__init__(self, query_symbols, query)
         self.relation = relation
@@ -158,6 +211,13 @@ class ForAll(Query):
         self.grounded = False
 
     def ground(self, logkb):
+        """
+        Grounds the query and relation
+
+        :param logkb: An implementation of a Logical Knowledge Base
+        :type logkb: :class:`.LogKB`
+        :return: A set of grounded constraints
+        """
         answers = logkb.ask(self.query_symbols, self.query)
 
         result = set([])
@@ -178,20 +238,41 @@ class ForAll(Query):
 
 
 class SubSymbol(Symbol):
-    """Just a sympy.Symbol, but inherited to be able to define symbols explicitly
+    """
+    Just a sympy.Symbol, but inherited to be able to define symbols explicitly
     """
     pass
 
 
 def sub_symbols(*symbols):
+    """
+    Convenience function for instantiating multiple :class:`.SubSymbol` at once.
+
+    :param symbols: Tuple of strings
+    :return: Tuple of SubSymbols
+    """
     return tuple(map(lambda s: SubSymbol(s), symbols))
 
 
 def boolean_predicate(name, arity):
+    """
+    Convenience function for generating a :class:`BooleanPredicate` type
+
+    :param name: Name of the predicate
+    :param arity: Arity (must match count of relation elements)
+    :return: A type with the given name, inherited from :class:`BooleanPredicate`
+    """
     return rlp_predicate(name, arity, boolean=true)
 
 
 def numeric_predicate(name, arity):
+    """
+    Convenience function for generating a :class:`NumericPredicate` type
+
+    :param name: Name of the predicate
+    :param arity: Arity (count of relation elements decremented by one)
+    :return: A type with the given name, inherited from :class:`NumericPredicate`
+    """
     return rlp_predicate(name, arity, boolean=false)
 
 
@@ -202,7 +283,7 @@ def rlp_predicate(name, arity, boolean):
         raise ValueError("Arity must not be less than 1, if boolean is true. Dude!")
 
     if arity == 0:
-        predicate_type = RlpPrediate
+        predicate_type = RlpPredicate
     elif boolean:
         predicate_type = BooleanPredicate
     else:
@@ -211,11 +292,14 @@ def rlp_predicate(name, arity, boolean):
                                                                          "grounded": False})
     return predicate_class
 
-class RlpPrediate(Expr):
+class RlpPredicate(Expr):
     pass
 
-class NumericPredicate(RlpPrediate, Function):
-
+class NumericPredicate(RlpPredicate, Function):
+    """
+    Representing a predicate that is understood as a function. That is, though the relation :math:`R` inside the LogKB
+    has :math:`k` elements, we define :math:`R(e_1, ..., e_{k-1}) := e_{k}`.
+    """
     @classmethod
     def eval(cls, *args):
         if not cls.grounded:
@@ -223,6 +307,13 @@ class NumericPredicate(RlpPrediate, Function):
         return cls.result
 
     def ground(self, logkb):
+        """
+        Grounds itself
+
+        :param logkb: An implementation of a Logical Knowledge Base
+        :type logkb: :class:`.LogKB`
+        :return: The :math:`e_{k}` th element
+        """
         args = self.args
         if len(args) > self.arity:
             raise Exception("Too many arguments.")
@@ -255,11 +346,16 @@ class NumericPredicate(RlpPrediate, Function):
 
 
 class BooleanPredicate(BooleanAtom, Function):
+    """
+    A Predicate to use in boolean expressions; can be used like a function.
+    """
     pass
 
 
 class RlpSum(Expr, Query):
+    """
 
+    """
     def __init__(self, query_symbols, query, expression):
         Query.__init__(self, query_symbols, query)
         self.expression = expression
@@ -267,6 +363,13 @@ class RlpSum(Expr, Query):
         self.grounded = False
 
     def ground(self, logkb):
+        """
+        Grounds the query and expression
+
+        :param logkb: An implementation of a Logical Knowledge Base
+        :type logkb: :class:`.LogKB`
+        :return: An summation of the grounded expressions
+        """
         answers = logkb.ask(self.query_symbols, self.query)
         result = 0
         for answer in answers:
