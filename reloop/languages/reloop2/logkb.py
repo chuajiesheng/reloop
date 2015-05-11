@@ -218,11 +218,12 @@ class PostgreSQLKb (LogKb):
 
     def get_columns_for_symbols(self, query_symbol, predicates):
         """
+        Creates a dictionary from symbols and predicates with Key, Value pairs of query_symbols,predicates , where is Symbol is the Key to its occurances in the predicates.
 
         :param query_symbol: The Symbols to be queried for (Keys)
         :type query_symbol: List(SubSymbol)
         :param predicates: The predicates, where the symbols might occur (Values)
-        :type predicates:List(BooleanPredicate)
+        :type predicates: List(BooleanPredicate)
         :return: A dictionary, which maps from the given query_symbols to the corresponding predicates in which the symbols occur.
         """
         column_for_symbols = {key: [] for key in query_symbol}

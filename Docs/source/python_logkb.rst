@@ -1,12 +1,15 @@
 LogKB
 ****************
 
-Summary
-=======
-TODO
-
 Documentation
 =======================
 
-.. automodule:: logkb
+.. autoclass:: logkb.LogKb
     :members:
+    :noindex:
+
+.. autoclass:: logkb.PyDatalogLogKb
+	:members:
+
+.. autoclass:: logkb.PostgreSQLKb
+	:members:
