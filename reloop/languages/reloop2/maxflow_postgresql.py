@@ -40,8 +40,8 @@ cursor.execute("CREATE TABLE source2 (x varchar(255));")
 cursor.execute("CREATE TABLE target2 (x varchar(255));")
 
 connection.commit()
-
-file = open("/home/danny/Downloads/Maxflow/maxflow.max" ,"r")
+path = raw_input("Please specify a path for a maxflow file")
+file = open(path ,"r")
 
 # s designates the source and t the target , a indicates edges and cost  [[node21,node22]cost]
 #n 1 s
