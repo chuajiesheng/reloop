@@ -5,7 +5,6 @@ from logkb import *
 from lp import *
 import time
 
-file = open("/home/danny/Downloads/Maxflow/small/BVZ-tsukuba0.max", "r")
 
 #----------------------------------------------------------
 # SQL Testing
@@ -15,7 +14,7 @@ file = open("/home/danny/Downloads/Maxflow/small/BVZ-tsukuba0.max", "r")
 # Initialize Database with necessary Tables and Values
 dbname = raw_input("Please specifiy the name of your Database: ")
 dbname = "dbname=" + str(dbname)
-user = "user="+ raw_input("Pease specify the Username for the Database: ")
+user = "user="+ raw_input("Please specify the Username for the Database: ")
 password = "password=" + raw_input("Specify the password if applicable: ")
 connection =  psycopg2.connect(dbname + " " + user + " " + password)
 cursor = connection.cursor()
@@ -42,9 +41,9 @@ cursor.execute("CREATE TABLE target2 (x varchar(255));")
 
 connection.commit()
 
-file = open("/home/danny/Downloads/Maxflow/liver.n6c10.max" ,"r")
+file = open("/home/danny/Downloads/Maxflow/maxflow.max" ,"r")
 
-# s designates the source and t the target , a indicates edges and cost  [[node1,node2]cost]
+# s designates the source and t the target , a indicates edges and cost  [[node21,node22]cost]
 #n 1 s
 #n 2 t
 #a 3 2 999999
@@ -64,7 +63,7 @@ for line in file:
         if temp[0] == "a" :
             cursor.execute("INSERT INTO node2 values('" + temp[1] + "')")
             cursor.execute("INSERT INTO node2 values('" + temp[2] + "')")
-            cursor.execute("INSERT INTO edge2 values('" + temp[1] + "," + temp[2] + "')")
+            cursor.execute("INSERT INTO edge2 values('" + temp[1] + "'" + "," + "'" + temp[2] + "')")
             cursor.execute("INSERT INTO cost2 values('" + temp[1]+ "'" + "," + "'" +  temp[2] + "' , " + temp[3]  + ")")
         else:
             continue
@@ -75,7 +74,9 @@ for line in file:
     connection.commit()
 
 cursor.execute("CREATE TABLE tmp (x varchar(10));")
+connection.commit()
 cursor.execute("INSERT INTO tmp SELECT DISTINCT * FROM node2;")
+connection.commit()
 cursor.execute("DROP TABLE node2;")
 cursor.execute("ALTER TABLE tmp RENAME TO node2;")
 connection.commit()
@@ -92,14 +93,14 @@ print "\nBuilding a relational variant of the " + model.name
 X, Y, Z = sub_symbols('X', 'Y', 'Z')
 
 flow = numeric_predicate("flow", 2)
-cost = numeric_predicate("cost", 2)
+cost = numeric_predicate("cost2", 2)
 
 model.add_reloop_variable(flow)
 
-source = boolean_predicate("source", 1)
-target = boolean_predicate("target", 1)
-edge = boolean_predicate("edge", 2)
-node = boolean_predicate("node", 1)
+source = boolean_predicate("source2", 1)
+target = boolean_predicate("target2", 1)
+edge = boolean_predicate("edge2", 2)
+node = boolean_predicate("node2", 1)
 
 # objective
 model += RlpSum([X, Y], source(X) & edge(X, Y), flow(X, Y))
