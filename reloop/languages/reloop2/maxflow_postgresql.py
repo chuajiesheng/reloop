@@ -44,6 +44,14 @@ connection.commit()
 
 file = open("/home/danny/Downloads/Maxflow/liver.n6c10.max" ,"r")
 
+# s designates the source and t the target , a indicates edges and cost  [[node1,node2]cost]
+#n 1 s
+#n 2 t
+#a 3 2 999999
+#a 4 2 999999
+#a 5 2 999999
+#a 6 2 999999
+
 count = 0
 for line in file:
     temp = line.split()
