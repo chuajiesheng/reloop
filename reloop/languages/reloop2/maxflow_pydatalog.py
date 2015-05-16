@@ -1,5 +1,6 @@
 from logkb import *
 from lp import *
+import time
 
 @pyDatalog.predicate()
 def node1(x):
@@ -10,6 +11,7 @@ def node1(x):
     yield('e')
     yield('f')
     yield('g')
+
 
 @pyDatalog.predicate()
 def edge2(x, y):
@@ -23,6 +25,7 @@ def edge2(x, y):
     yield('d', 'f')
     yield('e', 'g')
     yield('f', 'g')
+
 
 @pyDatalog.predicate()
 def source1(x):
@@ -46,10 +49,11 @@ def cost3(x, y, z):
     yield('e', 'g', 70)
     yield('f', 'g', 70)
 
-# Linear Program definition
 
+# Linear Program definition
+start = time.time()
 model = RlpProblem("traffic flow LP in the spirit of page 329 in http://ampl.com/BOOK/CHAPTERS/18-network.pdf",
-                   LpMaximize, PyDatalogLogKb(), LiftedLinear)
+                   LpMaximize, PyDatalogLogKb(), Pulp)
 
 print "\nBuilding a relational variant of the " + model.name
 
@@ -88,6 +92,8 @@ print "\nThe model has been solved: " + model.status() + "."
 
 sol = model.get_solution()
 
+end = time.time()
+
 print "The solutions for the flow variables are:\n"
 for key, value in sol.iteritems():
     if "flow" in key and value > 0:
@@ -98,6 +104,7 @@ for key, value in sol.iteritems():
     if "flow" in key and value > 0:
         total += value
 
+print "\n Time needed for the grounding and solving: " + str(end - start) + " s."
 print "\nThus, the maximum flow entering the traffic network at node a is "+str(sol["flow(a, b)"]+sol["flow(a, c)"])+" cars per hour."
 print "\nThe total flow in the traffic network is "+str(total)+" cars per hour."
 
