@@ -106,6 +106,9 @@ class LpProblem():
         return [(contained_lp_variables[i], factor_vector[i]) for i in range(len(contained_lp_variables))]
 
 class Pulp(LpProblem):
+    """
+    LPProblem implementation which uses the LP Solver provided by Pulp
+    """
     def __init__(self, name, sense):
         LpProblem.__init__(self, name, sense)
         self.lpmodel = pulp.LpProblem(name, sense)
