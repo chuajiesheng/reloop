@@ -91,6 +91,7 @@ class PyDatalogLogKb(LogKb):
 
 class PostgreSQLKb (LogKb):
     """
+    A Logical Knowledge Base based on a PostgreSQL database.
     """
 
     def __init__(self, dbname, user, password=None):
