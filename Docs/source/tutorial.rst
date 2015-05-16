@@ -62,7 +62,7 @@ A Relational Linear Program for Maximum Flow: Modelling in Operator Notation
 
 The start of your file will import reloop’s functions for use in your code::
 
-    from reloop.languages.rlp import *    
+    from reloop.languages.reloop2.reloop2 import *    
 
 A variable called model (although its name is not important) is created by instantiate RlpProblem. It has four parameters, the first being the
 arbitrary name of this problem (as a string), and the second parameter being either LpMinimize or LpMaximize depending on the type of LP we are trying to solve.
