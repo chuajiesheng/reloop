@@ -1,5 +1,5 @@
-from logkb import *
-from lp import *
+from reloop.languages.reloop2.logkb import *
+from reloop.languages.reloop2.lp import *
 import maxflow_example
 
 @pyDatalog.predicate()

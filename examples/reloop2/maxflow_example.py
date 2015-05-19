@@ -1,5 +1,4 @@
-from logkb import *
-from lp import *
+from reloop.languages.reloop2.lp import *
 import time
 
 def maxflow(logKb, solver, predicate_prefix=""):
