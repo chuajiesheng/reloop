@@ -1,5 +1,5 @@
-from logkb import *
-from lp import *
+from reloop.languages.reloop2.logkb import *
+from reloop.languages.reloop2.lp import *
 
 @pyDatalog.predicate()
 def attribute3(x, y, z):
@@ -26,7 +26,7 @@ model = RlpProblem("LP-SVM", LpMinimize, PyDatalogLogKb(), Pulp)
 print("\nBuilding a relational variant of the " + model.name)
 
 # const
-c = 1.0
+c = 1.0y
 
 # declarations
 X, Z, J, I = sub_symbols('X', 'Z', 'J', 'I')
