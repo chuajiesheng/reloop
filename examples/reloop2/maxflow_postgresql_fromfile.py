@@ -73,4 +73,4 @@ connection.commit()
 cursor.close()
 connection.close()
 
-model = maxflow_example.maxflow(PostgreSQLKb(db_name, db_user, db_password), Pulp)
+model = maxflow_example.maxflow(PostgreSQLKb(db_name, db_user, db_password), Pulp, table_prefix)
