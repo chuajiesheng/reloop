@@ -294,7 +294,7 @@ Of course, changing the knowledge base will result in different solutions. The c
     flow(f,g) free Continuous
 
 
-The complete running example can be found :ref:`here<maxflowOperator>`.
+The complete running example can be found :ref:`here<maxflow>`.
 
 
 Equitable Partitions and Lifted Linear Programming
