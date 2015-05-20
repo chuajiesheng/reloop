@@ -62,7 +62,6 @@ class PyDatalogLogKb(LogKb):
         query += ", X)"
 
         answer = pyDatalog.ask(query)
-        print "PREDICATE : " + str(predicate) + " QUERY " + str(query) + " ANSWER " + str(answer)
         return answer.answers
 
     @staticmethod
@@ -76,7 +75,6 @@ class PyDatalogLogKb(LogKb):
         :return: The complete Body for loading the program into pyDataLog.
         """
 
-        print "TYPE :" + str(type(logical_query))
         if logical_query.func is And:
             return " &".join([PyDatalogLogKb.transform_query(arg) for arg in logical_query.args])
 
@@ -170,10 +168,10 @@ class PostgreSQLKb (LogKb):
 
                 query += ")"
 
-        print "QUERY : " + query
+
         self.cursor.execute(query)
         values = self.cursor.fetchall()
-        print "VALUES : " + str(values)
+
         return values
 
     def ask_predicate(self, predicate):
@@ -192,7 +190,6 @@ class PostgreSQLKb (LogKb):
                 " FROM "  + str(predicate.name) + \
                 " WHERE " + \
                 " AND ".join([str(columns[index][0]) + "="  + "'" + str(arg) + "'" for index, arg in enumerate(predicate.args) ])
-        print query
 
         self.cursor.execute(query)
         return self.cursor.fetchall()
