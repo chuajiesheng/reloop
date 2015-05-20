@@ -245,9 +245,7 @@ class PostgreSQLKb (LogKb):
         :return: A list consisting of the column names.
         """
         query = "SELECT column_name FROM information_schema.columns where table_name=" + "'" + relation_name + "' ORDER BY ordinal_position ASC"
-        print "get_column_names: " + query
         self.cursor.execute(query)
         ans = [item[0] for item in self.cursor.fetchall()]
-        print ans
         return ans
 
