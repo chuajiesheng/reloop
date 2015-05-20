@@ -371,7 +371,7 @@ class RlpSum(Expr, Query):
         :return: An summation of the grounded expressions
         """
         answers = logkb.ask(self.query_symbols, self.query)
-        result = 0
+        result = Float(0.0)
         for answer in answers:
                 expression_eval_subs = self.expression
                 for index, symbol in enumerate(self.query_symbols):

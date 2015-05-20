@@ -278,8 +278,9 @@ def get_predicate_names(expr):
 
     elif expr.func is Pow:
         raise ValueError("Found non-linear constraint!")
-
+    elif isinstance(expr, Number):
+        return pred_names, factors 
     else:
-        raise NotImplementedError()
+        raise NotImplementedError("Cannot get predicates for: " + str(expr) + str(expr.func))
 
     return pred_names, factors
