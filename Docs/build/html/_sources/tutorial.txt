@@ -5,11 +5,9 @@
 Tutorial
 ========
 
-TODO: intro
-
 .. contents:: Contents
-	:depth: 3
-	:local:
+    :depth: 3
+    :local:
 
 Relational Linear Programming
 -----------------------------
@@ -64,64 +62,78 @@ A Relational Linear Program for Maximum Flow: Modelling in Operator Notation
 
 The start of your file will import reloop’s functions for use in your code::
 
-    from reloop.languages.rlp import *    
+    from reloop.languages.reloop2.reloop2 import *    
 
-A variable called model (although its name is not important) is created using the reloopProblem function. It has two parameters, the first being the
-arbitrary name of this problem (as a string), and the second parameter being either LpMinimize or LpMaximize depending on the type of LP we are trying to solve: ::
+A variable called model (although its name is not important) is created by instantiate RlpProblem. It has four parameters, the first being the
+arbitrary name of this problem (as a string), and the second parameter being either LpMinimize or LpMaximize depending on the type of LP we are trying to solve.
+With the third parameter one can specify a LogKB, with the third one an LP-Solver. ::
 
-    model = reloopProblem("flow LP", lp.LpMaximize)
+    model = RlpProblem("flow", LpMaximize, PyDatalogLogKb(), Pulp)
 
 
-Before we start defining constraints, we will declare our predicates. In this case we have 2 of them: ``flow`` -- our variable predicate, and ``cap``, which stores the capacities of the edges. We declare them as follows ::
+Before we start defining constraints, we will declare our predicates and symbols. 
+We need three different symbols for the constraint definition. So we define them with ::
+    
+    X, Y, Z = sub_symbols('X', 'Y', 'Z')
 
-    flow = model.predicate("flow", 2, var = True)
-    cap = model.predicate("cap", 2)
+Reloop has two different kinds of predicates: 
+ - Numeric predicates that will return a numeric value, e.g. cap('a', 'b') -> 100
+ - Boolean predicate that will return a boolean value, e.g. cap('a', 'b', 100) -> True
 
-The function ``predicate()`` takes as arguments the predicate name, the arity and optionally whether the predicate is an LP variable (by default assumed false). 
+In this case we have two numeric predicates: ``flow`` -- our variable predicate, and ``cap``, which stores the capacities of the edges. We declare them as follows ::
+  
+    flow = numeric_predicate("flow", 2)
+    cap = numeric_predicate("cap", 2)
 
-We will now illustrate the concept of substitutions to define ``outFlow`` and ``inFlow``. A substitution is essentially a preprocessor instruction to replace one piece of text with another. In particular we want the atoms ``inFlow`` and ``outFlow`` to always be replaced by the sums defined above. We first declare the two predicates as substitutions ::
+The function ``numeric_predicate()`` has two arguments: The predicate name and the arity.
+Next we want to introduce the ``flow`` predicate as a variable to the model, use ::
 
-    inFlow = Substitution("inFlow", 1)
-    outFlow = Substitution("outFlow", 1)
+    model.add_reloop_variable(flow)
 
-Next we define them ::
+Beside the numeric predicates, the flow problem also has 4 boolean predicates: ::
 
-    outFlow <<= [ "X", psum("Y in edge(X,Y)", flow("X","Y")) ]
-    inFlow  <<= [ "Y", psum("X in edge(X,Y)", flow('X','Y')) ]
+    source = boolean_predicate("source", 1)
+    target = boolean_predicate("target", 1)
+    edge = boolean_predicate("edge", 2)
+    node = boolean_predicate("node", 1)
 
-where the definition takes a list of a varlist and expression. In essence, the above is roughly equivalent to the C directive
-
-.. code-block:: c
-
-	#define outFlow(X) psum("Y in edge(X,Y)", flow("X","Y"))
-
-I.e., whenever something like ``outFlow(A)`` is encountered in our model, ``A`` will be bound to ``X`` and ``outFlow(A)`` will be replaced by ``psum("Y in edge(A,Y)", flow("A","Y"))``. Substitutions with multiple variables are also possible.    
-
+Because the reloop language builds on top of `sympy <http://www.sympy.org/en/index.html>`_, one can use almost all of sympy's features, such as substitutions, functions and the expression syntax.
+Reloop extends sympy with ``RlpSum``, an expression that represents the sum over an arbitrary logical query. 
 
 Now we start collecting our model specification in the ``model`` variable using the += operator.
-We start with our objective, namely that the flow out of the source node must be maximized. We specify that using the ``pobj()`` function, which takes an arithmetic expression as argument ::
+We start with our objective, namely that the flow out of the source node must be maximized. ::
 
-    model += pobj(psum("X, Y in source(X) & edge(X,Y)", flow("X","Y")))
+    model += RlpSum([X, Y], source(X) & edge(X, Y), flow(X, Y))
     
 This says that we want to sum all ``flow(X,Y)`` terms for which ``X`` is a source node and there is an edge between ``X`` and ``Y``.  
-
+ 
 Next, we encode the preservation of in- and outflows for all nodes that are not the source resp. target nodes: ::
 
-    model += pall("Z in node(Z) & ~source(Z) & ~target(Z)", inFlow("Z") == outFlow("Z"))
+    outFlow = RlpSum([X, ], edge(X, Z), flow(X, Z))
+    inFlow = RlpSum([Y, ], edge(Z, Y), flow(Z, Y))
 
-The function ``pall()`` (i.e. forall) takes a query and parequation as argument. It instantiates a ground constraint for every variable in the answer of the query. 
-This constraint says that except for the entrance and exit, the flow into each intersection
-equals the flow out. Note that we have made use of negation in the query of the forall quantification using ~. 
+    model += ForAll([Z, ], node(Z) & ~source(Z) & ~target(Z), inFlow |eq| outFlow)
 
+The class ``ForAll`` has similar arguments as RlpSum a list of symbols, a query for these symbols and a sympy relation. It represents a ground constraint for every variable in the answer of the query. 
+
+This constraint expresses that except for the entrance and exit, the flow into each intersection
+equals the flow out.
+
+*Notice:* You may want to use the ``outFlow`` and ``inFlow`` definitions with another symbol (differing from ``Z``).
+To archieve this, use `subs() <http://docs.sympy.org/dev/tutorial/basic_operations.html#substitution>`_ from sympy.
+
+Besides ``ForAll`` constraints one can use also sympy relations as constraints.
+This is useful, when you don't want to query the LogKB. 
+It is possible to use either ``Eq()``, ``Ge()`` and ``Le()`` directly or the infix notation with ``|eq|``, ``|ge|``/``>=``  and ``|le|``/``<=``. 
 
 Next, the capacity and traffic load are defined for each link: ::
 
-	model += pall("X,Y in edge(X,Y)", flow("X","Y") <= cap("X","Y") )
+    model += ForAll([X, Y], edge(X, Y), flow(X, Y) |le| cap(X, Y))
 
 Again, we have used cap/2 to refer to the corresponding values. The relational constraint introduces upper bounds for
 all flow/2 variables. Finally, we include also the lower bounds: ::
 
-	model += pall("X,Y in edge(X,Y)", flow("X","Y") >= 0)
+    model += ForAll([X, Y], edge(X, Y), flow(X, Y) |ge| 0)
 
 Now that all the model is specified, we still have to add the definitions of the logical predicates and parameters. When we have done this, we could print the induced
 LP using the "print model". We could even use the writeLP() to copy this information into a .lp file into the directory
@@ -133,6 +145,7 @@ Together with a logical knowledge base, effectively a logical program consisting
 
 A Logical Knowledge Base for the Flow RLP
 *****************************************
+While we are using pyDatalog as a Logical Knowledge Base (LogKB) for this problem, there is also one for PostgreSQL.
 
 Fist we define the node/1 predicate, i.e., the set of nodes in the flow network. To do so, we use pyDatalog and its decorator: ::
 
@@ -220,16 +233,16 @@ This produces the following output: ::
     The model has been solved: Optimal
     The solutions for the flow variables are:
 
-	flow(b,e) = 20.0
-	flow(d,f) = 40.0
-	flow(f,g) = 60.0
-	flow(c,f) = 20.0
-	flow(a,b) = 50.0
-	flow(c,d) = 60.0
-	flow(e,g) = 70.0
-	flow(a,c) = 80.0
-	flow(b,d) = 30.0
-	flow(d,e) = 50.0
+    flow(b,e) = 20.0
+    flow(d,f) = 40.0
+    flow(f,g) = 60.0
+    flow(c,f) = 20.0
+    flow(a,b) = 50.0
+    flow(c,d) = 60.0
+    flow(e,g) = 70.0
+    flow(a,c) = 80.0
+    flow(b,d) = 30.0
+    flow(d,e) = 50.0
 
 
     Thus, the maximum flow entering the traffic network at node a is 130.0 cars per hour.
@@ -238,86 +251,50 @@ This produces the following output: ::
 
 Of course, changing the knowledge base will result in different solutions. The corresponding .lp file (produced e.g. by PuLP) would look like this: ::
 
-	flow LP:
-	MAXIMIZE
-	1.0*flow(a,b) + 1.0*flow(a,c) + 0
-	SUBJECT TO
-	_C1: flow(c,f) + flow(d,f) - flow(f,g) = 0
-	_C2: flow(b,d) + flow(c,d) - flow(d,e) - flow(d,f) = 0
-	_C3: flow(a,b) - flow(b,d) - flow(b,e) = 0
-	_C4: flow(b,e) + flow(d,e) - flow(e,g) = 0
-	_C5: flow(a,c) - flow(c,d) - flow(c,f) = 0
-	_C6: flow(e,g) <= 70
-	_C7: flow(c,d) <= 60
-	_C8: flow(c,f) <= 20
-	_C9: flow(a,b) <= 50
-	_C10: flow(f,g) <= 70
-	_C11: flow(b,e) <= 20
-	_C12: flow(a,c) <= 100
-	_C13: flow(d,f) <= 60
-	_C14: flow(b,d) <= 40
-	_C15: flow(d,e) <= 50
-	_C16: flow(d,e) >= 0
-	_C17: flow(e,g) >= 0
-	_C18: flow(a,b) >= 0
-	_C19: flow(b,e) >= 0
-	_C20: flow(c,f) >= 0
-	_C21: flow(f,g) >= 0
-	_C22: flow(a,c) >= 0
-	_C23: flow(b,d) >= 0
-	_C24: flow(d,f) >= 0
-	_C25: flow(c,d) >= 0
+    flow LP:
+    MAXIMIZE
+    1.0*flow(a,b) + 1.0*flow(a,c) + 0
+    SUBJECT TO
+    _C1: flow(c,f) + flow(d,f) - flow(f,g) = 0
+    _C2: flow(b,d) + flow(c,d) - flow(d,e) - flow(d,f) = 0
+    _C3: flow(a,b) - flow(b,d) - flow(b,e) = 0
+    _C4: flow(b,e) + flow(d,e) - flow(e,g) = 0
+    _C5: flow(a,c) - flow(c,d) - flow(c,f) = 0
+    _C6: flow(e,g) <= 70
+    _C7: flow(c,d) <= 60
+    _C8: flow(c,f) <= 20
+    _C9: flow(a,b) <= 50
+    _C10: flow(f,g) <= 70
+    _C11: flow(b,e) <= 20
+    _C12: flow(a,c) <= 100
+    _C13: flow(d,f) <= 60
+    _C14: flow(b,d) <= 40
+    _C15: flow(d,e) <= 50
+    _C16: flow(d,e) >= 0
+    _C17: flow(e,g) >= 0
+    _C18: flow(a,b) >= 0
+    _C19: flow(b,e) >= 0
+    _C20: flow(c,f) >= 0
+    _C21: flow(f,g) >= 0
+    _C22: flow(a,c) >= 0
+    _C23: flow(b,d) >= 0
+    _C24: flow(d,f) >= 0
+    _C25: flow(c,d) >= 0
 
-	VARIABLES
-	flow(a,b) free Continuous
-	flow(a,c) free Continuous
-	flow(b,d) free Continuous
-	flow(b,e) free Continuous
-	flow(c,d) free Continuous
-	flow(c,f) free Continuous
-	flow(d,e) free Continuous
-	flow(d,f) free Continuous
-	flow(e,g) free Continuous
-	flow(f,g) free Continuous
-
-
-The complete running example can be found :ref:`here<maxflowOperator>`.
+    VARIABLES
+    flow(a,b) free Continuous
+    flow(a,c) free Continuous
+    flow(b,d) free Continuous
+    flow(b,e) free Continuous
+    flow(c,d) free Continuous
+    flow(c,f) free Continuous
+    flow(d,e) free Continuous
+    flow(d,f) free Continuous
+    flow(e,g) free Continuous
+    flow(f,g) free Continuous
 
 
-Modeling in Text Notation 
-****************************************************************************
-
-The RLP envirnonment allows the user to also enter the equations in text form, as introduced in (TODO: paper).
-To illustrate, we will show how the flow LP looks like in text form :: 
-
-	model = reloopProblem("flow LP", lp.LpMaximize)
-
-	# declarations
-	model.predicate("flow", 2, var = True)
-	model.predicate("cap", 2)
-	model.predicate("inFlow", 1, var = True)
-	model.predicate("outFlow", 1, var = True)
-	# the objective function is added to relational LP first
-	model += reloopConstraint("sum{ X,Y in source(X) & edge(X,Y) } : { flow(X,Y) }")
-	# constraints defining inflow are added
-	input = "forall{ Y in node(Y) & ~source(Y) } : { sum{ X in edge(X,Y) } : { 1.0*flow(X,Y)} = inFlow(Y)}"
-	model += reloopConstraint(input)
-	# constraints defining outflow are added
-	input = "forall{ X in node(X) & ~target(X) } : { sum{ Y in edge(X,Y) } : { 1.0*flow(X,Y) }  = outFlow(X)}"
-	model += reloopConstraint(input)
-	# constraints defining preservation of flow are added
-	input = "forall{ X in node(X) & ~source(X) & ~target(X)} : { inFlow(X) = outFlow(X) }"
-	model += reloopConstraint(input)
-	# constraints defining lower and upper bounds are added
-	input = "forall{ X,Y in edge(X,Y) } : { flow(X,Y) >= 0}"
-	model += reloopConstraint(input)
-	input = "forall{ X,Y in edge(X,Y) } : { flow(X,Y) <= cap(X,Y)}"
-	model += reloopConstraint(input)
-
-You can find the running code in :ref:`maxflow_text.py<maxflowText>`. 
-
-.. CAUTION::
-    Substitutions are not yet implemented in text mode. As you can see, we have implemented ``inFlow`` and ``outFlow`` as LP variables and their definitions as LP constraints.
+The complete running example can be found :ref:`here<maxflow>`.
 
 
 Equitable Partitions and Lifted Linear Programming

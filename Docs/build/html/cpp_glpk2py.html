@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Glpk2Py &mdash; reloop 0.0.1a documentation</title>
+    <title>Glpk2Py &mdash; reloop 0.1.0b documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.0.1a',
+        VERSION:     '0.1.0b',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,12 +27,12 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="reloop 0.0.1a documentation" href="index.html" />
+    <link rel="top" title="reloop 0.1.0b documentation" href="index.html" />
     <link rel="up" title="CPlusPlus" href="cpp.html" />
     <link rel="next" title="Bibliography" href="bibliography.html" />
     <link rel="prev" title="Fc" href="cpp_fc.html" />
@@ -42,7 +42,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body>
+  <body role="document">
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -56,7 +56,7 @@
         <a class="navbar-brand" href="http://www-ai.cs.uni-dortmund.de/weblab/index.html"><img class="intro-logo" src="_static/tulogo.svg">
         </a>
         <span class="navbar-text navbar-ls8-title">
-          reloop<span class="navbar-version"><b> (0.0.1)</b></span>
+          reloop<span class="navbar-version"><b> (0.1.0)</b></span>
         </span>
       </div>
 
@@ -94,7 +94,8 @@
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="python_maxflow_operator.html">maxflow_operator.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="python_maxflow_text.html">maxflow_text.py</a></li>
-<li class="toctree-l2"><a class="reference internal" href="python_equitablePartition_Abc.html">equitablePartition_Abc.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_lift_factorgraph.html">lift_factorgraph.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_lift_Abc.html">lift_Abc.py</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="code.html">Code</a><ul class="current">
@@ -141,9 +142,9 @@
 <h2>Members<a class="headerlink" href="#members" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="filetype">
 <h3>Filetype<a class="headerlink" href="#filetype" title="Permalink to this headline">¶</a></h3>
-<dl class="member">
-<dt id="glpk2py::filetype__enum">
-enum <tt class="descclassname">glpk2py::</tt><tt class="descname">filetype</tt><a class="headerlink" href="#glpk2py::filetype__enum" title="Permalink to this definition">¶</a></dt>
+<dl class="enum">
+<dt id="_CPPv2N7glpk2py8filetypeE">
+<em class="property">enum </em><code class="descclassname">glpk2py::</code><code class="descname">filetype</code><a class="headerlink" href="#_CPPv2N7glpk2py8filetypeE" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div>The Format of a given file</div></blockquote>
 <table border="1" class="docutils">
@@ -174,9 +175,9 @@ enum <tt class="descclassname">glpk2py::</tt><tt class="descname">filetype</tt><
 </div>
 <div class="section" id="bounds">
 <h3>Bounds<a class="headerlink" href="#bounds" title="Permalink to this headline">¶</a></h3>
-<dl class="member">
-<dt id="glpkl2py::bounds__enum">
-enum <tt class="descclassname">glpkl2py::</tt><tt class="descname">bounds</tt><a class="headerlink" href="#glpkl2py::bounds__enum" title="Permalink to this definition">¶</a></dt>
+<dl class="enum">
+<dt id="_CPPv2N8glpkl2py6boundsE">
+<em class="property">enum </em><code class="descclassname">glpkl2py::</code><code class="descname">bounds</code><a class="headerlink" href="#_CPPv2N8glpkl2py6boundsE" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div>Flags, which indicate the different bounds to be calculated for given LP.
 For instance if UPPER is set the function getMatrix() will calculate the upper bounds for the specified LP object.</div></blockquote>
@@ -216,9 +217,9 @@ For instance if UPPER is set the function getMatrix() will calculate the upper b
 </div>
 <div class="section" id="scaling">
 <h3>Scaling<a class="headerlink" href="#scaling" title="Permalink to this headline">¶</a></h3>
-<dl class="member">
-<dt id="glpk2py::scaling__enum">
-enum <tt class="descclassname">glpk2py::</tt><tt class="descname">scaling</tt><a class="headerlink" href="#glpk2py::scaling__enum" title="Permalink to this definition">¶</a></dt>
+<dl class="enum">
+<dt id="_CPPv2N7glpk2py7scalingE">
+<em class="property">enum </em><code class="descclassname">glpk2py::</code><code class="descname">scaling</code><a class="headerlink" href="#_CPPv2N7glpk2py7scalingE" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div>Flags used for distinguishing between the different scaling types to be used by the defined functions.</div></blockquote>
 <table border="1" class="docutils">
@@ -253,8 +254,8 @@ enum <tt class="descclassname">glpk2py::</tt><tt class="descname">scaling</tt><a
 <div class="section" id="openlp">
 <h3>openLP<a class="headerlink" href="#openlp" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
-<dt id="glpk2py::openLP__ssCR.i">
-void <tt class="descclassname">glpk2py::</tt><tt class="descname">openLP</tt><big>(</big>const std::string&amp; <em>fname</em>, int <em>format</em><big>)</big><a class="headerlink" href="#glpk2py::openLP__ssCR.i" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv2N7glpk2py6openLPERKNSt6stringEi">
+<span id="glpk2py::openLP__ssCR.i"></span>void <code class="descclassname">glpk2py::</code><code class="descname">openLP</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>fname</em>, int <em>format</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N7glpk2py6openLPERKNSt6stringEi" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div>Opens the LP by creating a glpk problem object and assigning the given file to it n
 Furthermore extracts the number of columns and rows of the opened LP and assigns the values to global variables</div></blockquote>
@@ -282,8 +283,8 @@ Furthermore extracts the number of columns and rows of the opened LP and assigns
 <div class="section" id="closelp">
 <h3>closeLP<a class="headerlink" href="#closelp" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
-<dt id="glpk2py::closeLP__X">
-void <tt class="descclassname">glpk2py::</tt><tt class="descname">closeLP</tt><big>(</big><em>void</em><big>)</big><a class="headerlink" href="#glpk2py::closeLP__X" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv2N7glpk2py7closeLPEv">
+<span id="glpk2py::closeLP__void"></span>void <code class="descclassname">glpk2py::</code><code class="descname">closeLP</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N7glpk2py7closeLPEv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Closes LP by calling the destructor of glpk, which deallocates all memory used by the corresponding problem object iff the constructor was called in openLPn
 The call of glp_free_env() frees all resources used by GLPK routines</p>
 </dd></dl>
@@ -292,8 +293,8 @@ The call of glp_free_env() frees all resources used by GLPK routines</p>
 <div class="section" id="getmatrix">
 <h3>getMatrix<a class="headerlink" href="#getmatrix" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
-<dt id="glpk2py::getMatrix__bounds.i">
-vector&lt;double&gt; <tt class="descclassname">glpk2py::</tt><tt class="descname">getMatrix</tt><big>(</big>bounds <em>boundquery</em>, int <em>scaled</em><big>)</big><a class="headerlink" href="#glpk2py::getMatrix__bounds.i" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv2N7glpk2py9getMatrixE6boundsi">
+<span id="glpk2py::getMatrix__bounds.i"></span>vector&lt;double&gt; <code class="descclassname">glpk2py::</code><code class="descname">getMatrix</code><span class="sig-paren">(</span>bounds <em>boundquery</em>, int <em>scaled</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N7glpk2py9getMatrixE6boundsi" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div>Computes a Matrix depending on the boundquery argument (see bounds)</div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
@@ -329,8 +330,8 @@ UNBOUND &#8211; Calculates unbound variables of a given LP</p>
 <div class="section" id="getobjective">
 <h3>getObjective<a class="headerlink" href="#getobjective" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
-<dt id="glpk2py::getObjective__i">
-vector&lt;double&gt; <tt class="descclassname">glpk2py::</tt><tt class="descname">getObjective</tt><big>(</big>int <em>scaled</em><big>)</big><a class="headerlink" href="#glpk2py::getObjective__i" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv2N7glpk2py12getObjectiveEi">
+<span id="glpk2py::getObjective__i"></span>vector&lt;double&gt; <code class="descclassname">glpk2py::</code><code class="descname">getObjective</code><span class="sig-paren">(</span>int <em>scaled</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N7glpk2py12getObjectiveEi" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div>Calculates the objective of a given LP</div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
@@ -355,8 +356,8 @@ the scale factor s is set to the current scaled factor and the current position 
 <div class="section" id="doscaling">
 <h3>doScaling<a class="headerlink" href="#doscaling" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
-<dt id="glpk2py::doScaling__scaling">
-void <tt class="descclassname">glpk2py::</tt><tt class="descname">doScaling</tt><big>(</big>scaling <em>sctype</em><big>)</big><a class="headerlink" href="#glpk2py::doScaling__scaling" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv2N7glpk2py9doScalingE7scaling">
+<span id="glpk2py::doScaling__scaling"></span>void <code class="descclassname">glpk2py::</code><code class="descname">doScaling</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv2N7glpk2py7scalingE" title="glpk2py::scaling">scaling</a> <em>sctype</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N7glpk2py9doScalingE7scaling" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div>Wrapper function for the glp scaling method, which does the actual scaling of the given lp.</div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
@@ -376,8 +377,8 @@ void <tt class="descclassname">glpk2py::</tt><tt class="descname">doScaling</tt>
 <div class="section" id="solve">
 <h3>Solve<a class="headerlink" href="#solve" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
-<dt id="glpk2py::solve">
-void <tt class="descclassname">glpk2py::</tt><tt class="descname">solve</tt><big>(</big><big>)</big><a class="headerlink" href="#glpk2py::solve" title="Permalink to this definition">¶</a></dt>
+<dt id="_CPPv2N7glpk2py5solveEv">
+<span id="glpk2py::solve"></span>void <code class="descclassname">glpk2py::</code><code class="descname">solve</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N7glpk2py5solveEv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Solves the given LP with an off-the-shelf LP-Solver for instance using the Gnu GLPK</p>
 </dd></dl>
 
@@ -603,8 +604,8 @@ void <tt class="descclassname">glpk2py::</tt><tt class="descname">solve</tt><big
       
     </p>
     <p>
-        &copy; Copyright 2014, Martin Mladenov, Kristian Kersting, Danny Heinrich.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
+        &copy; Copyright 2014, Martin Mladenov, Kristian Kersting, Danny Heinrich, Leonard Kleinhans.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.1.<br/>
     </p>
   </div>
 </footer>

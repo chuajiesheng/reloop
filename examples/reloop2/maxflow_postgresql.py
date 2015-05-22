@@ -1,12 +1,13 @@
 import psycopg2
 from reloop.languages.reloop2.logkb import *
 from reloop.languages.reloop2.lp import *
+import getpass
 import maxflow_example
 
 # Initialize Database with necessary Tables and Values
 db_name = raw_input("Please specifiy the name of your Database: ")
 db_user = raw_input("Pease specify the Username for the Database: ")
-db_password = raw_input("Specify the password if applicable: ")
+db_password = getpass.getpass("Enter your password (Leave blank if None):" )
 connection = psycopg2.connect("dbname=" + str(db_name) + " user=" + str(db_user) + " password=" + str(db_password))
 cursor = connection.cursor()
 

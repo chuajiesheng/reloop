@@ -1,6 +1,7 @@
 import psycopg2
 from reloop.languages.reloop2.logkb import *
 from reloop.languages.reloop2.lp import *
+import getpass
 import maxflow_example
 
 table_prefix = "file_"
@@ -8,7 +9,7 @@ table_prefix = "file_"
 # Initialize Database with necessary Tables and Values
 db_name = raw_input("Please specifiy the name of your Database: ")
 db_user = raw_input("Pease specify the Username for the Database: ")
-db_password = raw_input("Specify the password if applicable: ")
+db_password = getpass.getpass("Enter your password (Leave blank if None): ")
 connection = psycopg2.connect("dbname=" + str(db_name) + " user=" + str(db_user) + " password=" + str(db_password))
 cursor = connection.cursor()
 
@@ -33,9 +34,11 @@ connection.commit()
 path = raw_input("Please specify a path for a maxflow file")
 file = open(path, "r")
 
-# s designates the source and t the target , a indicates edges and cost  [[node21,node22]cost]
+# s designates the source and t the target , a indicates edges and cost  [[node21,node22]cost] and n without t or s the nodes
 #n 1 s
 #n 2 t
+#n 1
+#n 2
 #a 3 2 999999
 #a 4 2 999999
 #a 5 2 999999
@@ -44,32 +47,32 @@ file = open(path, "r")
 count = 0
 for line in file:
     temp = line.split()
-    if len(temp) >= 3:
-        if temp[0] == "n" and temp[2] == "s":
-            cursor.execute("INSERT INTO " + table_prefix + "source values('" + temp[1] + "')")
-        if temp[0] == "n" and temp[2] == "t":
-            cursor.execute("INSERT INTO " + table_prefix + "target values('" + temp[1] + "')")
 
-        if temp[0] == "a" :
-            cursor.execute("INSERT INTO " + table_prefix + "node values('" + temp[1] + "')")
-            cursor.execute("INSERT INTO " + table_prefix + "node values('" + temp[2] + "')")
-            cursor.execute("INSERT INTO " + table_prefix + "edge values('" + temp[1] + "'" + "," + "'" + temp[2] + "')")
-            cursor.execute("INSERT INTO " + table_prefix + "cost values('" + temp[1] + "'" + "," + "'" +  temp[2] + "' , " + temp[3]  + ")")
-        else:
-            continue
-        count += 1
-        if count % 10000 == 0:
-            print "Reading File Please Wait ...\n " + str(count) + " Lines were read so far."
+    if temp[0] == "n" and len(temp) == 3:
+        if temp[2] == 's':
+            cursor.execute("INSERT INTO " + table_prefix + "source values('" + temp[1] + "')")
+        elif temp[2] == 't':
+            cursor.execute("INSERT INTO " + table_prefix + "target values('" + temp[1] + "')")
+    elif temp[0] == "n":
+        cursor.execute("INSERT INTO " + table_prefix + "node values('" + temp[1] + "')")
+    if temp[0] == "a" :
+        cursor.execute("INSERT INTO " + table_prefix + "edge values('" + temp[1] + "'" + "," + "'" + temp[2] + "')")
+        cursor.execute("INSERT INTO " + table_prefix + "cost values('" + temp[1] + "'" + "," + "'" +  temp[2] + "' , " + temp[3]  + ")")
+    else:
+        continue
+    count += 1
+    if count % 10000 == 0:
+         print "Reading File Please Wait ...\n " + str(count) + " Lines were read so far."
 
     connection.commit()
 
-cursor.execute("CREATE TABLE tmp (x varchar(10));")
-connection.commit()
-cursor.execute("INSERT INTO tmp SELECT DISTINCT * FROM " + table_prefix + "node;")
-connection.commit()
-cursor.execute("DROP TABLE " + table_prefix + "node;")
-cursor.execute("ALTER TABLE tmp RENAME TO " + table_prefix + "node;")
-connection.commit()
+#cursor.execute("CREATE TABLE tmp (x varchar(10));")
+#connection.commit()
+#cursor.execute("INSERT INTO tmp SELECT DISTINCT * FROM " + table_prefix + "node;")
+#connection.commit()
+#cursor.execute("DROP TABLE " + table_prefix + "node;")
+#cursor.execute("ALTER TABLE tmp RENAME TO " + table_prefix + "node;")
+#connection.commit()
 cursor.close()
 connection.close()
 

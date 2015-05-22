@@ -7,7 +7,7 @@ Members
 
 Filetype
 ********
-.. cpp:member:: enum glpk2py::filetype
+.. cpp:enum::  glpk2py::filetype
 	
      The Format of a given file
 
@@ -20,7 +20,7 @@ Filetype
 
 Bounds
 ******
-.. cpp:member:: enum glpkl2py::bounds
+.. cpp:enum::  glpkl2py::bounds
 
      Flags, which indicate the different bounds to be calculated for given LP.
      For instance if UPPER is set the function getMatrix() will calculate the upper bounds for the specified LP object.
@@ -36,7 +36,7 @@ Bounds
 
 Scaling
 *******
-.. cpp:member:: enum glpk2py::scaling
+.. cpp:enum::  glpk2py::scaling
 
      Flags used for distinguishing between the different scaling types to be used by the defined functions.
 
