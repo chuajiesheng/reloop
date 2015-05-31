@@ -15,6 +15,7 @@ Contents:
    :maxdepth: 1
    
    python_reloop2
+   python_maxflow
    python_read
    python_shortestPath
    python_small_matrix

@@ -1,8 +1,8 @@
 .. _maxflow:
 
-===================
+====================
 maxflow_pydatalog.py
-===================
+====================
 
 .. literalinclude:: ../../examples/reloop2/maxflow_pydatalog.py
 
