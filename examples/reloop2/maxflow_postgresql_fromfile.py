@@ -4,6 +4,7 @@ from reloop.languages.reloop2.lp import *
 import getpass
 import maxflow_example
 
+
 """
 Execute this file if you want to read data for a maxflow problem from a plain text file
 If you do not want to input your database credentials every time you run the file please feel free to change
@@ -21,6 +22,7 @@ For further examples on the formatting on the input files please see the filenam
    a a c 20
    a a b 50    (edges and cap)
 """
+
 table_prefix = "file_"
 
 # Initialize Database with necessary Tables and Values
@@ -54,7 +56,6 @@ file = open(path, "r")
 count = 0
 for line in file:
     temp = line.split()
-
     if temp[0] == "n" and len(temp) == 3:
         if temp[2] == 's':
             cursor.execute("INSERT INTO " + table_prefix + "source values('" + temp[1] + "')")
@@ -62,18 +63,20 @@ for line in file:
             cursor.execute("INSERT INTO " + table_prefix + "target values('" + temp[1] + "')")
     elif temp[0] == "n":
         cursor.execute("INSERT INTO " + table_prefix + "node values('" + temp[1] + "')")
-    if temp[0] == "a" :
+    if temp[0] == "a":
         cursor.execute("INSERT INTO " + table_prefix + "edge values('" + temp[1] + "'" + "," + "'" + temp[2] + "')")
-        cursor.execute("INSERT INTO " + table_prefix + "cost values('" + temp[1] + "'" + "," + "'" +  temp[2] + "' , " + temp[3]  + ")")
+        cursor.execute(
+            "INSERT INTO " + table_prefix + "cost values('" + temp[1] + "'" + "," + "'" + temp[2] + "' , " + temp[
+                3] + ")")
     else:
         continue
     count += 1
     if count % 10000 == 0:
-         print "Reading File Please Wait ...\n " + str(count) + " Lines were read so far."
-
+        print "Reading File Please Wait ...\n " + str(count) + " Lines were read so far."
     connection.commit()
 
 cursor.close()
 connection.close()
+file.close()
 
 model = maxflow_example.maxflow(PostgreSQLKb(db_name, db_user, db_password), Pulp, table_prefix)
