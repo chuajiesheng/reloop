@@ -26,7 +26,7 @@ model = RlpProblem("LP-SVM", LpMinimize, PyDatalogLogKb(), Pulp)
 print("\nBuilding a relational variant of the " + model.name)
 
 # const
-c = 1.0y
+c = 1.0
 
 # declarations
 X, Z, J, I = sub_symbols('X', 'Z', 'J', 'I')

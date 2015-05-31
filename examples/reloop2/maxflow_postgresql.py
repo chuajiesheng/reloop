@@ -4,6 +4,10 @@ from reloop.languages.reloop2.lp import *
 import getpass
 import maxflow_example
 
+"""
+A static example for the maxflow problem contained in maxflow_example.max using a user specified postgreSQL DB
+"""
+
 # Initialize Database with necessary Tables and Values
 db_name = raw_input("Please specifiy the name of your Database: ")
 db_user = raw_input("Pease specify the Username for the Database: ")

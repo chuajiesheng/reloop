@@ -4,24 +4,23 @@ from reloop.languages.reloop2.lp import *
 import getpass
 import maxflow_example
 
-###########
-#
-# Execute this file if you want to read data for a maxflow problem from a plain text file
-# If you do not want to input your database credentials every time you run the file please feel free to change
-# db_name, db_user and db_password as well as the path accordingly.
-# Also feel free to change the table names and the table_prefix.
-# Default prefix: "file_"
-#
-#For further examples on the formatting on the input files please see the filename extension  .max
-#
-#   n a s       (source)
-#   n g t       (target)
-#   n a
-#   n b         (nodes)
-#   a a c 20
-#   a a b 50    (edges and cap)
-###########
+"""
+Execute this file if you want to read data for a maxflow problem from a plain text file
+If you do not want to input your database credentials every time you run the file please feel free to change
+db_name, db_user and db_password as well as the path accordingly.
+Also feel free to change the table names and the table_prefix, but be careful.
+Currently you will also have to change the names in maxflow_example.py as well.
+Default prefix: "file_"
 
+For further examples on the formatting on the input files please see the filename extension  .max
+
+   n a s       (source)
+   n g t       (target)
+   n a
+   n b         (nodes)
+   a a c 20
+   a a b 50    (edges and cap)
+"""
 table_prefix = "file_"
 
 # Initialize Database with necessary Tables and Values
