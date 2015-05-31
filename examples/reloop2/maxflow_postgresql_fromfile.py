@@ -4,6 +4,24 @@ from reloop.languages.reloop2.lp import *
 import getpass
 import maxflow_example
 
+###########
+#
+# Execute this file if you want to read data for a maxflow problem from a plain text file
+# If you do not want to input your database credentials every time you run the file please feel free to change
+# db_name, db_user and db_password as well as the path accordingly.
+# Also feel free to change the table names and the table_prefix.
+# Default prefix: "file_"
+#
+#For further examples on the formatting on the input files please see the filename extension  .max
+#
+#   n a s       (source)
+#   n g t       (target)
+#   n a
+#   n b         (nodes)
+#   a a c 20
+#   a a b 50    (edges and cap)
+###########
+
 table_prefix = "file_"
 
 # Initialize Database with necessary Tables and Values
@@ -34,16 +52,6 @@ connection.commit()
 path = raw_input("Please specify a path for a maxflow file")
 file = open(path, "r")
 
-# s designates the source and t the target , a indicates edges and cost  [[node21,node22]cost] and n without t or s the nodes
-#n 1 s
-#n 2 t
-#n 1
-#n 2
-#a 3 2 999999
-#a 4 2 999999
-#a 5 2 999999
-#a 6 2 999999
-
 count = 0
 for line in file:
     temp = line.split()
@@ -66,13 +74,6 @@ for line in file:
 
     connection.commit()
 
-#cursor.execute("CREATE TABLE tmp (x varchar(10));")
-#connection.commit()
-#cursor.execute("INSERT INTO tmp SELECT DISTINCT * FROM " + table_prefix + "node;")
-#connection.commit()
-#cursor.execute("DROP TABLE " + table_prefix + "node;")
-#cursor.execute("ALTER TABLE tmp RENAME TO " + table_prefix + "node;")
-#connection.commit()
 cursor.close()
 connection.close()
 

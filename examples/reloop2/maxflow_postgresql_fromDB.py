@@ -4,6 +4,15 @@ from reloop.languages.reloop2.lp import *
 import getpass
 import maxflow_example
 
+###########
+#
+# Execute this file if the tables you need for solving the problem are already available in the specified database
+# If you chose a different prefix than "_file" four your tables please change the table_prefix accordingly
+# Default prefix: "file_"
+#
+###########
+
+
 table_prefix = "file_"
 
 # Initialize Database with necessary Tables and Values

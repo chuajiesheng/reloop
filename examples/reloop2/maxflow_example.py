@@ -56,5 +56,6 @@ def maxflow(logKb, solver, predicate_prefix=""):
             total += value
 
     print "\nTime needed for the grounding and solving: " + str(end - start) + " s."
-    print "\nThus, the maximum flow entering the traffic network at node a is "+str(sol["flow(a, b)"]+sol["flow(a, c)"])+" cars per hour."
+    #TODO: Change output to display correct results for an arbitrary number of edges outgoing from the source
+    print "\nThus, the maximum flow entering the traffic network at node a is "+str(sol[predicate_prefix + "flow(a, b)"]+sol[predicate_prefix + "flow(a, c)"])+" cars per hour."
     print "\nThe total flow in the traffic network is "+str(total)+" cars per hour."
