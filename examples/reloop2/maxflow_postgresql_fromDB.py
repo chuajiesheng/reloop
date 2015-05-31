@@ -10,7 +10,6 @@ If you chose a different prefix than "_file" four your tables please change the 
 Default prefix: "file_"
 """
 
-
 table_prefix = "file_"
 
 # Initialize Database with necessary Tables and Values
