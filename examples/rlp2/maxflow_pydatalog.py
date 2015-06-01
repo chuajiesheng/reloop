@@ -1,11 +1,9 @@
-from reloop.languages.reloop2.logkb import *
-from reloop.languages.reloop2.lp import *
+from reloop.languages.rlp2 import *
 import maxflow_example
 
 """
 A static example for the maxflow problem contained in maxflow_example.max using pyDatalog
 """
-
 
 @pyDatalog.predicate()
 def node1(x):
@@ -36,7 +34,6 @@ def edge2(x, y):
 def source1(x):
     yield ('a')
 
-
 @pyDatalog.predicate()
 def target1(x):
     yield ('g')
@@ -55,6 +52,5 @@ def cost3(x, y, z):
     yield ('d', 'f', 60)
     yield ('e', 'g', 70)
     yield ('f', 'g', 70)
-
 
 model = maxflow_example.maxflow(PyDatalogLogKb(), Pulp)

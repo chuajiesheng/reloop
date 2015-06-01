@@ -1,6 +1,6 @@
 import psycopg2
-from reloop.languages.reloop2.logkb import *
-from reloop.languages.reloop2.lp import *
+from reloop.languages.rlp2.logkb import *
+from reloop.languages.rlp2.lp import *
 import getpass
 import maxflow_example
 

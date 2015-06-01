@@ -1,4 +1,4 @@
-Reloop Language
+RLP2
 ****************
 
 Summary
@@ -8,7 +8,7 @@ Main components of the reloop2 language. Including the definition of sympy exten
 Documentation
 =======================
 
-.. automodule:: reloop2
+.. automodule:: rlp
     :members:
     :special-members: __iadd__, __init__
 

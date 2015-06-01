@@ -1,5 +1,5 @@
-from reloop.languages.reloop2.logkb import *
-from reloop.languages.reloop2.lp import *
+from reloop.languages.rlp2.logkb import *
+from reloop.languages.rlp2.lp import *
 
 @pyDatalog.predicate()
 def attribute3(x, y, z):

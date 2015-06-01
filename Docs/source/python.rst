@@ -14,7 +14,7 @@ Contents:
 .. toctree::
    :maxdepth: 1
    
-   python_reloop2
+   python_rlp2
    python_maxflow
    python_read
    python_shortestPath

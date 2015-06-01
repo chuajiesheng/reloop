@@ -1,7 +1,7 @@
 from distutils.command.config import config
 import pulp
 import numpy
-from reloop2 import *
+from rlp import *
 
 # constants
 LpMinimize = 1

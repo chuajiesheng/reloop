@@ -1,4 +1,4 @@
-from reloop2 import *
+from rlp import *
 from pyDatalog import pyDatalog, pyEngine
 from sets import Set
 import psycopg2
