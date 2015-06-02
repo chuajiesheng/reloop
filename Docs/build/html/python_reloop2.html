@@ -1,0 +1,691 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Reloop Language &mdash; reloop 0.1.0b documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/ls8layout.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.0b',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="reloop 0.1.0b documentation" href="index.html" />
+    <link rel="up" title="Python" href="python.html" />
+    <link rel="next" title="Read" href="python_read.html" />
+    <link rel="prev" title="Python" href="python.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="http://www-ai.cs.uni-dortmund.de/weblab/index.html"><img class="intro-logo" src="_static/tulogo.svg">
+        </a>
+        <span class="navbar-text navbar-ls8-title">
+          reloop<span class="navbar-version"><b> (0.1.0)</b></span>
+        </span>
+      </div>
+
+      <div class="collapse navbar-collapse nav-collapse navbar-right">
+        <ul class="nav navbar-nav">
+          
+              <li><a href="index.html">Home</a></li>
+              <li><a href="download.html">Download</a></li>
+          
+          
+            
+<li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Index <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#main-dependencies">Main dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#optional-dependencies">Optional dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installing-reloop">Installing reloop</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#relational-linear-programming">Relational Linear Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#equitable-partitions-and-lifted-linear-programming">Equitable Partitions and Lifted Linear Programming</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="RAMPL.html">RAMPL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LLP.html">LLP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="python_maxflow_operator.html">maxflow_operator.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_maxflow_text.html">maxflow_text.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_lift_factorgraph.html">lift_factorgraph.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_lift_Abc.html">lift_Abc.py</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="code.html">Code</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="python.html">Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cython.html">Cython</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpp.html">CPlusPlus</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+</ul>
+</li>
+            
+          
+          
+          
+          
+          
+        </ul>
+
+        
+          
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        
+      </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <div class="section" id="reloop-language">
+<h1>Reloop Language<a class="headerlink" href="#reloop-language" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>Main components of the reloop2 language. Including the definition of sympy extensions, grounding logic, an interface for a Logical Knowledge Base interface and LP.</p>
+</div>
+<div class="section" id="module-reloop2">
+<span id="documentation"></span><h2>Documentation<a class="headerlink" href="#module-reloop2" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="reloop2.BooleanPredicate">
+<em class="property">class </em><code class="descclassname">reloop2.</code><code class="descname">BooleanPredicate</code><a class="reference internal" href="_modules/reloop2.html#BooleanPredicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop2.BooleanPredicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Predicate to use in boolean expressions; can be used like a function inside boolean terms.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="reloop2.ForAll">
+<em class="property">class </em><code class="descclassname">reloop2.</code><code class="descname">ForAll</code><span class="sig-paren">(</span><em>query_symbols</em>, <em>query</em>, <em>relation</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop2.html#ForAll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop2.ForAll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wraps a <a class="reference internal" href="#reloop2.Query" title="reloop2.Query"><code class="xref py py-class docutils literal"><span class="pre">Query</span></code></a> and a <code class="xref py py-class docutils literal"><span class="pre">Rel</span></code> to represent a set of constraints.</p>
+<dl class="method">
+<dt id="reloop2.ForAll.ground">
+<code class="descname">ground</code><span class="sig-paren">(</span><em>logkb</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop2.html#ForAll.ground"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop2.ForAll.ground" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grounds the query and relation</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>logkb</strong> (<code class="xref py py-class docutils literal"><span class="pre">LogKB</span></code>) &#8211; An implementation of a Logical Knowledge Base</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A set of grounded constraints</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="reloop2.NumericPredicate">
+<em class="property">class </em><code class="descclassname">reloop2.</code><code class="descname">NumericPredicate</code><a class="reference internal" href="_modules/reloop2.html#NumericPredicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop2.NumericPredicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Representing a predicate that is understood as a function. That is, though the relation <span class="math">\(R\)</span> inside the LogKB
+has <span class="math">\(k\)</span> elements, we define <span class="math">\(R(e_1, ..., e_{k-1}) := e_{k}\)</span>.</p>
+<dl class="method">
+<dt id="reloop2.NumericPredicate.ground">
+<code class="descname">ground</code><span class="sig-paren">(</span><em>logkb</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop2.html#NumericPredicate.ground"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop2.NumericPredicate.ground" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grounds itself</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>logkb</strong> (<code class="xref py py-class docutils literal"><span class="pre">LogKB</span></code>) &#8211; An implementation of a Logical Knowledge Base</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The <span class="math">\(e_{k}\)</span> th element</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="reloop2.Query">
+<em class="property">class </em><code class="descclassname">reloop2.</code><code class="descname">Query</code><span class="sig-paren">(</span><em>query_symbols</em>, <em>query</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop2.html#Query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop2.Query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal representation of a logical query.</p>
+<dl class="method">
+<dt id="reloop2.Query.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>query_symbols</em>, <em>query</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop2.html#Query.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop2.Query.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>query_symbols</strong> &#8211; List of type <a class="reference internal" href="#reloop2.SubSymbol" title="reloop2.SubSymbol"><code class="xref py py-class docutils literal"><span class="pre">SubSymbol</span></code></a></li>
+<li><strong>query</strong> &#8211; A logical query</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="reloop2.RlpProblem">
+<em class="property">class </em><code class="descclassname">reloop2.</code><code class="descname">RlpProblem</code><span class="sig-paren">(</span><em>name</em>, <em>sense</em>, <em>logkb</em>, <em>lp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop2.html#RlpProblem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop2.RlpProblem" title="Permalink to this definition">¶</a></dt>
+<dd><p>The model of a Relational Linear Program.</p>
+<dl class="method">
+<dt id="reloop2.RlpProblem.__iadd__">
+<code class="descname">__iadd__</code><span class="sig-paren">(</span><em>rhs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop2.html#RlpProblem.__iadd__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop2.RlpProblem.__iadd__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the objective or a constraint to the model.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rhs</strong> &#8211; Either an instance of :class :<cite>Expr</cite> (objective) or an instance of Rel or ForAllConstraint (constraint)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The class instance itself</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="reloop2.RlpProblem.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>name</em>, <em>sense</em>, <em>logkb</em>, <em>lp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop2.html#RlpProblem.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop2.RlpProblem.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instantiates the model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> &#8211; The name of the problem, describing it</li>
+<li><strong>sense</strong> &#8211; LpMaximize or LpMinimize</li>
+<li><strong>logkb</strong> &#8211; An instance of <code class="xref py py-class docutils literal"><span class="pre">logkb.LogKB</span></code></li>
+<li><strong>lp</strong> &#8211; A type of <a class="reference internal" href="#lp.LpProblem" title="lp.LpProblem"><code class="xref py py-class docutils literal"><span class="pre">lp.LpProblem</span></code></a></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="reloop2.RlpProblem.add_constraint_to_lp">
+<code class="descname">add_constraint_to_lp</code><span class="sig-paren">(</span><em>constraint</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop2.html#RlpProblem.add_constraint_to_lp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop2.RlpProblem.add_constraint_to_lp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a grounded constraint to the LP</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>constraint</strong> &#8211; The grounded constraint.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="reloop2.RlpProblem.add_objective_to_lp">
+<code class="descname">add_objective_to_lp</code><span class="sig-paren">(</span><em>objective</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop2.html#RlpProblem.add_objective_to_lp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop2.RlpProblem.add_objective_to_lp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a grounded objective to the LP</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>objective</strong> &#8211; A grounded expression (the objective)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="reloop2.RlpProblem.add_reloop_variable">
+<code class="descname">add_reloop_variable</code><span class="sig-paren">(</span><em>*predicates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop2.html#RlpProblem.add_reloop_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop2.RlpProblem.add_reloop_variable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Introduces predicates as lp variables. These predicate wont be grounded.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>predicates</strong> &#8211; A tuple of predicates to be added to the model</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="reloop2.RlpProblem.get_solution">
+<code class="descname">get_solution</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop2.html#RlpProblem.get_solution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop2.RlpProblem.get_solution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Passes the call to self.lpmodel</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The solution of the LP</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="reloop2.RlpProblem.ground_expression">
+<code class="descname">ground_expression</code><span class="sig-paren">(</span><em>expr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop2.html#RlpProblem.ground_expression"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop2.RlpProblem.ground_expression" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursively grounds any sympy expression, <a class="reference internal" href="#reloop2.RlpSum" title="reloop2.RlpSum"><code class="xref py py-class docutils literal"><span class="pre">RlpSum</span></code></a>, <code class="xref py py-class docutils literal"><span class="pre">RlpPredicate</span></code>, ...</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>expr</strong> &#8211; The expression which is to be grounded</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A grounded expression</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="reloop2.RlpProblem.ground_into_lp">
+<code class="descname">ground_into_lp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop2.html#RlpProblem.ground_into_lp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop2.RlpProblem.ground_into_lp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ground the RLP by grounding the objective and each constraint.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="reloop2.RlpProblem.solve">
+<code class="descname">solve</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop2.html#RlpProblem.solve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop2.RlpProblem.solve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grounds and solves the logical programm.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="reloop2.RlpProblem.status">
+<code class="descname">status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop2.html#RlpProblem.status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop2.RlpProblem.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Passes the call to self.lpmodel
+:return: The solution status of the LP.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="reloop2.RlpSum">
+<em class="property">class </em><code class="descclassname">reloop2.</code><code class="descname">RlpSum</code><span class="sig-paren">(</span><em>query_symbols</em>, <em>query</em>, <em>expression</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop2.html#RlpSum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop2.RlpSum" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="reloop2.RlpSum.ground">
+<code class="descname">ground</code><span class="sig-paren">(</span><em>logkb</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop2.html#RlpSum.ground"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop2.RlpSum.ground" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grounds the query and expression</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>logkb</strong> (<code class="xref py py-class docutils literal"><span class="pre">LogKB</span></code>) &#8211; An implementation of a Logical Knowledge Base</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">An summation of the grounded expressions</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="reloop2.SubSymbol">
+<em class="property">class </em><code class="descclassname">reloop2.</code><code class="descname">SubSymbol</code><a class="reference internal" href="_modules/reloop2.html#SubSymbol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop2.SubSymbol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Just a sympy.Symbol, but inherited to be able to define symbols explicitly</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="reloop2.boolean_predicate">
+<code class="descclassname">reloop2.</code><code class="descname">boolean_predicate</code><span class="sig-paren">(</span><em>name</em>, <em>arity</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop2.html#boolean_predicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop2.boolean_predicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function for generating a <a class="reference internal" href="#reloop2.BooleanPredicate" title="reloop2.BooleanPredicate"><code class="xref py py-class docutils literal"><span class="pre">BooleanPredicate</span></code></a> type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> &#8211; Name of the predicate</li>
+<li><strong>arity</strong> &#8211; Arity (must match count of relation elements)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A type with the given name, inherited from <a class="reference internal" href="#reloop2.BooleanPredicate" title="reloop2.BooleanPredicate"><code class="xref py py-class docutils literal"><span class="pre">BooleanPredicate</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="reloop2.numeric_predicate">
+<code class="descclassname">reloop2.</code><code class="descname">numeric_predicate</code><span class="sig-paren">(</span><em>name</em>, <em>arity</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop2.html#numeric_predicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop2.numeric_predicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function for generating a <a class="reference internal" href="#reloop2.NumericPredicate" title="reloop2.NumericPredicate"><code class="xref py py-class docutils literal"><span class="pre">NumericPredicate</span></code></a> type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> &#8211; Name of the predicate</li>
+<li><strong>arity</strong> &#8211; Arity (count of relation elements decremented by one)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A type with the given name, inherited from <a class="reference internal" href="#reloop2.NumericPredicate" title="reloop2.NumericPredicate"><code class="xref py py-class docutils literal"><span class="pre">NumericPredicate</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="reloop2.sub_symbols">
+<code class="descclassname">reloop2.</code><code class="descname">sub_symbols</code><span class="sig-paren">(</span><em>*symbols</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop2.html#sub_symbols"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop2.sub_symbols" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function for instantiating multiple <a class="reference internal" href="#reloop2.SubSymbol" title="reloop2.SubSymbol"><code class="xref py py-class docutils literal"><span class="pre">SubSymbol</span></code></a> at once.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>symbols</strong> &#8211; Tuple of strings</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Tuple of SubSymbols</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<span class="target" id="module-logkb"></span><dl class="class">
+<dt id="logkb.LogKb">
+<em class="property">class </em><code class="descclassname">logkb.</code><code class="descname">LogKb</code><a class="reference internal" href="_modules/logkb.html#LogKb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#logkb.LogKb" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interface for various LogKBs. Provides basic functionality for every LogKB to be implemented.</p>
+<dl class="method">
+<dt id="logkb.LogKb.ask">
+<code class="descname">ask</code><span class="sig-paren">(</span><em>query_symbols</em>, <em>logical_query</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logkb.html#LogKb.ask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#logkb.LogKb.ask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a query for the given LogKB and returns the List/Set of given answers from the LogKB</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>query_symbols</strong> &#8211; The symbols to be queried for.</li>
+<li><strong>logical_query</strong> &#8211; The logical query, which is to be transformed into a query fitting the LogKB</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A List of elements, which satisfy the query</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="logkb.LogKb.ask_predicate">
+<code class="descname">ask_predicate</code><span class="sig-paren">(</span><em>predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logkb.html#LogKb.ask_predicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#logkb.LogKb.ask_predicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Queries the LogKB for a specific Value for given constants.
+For Example : cost(&#8216;a&#8217;,&#8217;b&#8217;) = 50</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>predicate</strong> &#8211; The predicate to be queried for</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The Value associated with the predicate</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="logkb.PostgreSQLKb">
+<em class="property">class </em><code class="descclassname">logkb.</code><code class="descname">PostgreSQLKb</code><span class="sig-paren">(</span><em>dbname</em>, <em>user</em>, <em>password=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logkb.html#PostgreSQLKb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#logkb.PostgreSQLKb" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Logical Knowledge Base based on a PostgreSQL database.</p>
+<dl class="method">
+<dt id="logkb.PostgreSQLKb.and_clause_for_constants">
+<code class="descname">and_clause_for_constants</code><span class="sig-paren">(</span><em>predicates</em>, <em>and_clause_added</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logkb.html#PostgreSQLKb.and_clause_for_constants"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#logkb.PostgreSQLKb.and_clause_for_constants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterates over a list of given predicates and returns the where-clause for constants.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>predicates</strong> &#8211; The given predicates. E.g. : edge(X,&#8217;a&#8217;), edge (&#8216;a&#8217;,&#8217;c&#8217;)</li>
+<li><strong>and_clause_added</strong> (<em>Boolean</em>) &#8211; Indicates if there was been an and-clause beforehand to correctly concantenate the querystring</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The SQL conjunctions for the given predicates</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="logkb.PostgreSQLKb.ask">
+<code class="descname">ask</code><span class="sig-paren">(</span><em>query_symbols</em>, <em>logical_query</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logkb.html#PostgreSQLKb.ask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#logkb.PostgreSQLKb.ask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds a PostgreSQL query from a given logical query and its query_symbols by implicitly joining over all given predicates.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>query_symbols</strong> &#8211; see <code class="xref py py-func docutils literal"><span class="pre">ask()</span></code></li>
+<li><strong>query</strong> &#8211; see <code class="xref py py-func docutils literal"><span class="pre">ask()</span></code></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The answers, which satisfy the executed query on the database</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="logkb.PostgreSQLKb.ask_predicate">
+<code class="descname">ask_predicate</code><span class="sig-paren">(</span><em>predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logkb.html#PostgreSQLKb.ask_predicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#logkb.PostgreSQLKb.ask_predicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Queries a value from the database for a given predicate.
+The predicate only has constants as symbols and the value per definition has to be in the last column of the table.
+Such that a query &#8220;cost(&#8216;a&#8217;,&#8217;b&#8217;) implicitly queries for SELECT z FROM cost WHERE x = &#8216;a&#8217; AND y = &#8216;b&#8217;
+with z here being the third column of the table.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>predicate</strong> (<a class="reference internal" href="#reloop2.BooleanPredicate" title="reloop2.BooleanPredicate"><em>BooleanPredicate</em></a>) &#8211; The predicate to be queried for</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The Value associated with the predicate taken from the database</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="logkb.PostgreSQLKb.get_column_names">
+<code class="descname">get_column_names</code><span class="sig-paren">(</span><em>relation_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logkb.html#PostgreSQLKb.get_column_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#logkb.PostgreSQLKb.get_column_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function to get the name of the columns for a given table.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>relation_name</strong> (<a class="reference external" href="http://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; The name of the table</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list consisting of the column names.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="logkb.PostgreSQLKb.get_columns_for_symbols">
+<code class="descname">get_columns_for_symbols</code><span class="sig-paren">(</span><em>query_symbol</em>, <em>predicates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logkb.html#PostgreSQLKb.get_columns_for_symbols"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#logkb.PostgreSQLKb.get_columns_for_symbols" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a dictionary from symbols and predicates with Key, Value pairs of query_symbols,predicates , where is Symbol is the Key to its occurances in the predicates.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>query_symbol</strong> (<em>List(SubSymbol)</em>) &#8211; The Symbols to be queried for (Keys)</li>
+<li><strong>predicates</strong> (<em>List(BooleanPredicate)</em>) &#8211; The predicates, where the symbols might occur (Values)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A dictionary, which maps from the given query_symbols to the corresponding predicates in which the symbols occur.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-lp"></span><dl class="class">
+<dt id="lp.LpProblem">
+<em class="property">class </em><code class="descclassname">lp.</code><code class="descname">LpProblem</code><span class="sig-paren">(</span><em>name</em>, <em>sense</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lp.html#LpProblem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lp.LpProblem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Representation of a linear program. Intended to be inherited by multiple LP solver implementations.</p>
+<dl class="method">
+<dt id="lp.LpProblem.add_constraint">
+<code class="descname">add_constraint</code><span class="sig-paren">(</span><em>constraint_tuple</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lp.html#LpProblem.add_constraint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lp.LpProblem.add_constraint" title="Permalink to this definition">¶</a></dt>
+<dd><p>To be implemented by the actual solver.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>constraint_tuple</strong> &#8211; Constraint: Tuple of (lhs, b, sense), where lhs is an expression, b an atom (like an integer)</td>
+</tr>
+</tbody>
+</table>
+<p>and sense either -1, 0 or 1</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="lp.LpProblem.add_objective">
+<code class="descname">add_objective</code><span class="sig-paren">(</span><em>expr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lp.html#LpProblem.add_objective"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lp.LpProblem.add_objective" title="Permalink to this definition">¶</a></dt>
+<dd><p>To be implemented by the actual solver.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>expr</strong> &#8211; An object of type <code class="xref py py-class docutils literal"><span class="pre">sympy.core.Expr</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="lp.LpProblem.lp_variable">
+<code class="descname">lp_variable</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lp.html#LpProblem.lp_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lp.LpProblem.lp_variable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates some kind of lp variable, to be implemented by the solver.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> &#8211; name of a lp variable</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Some kind of lp variable</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="lp.LpProblem.solve">
+<code class="descname">solve</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/lp.html#LpProblem.solve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lp.LpProblem.solve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solves the lp</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="lp.LpProblem.status">
+<code class="descname">status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/lp.html#LpProblem.status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lp.LpProblem.status" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The solution status of the LP.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="lp.Pulp">
+<em class="property">class </em><code class="descclassname">lp.</code><code class="descname">Pulp</code><span class="sig-paren">(</span><em>name</em>, <em>sense</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lp.html#Pulp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lp.Pulp" title="Permalink to this definition">¶</a></dt>
+<dd><p>LPProblem implementation which uses the LP Solver provided by Pulp</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="_sources/python_reloop2.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, Martin Mladenov, Kristian Kersting, Danny Heinrich, Leonard Kleinhans.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

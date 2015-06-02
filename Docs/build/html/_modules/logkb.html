@@ -1,0 +1,411 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>logkb &mdash; reloop 0.1.0b documentation</title>
+    
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/ls8layout.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.0b',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="reloop 0.1.0b documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="http://www-ai.cs.uni-dortmund.de/weblab/index.html"><img class="intro-logo" src="../_static/tulogo.svg">
+        </a>
+        <span class="navbar-text navbar-ls8-title">
+          reloop<span class="navbar-version"><b> (0.1.0)</b></span>
+        </span>
+      </div>
+
+      <div class="collapse navbar-collapse nav-collapse navbar-right">
+        <ul class="nav navbar-nav">
+          
+              <li><a href="../index.html">Home</a></li>
+              <li><a href="../download.html">Download</a></li>
+          
+          
+            
+<li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Index <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#main-dependencies">Main dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#optional-dependencies">Optional dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-reloop">Installing reloop</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#relational-linear-programming">Relational Linear Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#equitable-partitions-and-lifted-linear-programming">Equitable Partitions and Lifted Linear Programming</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../RAMPL.html">RAMPL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../LLP.html">LLP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../python_maxflow_operator.html">maxflow_operator.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_maxflow_text.html">maxflow_text.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_lift_factorgraph.html">lift_factorgraph.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_lift_Abc.html">lift_Abc.py</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../code.html">Code</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../python.html">Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cython.html">Cython</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cpp.html">CPlusPlus</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
+</ul>
+</ul>
+</li>
+            
+          
+          
+          
+          
+          
+        </ul>
+
+        
+          
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        
+      </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <h1>Source code for logkb</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">rlp</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pyDatalog</span> <span class="kn">import</span> <span class="n">pyDatalog</span><span class="p">,</span> <span class="n">pyEngine</span>
+<span class="kn">from</span> <span class="nn">sets</span> <span class="kn">import</span> <span class="n">Set</span>
+<span class="kn">import</span> <span class="nn">psycopg2</span>
+
+<div class="viewcode-block" id="LogKb"><a class="viewcode-back" href="../python_rlp2.html#logkb.LogKb">[docs]</a><span class="k">class</span> <span class="nc">LogKb</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Interface for various LogKBs. Provides basic functionality for every LogKB to be implemented.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="LogKb.ask"><a class="viewcode-back" href="../python_rlp2.html#logkb.LogKb.ask">[docs]</a>    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_symbols</span><span class="p">,</span> <span class="n">logical_query</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructs a query for the given LogKB and returns the List/Set of given answers from the LogKB</span>
+
+<span class="sd">        :param query_symbols: The symbols to be queried for.</span>
+<span class="sd">        :param logical_query: The logical query, which is to be transformed into a query fitting the LogKB</span>
+<span class="sd">        :return: A List of elements, which satisfy the query</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</div>
+<div class="viewcode-block" id="LogKb.ask_predicate"><a class="viewcode-back" href="../python_rlp2.html#logkb.LogKb.ask_predicate">[docs]</a>    <span class="k">def</span> <span class="nf">ask_predicate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Queries the LogKB for a specific Value for given constants.</span>
+<span class="sd">        For Example : cost(&#39;a&#39;,&#39;b&#39;) = 50</span>
+
+<span class="sd">        :param predicate: The predicate to be queried for</span>
+<span class="sd">        :return: The Value associated with the predicate</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+</div></div>
+<span class="k">class</span> <span class="nc">PyDatalogLogKb</span><span class="p">(</span><span class="n">LogKb</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_symbols</span><span class="p">,</span> <span class="n">logical_query</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Builds a pyDataLog program from the logical_query and loads it. Then executes the query for the query_symbols.</span>
+
+<span class="sd">        :param query_symbols: The symbols to be queried.</span>
+<span class="sd">        :type query_symbols: list(SubSymbol)</span>
+<span class="sd">        :param logical_query:</span>
+<span class="sd">        :type:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">helper_predicate</span> <span class="o">=</span> <span class="s">&#39;helper(&#39;</span> <span class="o">+</span> <span class="s">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">query_symbols</span><span class="p">])</span> <span class="o">+</span> <span class="s">&#39;)&#39;</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">helper_predicate</span> <span class="o">+</span> <span class="s">&quot; &lt;= &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_query</span><span class="p">(</span><span class="n">logical_query</span><span class="p">)</span>
+        <span class="n">pyDatalog</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+
+        <span class="n">answer</span> <span class="o">=</span> <span class="n">pyDatalog</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">helper_predicate</span><span class="p">)</span>
+        <span class="n">pyEngine</span><span class="o">.</span><span class="n">Pred</span><span class="o">.</span><span class="n">reset_clauses</span><span class="p">(</span><span class="n">pyEngine</span><span class="o">.</span><span class="n">Pred</span><span class="p">(</span><span class="s">&quot;helper&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">query_symbols</span><span class="p">)))</span>
+
+        <span class="k">return</span> <span class="n">answer</span><span class="o">.</span><span class="n">answers</span>
+
+    <span class="k">def</span> <span class="nf">ask_predicate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Queries PyDataLog for the given predicate by constructing a query fitting the pyDataLog Syntax.</span>
+
+<span class="sd">        :param predicate: The predicate to be quried for</span>
+<span class="sd">        :return: The Value of the given predicate if it exists in the Database, None otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">predicate</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s">&quot;(&quot;</span>
+        <span class="n">query</span> <span class="o">+=</span> <span class="s">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">&quot;&#39;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">predicate</span><span class="o">.</span><span class="n">args</span><span class="p">])</span>
+        <span class="n">query</span> <span class="o">+=</span> <span class="s">&quot;, X)&quot;</span>
+
+        <span class="n">answer</span> <span class="o">=</span> <span class="n">pyDatalog</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">answer</span><span class="o">.</span><span class="n">answers</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">transform_query</span><span class="p">(</span><span class="n">logical_query</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Recursively builds the logical_query string from the given logical logical_query,by evaluating</span>
+
+<span class="sd">        :param logical_query: Type changes depending on the recursive depth and the depth of the expression.</span>
+<span class="sd">                              The logical query, needed for the pyDataLog program string.</span>
+<span class="sd">        :type logical_query: Boolean, BooleanPredicate</span>
+<span class="sd">        :return: The complete Body for loading the program into pyDataLog.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">logical_query</span><span class="o">.</span><span class="n">func</span> <span class="ow">is</span> <span class="n">And</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">&quot; &amp;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">PyDatalogLogKb</span><span class="o">.</span><span class="n">transform_query</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">logical_query</span><span class="o">.</span><span class="n">args</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">logical_query</span><span class="o">.</span><span class="n">func</span> <span class="ow">is</span> <span class="n">Not</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">&quot; ~&quot;</span> <span class="o">+</span> <span class="n">PyDatalogLogKb</span><span class="o">.</span><span class="n">transform_query</span><span class="p">(</span><span class="n">logical_query</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">logical_query</span><span class="p">,</span> <span class="n">BooleanPredicate</span><span class="p">):</span>
+            <span class="n">join</span> <span class="o">=</span> <span class="s">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">SubSymbol</span><span class="p">)</span> <span class="k">else</span> <span class="s">&quot;&#39;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">logical_query</span><span class="o">.</span><span class="n">args</span><span class="p">])</span>
+            <span class="k">return</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">logical_query</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s">&quot;(&quot;</span> <span class="o">+</span> <span class="n">join</span> <span class="o">+</span> <span class="s">&quot;)&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+<div class="viewcode-block" id="PostgreSQLKb"><a class="viewcode-back" href="../python_rlp2.html#logkb.PostgreSQLKb">[docs]</a><span class="k">class</span> <span class="nc">PostgreSQLKb</span> <span class="p">(</span><span class="n">LogKb</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A Logical Knowledge Base based on a PostgreSQL database.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dbname</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Opens a connection to the specified database and stores a cursor object for the class to access at runtime.</span>
+
+<span class="sd">        :param dbname: The name of the Database to connect to</span>
+<span class="sd">        :param user: Database User</span>
+<span class="sd">        :param password: The password for the given user if applicable</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">connection</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;dbname=&quot;</span><span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">dbname</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot; user=&quot;</span><span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">user</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot; password=&quot;</span><span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">password</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+<div class="viewcode-block" id="PostgreSQLKb.ask"><a class="viewcode-back" href="../python_rlp2.html#logkb.PostgreSQLKb.ask">[docs]</a>    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_symbols</span><span class="p">,</span> <span class="n">logical_query</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Builds a PostgreSQL query from a given logical query and its query_symbols by implicitly joining over all given predicates.</span>
+
+<span class="sd">        :param query_symbols: see :func:`~logkb.LogKB.ask`</span>
+<span class="sd">        :param query:         see :func:`~logkb.LogKB.ask`</span>
+<span class="sd">        :return: The answers, which satisfy the executed query on the database</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">negated_predicates</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">predicates</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">logical_query</span><span class="o">.</span><span class="n">func</span> <span class="ow">is</span> <span class="n">And</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">logical_query</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">arg</span><span class="o">.</span><span class="n">func</span> <span class="ow">is</span> <span class="n">Not</span><span class="p">:</span>
+                    <span class="n">negated_predicates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">BooleanPredicate</span><span class="p">):</span>
+                    <span class="n">predicates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;The given query is not in DNF&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">logical_query</span><span class="o">.</span><span class="n">func</span> <span class="ow">is</span> <span class="n">Not</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;This nothing! Or the universe! We don&#39;t know!&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">logical_query</span><span class="o">.</span><span class="n">func</span> <span class="ow">is</span> <span class="n">Or</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;Next version&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">logical_query</span><span class="p">,</span> <span class="n">BooleanPredicate</span><span class="p">):</span>
+            <span class="n">predicates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">logical_query</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&#39;The given function of the query has not been implemented yet or is not valid&#39;</span><span class="p">)</span>
+
+        <span class="n">column_for_symbols_where</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_columns_for_symbols</span><span class="p">(</span><span class="n">query_symbols</span><span class="p">,</span> <span class="n">predicates</span><span class="p">)</span>
+        <span class="n">column_for_symbols_notexists</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_columns_for_symbols</span><span class="p">(</span><span class="n">query_symbols</span><span class="p">,</span> <span class="n">negated_predicates</span><span class="p">)</span>
+
+        <span class="n">query</span> <span class="o">=</span> <span class="s">&quot;SELECT DISTINCT &quot;</span>
+        <span class="n">query</span> <span class="o">+=</span> <span class="s">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot;.&quot;</span> <span class="o">+</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot; AS &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">column_for_symbols_where</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span>
+        <span class="n">column_table_tuple_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">column_for_symbols_where</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+        <span class="n">tables</span> <span class="o">=</span> <span class="n">Set</span><span class="p">([</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="n">column_table_tuple_list</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sublist</span><span class="p">])</span>
+        <span class="n">query</span> <span class="o">+=</span> <span class="s">&quot; FROM &quot;</span> <span class="o">+</span> <span class="s">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">tables</span><span class="p">])</span>
+
+        <span class="n">and_clause</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">query</span> <span class="o">+=</span> <span class="s">&quot; WHERE &quot;</span>
+        <span class="k">for</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">column_for_symbols_where</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">and_clause</span><span class="p">:</span>
+                <span class="n">query</span> <span class="o">+=</span> <span class="s">&quot; AND &quot;</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">and_clause</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">and_clause</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="n">reference_column</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot;.&quot;</span> <span class="o">+</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">query</span> <span class="o">+=</span> <span class="s">&quot; AND &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">reference_column</span> <span class="o">+</span> <span class="s">&quot; = &quot;</span> <span class="o">+</span> <span class="n">rel</span> <span class="o">+</span> <span class="s">&quot;.&quot;</span> <span class="o">+</span> <span class="n">col</span> <span class="k">for</span> <span class="n">rel</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">value</span><span class="p">])</span>
+
+        <span class="n">query</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">and_clause_for_constants</span><span class="p">(</span><span class="n">predicates</span><span class="p">,</span> <span class="n">and_clause</span><span class="p">)</span>
+
+        <span class="n">and_clause</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">for</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">column_for_symbols_notexists</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">rel</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">and_clause</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">and_clause</span> <span class="o">=</span> <span class="bp">False</span>
+                <span class="n">query</span> <span class="o">+=</span> <span class="s">&quot; AND NOT EXISTS (SELECT * FROM &quot;</span> <span class="o">+</span> <span class="n">rel</span> <span class="o">+</span> <span class="s">&quot; WHERE &quot;</span>
+                <span class="n">reference_column</span> <span class="o">=</span> <span class="n">column_for_symbols_where</span><span class="p">[</span><span class="n">symbol</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">query</span> <span class="o">+=</span> <span class="s">&quot; AND &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">reference_column</span> <span class="o">+</span> <span class="s">&quot;.&quot;</span> <span class="o">+</span> <span class="n">col</span> <span class="o">+</span> <span class="s">&quot; = &quot;</span> <span class="o">+</span> <span class="n">reltmp</span> <span class="o">+</span> <span class="s">&quot;.&quot;</span> <span class="o">+</span> <span class="n">col</span> <span class="k">for</span> <span class="n">reltmp</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">value</span> <span class="k">if</span> <span class="n">reltmp</span> <span class="o">==</span> <span class="n">rel</span><span class="p">])</span>
+                <span class="n">query</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">and_clause_for_constants</span><span class="p">(</span><span class="n">negated_predicates</span><span class="p">,</span> <span class="n">and_clause</span><span class="p">)</span>
+
+                <span class="n">query</span> <span class="o">+=</span> <span class="s">&quot;)&quot;</span>
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">values</span>
+</div>
+<div class="viewcode-block" id="PostgreSQLKb.ask_predicate"><a class="viewcode-back" href="../python_rlp2.html#logkb.PostgreSQLKb.ask_predicate">[docs]</a>    <span class="k">def</span> <span class="nf">ask_predicate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Queries a value from the database for a given predicate.</span>
+<span class="sd">        The predicate only has constants as symbols and the value per definition has to be in the last column of the table.</span>
+<span class="sd">        Such that a query &quot;cost(&#39;a&#39;,&#39;b&#39;) implicitly queries for SELECT z FROM cost WHERE x = &#39;a&#39; AND y = &#39;b&#39;</span>
+<span class="sd">        with z here being the third column of the table.</span>
+
+<span class="sd">        :param predicate: The predicate to be queried for</span>
+<span class="sd">        :type predicate: BooleanPredicate</span>
+<span class="sd">        :return: The Value associated with the predicate taken from the database</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">columns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_column_names</span><span class="p">(</span><span class="n">predicate</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="s">&quot;SELECT &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">columns</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> \
+                <span class="s">&quot; FROM &quot;</span>  <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">predicate</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">+</span> \
+                <span class="s">&quot; WHERE &quot;</span> <span class="o">+</span> \
+                <span class="s">&quot; AND &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">columns</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s">&quot;=&quot;</span>  <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">predicate</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="PostgreSQLKb.and_clause_for_constants"><a class="viewcode-back" href="../python_rlp2.html#logkb.PostgreSQLKb.and_clause_for_constants">[docs]</a>    <span class="k">def</span> <span class="nf">and_clause_for_constants</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicates</span><span class="p">,</span> <span class="n">and_clause_added</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Iterates over a list of given predicates and returns the where-clause for constants.</span>
+
+<span class="sd">        :param predicates: The given predicates. E.g. : edge(X,&#39;a&#39;), edge (&#39;a&#39;,&#39;c&#39;)</span>
+<span class="sd">        :type predicate: List(BooleanPredicate)</span>
+<span class="sd">        :param and_clause_added: Indicates if there was been an and-clause beforehand to correctly concantenate the querystring</span>
+<span class="sd">        :type and_clause_added: Boolean</span>
+<span class="sd">        :return: The SQL conjunctions for the given predicates</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">predicate</span> <span class="ow">in</span> <span class="n">predicates</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">predicate</span><span class="o">.</span><span class="n">args</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">SubSymbol</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">and_clause_added</span><span class="p">:</span>
+                        <span class="n">query</span> <span class="o">+=</span> <span class="s">&quot; AND &quot;</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">and_clause_added</span> <span class="o">=</span> <span class="bp">True</span>
+                    <span class="n">query</span> <span class="o">+=</span> <span class="n">predicate</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_column_names</span><span class="p">(</span><span class="n">predicate</span><span class="o">.</span><span class="n">name</span><span class="p">)[</span><span class="n">index</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot; = &quot;</span> <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span> <span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span>
+
+        <span class="k">return</span> <span class="n">query</span>
+</div>
+<div class="viewcode-block" id="PostgreSQLKb.get_columns_for_symbols"><a class="viewcode-back" href="../python_rlp2.html#logkb.PostgreSQLKb.get_columns_for_symbols">[docs]</a>    <span class="k">def</span> <span class="nf">get_columns_for_symbols</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_symbol</span><span class="p">,</span> <span class="n">predicates</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a dictionary from symbols and predicates with Key, Value pairs of query_symbols,predicates , where is Symbol is the Key to its occurances in the predicates.</span>
+
+<span class="sd">        :param query_symbol: The Symbols to be queried for (Keys)</span>
+<span class="sd">        :type query_symbol: List(SubSymbol)</span>
+<span class="sd">        :param predicates: The predicates, where the symbols might occur (Values)</span>
+<span class="sd">        :type predicates: List(BooleanPredicate)</span>
+<span class="sd">        :return: A dictionary, which maps from the given query_symbols to the corresponding predicates in which the symbols occur.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">column_for_symbols</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">query_symbol</span><span class="p">}</span>
+        <span class="k">for</span> <span class="n">predicate</span> <span class="ow">in</span> <span class="n">predicates</span><span class="p">:</span>
+            <span class="n">column_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_column_names</span><span class="p">(</span><span class="n">predicate</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">predicate</span><span class="o">.</span><span class="n">args</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">SubSymbol</span><span class="p">):</span>
+                    <span class="n">column_for_symbols</span><span class="p">[</span><span class="n">arg</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">predicate</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">column_names</span><span class="p">[</span><span class="n">index</span><span class="p">]))</span>
+
+        <span class="k">return</span> <span class="n">column_for_symbols</span>
+</div>
+<div class="viewcode-block" id="PostgreSQLKb.get_column_names"><a class="viewcode-back" href="../python_rlp2.html#logkb.PostgreSQLKb.get_column_names">[docs]</a>    <span class="k">def</span> <span class="nf">get_column_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">relation_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convenience function to get the name of the columns for a given table.</span>
+
+<span class="sd">        :param relation_name: The name of the table</span>
+<span class="sd">        :type relation_name: str</span>
+<span class="sd">        :return: A list consisting of the column names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="s">&quot;SELECT column_name FROM information_schema.columns where table_name=&quot;</span> <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span> <span class="o">+</span> <span class="n">relation_name</span> <span class="o">+</span> <span class="s">&quot;&#39; ORDER BY ordinal_position ASC&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        <span class="n">ans</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="n">ans</span>
+</pre></div></div></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, Martin Mladenov, Kristian Kersting, Danny Heinrich, Leonard Kleinhans.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

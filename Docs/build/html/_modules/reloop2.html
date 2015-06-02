@@ -1,0 +1,568 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>reloop2 &mdash; reloop 0.1.0b documentation</title>
+    
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/ls8layout.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.0b',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="reloop 0.1.0b documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="http://www-ai.cs.uni-dortmund.de/weblab/index.html"><img class="intro-logo" src="../_static/tulogo.svg">
+        </a>
+        <span class="navbar-text navbar-ls8-title">
+          reloop<span class="navbar-version"><b> (0.1.0)</b></span>
+        </span>
+      </div>
+
+      <div class="collapse navbar-collapse nav-collapse navbar-right">
+        <ul class="nav navbar-nav">
+          
+              <li><a href="../index.html">Home</a></li>
+              <li><a href="../download.html">Download</a></li>
+          
+          
+            
+<li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Index <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#main-dependencies">Main dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#optional-dependencies">Optional dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-reloop">Installing reloop</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#relational-linear-programming">Relational Linear Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#equitable-partitions-and-lifted-linear-programming">Equitable Partitions and Lifted Linear Programming</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../RAMPL.html">RAMPL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../LLP.html">LLP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../python_maxflow_operator.html">maxflow_operator.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_maxflow_text.html">maxflow_text.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_lift_factorgraph.html">lift_factorgraph.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_lift_Abc.html">lift_Abc.py</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../code.html">Code</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../python.html">Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cython.html">Cython</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cpp.html">CPlusPlus</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
+</ul>
+</ul>
+</li>
+            
+          
+          
+          
+          
+          
+        </ul>
+
+        
+          
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        
+      </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <h1>Source code for reloop2</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">sympy</span> <span class="kn">import</span> <span class="n">srepr</span><span class="p">,</span> <span class="n">simplify</span><span class="p">,</span> <span class="n">sstr</span>
+<span class="kn">from</span> <span class="nn">sympy.core</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">sympy.logic.boolalg</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">infix</span> <span class="kn">import</span> <span class="n">or_infix</span>
+
+
+<div class="viewcode-block" id="RlpProblem"><a class="viewcode-back" href="../python_reloop2.html#reloop2.RlpProblem">[docs]</a><span class="k">class</span> <span class="nc">RlpProblem</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The model of a Relational Linear Program.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="RlpProblem.__init__"><a class="viewcode-back" href="../python_reloop2.html#reloop2.RlpProblem.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">sense</span><span class="p">,</span> <span class="n">logkb</span><span class="p">,</span> <span class="n">lp</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Instantiates the model</span>
+
+<span class="sd">        :param name: The name of the problem, describing it</span>
+<span class="sd">        :param sense: LpMaximize or LpMinimize</span>
+<span class="sd">        :param logkb: An instance of :class:`.logkb.LogKB`</span>
+<span class="sd">        :param lp: A type of :class:`lp.LpProblem`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lpmodel</span> <span class="o">=</span> <span class="n">lp</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">sense</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logkb</span> <span class="o">=</span> <span class="n">logkb</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reloop_variables</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_constraints</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">objective</span> <span class="o">=</span> <span class="bp">None</span>
+</div>
+<div class="viewcode-block" id="RlpProblem.add_reloop_variable"><a class="viewcode-back" href="../python_reloop2.html#reloop2.RlpProblem.add_reloop_variable">[docs]</a>    <span class="k">def</span> <span class="nf">add_reloop_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">predicates</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Introduces predicates as lp variables. These predicate wont be grounded.</span>
+
+<span class="sd">        :param predicates: A tuple of predicates to be added to the model</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">predicate</span> <span class="ow">in</span> <span class="n">predicates</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reloop_variables</span> <span class="o">|=</span> <span class="p">{(</span><span class="n">predicate</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">predicate</span><span class="o">.</span><span class="n">arity</span><span class="p">)}</span>
+</div>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">reloop_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reloop_variables</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_constraints</span>
+
+<div class="viewcode-block" id="RlpProblem.__iadd__"><a class="viewcode-back" href="../python_reloop2.html#reloop2.RlpProblem.__iadd__">[docs]</a>    <span class="k">def</span> <span class="nf">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rhs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds the objective or a constraint to the model.</span>
+
+<span class="sd">        :param rhs: Either an instance of :class :`Expr` (objective) or an instance of Rel or ForAllConstraint (constraint)</span>
+<span class="sd">        :return: The class instance itself</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span> <span class="n">Gt</span><span class="p">)</span> <span class="o">|</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span> <span class="n">Lt</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;StrictGreaterThan and StrictLessThan is not implemented!&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span> <span class="n">Rel</span><span class="p">)</span> <span class="o">|</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span> <span class="n">ForAll</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_constraints</span> <span class="o">+=</span> <span class="p">[</span><span class="n">rhs</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span> <span class="n">Expr</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">objective</span> <span class="o">=</span> <span class="n">rhs</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;&#39;rhs&#39; must be either an instance of sympy.Rel, sympy.Expr or an instance of &quot;</span>
+                             <span class="s">&quot;ForallConstraint!&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+</div>
+<div class="viewcode-block" id="RlpProblem.solve"><a class="viewcode-back" href="../python_reloop2.html#reloop2.RlpProblem.solve">[docs]</a>    <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Grounds and solves the logical programm.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ground_into_lp</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lpmodel</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="RlpProblem.status"><a class="viewcode-back" href="../python_reloop2.html#reloop2.RlpProblem.status">[docs]</a>    <span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Passes the call to self.lpmodel</span>
+<span class="sd">        :return: The solution status of the LP.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lpmodel</span><span class="o">.</span><span class="n">status</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="RlpProblem.get_solution"><a class="viewcode-back" href="../python_reloop2.html#reloop2.RlpProblem.get_solution">[docs]</a>    <span class="k">def</span> <span class="nf">get_solution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Passes the call to self.lpmodel</span>
+
+<span class="sd">        :return: The solution of the LP</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lpmodel</span><span class="o">.</span><span class="n">get_solution</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="RlpProblem.ground_into_lp"><a class="viewcode-back" href="../python_reloop2.html#reloop2.RlpProblem.ground_into_lp">[docs]</a>    <span class="k">def</span> <span class="nf">ground_into_lp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ground the RLP by grounding the objective and each constraint.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_objective_to_lp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ground_expression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">objective</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">constraints</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">constraint</span><span class="p">,</span> <span class="n">Rel</span><span class="p">):</span>
+                <span class="n">lhs</span> <span class="o">=</span> <span class="n">constraint</span><span class="o">.</span><span class="n">lhs</span> <span class="o">-</span> <span class="n">constraint</span><span class="o">.</span><span class="n">rhs</span>
+                <span class="n">ground_result</span> <span class="o">=</span> <span class="n">constraint</span><span class="o">.</span><span class="n">__class__</span><span class="p">(</span><span class="n">expand</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ground_expression</span><span class="p">(</span><span class="n">lhs</span><span class="p">)),</span> <span class="mf">0.0</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_constraint_to_lp</span><span class="p">(</span><span class="n">ground_result</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c"># maybe pre-ground here?</span>
+                <span class="c"># result = self.ground_expression(constraint.relation, bound=constraint.query_symbols)</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">constraint</span><span class="o">.</span><span class="n">ground</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logkb</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">expr</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+                    <span class="n">ground</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ground_expression</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
+                    <span class="n">ground_result</span> <span class="o">=</span> <span class="n">ground</span><span class="o">.</span><span class="n">__class__</span><span class="p">(</span><span class="n">expand</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ground_expression</span><span class="p">(</span><span class="n">ground</span><span class="o">.</span><span class="n">lhs</span><span class="p">)),</span> <span class="n">ground</span><span class="o">.</span><span class="n">rhs</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">add_constraint_to_lp</span><span class="p">(</span><span class="n">ground_result</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="RlpProblem.ground_expression"><a class="viewcode-back" href="../python_reloop2.html#reloop2.RlpProblem.ground_expression">[docs]</a>    <span class="k">def</span> <span class="nf">ground_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Recursively grounds any sympy expression, :class:`.RlpSum`, :class:`.RlpPredicate`, ...</span>
+
+<span class="sd">        :param expr: The expression which is to be grounded</span>
+<span class="sd">        :return: A grounded expression</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">expr</span><span class="o">.</span><span class="n">func</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Mul</span><span class="p">,</span> <span class="n">Add</span><span class="p">,</span> <span class="n">Pow</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">expr</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ground_expression</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">expr</span><span class="o">.</span><span class="n">args</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">expr</span><span class="o">.</span><span class="n">func</span> <span class="ow">is</span> <span class="n">RlpSum</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">expr</span><span class="o">.</span><span class="n">ground</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logkb</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ground_expression</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">NumericPredicate</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">expr</span><span class="o">.</span><span class="n">arity</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reloop_variables</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">expr</span><span class="o">.</span><span class="n">ground</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logkb</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">expr</span><span class="o">.</span><span class="n">func</span> <span class="ow">is</span> <span class="n">BooleanPredicate</span><span class="p">:</span>
+            <span class="c"># TODO Evaluate to 0 or 1? Did Martin say: that would be cool?</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;RlpBooleanPredicate is invalid here!&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">expr</span>
+</div>
+<div class="viewcode-block" id="RlpProblem.add_objective_to_lp"><a class="viewcode-back" href="../python_reloop2.html#reloop2.RlpProblem.add_objective_to_lp">[docs]</a>    <span class="k">def</span> <span class="nf">add_objective_to_lp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objective</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds a grounded objective to the LP</span>
+
+<span class="sd">        :param objective: A grounded expression (the objective)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">print</span> <span class="s">&quot;Add objective: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">objective</span><span class="p">)</span>
+        <span class="c"># + &quot;\n&quot; + srepr(objective)</span>
+        <span class="n">expr</span> <span class="o">=</span> <span class="n">objective</span>
+        <span class="k">if</span> <span class="n">objective</span><span class="o">.</span><span class="n">func</span> <span class="ow">is</span> <span class="n">Add</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">objective</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">is_Atom</span><span class="p">:</span>
+                    <span class="n">expr</span> <span class="o">-=</span> <span class="n">s</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lpmodel</span> <span class="o">+=</span> <span class="n">expr</span>
+</div>
+<div class="viewcode-block" id="RlpProblem.add_constraint_to_lp"><a class="viewcode-back" href="../python_reloop2.html#reloop2.RlpProblem.add_constraint_to_lp">[docs]</a>    <span class="k">def</span> <span class="nf">add_constraint_to_lp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">constraint</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds a grounded constraint to the LP</span>
+
+<span class="sd">        :param constraint: The grounded constraint.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">print</span> <span class="s">&quot;Add constraint: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">constraint</span><span class="p">)</span>
+        <span class="c"># + &quot;\n&quot; + srepr(constraint)</span>
+        <span class="n">lhs</span> <span class="o">=</span> <span class="n">constraint</span><span class="o">.</span><span class="n">lhs</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">constraint</span><span class="o">.</span><span class="n">rhs</span>
+        <span class="k">if</span> <span class="n">constraint</span><span class="o">.</span><span class="n">lhs</span><span class="o">.</span><span class="n">func</span> <span class="ow">is</span> <span class="n">Add</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">constraint</span><span class="o">.</span><span class="n">lhs</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">is_Atom</span><span class="p">:</span>
+                    <span class="n">lhs</span> <span class="o">-=</span> <span class="n">s</span>
+                    <span class="n">b</span> <span class="o">-=</span> <span class="n">s</span>
+
+        <span class="c"># TODO handle Lt and Gt</span>
+        <span class="k">if</span> <span class="n">constraint</span><span class="o">.</span><span class="n">func</span> <span class="ow">is</span> <span class="n">Ge</span><span class="p">:</span>
+            <span class="n">sense</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">constraint</span><span class="o">.</span><span class="n">func</span> <span class="ow">is</span> <span class="n">Eq</span><span class="p">:</span>
+            <span class="n">sense</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">elif</span> <span class="n">constraint</span><span class="o">.</span><span class="n">func</span> <span class="ow">is</span> <span class="n">Le</span><span class="p">:</span>
+            <span class="n">sense</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lpmodel</span> <span class="o">+=</span> <span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">sense</span><span class="p">)</span>
+</div>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">asstr</span> <span class="o">=</span> <span class="s">&quot;Objective: &quot;</span>
+        <span class="n">asstr</span> <span class="o">+=</span> <span class="n">srepr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">objective</span><span class="p">)</span>
+        <span class="n">asstr</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\n\n</span><span class="s">&quot;</span>
+        <span class="n">asstr</span> <span class="o">+=</span> <span class="s">&quot;Subject to:</span><span class="se">\n</span><span class="s">&quot;</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_constraints</span><span class="p">:</span>
+            <span class="n">asstr</span> <span class="o">+=</span> <span class="n">srepr</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+            <span class="n">asstr</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span>
+        <span class="k">return</span> <span class="n">asstr</span>
+
+</div>
+<div class="viewcode-block" id="Query"><a class="viewcode-back" href="../python_reloop2.html#reloop2.Query">[docs]</a><span class="k">class</span> <span class="nc">Query</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Internal representation of a logical query.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Query.__init__"><a class="viewcode-back" href="../python_reloop2.html#reloop2.Query.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_symbols</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param query_symbols: List of type :class:`SubSymbol`</span>
+<span class="sd">        :param query: A logical query</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_query_symbols</span> <span class="o">=</span> <span class="n">query_symbols</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_query</span> <span class="o">=</span> <span class="n">simplify</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+</div>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">query_symbols</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query_symbols</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query</span>
+
+</div>
+<div class="viewcode-block" id="ForAll"><a class="viewcode-back" href="../python_reloop2.html#reloop2.ForAll">[docs]</a><span class="k">class</span> <span class="nc">ForAll</span><span class="p">(</span><span class="n">Query</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Wraps a :class:`.Query` and a :class:`.Rel` to represent a set of constraints.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_symbols</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">relation</span><span class="p">):</span>
+        <span class="n">Query</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_symbols</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">relation</span> <span class="o">=</span> <span class="n">relation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grounded</span> <span class="o">=</span> <span class="bp">False</span>
+
+<div class="viewcode-block" id="ForAll.ground"><a class="viewcode-back" href="../python_reloop2.html#reloop2.ForAll.ground">[docs]</a>    <span class="k">def</span> <span class="nf">ground</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logkb</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Grounds the query and relation</span>
+
+<span class="sd">        :param logkb: An implementation of a Logical Knowledge Base</span>
+<span class="sd">        :type logkb: :class:`.LogKB`</span>
+<span class="sd">        :return: A set of grounded constraints</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">answers</span> <span class="o">=</span> <span class="n">logkb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">query_symbols</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([])</span>
+        <span class="k">if</span> <span class="n">answers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">lhs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relation</span><span class="o">.</span><span class="n">lhs</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">relation</span><span class="o">.</span><span class="n">rhs</span>
+            <span class="k">for</span> <span class="n">answer</span> <span class="ow">in</span> <span class="n">answers</span><span class="p">:</span>
+                    <span class="n">expression_eval_subs</span> <span class="o">=</span> <span class="n">lhs</span>
+                    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">query_symbols</span><span class="p">):</span>
+                        <span class="n">expression_eval_subs</span> <span class="o">=</span> <span class="n">expression_eval_subs</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">symbol</span><span class="p">,</span> <span class="n">answer</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+                    <span class="n">result</span> <span class="o">|=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">relation</span><span class="o">.</span><span class="n">__class__</span><span class="p">(</span><span class="n">expression_eval_subs</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">result</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grounded</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span>
+</div>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&quot;FORALL &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">query_symbols</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot; in &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;: &quot;</span> <span class="o">+</span> <span class="n">srepr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">relation</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="SubSymbol"><a class="viewcode-back" href="../python_reloop2.html#reloop2.SubSymbol">[docs]</a><span class="k">class</span> <span class="nc">SubSymbol</span><span class="p">(</span><span class="n">Symbol</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Just a sympy.Symbol, but inherited to be able to define symbols explicitly</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+
+</div>
+<div class="viewcode-block" id="sub_symbols"><a class="viewcode-back" href="../python_reloop2.html#reloop2.sub_symbols">[docs]</a><span class="k">def</span> <span class="nf">sub_symbols</span><span class="p">(</span><span class="o">*</span><span class="n">symbols</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convenience function for instantiating multiple :class:`.SubSymbol` at once.</span>
+
+<span class="sd">    :param symbols: Tuple of strings</span>
+<span class="sd">    :return: Tuple of SubSymbols</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">SubSymbol</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">symbols</span><span class="p">))</span>
+
+</div>
+<div class="viewcode-block" id="boolean_predicate"><a class="viewcode-back" href="../python_reloop2.html#reloop2.boolean_predicate">[docs]</a><span class="k">def</span> <span class="nf">boolean_predicate</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">arity</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convenience function for generating a :class:`BooleanPredicate` type</span>
+
+<span class="sd">    :param name: Name of the predicate</span>
+<span class="sd">    :param arity: Arity (must match count of relation elements)</span>
+<span class="sd">    :return: A type with the given name, inherited from :class:`BooleanPredicate`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">rlp_predicate</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">arity</span><span class="p">,</span> <span class="n">boolean</span><span class="o">=</span><span class="n">true</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="numeric_predicate"><a class="viewcode-back" href="../python_reloop2.html#reloop2.numeric_predicate">[docs]</a><span class="k">def</span> <span class="nf">numeric_predicate</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">arity</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convenience function for generating a :class:`NumericPredicate` type</span>
+
+<span class="sd">    :param name: Name of the predicate</span>
+<span class="sd">    :param arity: Arity (count of relation elements decremented by one)</span>
+<span class="sd">    :return: A type with the given name, inherited from :class:`NumericPredicate`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">rlp_predicate</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">arity</span><span class="p">,</span> <span class="n">boolean</span><span class="o">=</span><span class="n">false</span><span class="p">)</span>
+
+</div>
+<span class="k">def</span> <span class="nf">rlp_predicate</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">arity</span><span class="p">,</span> <span class="n">boolean</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">arity</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Arity must not be less than 0. Dude!&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">arity</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;</span> <span class="n">boolean</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Arity must not be less than 1, if boolean is true. Dude!&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">arity</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">predicate_type</span> <span class="o">=</span> <span class="n">RlpPredicate</span>
+    <span class="k">elif</span> <span class="n">boolean</span><span class="p">:</span>
+        <span class="n">predicate_type</span> <span class="o">=</span> <span class="n">BooleanPredicate</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">predicate_type</span> <span class="o">=</span> <span class="n">NumericPredicate</span>
+    <span class="n">predicate_class</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="n">predicate_type</span><span class="p">,),</span> <span class="p">{</span><span class="s">&quot;arity&quot;</span><span class="p">:</span> <span class="n">arity</span><span class="p">,</span> <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s">&quot;result&quot;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+                                                                         <span class="s">&quot;grounded&quot;</span><span class="p">:</span> <span class="bp">False</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">predicate_class</span>
+
+<span class="k">class</span> <span class="nc">RlpPredicate</span><span class="p">(</span><span class="n">Expr</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<div class="viewcode-block" id="NumericPredicate"><a class="viewcode-back" href="../python_reloop2.html#reloop2.NumericPredicate">[docs]</a><span class="k">class</span> <span class="nc">NumericPredicate</span><span class="p">(</span><span class="n">RlpPredicate</span><span class="p">,</span> <span class="n">Function</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Representing a predicate that is understood as a function. That is, though the relation :math:`R` inside the LogKB</span>
+<span class="sd">    has :math:`k` elements, we define :math:`R(e_1, ..., e_{k-1}) := e_{k}`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">eval</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">cls</span><span class="o">.</span><span class="n">grounded</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="n">cls</span><span class="o">.</span><span class="n">result</span>
+
+<div class="viewcode-block" id="NumericPredicate.ground"><a class="viewcode-back" href="../python_reloop2.html#reloop2.NumericPredicate.ground">[docs]</a>    <span class="k">def</span> <span class="nf">ground</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logkb</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Grounds itself</span>
+
+<span class="sd">        :param logkb: An implementation of a Logical Knowledge Base</span>
+<span class="sd">        :type logkb: :class:`.LogKB`</span>
+<span class="sd">        :return: The :math:`e_{k}` th element</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">arity</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Too many arguments.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">arity</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Not enough arguments&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">argument</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">argument</span><span class="p">,</span> <span class="n">SubSymbol</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Found free symbols while grounding: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+
+        <span class="n">answers</span> <span class="o">=</span> <span class="n">logkb</span><span class="o">.</span><span class="n">ask_predicate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">answers</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;Predicate is not defined or no result!&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">answers</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;The LogKb gives multiple results. Oh!&quot;</span><span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">answers</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">result</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grounded</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+</div>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">/</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">cls</span><span class="o">.</span><span class="n">arity</span><span class="p">)</span>
+
+    <span class="n">__repr__</span> <span class="o">=</span> <span class="n">__str__</span>
+
+</div>
+<div class="viewcode-block" id="BooleanPredicate"><a class="viewcode-back" href="../python_reloop2.html#reloop2.BooleanPredicate">[docs]</a><span class="k">class</span> <span class="nc">BooleanPredicate</span><span class="p">(</span><span class="n">BooleanAtom</span><span class="p">,</span> <span class="n">Function</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A Predicate to use in boolean expressions; can be used like a function inside boolean terms.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+
+</div>
+<div class="viewcode-block" id="RlpSum"><a class="viewcode-back" href="../python_reloop2.html#reloop2.RlpSum">[docs]</a><span class="k">class</span> <span class="nc">RlpSum</span><span class="p">(</span><span class="n">Expr</span><span class="p">,</span> <span class="n">Query</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_symbols</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">expression</span><span class="p">):</span>
+        <span class="n">Query</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_symbols</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">expression</span> <span class="o">=</span> <span class="n">expression</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grounded</span> <span class="o">=</span> <span class="bp">False</span>
+
+<div class="viewcode-block" id="RlpSum.ground"><a class="viewcode-back" href="../python_reloop2.html#reloop2.RlpSum.ground">[docs]</a>    <span class="k">def</span> <span class="nf">ground</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logkb</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Grounds the query and expression</span>
+
+<span class="sd">        :param logkb: An implementation of a Logical Knowledge Base</span>
+<span class="sd">        :type logkb: :class:`.LogKB`</span>
+<span class="sd">        :return: An summation of the grounded expressions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">answers</span> <span class="o">=</span> <span class="n">logkb</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">query_symbols</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">answer</span> <span class="ow">in</span> <span class="n">answers</span><span class="p">:</span>
+                <span class="n">expression_eval_subs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">expression</span>
+                <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">query_symbols</span><span class="p">):</span>
+                    <span class="n">expression_eval_subs</span> <span class="o">=</span> <span class="n">expression_eval_subs</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">symbol</span><span class="p">,</span> <span class="n">answer</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+                <span class="n">result</span> <span class="o">+=</span> <span class="n">expression_eval_subs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">result</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grounded</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span>
+</div>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_number</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="k">def</span> <span class="nf">_hashable_content</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;We need to overwrite this: The first parameter is a list and because of that the base</span>
+<span class="sd">        implementation does not work.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">query_symbols</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+    <span class="k">def</span> <span class="nf">_sympyrepr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">printer</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">grounded</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">&quot;RlpSum(&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">query_symbols</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot; in &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;, &quot;</span> <span class="o">+</span> <span class="n">srepr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">expression</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;)&quot;</span>
+        <span class="k">return</span> <span class="n">srepr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+</div>
+<span class="nd">@or_infix</span>
+<span class="k">def</span> <span class="nf">eq</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Eq</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+<span class="nd">@or_infix</span>
+<span class="k">def</span> <span class="nf">ge</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Ge</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+<span class="nd">@or_infix</span>
+<span class="k">def</span> <span class="nf">le</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Le</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, Martin Mladenov, Kristian Kersting, Danny Heinrich, Leonard Kleinhans.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
