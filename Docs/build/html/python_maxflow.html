@@ -27,19 +27,22 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="reloop 0.1.0b documentation" href="index.html" />
+    <link rel="up" title="Python" href="python.html" />
+    <link rel="next" title="Read" href="python_read.html" />
+    <link rel="prev" title="RLP2" href="python_rlp2.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -73,7 +76,7 @@
      href="index.html">Index <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
-      aria-labelledby="dLabelGlobalToc"><ul>
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#main-dependencies">Main dependencies</a></li>
@@ -95,8 +98,8 @@
 <li class="toctree-l2"><a class="reference internal" href="python_lift_Abc.html">lift_Abc.py</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="code.html">Code</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="python.html">Python</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="code.html">Code</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="python.html">Python</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cython.html">Cython</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cpp.html">CPlusPlus</a></li>
 </ul>
@@ -135,56 +138,60 @@
       
   <div class="section" id="maxflow-pydatalog-py">
 <span id="maxflow"></span><h1>maxflow_pydatalog.py<a class="headerlink" href="#maxflow-pydatalog-py" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">reloop.languages.reloop2.logkb</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">reloop.languages.reloop2.lp</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">reloop.languages.rlp2</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">maxflow_example</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">A static example for the maxflow problem contained in maxflow_example.max using pyDatalog</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="nd">@pyDatalog.predicate</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">node1</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">)</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">)</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;c&#39;</span><span class="p">)</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">)</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;e&#39;</span><span class="p">)</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;f&#39;</span><span class="p">)</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;g&#39;</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;c&#39;</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;e&#39;</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;f&#39;</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;g&#39;</span><span class="p">)</span>
 
 
 <span class="nd">@pyDatalog.predicate</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">edge2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">)</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">)</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;d&#39;</span><span class="p">)</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;e&#39;</span><span class="p">)</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;c&#39;</span><span class="p">,</span> <span class="s">&#39;d&#39;</span><span class="p">)</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;c&#39;</span><span class="p">,</span> <span class="s">&#39;f&#39;</span><span class="p">)</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="s">&#39;e&#39;</span><span class="p">)</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="s">&#39;f&#39;</span><span class="p">)</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;e&#39;</span><span class="p">,</span> <span class="s">&#39;g&#39;</span><span class="p">)</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;f&#39;</span><span class="p">,</span> <span class="s">&#39;g&#39;</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;d&#39;</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;e&#39;</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;c&#39;</span><span class="p">,</span> <span class="s">&#39;d&#39;</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;c&#39;</span><span class="p">,</span> <span class="s">&#39;f&#39;</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="s">&#39;e&#39;</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="s">&#39;f&#39;</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;e&#39;</span><span class="p">,</span> <span class="s">&#39;g&#39;</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;f&#39;</span><span class="p">,</span> <span class="s">&#39;g&#39;</span><span class="p">)</span>
 
 
 <span class="nd">@pyDatalog.predicate</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">source1</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">)</span>
 
 <span class="nd">@pyDatalog.predicate</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">target1</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;g&#39;</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;g&#39;</span><span class="p">)</span>
+
 
 <span class="nd">@pyDatalog.predicate</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">cost3</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
     <span class="c"># cost(a,b) = 50</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;e&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;c&#39;</span><span class="p">,</span> <span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;c&#39;</span><span class="p">,</span> <span class="s">&#39;f&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="s">&#39;e&#39;</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="s">&#39;f&#39;</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;e&#39;</span><span class="p">,</span> <span class="s">&#39;g&#39;</span><span class="p">,</span> <span class="mi">70</span><span class="p">)</span>
-    <span class="k">yield</span><span class="p">(</span><span class="s">&#39;f&#39;</span><span class="p">,</span> <span class="s">&#39;g&#39;</span><span class="p">,</span> <span class="mi">70</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;e&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;c&#39;</span><span class="p">,</span> <span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;c&#39;</span><span class="p">,</span> <span class="s">&#39;f&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="s">&#39;e&#39;</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="s">&#39;f&#39;</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;e&#39;</span><span class="p">,</span> <span class="s">&#39;g&#39;</span><span class="p">,</span> <span class="mi">70</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="s">&#39;f&#39;</span><span class="p">,</span> <span class="s">&#39;g&#39;</span><span class="p">,</span> <span class="mi">70</span><span class="p">)</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">maxflow_example</span><span class="o">.</span><span class="n">maxflow</span><span class="p">(</span><span class="n">PyDatalogLogKb</span><span class="p">(),</span> <span class="n">Pulp</span><span class="p">)</span>
 </pre></div>
@@ -192,10 +199,11 @@
 </div>
 <div class="section" id="maxflow-example-py">
 <h1>maxflow_example.py<a class="headerlink" href="#maxflow-example-py" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">reloop.languages.reloop2.lp</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">reloop.languages.rlp2</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
-<span class="k">def</span> <span class="nf">maxflow</span><span class="p">(</span><span class="n">logKb</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">predicate_prefix</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">maxflow</span><span class="p">(</span><span class="n">logKb</span><span class="p">,</span> <span class="n">solver</span><span class="p">):</span>
+
     <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">RlpProblem</span><span class="p">(</span><span class="s">&quot;traffic flow LP in the spirit of page 329 in http://ampl.com/BOOK/CHAPTERS/18-network.pdf&quot;</span><span class="p">,</span>
                        <span class="n">LpMaximize</span><span class="p">,</span> <span class="n">logKb</span><span class="p">,</span> <span class="n">solver</span><span class="p">)</span>
@@ -205,15 +213,15 @@
     <span class="c"># declarations</span>
     <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span> <span class="o">=</span> <span class="n">sub_symbols</span><span class="p">(</span><span class="s">&#39;X&#39;</span><span class="p">,</span> <span class="s">&#39;Y&#39;</span><span class="p">,</span> <span class="s">&#39;Z&#39;</span><span class="p">)</span>
 
-    <span class="n">flow</span> <span class="o">=</span> <span class="n">numeric_predicate</span><span class="p">(</span><span class="n">predicate_prefix</span> <span class="o">+</span> <span class="s">&quot;flow&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="n">cost</span> <span class="o">=</span> <span class="n">numeric_predicate</span><span class="p">(</span><span class="n">predicate_prefix</span> <span class="o">+</span> <span class="s">&quot;cost&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">flow</span> <span class="o">=</span> <span class="n">numeric_predicate</span><span class="p">(</span><span class="s">&quot;flow&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">cost</span> <span class="o">=</span> <span class="n">numeric_predicate</span><span class="p">(</span><span class="s">&quot;cost&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
     <span class="n">model</span><span class="o">.</span><span class="n">add_reloop_variable</span><span class="p">(</span><span class="n">flow</span><span class="p">)</span>
 
-    <span class="n">source</span> <span class="o">=</span> <span class="n">boolean_predicate</span><span class="p">(</span><span class="n">predicate_prefix</span> <span class="o">+</span> <span class="s">&quot;source&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">target</span> <span class="o">=</span> <span class="n">boolean_predicate</span><span class="p">(</span><span class="n">predicate_prefix</span> <span class="o">+</span> <span class="s">&quot;target&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">edge</span> <span class="o">=</span> <span class="n">boolean_predicate</span><span class="p">(</span><span class="n">predicate_prefix</span> <span class="o">+</span> <span class="s">&quot;edge&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="n">node</span> <span class="o">=</span> <span class="n">boolean_predicate</span><span class="p">(</span><span class="n">predicate_prefix</span> <span class="o">+</span> <span class="s">&quot;node&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">source</span> <span class="o">=</span> <span class="n">boolean_predicate</span><span class="p">(</span><span class="s">&quot;source&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">boolean_predicate</span><span class="p">(</span><span class="s">&quot;target&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">edge</span> <span class="o">=</span> <span class="n">boolean_predicate</span><span class="p">(</span><span class="s">&quot;edge&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="n">boolean_predicate</span><span class="p">(</span><span class="s">&quot;node&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
     <span class="c"># objective</span>
     <span class="n">model</span> <span class="o">+=</span> <span class="n">RlpSum</span><span class="p">([</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">],</span> <span class="n">source</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">edge</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">),</span> <span class="n">flow</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">))</span>
@@ -250,6 +258,7 @@
             <span class="n">total</span> <span class="o">+=</span> <span class="n">value</span>
 
     <span class="k">print</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">Time needed for the grounding and solving: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot; s.&quot;</span>
+    <span class="c">#TODO: Change output to display correct results for an arbitrary number of edges outgoing from the source</span>
     <span class="k">print</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">Thus, the maximum flow entering the traffic network at node a is &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">sol</span><span class="p">[</span><span class="s">&quot;flow(a, b)&quot;</span><span class="p">]</span><span class="o">+</span><span class="n">sol</span><span class="p">[</span><span class="s">&quot;flow(a, c)&quot;</span><span class="p">])</span><span class="o">+</span><span class="s">&quot; cars per hour.&quot;</span>
     <span class="k">print</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">The total flow in the traffic network is &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">total</span><span class="p">)</span><span class="o">+</span><span class="s">&quot; cars per hour.&quot;</span>
 </pre></div>
@@ -276,7 +285,7 @@
     </p>
     <p>
         &copy; Copyright 2014, Martin Mladenov, Kristian Kersting, Danny Heinrich, Leonard Kleinhans.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.1.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
     </p>
   </div>
 </footer>

@@ -27,7 +27,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
@@ -41,7 +41,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -140,22 +140,22 @@
 <div class="contents local topic" id="contents">
 <p class="topic-title first">Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="#relational-linear-programming" id="id3">Relational Linear Programming</a><ul>
-<li><a class="reference internal" href="#a-relational-linear-program-for-maximum-flow-modelling-in-operator-notation" id="id4">A Relational Linear Program for Maximum Flow: Modelling in Operator Notation</a></li>
-<li><a class="reference internal" href="#a-logical-knowledge-base-for-the-flow-rlp" id="id5">A Logical Knowledge Base for the Flow RLP</a></li>
-<li><a class="reference internal" href="#solving-instances-of-relational-flow-lp" id="id6">Solving Instances of Relational Flow LP</a></li>
+<li><a class="reference internal" href="#relational-linear-programming" id="id2">Relational Linear Programming</a><ul>
+<li><a class="reference internal" href="#a-relational-linear-program-for-maximum-flow-modelling-in-operator-notation" id="id3">A Relational Linear Program for Maximum Flow: Modelling in Operator Notation</a></li>
+<li><a class="reference internal" href="#a-logical-knowledge-base-for-the-flow-rlp" id="id4">A Logical Knowledge Base for the Flow RLP</a></li>
+<li><a class="reference internal" href="#solving-instances-of-relational-flow-lp" id="id5">Solving Instances of Relational Flow LP</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#equitable-partitions-and-lifted-linear-programming" id="id7">Equitable Partitions and Lifted Linear Programming</a><ul>
-<li><a class="reference internal" href="#equitable-partitions-of-matrices" id="id8">Equitable Partitions of Matrices</a></li>
-<li><a class="reference internal" href="#lifting-an-mrf-factor-graph" id="id9">Lifting an MRF Factor Graph</a></li>
-<li><a class="reference internal" href="#lifting-linear-programs" id="id10">Lifting Linear Programs</a></li>
+<li><a class="reference internal" href="#equitable-partitions-and-lifted-linear-programming" id="id6">Equitable Partitions and Lifted Linear Programming</a><ul>
+<li><a class="reference internal" href="#equitable-partitions-of-matrices" id="id7">Equitable Partitions of Matrices</a></li>
+<li><a class="reference internal" href="#lifting-an-mrf-factor-graph" id="id8">Lifting an MRF Factor Graph</a></li>
+<li><a class="reference internal" href="#lifting-linear-programs" id="id9">Lifting Linear Programs</a></li>
 </ul>
 </li>
 </ul>
 </div>
 <div class="section" id="relational-linear-programming">
-<h2><a class="toc-backref" href="#id3">Relational Linear Programming</a><a class="headerlink" href="#relational-linear-programming" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id2">Relational Linear Programming</a><a class="headerlink" href="#relational-linear-programming" title="Permalink to this headline">¶</a></h2>
 <p>Mathematical programs (MPs) are often specified using algebraic modelling languages such as AMPL. They simplify MP definition by allowing to use algebraic
 notation instead of matrices and define an objective and constraints through parameters whose domains are defined in a separate file,
 thus enabling separating the model from its instances. That is, algebraic modeling languages such as AMPL allow one to write down the problem description
@@ -164,9 +164,9 @@ However, they do not provide logically parameterized definitions for the arithme
 feature exactly this.</p>
 <p>Let&#8217;s consider a traffic flow problem, i.e., we are given a transportation network consisting of a source (S), sink (T), and
 intermediate nodes connected with links of certain capacity. For example, consider the following network.</p>
-<div class="figure align-center" id="id2">
+<div class="figure align-center">
 <a class="reference internal image-reference" href="_images/flownetwork.svg"><img alt="transportation network" src="_images/flownetwork.svg" /></a>
-<p class="caption"><span class="caption-text">Transportation network for the flow LP. Numbers indicate capacities of the links.</span></p>
+<p class="caption">Transportation network for the flow LP. Numbers indicate capacities of the links.</p>
 </div>
 <p>Our task is to find a way to route as much goods from the source to the sink as the network allows. One popular way to do this is using a linear program. Let us briefly describe what an LP for the max flow problem could look like. The first step to a linear programming model of the flow problem is to assign a continuous variable to each edge in the network. Our intention is that in the LP solution, these variables will hold the amount of goods flowing on the edges. In order to get an admissible flow, however, we need to constrain these variables. Clearly, the amount of goods flowing on an edge must not exceed its capacity. This is a linear constraint on the flow variables. Another linear constraint is that a flow must be nonnegative (by convention). Finally, we have to need to introduce flow conservation: the amount of goods flowing in each node must be equal to the amount of goods flowing out (except for the source and sink nodes). The LP we end up with is as follows:</p>
 <div class="math">
@@ -184,10 +184,10 @@ intermediate nodes connected with links of certain capacity. For example, consid
           &amp; \quad \forall e \in E: \quad 0 \leq f_e \leq c_e\;.\end{split}\]</div>
 <p>We will now show how to use reloop&#8217;s RLP language to construct and solve this model.</p>
 <div class="section" id="a-relational-linear-program-for-maximum-flow-modelling-in-operator-notation">
-<h3><a class="toc-backref" href="#id4">A Relational Linear Program for Maximum Flow: Modelling in Operator Notation</a><a class="headerlink" href="#a-relational-linear-program-for-maximum-flow-modelling-in-operator-notation" title="Permalink to this headline">¶</a></h3>
-<p>(The running code for this example can be found in <a class="reference internal" href="python_maxflow_operator.html#maxflowoperator"><span>maxflow_operator.py</span></a>.)</p>
+<h3><a class="toc-backref" href="#id3">A Relational Linear Program for Maximum Flow: Modelling in Operator Notation</a><a class="headerlink" href="#a-relational-linear-program-for-maximum-flow-modelling-in-operator-notation" title="Permalink to this headline">¶</a></h3>
+<p>(The running code for this example can be found in <a class="reference internal" href="python_maxflow_operator.html#maxflowoperator"><em>maxflow_operator.py</em></a>.)</p>
 <p>The start of your file will import reloop’s functions for use in your code:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">reloop.languages.reloop2.reloop2</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">reloop.languages.rlp2</span> <span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 </div>
 <p>A variable called model (although its name is not important) is created by instantiate RlpProblem. It has four parameters, the first being the
@@ -209,13 +209,13 @@ We need three different symbols for the constraint definition. So we define them
 </ul>
 </dd>
 </dl>
-<p>In this case we have two numeric predicates: <code class="docutils literal"><span class="pre">flow</span></code> &#8211; our variable predicate, and <code class="docutils literal"><span class="pre">cap</span></code>, which stores the capacities of the edges. We declare them as follows</p>
+<p>In this case we have two numeric predicates: <tt class="docutils literal"><span class="pre">flow</span></tt> &#8211; our variable predicate, and <tt class="docutils literal"><span class="pre">cap</span></tt>, which stores the capacities of the edges. We declare them as follows</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">flow</span> <span class="o">=</span> <span class="n">numeric_predicate</span><span class="p">(</span><span class="s">&quot;flow&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="n">cap</span> <span class="o">=</span> <span class="n">numeric_predicate</span><span class="p">(</span><span class="s">&quot;cap&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The function <code class="docutils literal"><span class="pre">numeric_predicate()</span></code> has two arguments: The predicate name and the arity.
-Next we want to introduce the <code class="docutils literal"><span class="pre">flow</span></code> predicate as a variable to the model, use</p>
+<p>The function <tt class="docutils literal"><span class="pre">numeric_predicate()</span></tt> has two arguments: The predicate name and the arity.
+Next we want to introduce the <tt class="docutils literal"><span class="pre">flow</span></tt> predicate as a variable to the model, use</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">model</span><span class="o">.</span><span class="n">add_reloop_variable</span><span class="p">(</span><span class="n">flow</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -227,13 +227,13 @@ Next we want to introduce the <code class="docutils literal"><span class="pre">f
 </pre></div>
 </div>
 <p>Because the reloop language builds on top of <a class="reference external" href="http://www.sympy.org/en/index.html">sympy</a>, one can use almost all of sympy&#8217;s features, such as substitutions, functions and the expression syntax.
-Reloop extends sympy with <code class="docutils literal"><span class="pre">RlpSum</span></code>, an expression that represents the sum over an arbitrary logical query.</p>
-<p>Now we start collecting our model specification in the <code class="docutils literal"><span class="pre">model</span></code> variable using the += operator.
+Reloop extends sympy with <tt class="docutils literal"><span class="pre">RlpSum</span></tt>, an expression that represents the sum over an arbitrary logical query.</p>
+<p>Now we start collecting our model specification in the <tt class="docutils literal"><span class="pre">model</span></tt> variable using the += operator.
 We start with our objective, namely that the flow out of the source node must be maximized.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">model</span> <span class="o">+=</span> <span class="n">RlpSum</span><span class="p">([</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">],</span> <span class="n">source</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">edge</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">),</span> <span class="n">flow</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>This says that we want to sum all <code class="docutils literal"><span class="pre">flow(X,Y)</span></code> terms for which <code class="docutils literal"><span class="pre">X</span></code> is a source node and there is an edge between <code class="docutils literal"><span class="pre">X</span></code> and <code class="docutils literal"><span class="pre">Y</span></code>.</p>
+<p>This says that we want to sum all <tt class="docutils literal"><span class="pre">flow(X,Y)</span></tt> terms for which <tt class="docutils literal"><span class="pre">X</span></tt> is a source node and there is an edge between <tt class="docutils literal"><span class="pre">X</span></tt> and <tt class="docutils literal"><span class="pre">Y</span></tt>.</p>
 <p>Next, we encode the preservation of in- and outflows for all nodes that are not the source resp. target nodes:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">outFlow</span> <span class="o">=</span> <span class="n">RlpSum</span><span class="p">([</span><span class="n">X</span><span class="p">,</span> <span class="p">],</span> <span class="n">edge</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Z</span><span class="p">),</span> <span class="n">flow</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Z</span><span class="p">))</span>
 <span class="n">inFlow</span> <span class="o">=</span> <span class="n">RlpSum</span><span class="p">([</span><span class="n">Y</span><span class="p">,</span> <span class="p">],</span> <span class="n">edge</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">Y</span><span class="p">),</span> <span class="n">flow</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">Y</span><span class="p">))</span>
@@ -241,14 +241,14 @@ We start with our objective, namely that the flow out of the source node must be
 <span class="n">model</span> <span class="o">+=</span> <span class="n">ForAll</span><span class="p">([</span><span class="n">Z</span><span class="p">,</span> <span class="p">],</span> <span class="n">node</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">source</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">target</span><span class="p">(</span><span class="n">Z</span><span class="p">),</span> <span class="n">inFlow</span> <span class="o">|</span><span class="n">eq</span><span class="o">|</span> <span class="n">outFlow</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The class <code class="docutils literal"><span class="pre">ForAll</span></code> has similar arguments as RlpSum a list of symbols, a query for these symbols and a sympy relation. It represents a ground constraint for every variable in the answer of the query.</p>
+<p>The class <tt class="docutils literal"><span class="pre">ForAll</span></tt> has similar arguments as RlpSum a list of symbols, a query for these symbols and a sympy relation. It represents a ground constraint for every variable in the answer of the query.</p>
 <p>This constraint expresses that except for the entrance and exit, the flow into each intersection
 equals the flow out.</p>
-<p><em>Notice:</em> You may want to use the <code class="docutils literal"><span class="pre">outFlow</span></code> and <code class="docutils literal"><span class="pre">inFlow</span></code> definitions with another symbol (differing from <code class="docutils literal"><span class="pre">Z</span></code>).
+<p><em>Notice:</em> You may want to use the <tt class="docutils literal"><span class="pre">outFlow</span></tt> and <tt class="docutils literal"><span class="pre">inFlow</span></tt> definitions with another symbol (differing from <tt class="docutils literal"><span class="pre">Z</span></tt>).
 To archieve this, use <a class="reference external" href="http://docs.sympy.org/dev/tutorial/basic_operations.html#substitution">subs()</a> from sympy.</p>
-<p>Besides <code class="docutils literal"><span class="pre">ForAll</span></code> constraints one can use also sympy relations as constraints.
+<p>Besides <tt class="docutils literal"><span class="pre">ForAll</span></tt> constraints one can use also sympy relations as constraints.
 This is useful, when you don&#8217;t want to query the LogKB.
-It is possible to use either <code class="docutils literal"><span class="pre">Eq()</span></code>, <code class="docutils literal"><span class="pre">Ge()</span></code> and <code class="docutils literal"><span class="pre">Le()</span></code> directly or the infix notation with <code class="docutils literal"><span class="pre">|eq|</span></code>, <code class="docutils literal"><span class="pre">|ge|</span></code>/<code class="docutils literal"><span class="pre">&gt;=</span></code>  and <code class="docutils literal"><span class="pre">|le|</span></code>/<code class="docutils literal"><span class="pre">&lt;=</span></code>.</p>
+It is possible to use either <tt class="docutils literal"><span class="pre">Eq()</span></tt>, <tt class="docutils literal"><span class="pre">Ge()</span></tt> and <tt class="docutils literal"><span class="pre">Le()</span></tt> directly or the infix notation with <tt class="docutils literal"><span class="pre">|eq|</span></tt>, <tt class="docutils literal"><span class="pre">|ge|</span></tt>/<tt class="docutils literal"><span class="pre">&gt;=</span></tt>  and <tt class="docutils literal"><span class="pre">|le|</span></tt>/<tt class="docutils literal"><span class="pre">&lt;=</span></tt>.</p>
 <p>Next, the capacity and traffic load are defined for each link:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">model</span> <span class="o">+=</span> <span class="n">ForAll</span><span class="p">([</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">],</span> <span class="n">edge</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">),</span> <span class="n">flow</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span> <span class="o">|</span><span class="n">le</span><span class="o">|</span> <span class="n">cap</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">))</span>
 </pre></div>
@@ -265,7 +265,7 @@ that your code-block is running from. Once your code runs successfully, you can 
 Together with a logical knowledge base, effectively a logical program consisting of logical facts and rules, it induces a ground LP as we will show next.</p>
 </div>
 <div class="section" id="a-logical-knowledge-base-for-the-flow-rlp">
-<h3><a class="toc-backref" href="#id5">A Logical Knowledge Base for the Flow RLP</a><a class="headerlink" href="#a-logical-knowledge-base-for-the-flow-rlp" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id4">A Logical Knowledge Base for the Flow RLP</a><a class="headerlink" href="#a-logical-knowledge-base-for-the-flow-rlp" title="Permalink to this headline">¶</a></h3>
 <p>While we are using pyDatalog as a Logical Knowledge Base (LogKB) for this problem, there is also one for PostgreSQL.</p>
 <p>Fist we define the node/1 predicate, i.e., the set of nodes in the flow network. To do so, we use pyDatalog and its decorator:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="nd">@pyDatalog.predicate</span><span class="p">()</span>
@@ -322,7 +322,7 @@ costs(X,Y)=Z:</p>
 </div>
 </div>
 <div class="section" id="solving-instances-of-relational-flow-lp">
-<h3><a class="toc-backref" href="#id6">Solving Instances of Relational Flow LP</a><a class="headerlink" href="#solving-instances-of-relational-flow-lp" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id5">Solving Instances of Relational Flow LP</a><a class="headerlink" href="#solving-instances-of-relational-flow-lp" title="Permalink to this headline">¶</a></h3>
 <p>To obtain the solution to this instance of the relational flow linear program, we could just call the solve() function.
 It calls PuLP&#8217; solver. Since everything is embedded within Python, we could also use Python to process
 the solution even further:</p>
@@ -411,14 +411,14 @@ flow(e,g) free Continuous
 flow(f,g) free Continuous
 </pre></div>
 </div>
-<p>The complete running example can be found <a class="reference internal" href="python_maxflow.html#maxflow"><span>here</span></a>.</p>
+<p>The complete running example can be found <a class="reference internal" href="python_maxflow.html#maxflow"><em>here</em></a>.</p>
 </div>
 </div>
 <div class="section" id="equitable-partitions-and-lifted-linear-programming">
-<h2><a class="toc-backref" href="#id7">Equitable Partitions and Lifted Linear Programming</a><a class="headerlink" href="#equitable-partitions-and-lifted-linear-programming" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id6">Equitable Partitions and Lifted Linear Programming</a><a class="headerlink" href="#equitable-partitions-and-lifted-linear-programming" title="Permalink to this headline">¶</a></h2>
 <p>Next to modeling languages, reloop offers tools for efficiently lifting and solving optimization problems produced by these languages (and not only). In the lifted solvers provided, efficiency is gained by exploiting redundancy in the structure of the problem. Our main tool for redundancy discovery are the so-called equitable partitions of matrices. In the following, we will look at computing equitable partitions of matrices with the tools of reloop, as well as  lifting factor graphs, solving linear equations and linear programs in a lifted fashion.</p>
 <div class="section" id="equitable-partitions-of-matrices">
-<h3><a class="toc-backref" href="#id8">Equitable Partitions of Matrices</a><a class="headerlink" href="#equitable-partitions-of-matrices" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id7">Equitable Partitions of Matrices</a><a class="headerlink" href="#equitable-partitions-of-matrices" title="Permalink to this headline">¶</a></h3>
 <p>Given is a tuple <span class="math">\(L=(\mathbf{A},\mathbf{b},\mathbf{c})\)</span>, where <span class="math">\(\mathbf{A}\in \mathbb{R}^{m\times n}, \mathbf{b}\in \mathbb{R}^{m}\)</span> and <span class="math">\(\mathbf{c}\in \mathbb{R}^{n}\)</span>. We say that a partition <span class="math">\({\cal P} = \{P_1,\ldots,P_p; Q_1,\ldots,Q_q\}\)</span> of <span class="math">\(L=(\mathbf{A},\mathbf{b},\mathbf{c})\)</span> is <strong>equitable</strong> if the following conditions hold.</p>
 <ul class="simple">
 <li>For any two columns <span class="math">\(i,\; j\)</span> in the same class <span class="math">\(P\)</span>, <span class="math">\(\mathbf{c}_i = \mathbf{c}_j\)</span>. For any two rows <span class="math">\(i,\; j\)</span> in the same class <span class="math">\(Q\)</span>, <span class="math">\(\mathbf{b}_i = \mathbf{b}_j\)</span>;</li>
@@ -434,7 +434,7 @@ flow(f,g) free Continuous
 <p>Reloop provides an interface to the highly efficient code of <a class="reference external" href="http://vlsicad.eecs.umich.edu/BK/SAUCY/">Saucy</a> for the computation of equitable partitions of matrices. Currently, we can compute the coarsest equitable partition of a matrix, as well as its orbit partition. We will now show how to compute equitable partitions. We will now illustrate the basic concepts by lifting a factor graph so we can later run lifted belief propagation.</p>
 </div>
 <div class="section" id="lifting-an-mrf-factor-graph">
-<h3><a class="toc-backref" href="#id9">Lifting an MRF Factor Graph</a><a class="headerlink" href="#lifting-an-mrf-factor-graph" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id8">Lifting an MRF Factor Graph</a><a class="headerlink" href="#lifting-an-mrf-factor-graph" title="Permalink to this headline">¶</a></h3>
 <p>Suppose we are given the following factor graph (to the right).</p>
 <div class="figure align-center">
 <a class="reference internal image-reference" href="_images/factorgraph1.svg"><img alt="factor graph" src="_images/factorgraph1.svg" width="45%" /></a>
@@ -444,7 +444,7 @@ flow(f,g) free Continuous
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">reloop.utils.saucy</span> <span class="kn">as</span> <span class="nn">saucy</span>
 </pre></div>
 </div>
-<p>We will also need <code class="docutils literal"><span class="pre">scipy.sparse</span></code> and <code class="docutils literal"><span class="pre">numpy</span></code>:</p>
+<p>We will also need <tt class="docutils literal"><span class="pre">scipy.sparse</span></tt> and <tt class="docutils literal"><span class="pre">numpy</span></tt>:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">scipy.sparse</span> <span class="kn">as</span> <span class="nn">sp</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 </pre></div>
@@ -466,7 +466,7 @@ flow(f,g) free Continuous
   0\\
   1\\
 \end{bmatrix}\; .\end{split}\]</div>
-<p>We can now input this in saucy. All our data needs to be in coo_matrix format, and <code class="docutils literal"><span class="pre">b</span></code> and <code class="docutils literal"><span class="pre">c</span></code> must be column vectors:</p>
+<p>We can now input this in saucy. All our data needs to be in coo_matrix format, and <tt class="docutils literal"><span class="pre">b</span></tt> and <tt class="docutils literal"><span class="pre">c</span></tt> must be column vectors:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">A</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
 <span class="n">b</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
 <span class="n">c</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
@@ -479,8 +479,8 @@ flow(f,g) free Continuous
 <span class="k">print</span> <span class="s">&quot;column classes: &quot;</span><span class="p">,</span> <span class="n">colpart</span>
 </pre></div>
 </div>
-<p>Note that the <code class="docutils literal"><span class="pre">1</span></code> in the last argument of <code class="docutils literal"><span class="pre">epBipartite()</span></code> indicates we are computing the coarsest equitable partition. To compute orbits, we use <code class="docutils literal"><span class="pre">0</span></code>.
-When ran, this python code (also found at <a class="reference internal" href="python_lift_factorgraph.html#epfg"><span>lift_factorgraph.py</span></a>) outputs the following:</p>
+<p>Note that the <tt class="docutils literal"><span class="pre">1</span></tt> in the last argument of <tt class="docutils literal"><span class="pre">epBipartite()</span></tt> indicates we are computing the coarsest equitable partition. To compute orbits, we use <tt class="docutils literal"><span class="pre">0</span></tt>.
+When ran, this python code (also found at <a class="reference internal" href="python_lift_factorgraph.html#epfg"><em>lift_factorgraph.py</em></a>) outputs the following:</p>
 <div class="highlight-python"><div class="highlight"><pre>entring wrapper with 2 rows, 3 cols and 4 entries.
 row colors: 1
 col colors: 3
@@ -508,7 +508,7 @@ column classes:  [1 0 1]
 <p>Note that the actual numbering of the classes is not guaranteed to follow any particular convention.</p>
 </div>
 <div class="section" id="lifting-linear-programs">
-<h3><a class="toc-backref" href="#id10">Lifting Linear Programs</a><a class="headerlink" href="#lifting-linear-programs" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id9">Lifting Linear Programs</a><a class="headerlink" href="#lifting-linear-programs" title="Permalink to this headline">¶</a></h3>
 <p>Let us consider the following LP:</p>
 <div class="math">
 \[\begin{split}\operatorname*{minimize}_{[x,y,z]^T \in \mathbb{R}^3}\quad  &amp;\; 0x + 0y + 1z\\
@@ -546,7 +546,7 @@ column classes:  [1 0 1]
    0\\
    -1\\
  \end{bmatrix}\;.\end{split}\]</div>
-<p>Within reloop, lifting LPs is achieved through the <code class="docutils literal"><span class="pre">utils.liftAbc()</span></code> function. The following code snippet shows how.</p>
+<p>Within reloop, lifting LPs is achieved through the <tt class="docutils literal"><span class="pre">utils.liftAbc()</span></tt> function. The following code snippet shows how.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">A</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
 <span class="n">b</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
 <span class="n">c</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
@@ -565,7 +565,7 @@ column classes:  [1 0 1]
 </pre></div>
 </div>
 <p>(TODO: fix sparsity of b and c)
-The minimal working example is found at <a class="reference internal" href="python_lift_Abc.html#liftabc"><span>lift_Abc.py</span></a>. Executing this code yields</p>
+The minimal working example is found at <a class="reference internal" href="python_lift_Abc.html#liftabc"><em>lift_Abc.py</em></a>. Executing this code yields</p>
 <div class="highlight-python"><div class="highlight"><pre>input LP:
 c: [[0 0 1]]
 b: [[ 1]
@@ -629,7 +629,7 @@ LA: [[ 2 -1]
     </p>
     <p>
         &copy; Copyright 2014, Martin Mladenov, Kristian Kersting, Danny Heinrich, Leonard Kleinhans.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.1.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
     </p>
   </div>
 </footer>

@@ -27,7 +27,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
@@ -40,7 +40,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -135,16 +135,16 @@
     <div class="col-md-12">
       
   <h1>Source code for logkb</h1><div class="highlight"><pre>
-<span class="kn">from</span> <span class="nn">reloop2</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">rlp</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pyDatalog</span> <span class="kn">import</span> <span class="n">pyDatalog</span><span class="p">,</span> <span class="n">pyEngine</span>
 <span class="kn">from</span> <span class="nn">sets</span> <span class="kn">import</span> <span class="n">Set</span>
 <span class="kn">import</span> <span class="nn">psycopg2</span>
 
-<div class="viewcode-block" id="LogKb"><a class="viewcode-back" href="../python_reloop2.html#logkb.LogKb">[docs]</a><span class="k">class</span> <span class="nc">LogKb</span><span class="p">:</span>
+<div class="viewcode-block" id="LogKb"><a class="viewcode-back" href="../python_rlp2.html#logkb.LogKb">[docs]</a><span class="k">class</span> <span class="nc">LogKb</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Interface for various LogKBs. Provides basic functionality for every LogKB to be implemented.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="LogKb.ask"><a class="viewcode-back" href="../python_reloop2.html#logkb.LogKb.ask">[docs]</a>    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_symbols</span><span class="p">,</span> <span class="n">logical_query</span><span class="p">):</span>
+<div class="viewcode-block" id="LogKb.ask"><a class="viewcode-back" href="../python_rlp2.html#logkb.LogKb.ask">[docs]</a>    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_symbols</span><span class="p">,</span> <span class="n">logical_query</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructs a query for the given LogKB and returns the List/Set of given answers from the LogKB</span>
 
@@ -154,7 +154,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 </div>
-<div class="viewcode-block" id="LogKb.ask_predicate"><a class="viewcode-back" href="../python_reloop2.html#logkb.LogKb.ask_predicate">[docs]</a>    <span class="k">def</span> <span class="nf">ask_predicate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate</span><span class="p">):</span>
+<div class="viewcode-block" id="LogKb.ask_predicate"><a class="viewcode-back" href="../python_rlp2.html#logkb.LogKb.ask_predicate">[docs]</a>    <span class="k">def</span> <span class="nf">ask_predicate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Queries the LogKB for a specific Value for given constants.</span>
 <span class="sd">        For Example : cost(&#39;a&#39;,&#39;b&#39;) = 50</span>
@@ -224,7 +224,7 @@
 
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
-<div class="viewcode-block" id="PostgreSQLKb"><a class="viewcode-back" href="../python_reloop2.html#logkb.PostgreSQLKb">[docs]</a><span class="k">class</span> <span class="nc">PostgreSQLKb</span> <span class="p">(</span><span class="n">LogKb</span><span class="p">):</span>
+<div class="viewcode-block" id="PostgreSQLKb"><a class="viewcode-back" href="../python_rlp2.html#logkb.PostgreSQLKb">[docs]</a><span class="k">class</span> <span class="nc">PostgreSQLKb</span> <span class="p">(</span><span class="n">LogKb</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A Logical Knowledge Base based on a PostgreSQL database.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -241,7 +241,7 @@
         <span class="n">connection</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;dbname=&quot;</span><span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">dbname</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot; user=&quot;</span><span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">user</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot; password=&quot;</span><span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">password</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
 
-<div class="viewcode-block" id="PostgreSQLKb.ask"><a class="viewcode-back" href="../python_reloop2.html#logkb.PostgreSQLKb.ask">[docs]</a>    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_symbols</span><span class="p">,</span> <span class="n">logical_query</span><span class="p">):</span>
+<div class="viewcode-block" id="PostgreSQLKb.ask"><a class="viewcode-back" href="../python_rlp2.html#logkb.PostgreSQLKb.ask">[docs]</a>    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_symbols</span><span class="p">,</span> <span class="n">logical_query</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Builds a PostgreSQL query from a given logical query and its query_symbols by implicitly joining over all given predicates.</span>
 
@@ -312,7 +312,7 @@
 
         <span class="k">return</span> <span class="n">values</span>
 </div>
-<div class="viewcode-block" id="PostgreSQLKb.ask_predicate"><a class="viewcode-back" href="../python_reloop2.html#logkb.PostgreSQLKb.ask_predicate">[docs]</a>    <span class="k">def</span> <span class="nf">ask_predicate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate</span><span class="p">):</span>
+<div class="viewcode-block" id="PostgreSQLKb.ask_predicate"><a class="viewcode-back" href="../python_rlp2.html#logkb.PostgreSQLKb.ask_predicate">[docs]</a>    <span class="k">def</span> <span class="nf">ask_predicate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Queries a value from the database for a given predicate.</span>
 <span class="sd">        The predicate only has constants as symbols and the value per definition has to be in the last column of the table.</span>
@@ -332,7 +332,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
 </div>
-<div class="viewcode-block" id="PostgreSQLKb.and_clause_for_constants"><a class="viewcode-back" href="../python_reloop2.html#logkb.PostgreSQLKb.and_clause_for_constants">[docs]</a>    <span class="k">def</span> <span class="nf">and_clause_for_constants</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicates</span><span class="p">,</span> <span class="n">and_clause_added</span><span class="p">):</span>
+<div class="viewcode-block" id="PostgreSQLKb.and_clause_for_constants"><a class="viewcode-back" href="../python_rlp2.html#logkb.PostgreSQLKb.and_clause_for_constants">[docs]</a>    <span class="k">def</span> <span class="nf">and_clause_for_constants</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicates</span><span class="p">,</span> <span class="n">and_clause_added</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Iterates over a list of given predicates and returns the where-clause for constants.</span>
 
@@ -354,7 +354,7 @@
 
         <span class="k">return</span> <span class="n">query</span>
 </div>
-<div class="viewcode-block" id="PostgreSQLKb.get_columns_for_symbols"><a class="viewcode-back" href="../python_reloop2.html#logkb.PostgreSQLKb.get_columns_for_symbols">[docs]</a>    <span class="k">def</span> <span class="nf">get_columns_for_symbols</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_symbol</span><span class="p">,</span> <span class="n">predicates</span><span class="p">):</span>
+<div class="viewcode-block" id="PostgreSQLKb.get_columns_for_symbols"><a class="viewcode-back" href="../python_rlp2.html#logkb.PostgreSQLKb.get_columns_for_symbols">[docs]</a>    <span class="k">def</span> <span class="nf">get_columns_for_symbols</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_symbol</span><span class="p">,</span> <span class="n">predicates</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a dictionary from symbols and predicates with Key, Value pairs of query_symbols,predicates , where is Symbol is the Key to its occurances in the predicates.</span>
 
@@ -374,7 +374,7 @@
 
         <span class="k">return</span> <span class="n">column_for_symbols</span>
 </div>
-<div class="viewcode-block" id="PostgreSQLKb.get_column_names"><a class="viewcode-back" href="../python_reloop2.html#logkb.PostgreSQLKb.get_column_names">[docs]</a>    <span class="k">def</span> <span class="nf">get_column_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">relation_name</span><span class="p">):</span>
+<div class="viewcode-block" id="PostgreSQLKb.get_column_names"><a class="viewcode-back" href="../python_rlp2.html#logkb.PostgreSQLKb.get_column_names">[docs]</a>    <span class="k">def</span> <span class="nf">get_column_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">relation_name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convenience function to get the name of the columns for a given table.</span>
 
@@ -403,7 +403,7 @@
     </p>
     <p>
         &copy; Copyright 2014, Martin Mladenov, Kristian Kersting, Danny Heinrich, Leonard Kleinhans.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.1.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
     </p>
   </div>
 </footer>
