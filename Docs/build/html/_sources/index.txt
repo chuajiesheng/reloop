@@ -73,7 +73,12 @@ From here you can:
 
 News
 ----
- * 16.02.20015: **Reloop** -- first release!
+ * 02.06.2015: Version 0.1.0. Check out the :ref:`tutorial <tutorial>`
+	* Major language update: Rlp2 based on `sympy <http://www.sympy.org/en/index.html>`_
+	* Support for **PostgreSQL** added
+	* Increased extensibility: Add your own LogKB or LP-solver
+
+ * 16.02.2015: **Reloop** -- first release!
 
 Acknowledgements
 ----------------
