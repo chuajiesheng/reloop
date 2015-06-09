@@ -48,9 +48,8 @@ class RlpProblem():
         :param rhs: Either an instance of :class :`Expr` (objective) or an instance of Rel or ForAllConstraint (constraint)
         :return: The class instance itself
         """
-        if isinstance(rhs, Gt) | isinstance(rhs, Lt):
-            raise NotImplementedError("StrictGreaterThan and StrictLessThan is not implemented!")
-        if isinstance(rhs, Rel) | isinstance(rhs, ForAll):
+
+        if is_valid_relation(rhs) | isinstance(rhs, ForAll):
             self._constraints += [rhs]
         elif isinstance(rhs, Expr):
             self.objective = rhs
@@ -206,6 +205,8 @@ class ForAll(Query):
     """
     def __init__(self, query_symbols, query, relation):
         Query.__init__(self, query_symbols, query)
+        if not is_valid_relation(relation):
+            raise ValueError("Third argument has to be a valid relation.")
         self.relation = relation
         self.result = []
         self.grounded = False
@@ -358,6 +359,10 @@ class RlpSum(Expr, Query):
     """
     def __init__(self, query_symbols, query, expression):
         Query.__init__(self, query_symbols, query)
+        if not isinstance(expression, Expr):
+            raise ValueError("The third argument was not an sympy.core.Expr!")
+        if isinstance(expression, Rel):
+            raise ValueError("You cannot use a sympy.core.Rel instance here!")
         self.expression = expression
         self.result = None
         self.grounded = False
@@ -407,3 +412,9 @@ def ge(a, b):
 def le(a, b):
     return Le(a, b)
 
+def is_valid_relation(relation):
+    if isinstance(relation, Gt) | isinstance(relation, Lt):
+        raise NotImplementedError("StrictGreaterThan and StrictLessThan is not implemented!")
+    if isinstance(relation, Rel):
+        return True
+    return False
