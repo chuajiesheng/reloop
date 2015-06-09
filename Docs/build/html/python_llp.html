@@ -10,8 +10,8 @@
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.3.4/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.3.4/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/ls8layout.css" type="text/css" />
     
@@ -27,10 +27,10 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="reloop 0.1.0b documentation" href="index.html" />
     <link rel="up" title="Python" href="python.html" />
@@ -42,7 +42,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -148,7 +148,7 @@
 <p>&#64;author: Martin Mladenov</p>
 <dl class="function">
 <dt id="reloop.solvers.llp.col2matrix">
-<code class="descclassname">reloop.solvers.llp.</code><code class="descname">col2matrix</code><span class="sig-paren">(</span><em>c</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop/solvers/llp.html#col2matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop.solvers.llp.col2matrix" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">reloop.solvers.llp.</tt><tt class="descname">col2matrix</tt><big>(</big><em>c</em><big>)</big><a class="reference internal" href="_modules/reloop/solvers/llp.html#col2matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop.solvers.llp.col2matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>TODO</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -164,7 +164,7 @@
 
 <dl class="function">
 <dt id="reloop.solvers.llp.liftedLPCVXOPT">
-<code class="descclassname">reloop.solvers.llp.</code><code class="descname">liftedLPCVXOPT</code><span class="sig-paren">(</span><em>A</em>, <em>b</em>, <em>c</em>, <em>debug=False</em>, <em>optiter=200</em>, <em>plot=False</em>, <em>save=False</em>, <em>orbits=False</em>, <em>sumRefine=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop/solvers/llp.html#liftedLPCVXOPT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop.solvers.llp.liftedLPCVXOPT" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">reloop.solvers.llp.</tt><tt class="descname">liftedLPCVXOPT</tt><big>(</big><em>A</em>, <em>b</em>, <em>c</em>, <em>debug=False</em>, <em>optiter=200</em>, <em>plot=False</em>, <em>save=False</em>, <em>orbits=False</em>, <em>sumRefine=False</em><big>)</big><a class="reference internal" href="_modules/reloop/solvers/llp.html#liftedLPCVXOPT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop.solvers.llp.liftedLPCVXOPT" title="Permalink to this definition">¶</a></dt>
 <dd><p>liftedLPCVXOPT: takes as input an LP in the form</p>
 <blockquote>
 <div><p>max   c&#8217;x</p>
@@ -200,7 +200,7 @@ CVXOPT and then the solution vector is recovered.</p>
 
 <dl class="function">
 <dt id="reloop.solvers.llp.objError">
-<code class="descclassname">reloop.solvers.llp.</code><code class="descname">objError</code><span class="sig-paren">(</span><em>objlift</em>, <em>objground</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop/solvers/llp.html#objError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop.solvers.llp.objError" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">reloop.solvers.llp.</tt><tt class="descname">objError</tt><big>(</big><em>objlift</em>, <em>objground</em><big>)</big><a class="reference internal" href="_modules/reloop/solvers/llp.html#objError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop.solvers.llp.objError" title="Permalink to this definition">¶</a></dt>
 <dd><p>objError : calculates the error of the objective lifted and ground values</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -221,7 +221,7 @@ CVXOPT and then the solution vector is recovered.</p>
 
 <dl class="function">
 <dt id="reloop.solvers.llp.report">
-<code class="descclassname">reloop.solvers.llp.</code><code class="descname">report</code><span class="sig-paren">(</span><em>objlift</em>, <em>objground</em>, <em>xopt</em>, <em>xground</em>, <em>timelift</em>, <em>timeground</em>, <em>rlift</em>, <em>rground</em>, <em>clift</em>, <em>cground</em>, <em>faildiff</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop/solvers/llp.html#report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop.solvers.llp.report" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">reloop.solvers.llp.</tt><tt class="descname">report</tt><big>(</big><em>objlift</em>, <em>objground</em>, <em>xopt</em>, <em>xground</em>, <em>timelift</em>, <em>timeground</em>, <em>rlift</em>, <em>rground</em>, <em>clift</em>, <em>cground</em>, <em>faildiff</em><big>)</big><a class="reference internal" href="_modules/reloop/solvers/llp.html#report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop.solvers.llp.report" title="Permalink to this definition">¶</a></dt>
 <dd><p>TODO</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -244,7 +244,7 @@ CVXOPT and then the solution vector is recovered.</p>
 
 <dl class="function">
 <dt id="reloop.solvers.llp.rowUnique">
-<code class="descclassname">reloop.solvers.llp.</code><code class="descname">rowUnique</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop/solvers/llp.html#rowUnique"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop.solvers.llp.rowUnique" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">reloop.solvers.llp.</tt><tt class="descname">rowUnique</tt><big>(</big><em>a</em><big>)</big><a class="reference internal" href="_modules/reloop/solvers/llp.html#rowUnique"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop.solvers.llp.rowUnique" title="Permalink to this definition">¶</a></dt>
 <dd><p>TODO</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -260,7 +260,7 @@ CVXOPT and then the solution vector is recovered.</p>
 
 <dl class="function">
 <dt id="reloop.solvers.llp.sp_saveProblem">
-<code class="descclassname">reloop.solvers.llp.</code><code class="descname">sp_saveProblem</code><span class="sig-paren">(</span><em>fname</em>, <em>A</em>, <em>b</em>, <em>c</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop/solvers/llp.html#sp_saveProblem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop.solvers.llp.sp_saveProblem" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">reloop.solvers.llp.</tt><tt class="descname">sp_saveProblem</tt><big>(</big><em>fname</em>, <em>A</em>, <em>b</em>, <em>c</em><big>)</big><a class="reference internal" href="_modules/reloop/solvers/llp.html#sp_saveProblem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop.solvers.llp.sp_saveProblem" title="Permalink to this definition">¶</a></dt>
 <dd><p>TODO</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -283,7 +283,7 @@ CVXOPT and then the solution vector is recovered.</p>
 
 <dl class="function">
 <dt id="reloop.solvers.llp.sparse">
-<code class="descclassname">reloop.solvers.llp.</code><code class="descname">sparse</code><span class="sig-paren">(</span><em>A</em>, <em>b</em>, <em>c</em>, <em>debug=False</em>, <em>optiter=200</em>, <em>plot=False</em>, <em>save=False</em>, <em>orbits=False</em>, <em>sumrefine=False</em>, <em>solver='cvxopt'</em>, <em>tol=1e-07</em>, <em>faildiff=1e-06</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop/solvers/llp.html#sparse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop.solvers.llp.sparse" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">reloop.solvers.llp.</tt><tt class="descname">sparse</tt><big>(</big><em>A</em>, <em>b</em>, <em>c</em>, <em>debug=False</em>, <em>optiter=200</em>, <em>plot=False</em>, <em>save=False</em>, <em>orbits=False</em>, <em>sumrefine=False</em>, <em>solver='cvxopt'</em>, <em>tol=1e-07</em>, <em>faildiff=1e-06</em><big>)</big><a class="reference internal" href="_modules/reloop/solvers/llp.html#sparse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop.solvers.llp.sparse" title="Permalink to this definition">¶</a></dt>
 <dd><p>TODO
 :param A:
 :type A:
@@ -313,7 +313,7 @@ CVXOPT and then the solution vector is recovered.</p>
 
 <dl class="function">
 <dt id="reloop.solvers.llp.sumRefinement">
-<code class="descclassname">reloop.solvers.llp.</code><code class="descname">sumRefinement</code><span class="sig-paren">(</span><em>A</em>, <em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/reloop/solvers/llp.html#sumRefinement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop.solvers.llp.sumRefinement" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">reloop.solvers.llp.</tt><tt class="descname">sumRefinement</tt><big>(</big><em>A</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/reloop/solvers/llp.html#sumRefinement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#reloop.solvers.llp.sumRefinement" title="Permalink to this definition">¶</a></dt>
 <dd><p>TODO</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -355,7 +355,7 @@ CVXOPT and then the solution vector is recovered.</p>
     </p>
     <p>
         &copy; Copyright 2014, Martin Mladenov, Kristian Kersting, Danny Heinrich, Leonard Kleinhans.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
     </p>
   </div>
 </footer>

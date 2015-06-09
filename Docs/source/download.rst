@@ -7,5 +7,5 @@ Download
 	This code is still in a very experimental stage and we do not guarantee its fitness for any particular purpose. There may be a number of bugs, missing features or missing documentation. In case you encounter any of these, you can get in touch with us at ...
 	We greatly appreciate any feedback.
 
-You can download the latest stable reloop release as a tarball `here <https://bitbucket.org/RELOPT/saucywrapper/get/master.tar.gz>`_.
+You can download the latest stable reloop release as a tarball :download:`here <_static/master.tar.gz>`.
 

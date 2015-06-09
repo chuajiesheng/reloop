@@ -10,8 +10,8 @@
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.3.4/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.3.4/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/ls8layout.css" type="text/css" />
     
@@ -27,10 +27,10 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="reloop 0.1.0b documentation" href="index.html" />
     <link rel="up" title="CPlusPlus" href="cpp.html" />
@@ -42,7 +42,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -142,111 +142,12 @@
 <h2>Members<a class="headerlink" href="#members" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="filetype">
 <h3>Filetype<a class="headerlink" href="#filetype" title="Permalink to this headline">¶</a></h3>
-<dl class="enum">
-<dt id="_CPPv2N7glpk2py8filetypeE">
-<em class="property">enum </em><code class="descclassname">glpk2py::</code><code class="descname">filetype</code><a class="headerlink" href="#_CPPv2N7glpk2py8filetypeE" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div>The Format of a given file</div></blockquote>
-<table border="1" class="docutils">
-<colgroup>
-<col width="12%" />
-<col width="12%" />
-<col width="76%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Name</th>
-<th class="head">Value</th>
-<th class="head">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>MPS</td>
-<td>0</td>
-<td>Given file is in the MPS format</td>
-</tr>
-<tr class="row-odd"><td>LP</td>
-<td>1</td>
-<td>Given file is in the LP format</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </div>
 <div class="section" id="bounds">
 <h3>Bounds<a class="headerlink" href="#bounds" title="Permalink to this headline">¶</a></h3>
-<dl class="enum">
-<dt id="_CPPv2N8glpkl2py6boundsE">
-<em class="property">enum </em><code class="descclassname">glpkl2py::</code><code class="descname">bounds</code><a class="headerlink" href="#_CPPv2N8glpkl2py6boundsE" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div>Flags, which indicate the different bounds to be calculated for given LP.
-For instance if UPPER is set the function getMatrix() will calculate the upper bounds for the specified LP object.</div></blockquote>
-<table border="1" class="docutils">
-<colgroup>
-<col width="23%" />
-<col width="16%" />
-<col width="61%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Name</th>
-<th class="head">Value</th>
-<th class="head">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>UPPER</td>
-<td>0</td>
-<td>Upper Bounds ax &gt; b</td>
-</tr>
-<tr class="row-odd"><td>LOWER</td>
-<td>1</td>
-<td>Lower Bounds ax &lt; b</td>
-</tr>
-<tr class="row-even"><td>EQUAL</td>
-<td>2</td>
-<td>Fixed Bounds ax = b</td>
-</tr>
-<tr class="row-odd"><td>UNBOUND</td>
-<td>3</td>
-<td>Unbound ax &lt; 0</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </div>
 <div class="section" id="scaling">
 <h3>Scaling<a class="headerlink" href="#scaling" title="Permalink to this headline">¶</a></h3>
-<dl class="enum">
-<dt id="_CPPv2N7glpk2py7scalingE">
-<em class="property">enum </em><code class="descclassname">glpk2py::</code><code class="descname">scaling</code><a class="headerlink" href="#_CPPv2N7glpk2py7scalingE" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div>Flags used for distinguishing between the different scaling types to be used by the defined functions.</div></blockquote>
-<table border="1" class="docutils">
-<colgroup>
-<col width="21%" />
-<col width="15%" />
-<col width="65%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Name</th>
-<th class="head">Value</th>
-<th class="head">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>GEOMEAN</td>
-<td>0</td>
-<td>Geometric mean scaling</td>
-</tr>
-<tr class="row-odd"><td>EQUILIB</td>
-<td>1</td>
-<td>Equilibration scaling</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </div>
 </div>
 <div class="section" id="functions">
@@ -254,8 +155,8 @@ For instance if UPPER is set the function getMatrix() will calculate the upper b
 <div class="section" id="openlp">
 <h3>openLP<a class="headerlink" href="#openlp" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
-<dt id="_CPPv2N7glpk2py6openLPERKNSt6stringEi">
-<span id="glpk2py::openLP__ssCR.i"></span>void <code class="descclassname">glpk2py::</code><code class="descname">openLP</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>fname</em>, int <em>format</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N7glpk2py6openLPERKNSt6stringEi" title="Permalink to this definition">¶</a></dt>
+<dt id="glpk2py::openLP__ssCR.i">
+void <tt class="descclassname">glpk2py::</tt><tt class="descname">openLP</tt><big>(</big>const std::string&amp; <em>fname</em>, int <em>format</em><big>)</big><a class="headerlink" href="#glpk2py::openLP__ssCR.i" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div>Opens the LP by creating a glpk problem object and assigning the given file to it n
 Furthermore extracts the number of columns and rows of the opened LP and assigns the values to global variables</div></blockquote>
@@ -283,8 +184,8 @@ Furthermore extracts the number of columns and rows of the opened LP and assigns
 <div class="section" id="closelp">
 <h3>closeLP<a class="headerlink" href="#closelp" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
-<dt id="_CPPv2N7glpk2py7closeLPEv">
-<span id="glpk2py::closeLP__void"></span>void <code class="descclassname">glpk2py::</code><code class="descname">closeLP</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N7glpk2py7closeLPEv" title="Permalink to this definition">¶</a></dt>
+<dt id="glpk2py::closeLP__X">
+void <tt class="descclassname">glpk2py::</tt><tt class="descname">closeLP</tt><big>(</big><em>void</em><big>)</big><a class="headerlink" href="#glpk2py::closeLP__X" title="Permalink to this definition">¶</a></dt>
 <dd><p>Closes LP by calling the destructor of glpk, which deallocates all memory used by the corresponding problem object iff the constructor was called in openLPn
 The call of glp_free_env() frees all resources used by GLPK routines</p>
 </dd></dl>
@@ -293,8 +194,8 @@ The call of glp_free_env() frees all resources used by GLPK routines</p>
 <div class="section" id="getmatrix">
 <h3>getMatrix<a class="headerlink" href="#getmatrix" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
-<dt id="_CPPv2N7glpk2py9getMatrixE6boundsi">
-<span id="glpk2py::getMatrix__bounds.i"></span>vector&lt;double&gt; <code class="descclassname">glpk2py::</code><code class="descname">getMatrix</code><span class="sig-paren">(</span>bounds <em>boundquery</em>, int <em>scaled</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N7glpk2py9getMatrixE6boundsi" title="Permalink to this definition">¶</a></dt>
+<dt id="glpk2py::getMatrix__bounds.i">
+vector&lt;double&gt; <tt class="descclassname">glpk2py::</tt><tt class="descname">getMatrix</tt><big>(</big>bounds <em>boundquery</em>, int <em>scaled</em><big>)</big><a class="headerlink" href="#glpk2py::getMatrix__bounds.i" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div>Computes a Matrix depending on the boundquery argument (see bounds)</div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
@@ -330,8 +231,8 @@ UNBOUND &#8211; Calculates unbound variables of a given LP</p>
 <div class="section" id="getobjective">
 <h3>getObjective<a class="headerlink" href="#getobjective" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
-<dt id="_CPPv2N7glpk2py12getObjectiveEi">
-<span id="glpk2py::getObjective__i"></span>vector&lt;double&gt; <code class="descclassname">glpk2py::</code><code class="descname">getObjective</code><span class="sig-paren">(</span>int <em>scaled</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N7glpk2py12getObjectiveEi" title="Permalink to this definition">¶</a></dt>
+<dt id="glpk2py::getObjective__i">
+vector&lt;double&gt; <tt class="descclassname">glpk2py::</tt><tt class="descname">getObjective</tt><big>(</big>int <em>scaled</em><big>)</big><a class="headerlink" href="#glpk2py::getObjective__i" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div>Calculates the objective of a given LP</div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
@@ -356,8 +257,8 @@ the scale factor s is set to the current scaled factor and the current position 
 <div class="section" id="doscaling">
 <h3>doScaling<a class="headerlink" href="#doscaling" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
-<dt id="_CPPv2N7glpk2py9doScalingE7scaling">
-<span id="glpk2py::doScaling__scaling"></span>void <code class="descclassname">glpk2py::</code><code class="descname">doScaling</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv2N7glpk2py7scalingE" title="glpk2py::scaling">scaling</a> <em>sctype</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N7glpk2py9doScalingE7scaling" title="Permalink to this definition">¶</a></dt>
+<dt id="glpk2py::doScaling__scaling">
+void <tt class="descclassname">glpk2py::</tt><tt class="descname">doScaling</tt><big>(</big>scaling <em>sctype</em><big>)</big><a class="headerlink" href="#glpk2py::doScaling__scaling" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div>Wrapper function for the glp scaling method, which does the actual scaling of the given lp.</div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
@@ -377,8 +278,8 @@ the scale factor s is set to the current scaled factor and the current position 
 <div class="section" id="solve">
 <h3>Solve<a class="headerlink" href="#solve" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
-<dt id="_CPPv2N7glpk2py5solveEv">
-<span id="glpk2py::solve"></span>void <code class="descclassname">glpk2py::</code><code class="descname">solve</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N7glpk2py5solveEv" title="Permalink to this definition">¶</a></dt>
+<dt id="glpk2py::solve">
+void <tt class="descclassname">glpk2py::</tt><tt class="descname">solve</tt><big>(</big><big>)</big><a class="headerlink" href="#glpk2py::solve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Solves the given LP with an off-the-shelf LP-Solver for instance using the Gnu GLPK</p>
 </dd></dl>
 
@@ -605,7 +506,7 @@ the scale factor s is set to the current scaled factor and the current position 
     </p>
     <p>
         &copy; Copyright 2014, Martin Mladenov, Kristian Kersting, Danny Heinrich, Leonard Kleinhans.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
     </p>
   </div>
 </footer>

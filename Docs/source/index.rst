@@ -15,8 +15,6 @@
    introduction
    installation
    tutorial 
-   RAMPL
-   LLP
    examples
    code
    bibliography
