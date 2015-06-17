@@ -170,8 +170,8 @@ def sparse(A, b, c=None, G=None, h=None, debug=False, optiter=200, plot=False, s
         LA, Lb, Lc, compresstime, Bcc = saucy.liftAbc(A, b, c, sparse=True, orbits=orbits)
 
     starttime = time.clock()
-    print "Solving lifted LP:"
-    print "LA: ", LA.shape, " LG: ", LG.shape
+    # print "Solving lifted LP:"
+    # print "LA: ", LA.shape, " LG: ", LG.shape
     problifted = pic.Problem()
     lx = problifted.add_variable('lx', LA.shape[1], vtype='continuous')
     problifted.add_constraint(
@@ -218,6 +218,7 @@ def report(objlift, objground, xopt, xground, timelift,
 
     :returns:
     """
+    # TODO display stats for equality constraints
     print "========= LIFTING REPORT ========="
     print "column reduction: ", cground, " -> ", clift
     print "row reduction: ", rground, " -> ", rlift
