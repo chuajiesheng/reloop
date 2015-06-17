@@ -13,10 +13,10 @@ def epBipartite(A, b, c, G=None, h=None, orbits=False):
 		bmod = np.hstack((bmod, hmod))
 	if G != None:
 		A = sp.vstack((A,G))
-	print "======++EPBIPARTITE"
-	print bmod.shape
-	print A.shape
-	print G.shape
+	# print "======++EPBIPARTITE"
+	# print bmod.shape
+	# print A.shape
+	# print G.shape
 	# print A.todense()
 	# print bmod
 	_, data = np.unique(A.data.round(6), return_inverse=True)
