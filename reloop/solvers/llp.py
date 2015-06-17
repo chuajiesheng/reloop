@@ -97,8 +97,8 @@ def sp_saveProblem(fname, A, b, c):
     prob.write_to_file(fname, writer='gurobi')
 
 
-def sparse(A, b, c, debug=False, optiter=200, plot=False, save=False, orbits=False,
-           sumrefine=False, solver='cvxopt', tol=1e-7, faildiff=1e-6):
+def sparse(A, b, c=None, G=None, h=None, debug=False, optiter=200, plot=False, save=False, orbits=False,
+           sumrefine=False, solver='cvxopt', tol=1e-7, faildiff=1e-2):
     """
     TODO
     :param A:
@@ -107,6 +107,10 @@ def sparse(A, b, c, debug=False, optiter=200, plot=False, save=False, orbits=Fal
     :type b:
     :param c:
     :type c:
+    :param G:
+    :type g:
+    :param h:
+    :type h:
     :param optiter:
     :type optiter:
     :param plot:
@@ -121,6 +125,7 @@ def sparse(A, b, c, debug=False, optiter=200, plot=False, save=False, orbits=Fal
     :returns:
     """
 
+
     solvers.options['abstol'] = tol
     if debug or (save != False):
         mc = -matrix(c.todense())
@@ -130,10 +135,19 @@ def sparse(A, b, c, debug=False, optiter=200, plot=False, save=False, orbits=Fal
             A.tocoo().col.tolist())
         mb = matrix(b.todense())
 
+
         probground = pic.Problem()
         x = probground.add_variable('x', mA.size[1], vtype='continuous')
         probground.add_constraint(mA * x < mb.T)
         probground.set_objective('min', mc.T * x)
+        if (G!=None and h!=None):
+            mG = spmatrix(
+                G.tocoo().data,
+                G.tocoo().row.tolist(),
+                G.tocoo().col.tolist())
+            mh = matrix(h.todense())
+            probground.add_constraint(mG * x == mh.T)
+            
         # probground.write_to_file(fname,writer='gurobi')
 
         # if glpk:
@@ -141,25 +155,40 @@ def sparse(A, b, c, debug=False, optiter=200, plot=False, save=False, orbits=Fal
         #     sol = solvers.lp(mc, mA, mb, solver="glpk")
         # else:
         #     sol = solvers.lp(mc, mA, mb)
-
-        xground = x.value
-        xground = np.array(xground).ravel()
+        try:
+            xground = x.value
+        except:
+            xground = np.array([0])
+        else:
+            xground = np.array(xground).ravel()
         timeground = solinfognd['time']
         objground = solinfognd['obj']
 
-    LA, Lb, Lc, compresstime, Bcc = saucy.liftAbc(A, b, c, sparse=True, orbits=orbits)
-    starttime = time.clock()
+    if (G!=None and h!=None):
+        LA, Lb, Lc, LG, Lh, compresstime, Bcc = saucy.liftAbc(A, b, c, G=G, h=h, sparse=True, orbits=orbits)
+    else:
+        LA, Lb, Lc, compresstime, Bcc = saucy.liftAbc(A, b, c, sparse=True, orbits=orbits)
 
+    starttime = time.clock()
+    print "Solving lifted LP:"
+    print "LA: ", LA.shape, " LG: ", LG.shape
     problifted = pic.Problem()
     lx = problifted.add_variable('lx', LA.shape[1], vtype='continuous')
     problifted.add_constraint(
         spmatrix(LA.data, LA.row.tolist(), LA.col.tolist()) * lx < matrix(Lb).T)
+    if (G!=None and h!=None):
+        problifted.add_constraint(
+            spmatrix(LG.data, LG.row.tolist(), LG.col.tolist()) * lx == matrix(Lh).T)
 
     problifted.set_objective('min', -matrix(Lc).T * lx)
     solinfolifted = problifted.solve(solver=solver, verbose=True)
-    xopt = lx.value
-    r = sp.csr_matrix(np.array(xopt).ravel())
-    xopt = np.array((Bcc * r.T).todense()).ravel()
+    try:
+        xopt = lx.value
+    except:
+        xopt = np.array([0])
+    else:
+        r = sp.csr_matrix(np.array(xopt).ravel())
+        xopt = np.array((Bcc * r.T).todense()).ravel()
     timelift = solinfolifted['time'] + compresstime
     objlift = solinfolifted['obj']
     if debug:
@@ -223,6 +252,8 @@ def objError(objlift, objground):
         else:
             return 1
     else:
+        objlift = np.abs(objlift)
+        objground = np.abs(objground)
         print "objective values disagree by", \
               (max(objlift, objground) / min(objlift, objground) - 1) * 100, "%"
         return max(objlift, objground) / min(objlift, objground) - 1

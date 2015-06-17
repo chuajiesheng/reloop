@@ -11,10 +11,13 @@ print "c: " + str(c.todense().T)
 print "b: " + str(b.todense())
 print "A: " + str(A.todense())
 
-LA, Lb, Lc, compresstime, Bcc = saucy.liftAbc(A, b, c, sparse=True, orbits=False)
+LA, Lb, Lc, LG, Lh, compresstime, Bcc = saucy.liftAbc(A, b, c, G=A, h=b, sparse=True, orbits=False)
+
 
 print "lifted LP:"
 print "lifted c: " + str(Lc.T)
 print "Lb: " + str(Lb)
 print "LA: " + str(LA.todense())
+print "Lh: " + str(Lh)
+print "LG: " + str(LG.todense())
 print Bcc.todense()
