@@ -5,6 +5,14 @@ import maxflow_example
 A static example for the maxflow problem contained in maxflow_example.max using pyDatalog
 """
 
+try:
+    @pyDatalog.predicate()
+    def pyDatalogImportTest(x):
+        yield('True')
+
+except NameError:
+    raise ImportError("Pydatalog is currently not installed on this machine. To use this example please install PyDatalog.")
+
 @pyDatalog.predicate()
 def node1(x):
     yield ('a')
