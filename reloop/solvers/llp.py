@@ -124,7 +124,13 @@ def sparse(A, b, c=None, G=None, h=None, debug=False, optiter=200, plot=False, s
 
     :returns:
     """
-
+    print "Solving: "
+    print "= Dimensions: "
+    print "== A: ", A.shape
+    print "== b: ", b.shape
+    if not (G is None): print "== G: ", G.shape
+    if not (h is None): print "== h: ", h.shape
+    print "== c: ", c.shape
 
     solvers.options['abstol'] = tol
     if debug or (save != False):
@@ -138,18 +144,21 @@ def sparse(A, b, c=None, G=None, h=None, debug=False, optiter=200, plot=False, s
 
         probground = pic.Problem()
         x = probground.add_variable('x', mA.size[1], vtype='continuous')
-        probground.add_constraint(mA * x < mb.T)
+        probground.add_constraint(mA * x < mb)
         probground.set_objective('min', mc.T * x)
         if (G!=None and h!=None):
+            # print G.shape
             mG = spmatrix(
                 G.tocoo().data,
                 G.tocoo().row.tolist(),
-                G.tocoo().col.tolist())
+                G.tocoo().col.tolist(), size=G.shape)
+            # print mG.size
             mh = matrix(h.todense())
-            probground.add_constraint(mG * x == mh.T)
+            # print x.size 
+            # print mh.size
+            probground.add_constraint(mG * x == mh)
             
         # probground.write_to_file(fname,writer='gurobi')
-
         # if glpk:
         solinfognd = probground.solve(solver=solver, verbose=True)
         #     sol = solvers.lp(mc, mA, mb, solver="glpk")
@@ -178,7 +187,7 @@ def sparse(A, b, c=None, G=None, h=None, debug=False, optiter=200, plot=False, s
         spmatrix(LA.data, LA.row.tolist(), LA.col.tolist()) * lx < matrix(Lb).T)
     if (G!=None and h!=None):
         problifted.add_constraint(
-            spmatrix(LG.data, LG.row.tolist(), LG.col.tolist()) * lx == matrix(Lh).T)
+            spmatrix(LG.data, LG.row.tolist(), LG.col.tolist(), size=LG.shape) * lx == matrix(Lh).T)
 
     problifted.set_objective('min', -matrix(Lc).T * lx)
     solinfolifted = problifted.solve(solver=solver, verbose=True)

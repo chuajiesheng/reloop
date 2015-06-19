@@ -68,7 +68,7 @@ def loadNsolve(fname, scaled, ftype):
     b = np.matrix(b)
     b.shape = (b.shape[1],1)
     b = sp.coo_matrix(b)
-    if h != None:
+    if not (h is None):
         h = np.matrix(h)
         h.shape = (h.shape[1],1)
         h = sp.coo_matrix(h)
@@ -76,13 +76,18 @@ def loadNsolve(fname, scaled, ftype):
         print h.shape
     # done with A
     c = lpread.getObjective(scaled)
+    print c
     c.shape = (len(c),1)
     c = sp.coo_matrix(c)
     # glpk2py_wrapper.solve()
     # exit()
     lpread.closeLP()
     # return liftedLPCVXOPT(A.todense(),b.todense(),c.todense(),debug=True,plot=False,orbits=False, sumRefine=False)
-    return llpsolve.sparse(A, b, c, G=G, h=h, debug=True,orbits=False, sumrefine=False, solver='cvxopt')
+    res = llpsolve.sparse(A, b, c, G=G, h=h, debug=True,orbits=False, sumrefine=False, solver='cvxopt')
+    try:
+        return res
+    except: 
+	   return ["failed", "failed", "failed", "failed", "failed", "failed", "failed", "failed"]
 
 def runbatch(path, output, type):
     """
@@ -116,4 +121,4 @@ def runbatch(path, output, type):
 if __name__ == '__main__':
     LP = 1
     MTS = 0
-    runbatch("../data/*.lp","results_ep_Meszaros_counting_ref.pkl",LP)
+    runbatch("../data/*.lp","results.pkl",LP)
