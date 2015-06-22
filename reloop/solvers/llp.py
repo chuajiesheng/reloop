@@ -147,23 +147,16 @@ def sparse(A, b, c=None, G=None, h=None, debug=False, optiter=200, plot=False, s
         probground.add_constraint(mA * x < mb)
         probground.set_objective('min', mc.T * x)
         if (G!=None and h!=None):
-            # print G.shape
             mG = spmatrix(
                 G.tocoo().data,
                 G.tocoo().row.tolist(),
                 G.tocoo().col.tolist(), size=G.shape)
-            # print mG.size
+
             mh = matrix(h.todense())
-            # print x.size 
-            # print mh.size
+
             probground.add_constraint(mG * x == mh)
             
-        # probground.write_to_file(fname,writer='gurobi')
-        # if glpk:
         solinfognd = probground.solve(solver=solver, verbose=True)
-        #     sol = solvers.lp(mc, mA, mb, solver="glpk")
-        # else:
-        #     sol = solvers.lp(mc, mA, mb)
         try:
             xground = x.value
         except:
@@ -173,14 +166,13 @@ def sparse(A, b, c=None, G=None, h=None, debug=False, optiter=200, plot=False, s
         timeground = solinfognd['time']
         objground = solinfognd['obj']
 
+    starttime = time.clock()
+    
     if (G!=None and h!=None):
         LA, Lb, Lc, LG, Lh, compresstime, Bcc = saucy.liftAbc(A, b, c, G=G, h=h, sparse=True, orbits=orbits)
     else:
         LA, Lb, Lc, compresstime, Bcc = saucy.liftAbc(A, b, c, sparse=True, orbits=orbits)
 
-    starttime = time.clock()
-    # print "Solving lifted LP:"
-    # print "LA: ", LA.shape, " LG: ", LG.shape
     problifted = pic.Problem()
     lx = problifted.add_variable('lx', LA.shape[1], vtype='continuous')
     problifted.add_constraint(
