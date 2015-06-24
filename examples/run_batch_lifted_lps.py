@@ -36,53 +36,7 @@ def loadNsolve(fname, scaled, ftype):
 
 
     """  
-    A = sp.coo_matrix((1,1))
-    b = np.zeros((0,0))
-    G = None
-    h = None
-    e = False
-    lpread.openLP(fname,np.int32(ftype))
-
-    if scaled == 1: lpread.doScaling(EQUILIB)
-    lpmatrix = lpread.getMatrix_Upper(scaled) 
-    nelms = np.int(lpmatrix[2,0])
-    if nelms > 0:
-        [A, b] = lpread.extract_matrix(lpmatrix)
-        e = True
-    lpmatrix = lpread.getMatrix_Lower(scaled)
-    nelms = np.int(lpmatrix[2,0])
-    if nelms > 0:
-        [AA, bb] = lpread.extract_matrix(lpmatrix)
-        if e:
-            A = sp.vstack((A,-AA))
-            b = np.hstack((b,-bb))
-        else:
-            A = -AA
-            b = -bb
-            e = True
-    lpmatrix = lpread.getMatrix_Equal(scaled)
-    nelms = np.int(lpmatrix[2,0])
-    if nelms > 0:
-        [G, h] = lpread.extract_matrix(lpmatrix)
-    print "after eq: ", A.shape
-    b = np.matrix(b)
-    b.shape = (b.shape[1],1)
-    b = sp.coo_matrix(b)
-    if not (h is None):
-        h = np.matrix(h)
-        h.shape = (h.shape[1],1)
-        h = sp.coo_matrix(h)
-        print G.shape
-        print h.shape
-    # done with A
-    c = lpread.getObjective(scaled)
-    print c
-    c.shape = (len(c),1)
-    c = sp.coo_matrix(c)
-    # glpk2py_wrapper.solve()
-    # exit()
-    lpread.closeLP()
-    # return liftedLPCVXOPT(A.todense(),b.todense(),c.todense(),debug=True,plot=False,orbits=False, sumRefine=False)
+    A, b, c, G, h = lpread.readLP(fname, scaled, ftype)
     res = llpsolve.sparse(A, b, c, G=G, h=h, debug=True,orbits=False, sumrefine=False, solver='cvxopt')
     try:
         return res

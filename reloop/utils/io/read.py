@@ -9,6 +9,73 @@ UNBOUND = 1
 GEOMMEAN = 6
 EQUILIB = 7
 
+def readLP(fname, scaled, ftype):
+    """
+     TODO: write me.
+
+    :param fname: The name of a given file, which contains the LP
+    :type fname: str.
+    :param scaled: scaled An integeftype The type of the given problem (mostly LPs)r value, which indicates a scaling/scaled LP (?)
+    :type scaled: int.
+    :param ftype: ftype The type of the given problem (mostly LPs)
+    :type ftype: str.
+    :returns:  The n-tuple  [xopt, timeground, timelift, compresstime, shapeR0, shapeR1,shapeC0, shapeC1]:: 
+
+            xopt --
+            timeground -- 
+            timelift --
+            compresstime --
+            shapeR0 --
+            shapeR1 --
+            shapeC0 --
+            shapeC1 --
+
+     >>> print loadNsolve('aircraft.gz.mts.lp',0,'LP')
+     aircraft.gz.mts.lp :  [4.140719000000001, 0.393192, 0.37750799999999973, 7517, 57, 15025, 105]
+
+
+    """  
+    A = None
+    b = None
+    G = None
+    h = None
+    e = False
+    openLP(fname,np.int32(ftype))
+    if scaled == 1: doScaling(EQUILIB)
+    lpmatrix = getMatrix_Upper(scaled) 
+    nelms = np.int(lpmatrix[2,0])
+    if nelms > 0:
+        [A, b] = extract_matrix(lpmatrix)
+        e = True
+    lpmatrix = getMatrix_Lower(scaled)
+    nelms = np.int(lpmatrix[2,0])
+    if nelms > 0:
+        [AA, bb] = extract_matrix(lpmatrix)
+        if e:
+            A = sp.vstack((A,-AA))
+            b = np.hstack((b,-bb))
+        else:
+            A = -AA
+            b = -bb
+            e = True
+    lpmatrix = getMatrix_Equal(scaled)
+    nelms = np.int(lpmatrix[2,0])
+    if nelms > 0:
+        [G, h] = extract_matrix(lpmatrix)
+    b = np.matrix(b)
+    b.shape = (b.shape[1],1)
+    b = sp.coo_matrix(b)
+    if not (h is None):
+        h = np.matrix(h)
+        h.shape = (h.shape[1],1)
+        h = sp.coo_matrix(h)
+        print G.shape
+        print h.shape
+    c = getObjective(scaled)
+    c.shape = (len(c),1)
+    c = sp.coo_matrix(c)
+    return A, b, c, G, h
+
 def openLP(fname,ftype):
     """
     Calls C++ code which opens a linear Program to solve given problem in specified file.
