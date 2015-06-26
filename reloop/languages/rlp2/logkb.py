@@ -1,12 +1,34 @@
 from rlp import *
-from pyDatalog import pyDatalog, pyEngine
-from sets import Set
-import psycopg2
+
+try:
+    from pyDatalog import pyDatalog, pyEngine
+
+    pydatalog_available = True
+except ImportError:
+    pydatalog_available = False
+
+try:
+    import psycopg2
+
+    psycopg2_available = True
+except ImportError:
+    psycopg2_available = False
+
+try:
+    from problog import *
+
+    prolog_available = True
+except ImportError:
+    prolog_available = False
+
+assert psycopg2_available or pydatalog_available or prolog_available, 'Import Error : Please install any one of our interface Knowledgebases to proceed. Currently available are PostgreSQL and Pydatalog.'
+
 
 class LogKb:
     """
     Interface for various LogKBs. Provides basic functionality for every LogKB to be implemented.
     """
+
     def ask(self, query_symbols, logical_query):
         """
         Constructs a query for the given LogKB and returns the List/Set of given answers from the LogKB
@@ -29,6 +51,8 @@ class LogKb:
 
 
 class PyDatalogLogKb(LogKb):
+    def __init__(self):
+        assert pydatalog_available, "Import Error: PyDatalog is not installed on your machine. To use our PyDatalog interface please install pydatalog"
 
     def ask(self, query_symbols, logical_query):
         """
@@ -49,6 +73,7 @@ class PyDatalogLogKb(LogKb):
         pyEngine.Pred.reset_clauses(pyEngine.Pred("helper", len(query_symbols)))
 
         return answer.answers
+
 
     def ask_predicate(self, predicate):
         """
@@ -82,12 +107,13 @@ class PyDatalogLogKb(LogKb):
             return " ~" + PyDatalogLogKb.transform_query(logical_query.args[0])
 
         if isinstance(logical_query, BooleanPredicate):
-            join = ",".join([str(arg) if isinstance(arg, SubSymbol) else "'" + str(arg) + "'" for arg in logical_query.args])
+            join = ",".join([str(arg) if isinstance(arg, SubSymbol) else str(arg)  for arg in logical_query.args])
             return " " + logical_query.name + "(" + join + ")"
 
         raise NotImplementedError
 
-class PostgreSQLKb (LogKb):
+
+class PostgreSQLKb(LogKb):
     """
     A Logical Knowledge Base based on a PostgreSQL database.
     """
@@ -101,7 +127,10 @@ class PostgreSQLKb (LogKb):
         :param user: Database User
         :param password: The password for the given user if applicable
         """
-        connection = psycopg2.connect("dbname="+ str(dbname) + " user="+ str(user) + " password="+ str(password))
+
+        assert psycopg2_available, "Import Error : It seems like psycopg2 is currently not installed or available on your machine. To proceed please install psycopg2"
+
+        connection = psycopg2.connect("dbname=" + str(dbname) + " user=" + str(user) + " password=" + str(password))
         self.cursor = connection.cursor()
 
     def ask(self, query_symbols, logical_query):
@@ -137,7 +166,7 @@ class PostgreSQLKb (LogKb):
         query = "SELECT DISTINCT "
         query += ", ".join([value[0][0] + "." + value[0][1] + " AS " + str(key) for key, value in column_for_symbols_where.items()])
         column_table_tuple_list = [value for key, value in column_for_symbols_where.items()]
-        tables = Set([item[0] for sublist in column_table_tuple_list for item in sublist])
+        tables = set([item[0] for sublist in column_table_tuple_list for item in sublist])
         query += " FROM " + ", ".join([str(value) for value in tables])
 
         and_clause = False
@@ -169,7 +198,6 @@ class PostgreSQLKb (LogKb):
 
                 query += ")"
 
-
         self.cursor.execute(query)
         values = self.cursor.fetchall()
 
@@ -187,10 +215,10 @@ class PostgreSQLKb (LogKb):
         :return: The Value associated with the predicate taken from the database
         """
         columns = self.get_column_names(predicate.name)
-        query = "SELECT " + str(columns[len(columns)-1][0]) + \
-                " FROM "  + str(predicate.name) + \
+        query = "SELECT " + str(columns[len(columns) - 1][0]) + \
+                " FROM " + str(predicate.name) + \
                 " WHERE " + \
-                " AND ".join([str(columns[index][0]) + "="  + "'" + str(arg) + "'" for index, arg in enumerate(predicate.args) ])
+                " AND ".join([str(columns[index][0]) + "=" + "'" + str(arg) + "'" for index, arg in enumerate(predicate.args)])
 
         self.cursor.execute(query)
         return self.cursor.fetchall()
@@ -213,7 +241,7 @@ class PostgreSQLKb (LogKb):
                         query += " AND "
                     else:
                         and_clause_added = True
-                    query += predicate.name + "." + self.get_column_names(predicate.name)[index] + " = " + "'" +str(arg) + "'"
+                    query += predicate.name + "." + self.get_column_names(predicate.name)[index] + " = " + "'" + str(arg) + "'"
 
         return query
 
@@ -250,3 +278,13 @@ class PostgreSQLKb (LogKb):
         ans = [item[0] for item in self.cursor.fetchall()]
         return ans
 
+
+class prologKb(LogKb):
+    def __init__(self):
+        assert pydatalog_available, "Import Error : Prolog is currently not available on your machine. Please install Problog to use this interface."
+
+    def ask(self, logical_query):
+        pass
+
+    def ask_predicate(self, predicate):
+        pass
