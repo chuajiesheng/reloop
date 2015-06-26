@@ -2,25 +2,27 @@ from rlp import *
 
 try:
     from pyDatalog import pyDatalog, pyEngine
+
     pydatalog_available = True
 except ImportError:
     pydatalog_available = False
 
 try:
     import psycopg2
+
     psycopg2_available = True
 except ImportError:
     psycopg2_available = False
 
 try:
     from problog import *
+
     prolog_available = True
 except ImportError:
     prolog_available = False
 
-
-
 assert psycopg2_available or pydatalog_available or prolog_available, 'Import Error : Please install any one of our interface Knowledgebases to proceed. Currently available are PostgreSQL and Pydatalog.'
+
 
 class LogKb:
     """
@@ -49,7 +51,6 @@ class LogKb:
 
 
 class PyDatalogLogKb(LogKb):
-
     def __init__(self):
         assert pydatalog_available, "Import Error: PyDatalog is not installed on your machine. To use our PyDatalog interface please install pydatalog"
 
@@ -72,6 +73,7 @@ class PyDatalogLogKb(LogKb):
         pyEngine.Pred.reset_clauses(pyEngine.Pred("helper", len(query_symbols)))
 
         return answer.answers
+
 
     def ask_predicate(self, predicate):
         """
@@ -105,7 +107,7 @@ class PyDatalogLogKb(LogKb):
             return " ~" + PyDatalogLogKb.transform_query(logical_query.args[0])
 
         if isinstance(logical_query, BooleanPredicate):
-            join = ",".join([str(arg) if isinstance(arg, SubSymbol) else "'" + str(arg) + "'" for arg in logical_query.args])
+            join = ",".join([str(arg) if isinstance(arg, SubSymbol) else str(arg)  for arg in logical_query.args])
             return " " + logical_query.name + "(" + join + ")"
 
         raise NotImplementedError
@@ -278,7 +280,6 @@ class PostgreSQLKb(LogKb):
 
 
 class prologKb(LogKb):
-
     def __init__(self):
         assert pydatalog_available, "Import Error : Prolog is currently not available on your machine. Please install Problog to use this interface."
 
