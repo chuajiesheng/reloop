@@ -77,34 +77,19 @@ model += ForAll([J, X], num(J) & num(X), RlpSum([I, ], num(I), fill(I, J, X)) |e
 # each number is encountered exactly once per box
 model += ForAll([X, U, V], num(X) & boxind(U) & boxind(V), RlpSum([I, J], box(I, J, U, V), fill(I, J, X)) |eq| 1)
 
+# nonnegativity 
+model += ForAll([I, J, X], num(X) & num(I) & num(J), fill(I, J, X) |ge| 0)
 # initial assignment
 model += ForAll([I, J, X], initial(I, J, X), fill(I, J, X) |eq| 1) 
 
-print "The model has been built:"
-print pyDatalog.ask('box(I,J,K,L)') #this query seems to work correctly?? but the constraint before the last one does not ground??
-print(model)
 model.solve()
-
-exit()
-
 
 end = time.time()
 
-# print "\nThe model has been solved: " + model.status() + "."
+print "\nThe model has been solved: " + model.status() + "."
 
-# sol = model.get_solution()
-# exit()
-# print "The solutions for the flow variables are:\n"
-# for key, value in sol.iteritems():
-#     if "flow" in key and value > 0:
-#         print key+" = "+str(value)
-
-# total = 0
-# for key, value in sol.iteritems():
-#     if "flow" in key and value > 0:
-#         total += value
-
-# print "\nTime needed for the grounding and solving: " + str(end - start) + " s."
-# #TODO: Change output to display correct results for an arbitrary number of edges outgoing from the source
-# print "\nThus, the maximum flow entering the traffic network at node a is "+str(sol["flow(a, b)"]+sol["flow(a, c)"])+" cars per hour."
-# print "\nThe total flow in the traffic network is "+str(total)+" cars per hour."
+sol = model.get_solution()
+print "The solutions for the fill variables are:\n"
+for key, value in sol.iteritems():
+    if "fill" in key and value != 0:
+	print key
