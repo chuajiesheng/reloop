@@ -8,9 +8,6 @@ for u in range(9):
 for u in range(3):
     pyDatalog.assert_fact('boxind', u+1)
 
-pyDatalog.load("""
-    box(I, J, U, V) <= boxind(U) & boxind(V) & num(I) & num(J) & (I > (U-1)*3) & (I <= U*3) & (J > (V-1)*3) & (J <= V*3)
-""")
 
 pyDatalog.assert_fact('initial', 1, 1, 5)
 pyDatalog.assert_fact('initial', 2, 1, 6)
@@ -41,6 +38,10 @@ pyDatalog.assert_fact('initial', 4, 9, 3)
 pyDatalog.assert_fact('initial', 5, 9, 1)
 pyDatalog.assert_fact('initial', 6, 9, 6)
 pyDatalog.assert_fact('initial', 8, 9, 5)
+
+pyDatalog.load("""
+    box(I, J, U, V) <= boxind(U) & boxind(V) & num(I) & num(J) & (I > (U-1)*3) & (I <= U*3) & (J > (V-1)*3) & (J <= V*3)
+""")
 
 start = time.time()
 model = RlpProblem("play sudoku for fun and profit",
@@ -79,6 +80,7 @@ model += ForAll([X, U, V], num(X) & boxind(U) & boxind(V), RlpSum([I, J], box(I,
 
 # nonnegativity 
 model += ForAll([I, J, X], num(X) & num(I) & num(J), fill(I, J, X) |ge| 0)
+
 # initial assignment
 model += ForAll([I, J, X], initial(I, J, X), fill(I, J, X) |eq| 1) 
 
