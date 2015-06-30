@@ -167,12 +167,15 @@ vector<double> getObjective(int scaled) {
     *itera = s*glp_get_obj_coef(lp, i);
     itera++;
   }
+/*  for (vector<double>::iterator iterb = objective.begin(); iterb < objective.end(); iterb++) {
+    cout << *iterb << ", ";
+  }*/
   /*for (pyublas::numpy_vector<double>::iterator iterb = objective.begin(); iterb < objective.end(); iterb++) {
     cout << *iterb << ", ";
   }
   */
   if (glp_get_obj_dir(lp) == GLP_MIN) {
-    transform(objective.begin(),objective.end(),objective.begin(),bind1st(multiplies<int>(),-1));
+    transform(objective.begin(),objective.end(),objective.begin(),bind1st(multiplies<double>(),-1));
     return objective;
   } else {
     return objective;
