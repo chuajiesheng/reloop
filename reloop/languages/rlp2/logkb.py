@@ -2,6 +2,9 @@ from rlp import *
 from pyDatalog import pyDatalog, pyEngine
 from sets import Set
 import psycopg2
+import logging
+
+log = logging.getLogger(__name__)
 
 class LogKb:
     """

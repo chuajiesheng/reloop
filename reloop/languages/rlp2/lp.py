@@ -2,6 +2,9 @@ from distutils.command.config import config
 import pulp
 import numpy
 from rlp import *
+import logging
+
+log = logging.getLogger(__name__)
 
 # constants
 LpMinimize = 1

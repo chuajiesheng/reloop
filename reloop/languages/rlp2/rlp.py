@@ -2,7 +2,9 @@ from sympy import srepr, simplify, sstr
 from sympy.core import *
 from sympy.logic.boolalg import *
 from infix import or_infix
+import logging
 
+log = logging.getLogger(__name__)
 
 class RlpProblem():
     """
