@@ -134,7 +134,7 @@ class RlpProblem():
 
         :param objective: A grounded expression (the objective)
         """
-        log.info("Add objective: " + str(objective))
+        log.debug("Add objective: " + str(objective))
         # + "\n" + srepr(objective)
         expr = objective
         if objective.func is Add:
@@ -150,7 +150,7 @@ class RlpProblem():
 
         :param constraint: The grounded constraint.
         """
-        log.info("Add constraint: " + str(constraint))
+        log.debug("Add constraint: " + str(constraint))
         # + "\n" + srepr(constraint)
         lhs = constraint.lhs
         b = constraint.rhs
