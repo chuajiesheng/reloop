@@ -2,7 +2,9 @@ from sympy import srepr, simplify, sstr
 from sympy.core import *
 from sympy.logic.boolalg import *
 from infix import or_infix
+import logging
 
+log = logging.getLogger(__name__)
 
 class RlpProblem():
     """
@@ -132,7 +134,7 @@ class RlpProblem():
 
         :param objective: A grounded expression (the objective)
         """
-        print "Add objective: " + str(objective)
+        log.debug("Add objective: " + str(objective))
         # + "\n" + srepr(objective)
         expr = objective
         if objective.func is Add:
@@ -148,7 +150,7 @@ class RlpProblem():
 
         :param constraint: The grounded constraint.
         """
-        print "Add constraint: " + str(constraint)
+        log.debug("Add constraint: " + str(constraint))
         # + "\n" + srepr(constraint)
         lhs = constraint.lhs
         b = constraint.rhs

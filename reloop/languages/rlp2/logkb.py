@@ -1,4 +1,5 @@
 from rlp import *
+import logging
 
 try:
     from pyDatalog import pyDatalog, pyEngine
@@ -22,6 +23,7 @@ except ImportError:
     prolog_available = False
 
 assert psycopg2_available or pydatalog_available or prolog_available, 'Import Error : Please install any one of our interface Knowledgebases to proceed. Currently available are PostgreSQL and Pydatalog.'
+log = logging.getLogger(__name__)
 
 
 class LogKb:
