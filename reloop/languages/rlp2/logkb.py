@@ -1,3 +1,4 @@
+from pandas.core.common import _ABCGeneric
 from rlp import *
 import logging
 
@@ -169,6 +170,12 @@ class PostgreSQLKb(LogKb):
         query += ", ".join([value[0][0] + "." + value[0][1] + " AS " + str(key) for key, value in column_for_symbols_where.items()])
         column_table_tuple_list = [value for key, value in column_for_symbols_where.items()]
         tables = set([item[0] for sublist in column_table_tuple_list for item in sublist])
+
+        for table in tables:
+            self.cursor.execute("select exists(select * from information_schema.tables where table_name=%s)", (str(table),))
+            if self.cursor.fetchone()[0] is False:
+                raise ValueError ("Error : the table " + str(table) + " does not exist in the specified database and therefore can not be queried.")
+
         query += " FROM " + ", ".join([str(value).lower() for value in tables])
 
         and_clause = False
