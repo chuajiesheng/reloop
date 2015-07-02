@@ -169,7 +169,7 @@ class PostgreSQLKb(LogKb):
         query += ", ".join([value[0][0] + "." + value[0][1] + " AS " + str(key) for key, value in column_for_symbols_where.items()])
         column_table_tuple_list = [value for key, value in column_for_symbols_where.items()]
         tables = set([item[0] for sublist in column_table_tuple_list for item in sublist])
-        query += " FROM " + ", ".join([str(value) for value in tables])
+        query += " FROM " + ", ".join([str(value).lower() for value in tables])
 
         and_clause = False
         query += " WHERE "
@@ -182,7 +182,7 @@ class PostgreSQLKb(LogKb):
             else:
                 and_clause = False
             reference_column = value[0][0] + "." + value[0][1]
-            query += " AND ".join([reference_column + " = " + rel + "." + col for rel, col in value])
+            query += " AND ".join([reference_column + " = " + rel.lower()  + "." + col for rel, col in value])
 
         query += self.and_clause_for_constants(predicates, and_clause)
 
@@ -193,9 +193,9 @@ class PostgreSQLKb(LogKb):
                     and_clause = True
                 else:
                     and_clause = False
-                query += " AND NOT EXISTS (SELECT * FROM " + rel + " WHERE "
+                query += " AND NOT EXISTS (SELECT * FROM " + rel.lower() + " WHERE "
                 reference_column = column_for_symbols_where[symbol][0][0]
-                query += " AND ".join([reference_column + "." + col + " = " + reltmp + "." + col for reltmp, col in value if reltmp == rel])
+                query += " AND ".join([reference_column + "." + col + " = " + reltmp.lower()  + "." + col  for reltmp, col in value if reltmp == rel])
                 query += self.and_clause_for_constants(negated_predicates, and_clause)
 
                 query += ")"
@@ -218,7 +218,7 @@ class PostgreSQLKb(LogKb):
         """
         columns = self.get_column_names(predicate.name)
         query = "SELECT " + str(columns[len(columns) - 1][0]) + \
-                " FROM " + str(predicate.name) + \
+                " FROM " + str(predicate.name.lower()) + \
                 " WHERE " + \
                 " AND ".join([str(columns[index][0]) + "=" + "'" + str(arg) + "'" for index, arg in enumerate(predicate.args)])
 
@@ -243,7 +243,7 @@ class PostgreSQLKb(LogKb):
                         query += " AND "
                     else:
                         and_clause_added = True
-                    query += predicate.name + "." + self.get_column_names(predicate.name)[index] + " = " + "'" + str(arg) + "'"
+                    query += predicate.name.lower()  + "." + self.get_column_names(predicate.name)[index] + " = " + "'" + str(arg) + "'"
 
         return query
 
@@ -275,7 +275,7 @@ class PostgreSQLKb(LogKb):
         :type relation_name: str
         :return: A list consisting of the column names.
         """
-        query = "SELECT column_name FROM information_schema.columns where table_name=" + "'" + relation_name + "' ORDER BY ordinal_position ASC"
+        query = "SELECT column_name FROM information_schema.columns where table_name=" + "'" + relation_name.lower() + "' ORDER BY ordinal_position ASC"
         self.cursor.execute(query)
         ans = [item[0] for item in self.cursor.fetchall()]
         return ans
