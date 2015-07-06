@@ -1,5 +1,6 @@
 from sympy import srepr, simplify, sstr
 from sympy.core import *
+from sympy.sets import FiniteSet
 from sympy.logic.boolalg import *
 from infix import or_infix
 import logging
@@ -189,6 +190,9 @@ class Query:
         :param query_symbols: List of type :class:`SubSymbol`
         :param query: A logical query
         """
+        if not isinstance(query_symbols, FiniteSet):
+            query_symbols = FiniteSet(*query_symbols)
+
         self._query_symbols = query_symbols
         self._query = simplify(query)
 
@@ -359,6 +363,15 @@ class RlpSum(Expr, Query):
     """
 
     """
+    def __new__(cls, query_symbols, query, expression):
+        if not isinstance(query_symbols, FiniteSet):
+            query_symbols = FiniteSet(*query_symbols)
+
+        rlp_sum = Expr.__new__(cls)
+        rlp_sum._args = tuple([query_symbols, query, expression])
+
+        return rlp_sum
+
     def __init__(self, query_symbols, query, expression):
         Query.__init__(self, query_symbols, query)
         if not isinstance(expression, Expr):

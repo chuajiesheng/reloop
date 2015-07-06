@@ -35,7 +35,7 @@ def maxflow(logKb, solver):
     model += ForAll([Z, ], node(Z) & ~source(Z) & ~target(Z), inFlow |eq| outFlow)
 
     # upper and lower bound constraints
-    model += ForAll([X, Y], edge(X, Y), flow(X, Y) |ge| 0)
+    model += ForAll({X, Y}, edge(X, Y), flow(X, Y) |ge| 0)
     model += ForAll([X, Y], edge(X, Y), flow(X, Y) |le| cost(X, Y))
 
     print "The model has been built:"
