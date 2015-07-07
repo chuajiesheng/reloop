@@ -77,7 +77,6 @@ class PyDatalogLogKb(LogKb):
 
         return answer.answers
 
-
     def ask_predicate(self, predicate):
         """
         Queries PyDataLog for the given predicate by constructing a query fitting the pyDataLog Syntax.
@@ -286,14 +285,3 @@ class PostgreSQLKb(LogKb):
         self.cursor.execute(query)
         ans = [item[0] for item in self.cursor.fetchall()]
         return ans
-
-
-class prologKb(LogKb):
-    def __init__(self):
-        assert pydatalog_available, "Import Error : Prolog is currently not available on your machine. Please install Problog to use this interface."
-
-    def ask(self, logical_query):
-        pass
-
-    def ask_predicate(self, predicate):
-        pass
