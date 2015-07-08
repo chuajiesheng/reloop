@@ -1,3 +1,4 @@
+import psycopg2
 from reloop.languages.rlp2.logkb import *
 from reloop.languages.rlp2.lp import *
 import getpass
@@ -15,7 +16,7 @@ For further examples on the formatting on the input files please see the filenam
 
    n a s       (source)
    n g t       (target)
-   n adann
+   n a
    n b         (nodes)
    a a c 20
    a a b 50    (edges and cap)
