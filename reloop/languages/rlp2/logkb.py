@@ -1,4 +1,3 @@
-from pandas.core.common import _ABCGeneric
 from rlp import *
 import logging
 
