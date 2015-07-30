@@ -1,4 +1,3 @@
-from pandas.core.common import _ABCGeneric
 from rlp import *
 import logging
 
@@ -76,7 +75,6 @@ class PyDatalogLogKb(LogKb):
         pyEngine.Pred.reset_clauses(pyEngine.Pred("helper", len(query_symbols)))
 
         return answer.answers
-
 
     def ask_predicate(self, predicate):
         """
@@ -286,14 +284,3 @@ class PostgreSQLKb(LogKb):
         self.cursor.execute(query)
         ans = [item[0] for item in self.cursor.fetchall()]
         return ans
-
-
-class prologKb(LogKb):
-    def __init__(self):
-        assert pydatalog_available, "Import Error : Prolog is currently not available on your machine. Please install Problog to use this interface."
-
-    def ask(self, logical_query):
-        pass
-
-    def ask_predicate(self, predicate):
-        pass
