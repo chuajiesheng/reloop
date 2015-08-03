@@ -89,18 +89,18 @@ class BlockGrounder(Grounder):
             # print constr_matrix
             # print constr_vector
             if isinstance(constraint.relation, Equality):
-                G = constr_matrix if G is None else sp.vstack((G, constr_matrix))
-                h = constr_vector if h is None else sp.vstack((h, constr_vector))
+                G = constr_matrix if G is None else sp.sparse.vstack((G, constr_matrix))
+                h = constr_vector if h is None else sp.sparse.vstack((h, constr_vector))
             else:
-                A = constr_matrix if A is None else sp.vstack((A, constr_matrix))
-                b = constr_vector if b is None else sp.vstack((b, constr_vector))
+                A = constr_matrix if A is None else sp.sparse.vstack((A, constr_matrix))
+                b = constr_vector if b is None else sp.sparse.vstack((b, constr_vector))
 
         if b is not None: b = -b #at some point we had lhs = lhs - rhs, so now we have to put b back on the rhs
         if h is not None: h = -h
-        if rlpProblem.sense != LpMaximize:
-            c = -c
 
-        return c,G,h ,A ,b
+        c = rlpProblem.sense * c
+
+        return c.todense().T, A.tocoo(), b.todense(), G.tocoo(), h.todense()
                 # result = constraint.ground(self.logkb, self._reloop_variables)
                 #TODO: can we organize the code so that we don't have to propagate _reloop_variables?
                 # for expr in result:
@@ -209,6 +209,8 @@ def coefficient_to_query(lpvariables, expr):
             return [True, Float(1.0), expr]
         else:
             [val] = sub_symbols('VAL'+str(id(expr)))
+            [val] = sub_symbols('VAL'+str(id(expr)))
+            #val = Symbol('VAL'+str(id(expr)))
             b = boolean_predicate(str(expr.func), len(expr.args)+1)
             return [b(*(expr.args+tuple([val]))), val, None]
     else:
