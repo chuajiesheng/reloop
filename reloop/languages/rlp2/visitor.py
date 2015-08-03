@@ -38,10 +38,9 @@ class NormalizeVisitor(ImmutableVisitor):
             return self.visit_rlpsum(expr)
         else:
             args = expr.args
-            for arg in args:
-               arg = self.visit(arg)
+            normalized_args = [self.visit(arg) for arg in args]
 
-            return expr.func(*args)
+            return expr.func(*normalized_args)
 
 
         #aise ValueError("Malformed expression detected: argument is not instance of sympy.core.Mul, sympy.core.Add or RlpSum but contains a RlpSum; Type is " + str(type(expr)))
@@ -92,14 +91,14 @@ sum = RlpSum({X, }, pred(X), Add(RlpSum({Y, }, pred(Y) & pred(X), 7*Y),4, Mul(X,
 
 print(srepr(sum))
 
-norm_visit = NormalizeVisitor(sum)
-print("NormalizeVisitor: " + srepr(norm_visit.result))
+#norm_visit = NormalizeVisitor(sum)
+#print("NormalizeVisitor: " + srepr(norm_visit.result))
 
 
-print("\nOrigin:  " + srepr(sum))
+#print("\nOrigin:  " + srepr(sum))
 
-print(sum)
-print(norm_visit.result)
+##print(sum)
+#print(norm_visit.result)
 
 
 class ExpressionGrounder(ImmutableVisitor):
