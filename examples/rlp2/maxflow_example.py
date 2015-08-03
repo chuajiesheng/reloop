@@ -3,12 +3,12 @@ import time
 import logging
 import sys
 
-def maxflow(logKb, solver):
+def maxflow(grounder, solver):
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
     start = time.time()
     model = RlpProblem("traffic flow LP in the spirit of page 329 in http://ampl.com/BOOK/CHAPTERS/18-network.pdf",
-                       LpMaximize, logKb, solver)
+                       LpMaximize, grounder, solver)
 
     print "\nBuilding a relational variant of the " + model.name
 

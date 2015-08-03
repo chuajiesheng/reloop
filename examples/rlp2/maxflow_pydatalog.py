@@ -1,5 +1,9 @@
 from reloop.languages.rlp2 import *
 import maxflow_example
+from reloop.languages.rlp2.grounding.recursive import RecursiveGrounder
+from reloop.languages.rlp2.lpsolver import CvxoptSolver
+from reloop.languages.rlp2.logkb import PyDatalogLogKb
+from pyDatalog import pyDatalog
 
 """
 A static example for the maxflow problem contained in maxflow_example.max using pyDatalog
@@ -53,4 +57,8 @@ def cost3(x, y, z):
     yield ('e', 'g', 70)
     yield ('f', 'g', 70)
 
-model = maxflow_example.maxflow(PyDatalogLogKb(), Pulp)
+logkb = PyDatalogLogKb()
+grounder = RecursiveGrounder(logkb)
+
+
+model = maxflow_example.maxflow(grounder, CvxoptSolver)

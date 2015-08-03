@@ -11,7 +11,7 @@ class RlpProblem():
     """
     The model of a Relational Linear Program.
     """
-    def __init__(self, name, sense, logkb, lp):
+    def __init__(self, name, sense, grounder, lpsolver):
         """
         Instantiates the model
 
@@ -20,8 +20,10 @@ class RlpProblem():
         :param logkb: An instance of :class:`.logkb.LogKB`
         :param lp: A type of :class:`lp.LpProblem`
         """
-        self.lpmodel = lp(name, sense)
-        self.logkb = logkb
+
+        self.sense = sense
+        self.grounder = grounder
+        self.lpsolver = lpsolver
         self.name = name
         self._reloop_variables = set([])
         self._constraints = []
@@ -35,6 +37,7 @@ class RlpProblem():
         """
         for predicate in predicates:
             self._reloop_variables |= {(predicate.name, predicate.arity)}
+            predicate.isReloopVariable = True
 
     @property
     def reloop_variables(self):
@@ -66,8 +69,9 @@ class RlpProblem():
         """
         Grounds and solves the logical programm.
         """
-        self.ground_into_lp()
-        self.lpmodel.solve()
+        lp = self.grounder.ground(self)
+        self.solution = self.lpsolver().solve(*lp)
+
 
     def status(self):
         """
@@ -75,7 +79,8 @@ class RlpProblem():
         :return: The solution status of the LP.
 
         """
-        return self.lpmodel.status()
+        pass
+        # return self.lpmodel.status()
 
     def get_solution(self):
         """
@@ -83,92 +88,7 @@ class RlpProblem():
 
         :return: The solution of the LP
         """
-        return self.lpmodel.get_solution()
-
-    def ground_into_lp(self):
-        """
-        Ground the RLP by grounding the objective and each constraint.
-        """
-        self.add_objective_to_lp(self.ground_expression(self.objective))
-
-        for constraint in self.constraints:
-            if isinstance(constraint, Rel):
-                lhs = constraint.lhs - constraint.rhs
-                ground_result = constraint.__class__(expand(self.ground_expression(lhs)), 0.0)
-                self.add_constraint_to_lp(ground_result)
-            else:
-                # maybe pre-ground here?
-                # result = self.ground_expression(constraint.relation, bound=constraint.query_symbols)
-                result = constraint.ground(self.logkb)
-                for expr in result:
-                    ground = self.ground_expression(expr)
-                    ground_result = ground.__class__(expand(self.ground_expression(ground.lhs)), ground.rhs)
-                    self.add_constraint_to_lp(ground_result)
-
-    def ground_expression(self, expr):
-        """
-        Recursively grounds any sympy expression, :class:`.RlpSum`, :class:`.RlpPredicate`, ...
-
-        :param expr: The expression which is to be grounded
-        :return: A grounded expression
-        """
-        if expr.func in [Mul, Add, Pow]:
-            return expr.func(*map(lambda a: self.ground_expression(a), expr.args))
-
-        if expr.func is RlpSum:
-            result = expr.ground(self.logkb)
-            return self.ground_expression(result)
-
-        if isinstance(expr, NumericPredicate):
-            if (expr.name, expr.arity) not in self.reloop_variables:
-                return expr.ground(self.logkb)
-
-        if expr.func is BooleanPredicate:
-            # TODO Evaluate to 0 or 1? Did Martin say: that would be cool?
-            raise ValueError("RlpBooleanPredicate is invalid here!")
-
-        return expr
-
-    def add_objective_to_lp(self, objective):
-        """
-        Adds a grounded objective to the LP
-
-        :param objective: A grounded expression (the objective)
-        """
-        log.debug("Add objective: " + str(objective))
-        # + "\n" + srepr(objective)
-        expr = objective
-        if objective.func is Add:
-            for s in objective.args:
-                if s.is_Atom:
-                    expr -= s
-
-        self.lpmodel += expr
-
-    def add_constraint_to_lp(self, constraint):
-        """
-        Adds a grounded constraint to the LP
-
-        :param constraint: The grounded constraint.
-        """
-        log.debug("Add constraint: " + str(constraint))
-        # + "\n" + srepr(constraint)
-        lhs = constraint.lhs
-        b = constraint.rhs
-        if constraint.lhs.func is Add:
-            for s in constraint.lhs.args:
-                if s.is_Atom:
-                    lhs -= s
-                    b -= s
-
-        # TODO handle Lt and Gt
-        if constraint.func is Ge:
-            sense = 1
-        elif constraint.func is Eq:
-            sense = 0
-        elif constraint.func is Le:
-            sense = -1
-        self.lpmodel += (lhs, b, sense)
+        return self.solution()
 
     def __str__(self):
         asstr = "Objective: "
@@ -295,8 +215,7 @@ def rlp_predicate(name, arity, boolean):
         predicate_type = BooleanPredicate
     else:
         predicate_type = NumericPredicate
-    predicate_class = type(name, (predicate_type,), {"arity": arity, "name": name, "result": None,
-                                                                         "grounded": False})
+    predicate_class = type(name, (predicate_type,), {"arity": arity, "name": name, "isReloopVariable": False })
     return predicate_class
 
 class RlpPredicate(Expr):
@@ -309,41 +228,7 @@ class NumericPredicate(RlpPredicate, Function):
     """
     @classmethod
     def eval(cls, *args):
-        if not cls.grounded:
-            return None
-        return cls.result
-
-    def ground(self, logkb):
-        """
-        Grounds itself
-
-        :param logkb: An implementation of a Logical Knowledge Base
-        :type logkb: :class:`.LogKB`
-        :return: The :math:`e_{k}` th element
-        """
-        args = self.args
-        if len(args) > self.arity:
-            raise Exception("Too many arguments.")
-
-        if len(args) < self.arity:
-            raise Exception("Not enough arguments")
-
-        for argument in args:
-            if isinstance(argument, SubSymbol):
-                raise ValueError("Found free symbols while grounding: " + str(self))
-
-        answers = logkb.ask_predicate(self)
-        if answers is None:
-            raise ValueError('Predicate is not defined or no result!')
-
-        if len(answers) != 1:
-            raise ValueError("The LogKb gives multiple results. Oh!")
-
-        result = answers.pop()
-        self.result = result
-        self.grounded = True
-        return float(result[0])
-
+        return None
 
     @classmethod
     def __str__(cls):
@@ -379,27 +264,6 @@ class RlpSum(Expr, Query):
         if isinstance(expression, Rel):
             raise ValueError("You cannot use a sympy.core.Rel instance here!")
         self.expression = expression
-        self.result = None
-        self.grounded = False
-
-    def ground(self, logkb):
-        """
-        Grounds the query and expression
-
-        :param logkb: An implementation of a Logical Knowledge Base
-        :type logkb: :class:`.LogKB`
-        :return: An summation of the grounded expressions
-        """
-        answers = logkb.ask(self.query_symbols, self.query)
-        result = Float(0.0)
-        for answer in answers:
-                expression_eval_subs = self.expression
-                for index, symbol in enumerate(self.query_symbols):
-                    expression_eval_subs = expression_eval_subs.subs(symbol, answer[index])
-                result += expression_eval_subs
-        self.result = result
-        self.grounded = True
-        return self.result
 
     @property
     def is_number(self):
@@ -411,9 +275,7 @@ class RlpSum(Expr, Query):
         return tuple(self.query_symbols) + self._args[1:]
 
     def _sympyrepr(self, printer, *args):
-        if not self.grounded:
-            return "RlpSum(" + str(self.query_symbols) + " in " + str(self.query) + ", " + srepr(self.expression) + ")"
-        return srepr(self.result)
+        return "RlpSum(" + str(self.query_symbols) + " in " + str(self.query) + ", " + srepr(self.expression) + ")"
 
 @or_infix
 def eq(a, b):

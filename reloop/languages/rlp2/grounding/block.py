@@ -3,10 +3,14 @@ from grounder import PostgresqlConnector
 from reloop.languages.rlp2 import *
 import scipy as sp
 import scipy.sparse
+import numpy as np
 
 from sympy.sets import EmptySet
 
-class BlockGrounder(Grounder, PostgresqlConnector):
+class BlockGrounder(Grounder):
+
+    def __init__(self, logkb):
+        self.logkb = logkb
 
     def ground(self, rlpProblem):
 
@@ -21,10 +25,10 @@ class BlockGrounder(Grounder, PostgresqlConnector):
         self.O = {}
         self.T = {}
 
-        self.constraint_to_matrix(rlpProblem.objective, self.col_dicts, self.row_dicts, self.O)
+        self.constraint_to_matrix(rlpProblem, rlpProblem.objective, self.col_dicts, self.row_dicts, self.O)
 
         for constraint in rlpProblem.constraints:
-            self.constraint_to_matrix(constraint, self.col_dicts, self.row_dicts, self.T)
+            self.constraint_to_matrix(rlpProblem, constraint, self.col_dicts, self.row_dicts, self.T)
 
 
         print "stiching stuff back together"
@@ -43,7 +47,7 @@ class BlockGrounder(Grounder, PostgresqlConnector):
                     value = self.O[constr_name][key]
                     value.resize((self.row_dicts[constr_name]["count"], self.col_dicts[key]["count"]))
                 else:
-                    value = sp.dok_matrix((self.row_dicts[constr_name]["count"], self.col_dicts[key]["count"]))
+                    value = sp.sparse.dok_matrix((self.row_dicts[constr_name]["count"], self.col_dicts[key]["count"]))
 
                 if c is not None:
                     c = sp.hstack((c, value))
@@ -96,13 +100,8 @@ class BlockGrounder(Grounder, PostgresqlConnector):
         if h is not None: h = -h
         if rlpProblem.sense != LpMaximize:
             c = -c
-        # print A.todense()
-        # print b.todense()
-        # print G.todense()
-        # print h.todense()
-        # print c.todense()
 
-        return A,b,c,G,h
+        return c,G,h ,A ,b
                 # result = constraint.ground(self.logkb, self._reloop_variables)
                 #TODO: can we organize the code so that we don't have to propagate _reloop_variables?
                 # for expr in result:
@@ -110,7 +109,7 @@ class BlockGrounder(Grounder, PostgresqlConnector):
                 #     ground_result = ground.__class__(expand(self.ground_expression(ground.lhs)), ground.rhs)
                 #     self.add_constraint_to_lp(ground_result)
 
-    def constraint_to_matrix(self, constraint, col_dicts, row_dicts, T):
+    def constraint_to_matrix(self, rlpProblem, constraint, col_dicts, row_dicts, T):
         constr_name = 'CONSTR'+str(id(constraint))
         T[constr_name] = {}
         row_dicts[constr_name] = {"count":0}
@@ -137,7 +136,8 @@ class BlockGrounder(Grounder, PostgresqlConnector):
         print "=========="
         print constraint
         print lhs
-        if not isinstance(lhs, Add): terms = [lhs] #### do this otherwise we iterate over the subsymbols
+        if not isinstance(lhs, Add): terms = [lhs] #### do thi        # print A.todense()
+
         else: terms = lhs.args
         row_dict = row_dicts[constr_name]
 
@@ -148,11 +148,11 @@ class BlockGrounder(Grounder, PostgresqlConnector):
             if isinstance(term, RlpSum):
                 term_query = term.query
                 term_qsymb = term.query_symbols
-                coef_query, coef_qsymb, var_atom = BlockGrounder.coefficient_to_query(self._reloop_variables, term.args[2])
+                coef_query, coef_qsymb, var_atom = coefficient_to_query(rlpProblem._reloop_variables, term.args[2])
             else:
                 term_query = True
                 term_qsymb = EmptySet()
-                coef_query, coef_qsymb, var_atom = BlockGrounder.coefficient_to_query(self._reloop_variables, term)
+                coef_query, coef_qsymb, var_atom = coefficient_to_query(rlpProblem._reloop_variables, term)
 
             print "constr_qsymb: ", constr_qsymb
             print "term_qsymb: ", term_qsymb
@@ -173,9 +173,8 @@ class BlockGrounder(Grounder, PostgresqlConnector):
             if col_dicts.has_key(str(var_atom)):
                 col_dict = col_dicts[str(var_atom)]
             else:
-                col_dict = {"count":0}
+                col_dict = {"count": 0}
                 col_dicts[str(var_atom)] = col_dict
-
 
             row_order = [header.index(str(var).lower()) for var in constr_qsymb]
 
@@ -187,7 +186,7 @@ class BlockGrounder(Grounder, PostgresqlConnector):
             # print TT
             # print TT[:,2]
             # print (TT[:,0], TT[:,1])
-            D = sp.coo_matrix((TT[:,2], (TT[:,0], TT[:,1]))).todok()
+            D = sp.sparse.coo_matrix((TT[:,2], (TT[:,0], TT[:,1]))).todok()
             if T.has_key(constr_name):
                 if T[constr_name].has_key(str(var_atom)):
                     D.resize((row_dict["count"], col_dict["count"]))
@@ -199,28 +198,37 @@ class BlockGrounder(Grounder, PostgresqlConnector):
                 T[constr_name] = {}
                 T[constr_name][str(var_atom)] = D
 
-    @staticmethod
-    def coefficient_to_query(lpvariables, expr):
-        """
-        TODO: write me tenderly
-        """
-        if isinstance(expr, NumericPredicate):
-            if (expr.name, expr.arity) in lpvariables:
-                return [True, 1.0, expr]
-            else:
-                [val] = sub_symbols('VAL'+str(id(expr)))
-                b = boolean_predicate(str(expr.func), len(expr.args)+1)
-                return [b(*(expr.args+tuple([val]))), val, None]
-        else:
-            query = []
-            query_expr = []
-            var_atom = None
-            for arg in expr.args:
-                if expr.has(NumericPredicate):
-                    [q, e, v] = coefficient_to_query(lpvariables, arg)
-                    if v is not None: var_atom = v
-                else:
-                    q = True; e = arg
-                query.append(q); query_expr.append(e)
-            return [And(*query), expr.func(*query_expr), var_atom]
 
+def coefficient_to_query(lpvariables, expr):
+    """
+    TODO: write me tenderly
+    """
+    if isinstance(expr, NumericPredicate):
+        if (expr.name, expr.arity) in lpvariables:
+            return [True, 1.0, expr]
+        else:
+            [val] = sub_symbols('VAL'+str(id(expr)))
+            b = boolean_predicate(str(expr.func), len(expr.args)+1)
+            return [b(*(expr.args+tuple([val]))), val, None]
+    else:
+        query = []
+        query_expr = []
+        var_atom = None
+        for arg in expr.args:
+            if arg.has(NumericPredicate):
+                [q, e, v] = coefficient_to_query(lpvariables, arg)
+                if v is not None: var_atom = v
+            else:
+                q = True; e = arg
+            query.append(q); query_expr.append(e)
+        return [And(*query), expr.func(*query_expr), var_atom]
+
+def unique(tup, index_dict):
+    s = ",".join([str(u) for u in tup])
+    if index_dict.has_key(s):
+        return index_dict[s]
+    else:
+        c = index_dict["count"]
+        index_dict[s] = c
+        index_dict["count"] = c + 1
+        return c

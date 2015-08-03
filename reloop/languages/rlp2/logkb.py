@@ -161,9 +161,31 @@ class PostgreSQLKb(LogKb):
         else:
             raise NotImplementedError('The given function of the query has not been implemented yet or is not valid')
 
-        column_for_symbols_where = self.get_columns_for_symbols(query_symbols, predicates)
-        column_for_symbols_notexists = self.get_columns_for_symbols(query_symbols, negated_predicates)
+        #column_for_symbols_where = self.get_columns_for_symbols(query_symbols, predicates)
+        #column_for_symbols_notexists = self.get_columns_for_symbols(query_symbols, negated_predicates)
+        ############### test
+        query_variables = []
+        query_expressions = []
+        for symbol in query_symbols:
+            print symbol
+            print symbol.func
+            if symbol.func is SubSymbol: query_variables.append(symbol)
+            else: query_expressions.append(symbol)
+        column_for_symbols_where = self.get_columns_for_symbols(query_variables, predicates)
+        column_for_symbols_notexists = self.get_columns_for_symbols(query_variables, negated_predicates)
 
+        query_expressions_subs = []
+        for expr in query_expressions:
+            '''
+            tried using the sympy substitution here, but it tries to parse the input.
+            '''
+            e = str(expr)
+            for key, value in column_for_symbols_where.items():
+                if (str(key).find("VAL") != -1):
+                    e = e.replace(str(key), value[0][0] + "." + value[0][1])
+            query_expressions_subs.append(e)
+
+        ################# test
         query = "SELECT DISTINCT "
         query += ", ".join([value[0][0] + "." + value[0][1] + " AS " + str(key) for key, value in column_for_symbols_where.items()])
         column_table_tuple_list = [value for key, value in column_for_symbols_where.items()]

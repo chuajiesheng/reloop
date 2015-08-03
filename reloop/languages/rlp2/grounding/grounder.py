@@ -1,7 +1,10 @@
-
+import abc
 
 class Grounder():
 
+    __metaclass__ = abc.ABCMeta
+
+    @abc.abstractmethod
     def ground(self, rlpProblem):
         raise NotImplementedError("")
 

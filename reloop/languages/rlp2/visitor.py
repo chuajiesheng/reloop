@@ -123,9 +123,71 @@ class ExpressionGrounder(ImmutableVisitor):
             result = self.visit_rlpsum(expr)
             return self.visit(result)
 
+        if isinstance(expr, NumericPredicate) and not expr.isReloopVariable:
+            return self.visit_numeric_predicate(expr)
+
+        if expr.func is BooleanPredicate:
+            # TODO Evaluate to 0 or 1? Did Martin say: that would be cool?
+            raise ValueError("RlpBooleanPredicate is invalid here!")
+
+        return expr
+
+    def visit_rlpsum(self, rlpsum):
+        answers = self.logkb.ask(rlpsum.query_symbols, rlpsum.query)
+        result = Float(0.0)
+        for answer in answers:
+                expression_eval_subs = rlpsum.expression
+                for index, symbol in enumerate(rlpsum.query_symbols):
+                    expression_eval_subs = expression_eval_subs.subs(symbol, answer[index])
+                result += expression_eval_subs
+
+        return result
+
+    def visit_numeric_predicate(self, pred):
+        args = pred.args
+        if len(args) > pred.arity:
+            raise Exception("Too many arguments.")
+
+        if len(args) < pred.arity:
+            raise Exception("Not enough arguments")
+
+        for argument in args:
+            if isinstance(argument, SubSymbol):
+                raise ValueError("Found free symbols while grounding: " + str(pred))
+
+        answers = self.logkb.ask_predicate(pred)
+        if answers is None:
+            raise ValueError('Predicate is not defined or no result!')
+
+        if len(answers) != 1:
+            raise ValueError("The LogKb gives multiple results. Oh!")
+
+        result = answers.pop()
+
+        return float(result[0])
+
+
+
+class AffineExpressionCompiler(ImmutableVisitor):
+    """
+    Grounds a sympy expression into a set of lp variables and the grounded expression
+    """
+
+    def __init__(self, expr, logkb):
+        self.lp_variables = set([])
+
+        expanded_expr = expand(expr)
+        self._result = self.visit(expanded_expr)
+
+    def visit(self, expr):
+
+        if expr.func in [Mul, Add, Pow]:
+            return expr.func(*map(lambda a: self.visit(a), expr.args))
+
+
         if isinstance(expr, NumericPredicate):
                 if not expr.isReloopVariable:
-                    return self.visit_numeric_predicate(expr)
+                    raise ValueError("Not fully grounded")
                 else:
                     self.lp_variables.add(sstr(expr))
 
