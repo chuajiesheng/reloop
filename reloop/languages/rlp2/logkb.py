@@ -296,7 +296,11 @@ class PostgreSQLKb(LogKb):
 
             for index, arg in enumerate(predicate.args):
                 if isinstance(arg, SubSymbol):
-                    column_for_symbols[arg].append((predicate.name, column_names[index]))
+                    #column_for_symbols[arg].append((predicate.name, column_names[index]))
+                    if column_for_symbols.has_key(arg):
+                        column_for_symbols[arg].append((predicate.name, column_names[index]))
+                    else:
+                        column_for_symbols[arg] = [(predicate.name, column_names[index])]
 
         return column_for_symbols
 
