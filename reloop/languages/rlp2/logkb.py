@@ -142,6 +142,9 @@ class PostgreSQLKb(LogKb):
         :param query:         see :func:`~logkb.LogKB.ask`
         :return: The answers, which satisfy the executed query on the database
         """
+
+        logical_query = simplify(logical_query)
+
         negated_predicates = []
         predicates = []
         if logical_query.func is And:
@@ -187,7 +190,8 @@ class PostgreSQLKb(LogKb):
 
         ################# test
         query = "SELECT DISTINCT "
-        query += ", ".join([value[0][0] + "." + value[0][1] + " AS " + str(key) for key, value in column_for_symbols_where.items()])
+        #query += ", ".join([value[0][0] + "." + value[0][1] + " AS " + str(key) for key, value in column_for_symbols_where.items()])
+        query += ", ".join([value[0][0] + "." + value[0][1] + " AS " + str(key) for key, value in column_for_symbols_where.items()] + [str(e) for e in query_expressions_subs])
         column_table_tuple_list = [value for key, value in column_for_symbols_where.items()]
         tables = set([item[0] for sublist in column_table_tuple_list for item in sublist])
 
@@ -230,7 +234,9 @@ class PostgreSQLKb(LogKb):
         self.cursor.execute(query)
         values = self.cursor.fetchall()
 
-        return values
+        #return values
+        header = [col[0] for col in self.cursor.description]
+        return header, values
 
     def ask_predicate(self, predicate):
         """

@@ -13,11 +13,10 @@ class BlockGrounder(Grounder):
         self.logkb = logkb
 
     def ground(self, rlpProblem):
-
-
         """
         Ground the RLP by grounding the objective and each constraint.
         """
+
         # self.add_objective_to_lp(self.ground_expression(self.objective))
 
         self.col_dicts = {}
@@ -143,7 +142,7 @@ class BlockGrounder(Grounder):
 
 
         for term in terms:
-            print "---------"
+
             print term
             if isinstance(term, RlpSum):
                 term_query = term.query
@@ -162,7 +161,9 @@ class BlockGrounder(Grounder):
             print "term_query: ", term_query
             print "coef_query: ", coef_query
 
-            header, records = self.logkb.ask(constr_qsymb + term_qsymb + FiniteSet(coef_qsymb),  constr_query & term_query & coef_query)
+            qs= constr_qsymb + term_qsymb + FiniteSet(coef_qsymb)
+            q = constr_query & term_query & coef_query
+            header, records = self.logkb.ask(qs,  q)
 
             if var_atom is None:
                 var_atom = "b_vec"
@@ -205,7 +206,7 @@ def coefficient_to_query(lpvariables, expr):
     """
     if isinstance(expr, NumericPredicate):
         if (expr.name, expr.arity) in lpvariables:
-            return [True, 1.0, expr]
+            return [True, Float(1.0), expr]
         else:
             [val] = sub_symbols('VAL'+str(id(expr)))
             b = boolean_predicate(str(expr.func), len(expr.args)+1)
