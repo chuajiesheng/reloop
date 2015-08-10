@@ -19,7 +19,7 @@ class ImmutableVisitor():
     def result(self):
         return self._result
 
-class NormalizeVisitor(ImmutableVisitor):
+class Normalizer(ImmutableVisitor):
     def __init__(self, expr):
         expanded_expr = expand(expr)
 

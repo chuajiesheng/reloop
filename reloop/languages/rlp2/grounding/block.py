@@ -20,17 +20,12 @@ class BlockGrounder(Grounder):
         """
         Ground the RLP by grounding the objective and each constraint.
         """
-
-        self.constraint_to_matrix(rlpProblem, rlpProblem.objective, self.col_dicts, self.row_dicts, self.O)
+        self.constraint_to_matrix(rlpProblem.objective, self.col_dicts, self.row_dicts, self.O)
 
         for constraint in rlpProblem.constraints:
-            self.constraint_to_matrix(rlpProblem, constraint, self.col_dicts, self.row_dicts, self.T)
-
-
-        print "stiching stuff back together"
+            self.constraint_to_matrix(constraint, self.col_dicts, self.row_dicts, self.T)
 
         G = h = A = b = c = None
-
 
         for constr_name in self.O.keys():
             for reloop_variable in rlpProblem._reloop_variables:
@@ -43,17 +38,15 @@ class BlockGrounder(Grounder):
                     value = sp.sparse.dok_matrix((len(self.row_dicts[constr_name]), len(self.col_dicts[key])))
 
                 if c is not None:
-                    c = sp.hstack((c, value))
+                    c = sp.sparse.hstack((c, value))
                 else:
                     c = value
         #TODO: figure out the precise var mapping at some point.
-
 
         for constraint in rlpProblem.constraints:
             constr_matrix = None
             constr_vector = None
             constr_name = 'CONSTR'+str(id(constraint))
-            print constr_name
 
             for reloop_variable in rlpProblem._reloop_variables:
                 key = "%s/%s" % reloop_variable
@@ -64,12 +57,12 @@ class BlockGrounder(Grounder):
                     value = sp.sparse.dok_matrix((self.row_dicts[constr_name]["count"], self.col_dicts[key]["count"]))
                 if constr_matrix is not None:
                     value.resize((self.row_dicts[constr_name]["count"], self.col_dicts[key]["count"]))
-                    constr_matrix = sp.hstack((constr_matrix, value)) #TODO: this should not be done like that, assign predicate ranges
+                    constr_matrix = sp.sparse.hstack((constr_matrix, value)) #TODO: this should not be done like that, assign predicate ranges
                 else:
                     constr_matrix = value
-            if self.T[constr_name].has_key("b_vec"):
-                value = self.T[constr_name]["b_vec"]
-                value.resize((self.row_dicts[constr_name]["count"], 1))
+            if self.T[constr_name].has_key("None"):
+                value = self.T[constr_name]["None"]
+                value.resize((len(self.row_dicts[constr_name]), 1))
                 constr_vector = value
             else:
                 constr_vector = sp.sparse.dok_matrix((len(self.row_dicts[constr_name]), 1))
@@ -88,15 +81,12 @@ class BlockGrounder(Grounder):
 
         return c.todense().T, A.tocoo(), b.todense(), G.tocoo(), h.todense()
 
-    def visit(self, constraint):
-        pass
-
-
-    def constraint_to_matrix(self, rlpProblem, constraint, col_dicts, row_dicts, T):
+    def constraint_to_matrix(self, constraint, col_dicts, row_dicts, T):
 
         constr_name = 'CONSTR'+str(id(constraint))
         T[constr_name] = {}
         row_dicts[constr_name] = OrderedSet()
+        row_dict = row_dicts[constr_name]
 
         if isinstance(constraint, Rel):
             lhs = constraint.lhs - constraint.rhs
@@ -113,67 +103,64 @@ class BlockGrounder(Grounder):
             constr_query = True
             constr_query_symbols = EmptySet()
 
-        lhs = NormalizeVisitor(lhs).result
+        lhs = Normalizer(lhs).result
 
-        if not isinstance(lhs, Add): terms = [lhs]
-        else: terms = lhs.args
+        if not isinstance(lhs, Add):
+            summands = [lhs]
+        else:
+            summands = lhs.args
 
-        row_dict = row_dicts[constr_name]
+        for summand in summands:
 
-        for term in terms:
-
-            if isinstance(term, RlpSum):
-                term_query = term.query
-                term_qsymb = term.query_symbols
-                coef_query, coef_qsymb, var_atom = coefficient_to_query(term.args[2])
+            if isinstance(summand, RlpSum):
+                summand_query = summand.query
+                summand_query_symbols = summand.query_symbols
+                coef_query, coef_query_symbols, variable = coefficient_to_query(summand.args[2])
             else:
-                term_query = BooleanTrue
-                term_qsymb = EmptySet()
-                coef_query, coef_qsymb, var_atom = coefficient_to_query(term)
+                summand_query = True
+                summand_query_symbols = EmptySet()
+                coef_query, coef_query_symbols, variable = coefficient_to_query(summand)
 
-            query_symbols = constr_query_symbols + term_qsymb
-            query_symbols = [s for s in query_symbols]
+            query_symbols = OrderedSet(constr_query_symbols + summand_query_symbols)
 
-            coeff_expr = coef_qsymb if not isinstance(coef_qsymb, SubSymbol) else None
-            q = constr_query & term_query & coef_query
+            coef_expr = coef_query_symbols if not isinstance(coef_query_symbols, SubSymbol) else None
+            query = constr_query & summand_query & coef_query
 
-            records = self.logkb.ask(query_symbols,  q, coeff_expr)
+            records = self.logkb.ask(query_symbols,  query, coef_expr)
 
-            if var_atom is None:
-                var_atom = "b_vec"
+            if variable is not None:
+                variable_qs_indices = [query_symbols.index(var) for var in variable.args]
+            else:
                 variable_qs_indices = []
-            else:
-                variable_qs_indices = [query_symbols.index(var) for var in var_atom.args]
 
-            if col_dicts.has_key(str(var_atom)):
-                col_dict = col_dicts[str(var_atom)]
+            if col_dicts.has_key(str(variable)):
+                col_dict = col_dicts[str(variable)]
             else:
                 col_dict = OrderedSet()
-                col_dicts[str(var_atom)] = col_dict
+                col_dicts[str(variable)] = col_dict
 
-            constr_qs_indices = [query_symbols.index(var) for var in constr_query_symbols]
+            constr_qs_indices = [query_symbols.index(symbol) for symbol in constr_query_symbols]
 
             expr_index = len(records[0])-1
 
-            TT = [
-                [row_dict.add(hash(tuple(rec[i] for i in constr_qs_indices))),
-                 col_dict.add(hash(tuple(rec[i] for i in variable_qs_indices))),
-                 np.float(rec[expr_index])]
-                for rec in records]
-            TT = np.array(TT)
+            sparse_data = np.array([[
+                np.float(rec[expr_index]),
+                row_dict.add(hash(tuple(rec[i] for i in constr_qs_indices))),
+                col_dict.add(hash(tuple(rec[i] for i in variable_qs_indices)))
+                ] for rec in records])
 
-            D = sp.sparse.coo_matrix((TT[:, 2], (TT[:, 0], TT[:, 1]))).todok()
+            D = sp.sparse.coo_matrix((sparse_data[:, 0], (sparse_data[:, 1], sparse_data[:, 2]))).todok()
 
             if T.has_key(constr_name):
-                if T[constr_name].has_key(str(var_atom)):
+                if T[constr_name].has_key(str(variable)):
                     D.resize((len(row_dict), len(col_dict)))
-                    T[constr_name][str(var_atom)].resize((len(row_dict), len(col_dict)))
-                    T[constr_name][str(var_atom)] += D
+                    T[constr_name][str(variable)].resize((len(row_dict), len(col_dict)))
+                    T[constr_name][str(variable)] += D
                 else:
-                    T[constr_name][str(var_atom)] = D
+                    T[constr_name][str(variable)] = D
             else:
                 T[constr_name] = {}
-                T[constr_name][str(var_atom)] = D
+                T[constr_name][str(variable)] = D
 
 
 def coefficient_to_query(expr):
@@ -200,16 +187,6 @@ def coefficient_to_query(expr):
             query.append(q); query_expr.append(e)
         return [And(*query), expr.func(*query_expr), var_atom]
 
-def unique(tup, index_dict):
-    s = ",".join([str(u) for u in tup])
-    if index_dict.has_key(s):
-        return index_dict[s]
-    else:
-        c = index_dict["count"]
-        index_dict[s] = c
-        index_dict["count"] = c + 1
-        return c
 
 def variable_name_for_expression(expr):
     return 'VAL' + str(id(expr))
-
