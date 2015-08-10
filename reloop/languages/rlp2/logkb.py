@@ -133,8 +133,9 @@ class PostgreSQLKb(LogKb):
 
         connection = psycopg2.connect("dbname=" + str(dbname) + " user=" + str(user) + " password=" + str(password))
         self.cursor = connection.cursor()
+        self.recursive = True
 
-    def ask(self, query_symbols, logical_query):
+    def ask(self, query_symbols, logical_query, coeff_expr = None):
         """
         Builds a PostgreSQL query from a given logical query and its query_symbols by implicitly joining over all given predicates.
 
@@ -164,39 +165,24 @@ class PostgreSQLKb(LogKb):
         else:
             raise NotImplementedError('The given function of the query has not been implemented yet or is not valid')
 
-        #column_for_symbols_where = self.get_columns_for_symbols(query_symbols, predicates)
-        #column_for_symbols_notexists = self.get_columns_for_symbols(query_symbols, negated_predicates)
-        ############### test
-        query_variables = []
-        query_expressions = []
-        for symbol in query_symbols:
-            print symbol
-            print symbol.func
-            if symbol.func is SubSymbol: query_variables.append(symbol)
-            else: query_expressions.append(symbol)
-        column_for_symbols_where = self.get_columns_for_symbols(query_variables, predicates)
-        column_for_symbols_notexists = self.get_columns_for_symbols(query_variables, negated_predicates)
+        column_for_symbols_where = self.get_columns_for_symbols(query_symbols, predicates)
+        column_for_symbols_notexists = self.get_columns_for_symbols(query_symbols, negated_predicates)
+        column_for_symbols_all = self.get_columns_for_symbols(logical_query.atoms(Symbol), predicates + negated_predicates)
 
-        query_expressions_subs = []
-        for expr in query_expressions:
-            '''
-            tried using the sympy substitution here, but it tries to parse the input.
-            '''
-            e = str(expr)
-            for key, value in column_for_symbols_where.items():
-                if (str(key).find("VAL") != -1):
-                    e = e.replace(str(key), value[0][0] + "." + value[0][1])
-            query_expressions_subs.append(e)
+        expr_as_string = str(coeff_expr)
+        for symbol, columns in column_for_symbols_all.items():
+            if isinstance(symbol, VariableSubSymbol):
+                expr_as_string = expr_as_string.replace(str(symbol), columns[0][0] + "." + columns[0][1])
 
-        ################# test
         query = "SELECT DISTINCT "
-        #query += ", ".join([value[0][0] + "." + value[0][1] + " AS " + str(key) for key, value in column_for_symbols_where.items()])
-        query += ", ".join([value[0][0] + "." + value[0][1] + " AS " + str(key) for key, value in column_for_symbols_where.items()] + [str(e) for e in query_expressions_subs])
+
+        query += ", ".join([value[0][0] + "." + value[0][1] + " AS " + str(key) for key, value in column_for_symbols_where.items()] + [expr_as_string])
         column_table_tuple_list = [value for key, value in column_for_symbols_where.items()]
         tables = set([item[0] for sublist in column_table_tuple_list for item in sublist])
 
         for table in tables:
-            self.cursor.execute("select exists(select * from information_schema.tables where table_name=%s)", (str(table),))
+            queryy = "select exists(select * from information_schema.tables where table_name='" + table + "')"
+            self.cursor.execute(queryy)
             if self.cursor.fetchone()[0] is False:
                 raise ValueError ("Error : the table " + str(table) + " does not exist in the specified database and therefore can not be queried.")
 
@@ -226,7 +212,7 @@ class PostgreSQLKb(LogKb):
                     and_clause = False
                 query += " AND NOT EXISTS (SELECT * FROM " + rel.lower() + " WHERE "
                 reference_column = column_for_symbols_where[symbol][0][0]
-                query += " AND ".join([reference_column + "." + col + " = " + reltmp.lower()  + "." + col  for reltmp, col in value if reltmp == rel])
+                query += " AND ".join([reference_column + "." + col + " = " + reltmp.lower()  + "." + col for reltmp, col in value if reltmp == rel])
                 query += self.and_clause_for_constants(negated_predicates, and_clause)
 
                 query += ")"
@@ -234,9 +220,7 @@ class PostgreSQLKb(LogKb):
         self.cursor.execute(query)
         values = self.cursor.fetchall()
 
-        #return values
-        header = [col[0] for col in self.cursor.description]
-        return header, values
+        return values
 
     def ask_predicate(self, predicate):
         """
@@ -276,13 +260,14 @@ class PostgreSQLKb(LogKb):
                         query += " AND "
                     else:
                         and_clause_added = True
-                    query += predicate.name.lower()  + "." + self.get_column_names(predicate.name)[index] + " = " + "'" + str(arg) + "'"
+                    query += predicate.name.lower() + "." + self.get_column_names(predicate.name)[index] + " = " + "'" + str(arg) + "'"
 
         return query
 
     def get_columns_for_symbols(self, query_symbol, predicates):
         """
-        Creates a dictionary from symbols and predicates with Key, Value pairs of query_symbols,predicates , where is Symbol is the Key to its occurances in the predicates.
+        Creates a dictionary from symbols and predicates with Key, Value pairs of query_symbols,predicates , where
+        Symbol is the Key to its occurances in the predicates.
 
         :param query_symbol: The Symbols to be queried for (Keys)
         :type query_symbol: List(SubSymbol)
@@ -296,11 +281,9 @@ class PostgreSQLKb(LogKb):
 
             for index, arg in enumerate(predicate.args):
                 if isinstance(arg, SubSymbol):
-                    #column_for_symbols[arg].append((predicate.name, column_names[index]))
+                    # We only want those symbols, that appear in the query
                     if column_for_symbols.has_key(arg):
                         column_for_symbols[arg].append((predicate.name, column_names[index]))
-                    else:
-                        column_for_symbols[arg] = [(predicate.name, column_names[index])]
 
         return column_for_symbols
 

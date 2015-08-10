@@ -60,6 +60,15 @@ class CvxoptSolver(LpSolver):
     def solve(self, c, g, h, a, b):
         c, g, h, a, b = get_cvxopt_matrices(c, g, h, a, b)
 
+        print("START MATRICES")
+        print(c)
+        print(g)
+        print(h)
+        print(a)
+        print(b)
+        print("END MATRICES")
+
+
         #solver = self.options.get("cvxopt_solver","conelp")
         solver = "glpk"
         self._result = cvxopt.solvers.lp(c, G=g, h=h, A=a, b=b, solver=solver)

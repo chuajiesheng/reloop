@@ -11,18 +11,15 @@ class BlockGrounder(Grounder):
 
     def __init__(self, logkb):
         self.logkb = logkb
+        self.col_dicts = {}
+        self.row_dicts = {}
+        self.O = {}
+        self.T = {}
 
     def ground(self, rlpProblem):
         """
         Ground the RLP by grounding the objective and each constraint.
         """
-
-        # self.add_objective_to_lp(self.ground_expression(self.objective))
-
-        self.col_dicts = {}
-        self.row_dicts = {}
-        self.O = {}
-        self.T = {}
 
         self.constraint_to_matrix(rlpProblem, rlpProblem.objective, self.col_dicts, self.row_dicts, self.O)
 
@@ -53,20 +50,17 @@ class BlockGrounder(Grounder):
                 else:
                     c = value
         #TODO: figure out the precise var mapping at some point.
-        for key, value in self.T.iteritems():
-            print key
-            for keykey, valuevalue in value.iteritems():
-                print keykey
+
+
         for constraint in rlpProblem.constraints:
             constr_matrix = None
             constr_vector = None
             constr_name = 'CONSTR'+str(id(constraint))
             print constr_name
 
-            # for key, value in T[constr_name].iteritems():
             for reloop_variable in rlpProblem._reloop_variables:
                 key = "%s/%s" % reloop_variable
-                print key
+
                 if not self.col_dicts[key].has_key("range"):
                     self.col_dicts[key]["range"] = block_start
                     block_start += self.col_dicts[key]["count"]
@@ -86,8 +80,7 @@ class BlockGrounder(Grounder):
                 constr_vector = value
             else:
                 constr_vector = sp.sparse.dok_matrix((self.row_dicts[constr_name]["count"], 1))
-            # print constr_matrix
-            # print constr_vector
+
             if isinstance(constraint.relation, Equality):
                 G = constr_matrix if G is None else sp.sparse.vstack((G, constr_matrix))
                 h = constr_vector if h is None else sp.sparse.vstack((h, constr_vector))
@@ -101,14 +94,13 @@ class BlockGrounder(Grounder):
         c = rlpProblem.sense * c
 
         return c.todense().T, A.tocoo(), b.todense(), G.tocoo(), h.todense()
-                # result = constraint.ground(self.logkb, self._reloop_variables)
-                #TODO: can we organize the code so that we don't have to propagate _reloop_variables?
-                # for expr in result:
-                #     ground = self.ground_expression(expr)
-                #     ground_result = ground.__class__(expand(self.ground_expression(ground.lhs)), ground.rhs)
-                #     self.add_constraint_to_lp(ground_result)
+
+    def visit(self, constraint):
+        pass
+
 
     def constraint_to_matrix(self, rlpProblem, constraint, col_dicts, row_dicts, T):
+
         constr_name = 'CONSTR'+str(id(constraint))
         T[constr_name] = {}
         row_dicts[constr_name] = {"count":0}
@@ -132,62 +124,57 @@ class BlockGrounder(Grounder):
 
         lhs = NormalizeVisitor(lhs).result
 
-        print "=========="
-        print constraint
-        print lhs
-        if not isinstance(lhs, Add): terms = [lhs] #### do thi        # print A.todense()
-
+        if not isinstance(lhs, Add): terms = [lhs]
         else: terms = lhs.args
-        row_dict = row_dicts[constr_name]
 
+        row_dict = row_dicts[constr_name]
 
         for term in terms:
 
-            print term
             if isinstance(term, RlpSum):
                 term_query = term.query
                 term_qsymb = term.query_symbols
-                coef_query, coef_qsymb, var_atom = coefficient_to_query(rlpProblem._reloop_variables, term.args[2])
+                coef_query, coef_qsymb, var_atom = coefficient_to_query(term.args[2])
             else:
                 term_query = True
                 term_qsymb = EmptySet()
-                coef_query, coef_qsymb, var_atom = coefficient_to_query(rlpProblem._reloop_variables, term)
+                coef_query, coef_qsymb, var_atom = coefficient_to_query(term)
 
-            print "constr_qsymb: ", constr_qsymb
-            print "term_qsymb: ", term_qsymb
-            print "coef_qsymb: ", FiniteSet(coef_qsymb)
 
-            print "constr_query: ", constr_query
-            print "term_query: ", term_query
-            print "coef_query: ", coef_query
+            qs = constr_qsymb + term_qsymb
+            #if isinstance(coef_qsymb, SubSymbol): qs += FiniteSet(coef_qsymb)
+            qs = [s for s in qs]
 
-            qs= constr_qsymb + term_qsymb + FiniteSet(coef_qsymb)
+            coeff_expr = coef_qsymb if not isinstance(coef_qsymb, SubSymbol) else None
             q = constr_query & term_query & coef_query
-            header, records = self.logkb.ask(qs,  q)
+
+            records = self.logkb.ask(qs,  q, coeff_expr)
 
             if var_atom is None:
                 var_atom = "b_vec"
                 col_order = []
             else:
-                col_order = [header.index(str(var).lower()) for var in var_atom.args]
-            # print "var atom: ", str(var_atom)
+                col_order = [qs.index(var) for var in var_atom.args]
+
             if col_dicts.has_key(str(var_atom)):
                 col_dict = col_dicts[str(var_atom)]
             else:
                 col_dict = {"count": 0}
                 col_dicts[str(var_atom)] = col_dict
 
-            row_order = [header.index(str(var).lower()) for var in constr_qsymb]
+            row_order = [qs.index(var) for var in constr_qsymb]
 
-            data_index = header.index("?column?")
-            # print records
-            TT = [ [unique((rec[i] for i in row_order),row_dict), unique((rec[i] for i in col_order), col_dict), np.float(rec[data_index])] for rec in records ]
+            data_index = len(records[0])-1
+
+            TT = [
+                [unique((rec[i] for i in row_order),row_dict),
+                 unique((rec[i] for i in col_order), col_dict),
+                 np.float(rec[data_index])]
+                for rec in records ]
             TT = np.array(TT)
 
-            # print TT
-            # print TT[:,2]
-            # print (TT[:,0], TT[:,1])
-            D = sp.sparse.coo_matrix((TT[:,2], (TT[:,0], TT[:,1]))).todok()
+            D = sp.sparse.coo_matrix((TT[:, 2], (TT[:, 0], TT[:, 1]))).todok()
+
             if T.has_key(constr_name):
                 if T[constr_name].has_key(str(var_atom)):
                     D.resize((row_dict["count"], col_dict["count"]))
@@ -200,17 +187,15 @@ class BlockGrounder(Grounder):
                 T[constr_name][str(var_atom)] = D
 
 
-def coefficient_to_query(lpvariables, expr):
+def coefficient_to_query(expr):
     """
     TODO: write me tenderly
     """
     if isinstance(expr, NumericPredicate):
-        if (expr.name, expr.arity) in lpvariables:
+        if(expr.isReloopVariable):
             return [True, Float(1.0), expr]
         else:
-            [val] = sub_symbols('VAL'+str(id(expr)))
-            [val] = sub_symbols('VAL'+str(id(expr)))
-            #val = Symbol('VAL'+str(id(expr)))
+            val = VariableSubSymbol(variable_name_for_expression(expr))
             b = boolean_predicate(str(expr.func), len(expr.args)+1)
             return [b(*(expr.args+tuple([val]))), val, None]
     else:
@@ -219,7 +204,7 @@ def coefficient_to_query(lpvariables, expr):
         var_atom = None
         for arg in expr.args:
             if arg.has(NumericPredicate):
-                [q, e, v] = coefficient_to_query(lpvariables, arg)
+                [q, e, v] = coefficient_to_query(arg)
                 if v is not None: var_atom = v
             else:
                 q = True; e = arg
@@ -235,3 +220,7 @@ def unique(tup, index_dict):
         index_dict[s] = c
         index_dict["count"] = c + 1
         return c
+
+def variable_name_for_expression(expr):
+    return 'VAL' + str(id(expr))
+

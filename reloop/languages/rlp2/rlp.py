@@ -171,6 +171,9 @@ class SubSymbol(Symbol):
     pass
 
 
+class VariableSubSymbol(SubSymbol):
+    pass
+
 def sub_symbols(*symbols):
     """
     Convenience function for instantiating multiple :class:`.SubSymbol` at once.
