@@ -1,9 +1,9 @@
 from grounder import Grounder
-from grounder import PostgresqlConnector
 from reloop.languages.rlp2 import *
 import scipy as sp
 import scipy.sparse
 import numpy as np
+from ordered_set import OrderedSet
 
 from sympy.sets import EmptySet
 
@@ -31,19 +31,16 @@ class BlockGrounder(Grounder):
 
         G = h = A = b = c = None
 
-        block_start = 0
+
         for constr_name in self.O.keys():
             for reloop_variable in rlpProblem._reloop_variables:
                 key = "%s/%s" % reloop_variable
-                print key
-                if not self.col_dicts[key].has_key("range"):
-                    self.col_dicts[key]["range"] = block_start
-                    block_start += self.col_dicts[key]["count"]
+
                 if self.O[constr_name].has_key(key):
                     value = self.O[constr_name][key]
-                    value.resize((self.row_dicts[constr_name]["count"], self.col_dicts[key]["count"]))
+                    value.resize((len(self.row_dicts[constr_name]), len(self.col_dicts[key])))
                 else:
-                    value = sp.sparse.dok_matrix((self.row_dicts[constr_name]["count"], self.col_dicts[key]["count"]))
+                    value = sp.sparse.dok_matrix((len(self.row_dicts[constr_name]), len(self.col_dicts[key])))
 
                 if c is not None:
                     c = sp.hstack((c, value))
@@ -61,10 +58,6 @@ class BlockGrounder(Grounder):
             for reloop_variable in rlpProblem._reloop_variables:
                 key = "%s/%s" % reloop_variable
 
-                if not self.col_dicts[key].has_key("range"):
-                    self.col_dicts[key]["range"] = block_start
-                    block_start += self.col_dicts[key]["count"]
-
                 if self.T[constr_name].has_key(key):
                     value = self.T[constr_name][key]
                 else:
@@ -79,7 +72,7 @@ class BlockGrounder(Grounder):
                 value.resize((self.row_dicts[constr_name]["count"], 1))
                 constr_vector = value
             else:
-                constr_vector = sp.sparse.dok_matrix((self.row_dicts[constr_name]["count"], 1))
+                constr_vector = sp.sparse.dok_matrix((len(self.row_dicts[constr_name]), 1))
 
             if isinstance(constraint.relation, Equality):
                 G = constr_matrix if G is None else sp.sparse.vstack((G, constr_matrix))
@@ -103,24 +96,22 @@ class BlockGrounder(Grounder):
 
         constr_name = 'CONSTR'+str(id(constraint))
         T[constr_name] = {}
-        row_dicts[constr_name] = {"count":0}
-
+        row_dicts[constr_name] = OrderedSet()
 
         if isinstance(constraint, Rel):
             lhs = constraint.lhs - constraint.rhs
             constr_query = True
-            constr_qsymb = EmptySet()
-
+            constr_query_symbols = EmptySet()
         elif isinstance(constraint, ForAll):
             lhs = constraint.relation.lhs - constraint.relation.rhs
             if isinstance(constraint.relation, GreaterThan):
                 lhs = -1*lhs
             constr_query = constraint.query
-            constr_qsymb = constraint.query_symbols
+            constr_query_symbols = constraint.query_symbols
         else:
             lhs = constraint
             constr_query = True
-            constr_qsymb = EmptySet()
+            constr_query_symbols = EmptySet()
 
         lhs = NormalizeVisitor(lhs).result
 
@@ -136,49 +127,47 @@ class BlockGrounder(Grounder):
                 term_qsymb = term.query_symbols
                 coef_query, coef_qsymb, var_atom = coefficient_to_query(term.args[2])
             else:
-                term_query = True
+                term_query = BooleanTrue
                 term_qsymb = EmptySet()
                 coef_query, coef_qsymb, var_atom = coefficient_to_query(term)
 
-
-            qs = constr_qsymb + term_qsymb
-            #if isinstance(coef_qsymb, SubSymbol): qs += FiniteSet(coef_qsymb)
-            qs = [s for s in qs]
+            query_symbols = constr_query_symbols + term_qsymb
+            query_symbols = [s for s in query_symbols]
 
             coeff_expr = coef_qsymb if not isinstance(coef_qsymb, SubSymbol) else None
             q = constr_query & term_query & coef_query
 
-            records = self.logkb.ask(qs,  q, coeff_expr)
+            records = self.logkb.ask(query_symbols,  q, coeff_expr)
 
             if var_atom is None:
                 var_atom = "b_vec"
-                col_order = []
+                variable_qs_indices = []
             else:
-                col_order = [qs.index(var) for var in var_atom.args]
+                variable_qs_indices = [query_symbols.index(var) for var in var_atom.args]
 
             if col_dicts.has_key(str(var_atom)):
                 col_dict = col_dicts[str(var_atom)]
             else:
-                col_dict = {"count": 0}
+                col_dict = OrderedSet()
                 col_dicts[str(var_atom)] = col_dict
 
-            row_order = [qs.index(var) for var in constr_qsymb]
+            constr_qs_indices = [query_symbols.index(var) for var in constr_query_symbols]
 
-            data_index = len(records[0])-1
+            expr_index = len(records[0])-1
 
             TT = [
-                [unique((rec[i] for i in row_order),row_dict),
-                 unique((rec[i] for i in col_order), col_dict),
-                 np.float(rec[data_index])]
-                for rec in records ]
+                [row_dict.add(hash(tuple(rec[i] for i in constr_qs_indices))),
+                 col_dict.add(hash(tuple(rec[i] for i in variable_qs_indices))),
+                 np.float(rec[expr_index])]
+                for rec in records]
             TT = np.array(TT)
 
             D = sp.sparse.coo_matrix((TT[:, 2], (TT[:, 0], TT[:, 1]))).todok()
 
             if T.has_key(constr_name):
                 if T[constr_name].has_key(str(var_atom)):
-                    D.resize((row_dict["count"], col_dict["count"]))
-                    T[constr_name][str(var_atom)].resize((row_dict["count"], col_dict["count"]))
+                    D.resize((len(row_dict), len(col_dict)))
+                    T[constr_name][str(var_atom)].resize((len(row_dict), len(col_dict)))
                     T[constr_name][str(var_atom)] += D
                 else:
                     T[constr_name][str(var_atom)] = D
