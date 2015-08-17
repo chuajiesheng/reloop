@@ -16,9 +16,14 @@ from distutils.core import setup
 from distutils.extension import Extension
 from Cython.Distutils import build_ext
 import os
+import sys
 # from Cython.Build import cythonize
 
-os.environ["CC"] = "g++" 
+if sys.platform == 'darwin':
+    os.environ["CC"] = "gcc"
+    os.environ["CXX"] = "g++"
+else:
+    os.environ['CC'] = "g++"
 
 ext_modules = [
     Extension(
