@@ -36,7 +36,7 @@ class RlpProblem():
         :param predicates: A tuple of predicates to be added to the model
         """
         for predicate in predicates:
-            self._reloop_variables |= {(predicate.name, predicate.arity)}
+            self._reloop_variables |= {predicate}
             predicate.isReloopVariable = True
 
     @property
@@ -218,7 +218,7 @@ def rlp_predicate(name, arity, boolean):
         predicate_type = BooleanPredicate
     else:
         predicate_type = NumericPredicate
-    predicate_class = type(name, (predicate_type,), {"arity": arity, "name": name, "isReloopVariable": False })
+    predicate_class = type(name, (predicate_type,), {"arity": arity, "name": name, "isReloopVariable": False, "__str__" : predicate_type.__class__.__str__})
     return predicate_class
 
 class RlpPredicate(Expr):
@@ -229,6 +229,7 @@ class NumericPredicate(RlpPredicate, Function):
     Representing a predicate that is understood as a function. That is, though the relation :math:`R` inside the LogKB
     has :math:`k` elements, we define :math:`R(e_1, ..., e_{k-1}) := e_{k}`.
     """
+
     @classmethod
     def eval(cls, *args):
         return None
@@ -298,3 +299,4 @@ def is_valid_relation(relation):
     if isinstance(relation, Rel):
         return True
     return False
+

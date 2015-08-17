@@ -28,8 +28,8 @@ class BlockGrounder(Grounder):
         G = h = A = b = c = None
 
         for constr_name in self.O.keys():
-            for reloop_variable in rlpProblem._reloop_variables:
-                key = "%s/%s" % reloop_variable
+            for reloop_variable in rlpProblem.reloop_variables:
+                key = reloop_variable
 
                 if self.O[constr_name].has_key(key):
                     value = self.O[constr_name][key]
@@ -46,22 +46,23 @@ class BlockGrounder(Grounder):
         for constraint in rlpProblem.constraints:
             constr_matrix = None
             constr_vector = None
-            constr_name = 'CONSTR'+str(id(constraint))
+            constr_name = constraint_str(constraint)
 
-            for reloop_variable in rlpProblem._reloop_variables:
-                key = "%s/%s" % reloop_variable
+            for reloop_variable in rlpProblem.reloop_variables:
+                key = reloop_variable
 
-                if self.T[constr_name].has_key(key):
+                if key in self.T[constr_name]:
                     value = self.T[constr_name][key]
                 else:
-                    value = sp.sparse.dok_matrix((self.row_dicts[constr_name]["count"], self.col_dicts[key]["count"]))
+                    value = sp.sparse.dok_matrix((len(self.row_dicts[constr_name]), len(self.col_dicts[key])))
                 if constr_matrix is not None:
                     value.resize((self.row_dicts[constr_name]["count"], self.col_dicts[key]["count"]))
                     constr_matrix = sp.sparse.hstack((constr_matrix, value)) #TODO: this should not be done like that, assign predicate ranges
                 else:
                     constr_matrix = value
-            if self.T[constr_name].has_key("None"):
-                value = self.T[constr_name]["None"]
+
+            if None.__class__ in self.T[constr_name]:
+                value = self.T[constr_name][None.__class__]
                 value.resize((len(self.row_dicts[constr_name]), 1))
                 constr_vector = value
             else:
@@ -83,7 +84,9 @@ class BlockGrounder(Grounder):
 
     def constraint_to_matrix(self, constraint, col_dicts, row_dicts, T):
 
-        constr_name = 'CONSTR'+str(id(constraint))
+
+        constr_name = constraint_str(constraint)
+        print constr_name
         T[constr_name] = {}
         row_dicts[constr_name] = OrderedSet()
         row_dict = row_dicts[constr_name]
@@ -111,7 +114,6 @@ class BlockGrounder(Grounder):
             summands = lhs.args
 
         for summand in summands:
-
             if isinstance(summand, RlpSum):
                 summand_query = summand.query
                 summand_query_symbols = summand.query_symbols
@@ -133,11 +135,12 @@ class BlockGrounder(Grounder):
             else:
                 variable_qs_indices = []
 
-            if col_dicts.has_key(str(variable)):
-                col_dict = col_dicts[str(variable)]
+            variable_class = variable.__class__
+            if col_dicts.has_key(variable_class):
+                col_dict = col_dicts[variable_class]
             else:
                 col_dict = OrderedSet()
-                col_dicts[str(variable)] = col_dict
+                col_dicts[variable_class] = col_dict
 
             constr_qs_indices = [query_symbols.index(symbol) for symbol in constr_query_symbols]
 
@@ -151,16 +154,13 @@ class BlockGrounder(Grounder):
 
             D = sp.sparse.coo_matrix((sparse_data[:, 0], (sparse_data[:, 1], sparse_data[:, 2]))).todok()
 
-            if T.has_key(constr_name):
-                if T[constr_name].has_key(str(variable)):
-                    D.resize((len(row_dict), len(col_dict)))
-                    T[constr_name][str(variable)].resize((len(row_dict), len(col_dict)))
-                    T[constr_name][str(variable)] += D
-                else:
-                    T[constr_name][str(variable)] = D
+            if variable_class in T[constr_name]:
+                shape = (len(row_dict), len(col_dict))
+                D.resize(shape)
+                T[constr_name][variable_class].resize(shape)
+                T[constr_name][variable_class] += D
             else:
-                T[constr_name] = {}
-                T[constr_name][str(variable)] = D
+                T[constr_name][variable_class] = D
 
 
 def coefficient_to_query(expr):
@@ -190,3 +190,6 @@ def coefficient_to_query(expr):
 
 def variable_name_for_expression(expr):
     return 'VAL' + str(id(expr))
+
+def constraint_str(constraint):
+    return 'CONSTR'+str(id(constraint))

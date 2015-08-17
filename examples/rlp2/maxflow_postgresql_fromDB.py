@@ -1,6 +1,7 @@
 from reloop.languages.rlp2.logkb import *
 from reloop.languages.rlp2.lp import *
 from reloop.languages.rlp2.grounding.block import *
+from reloop.languages.rlp2.grounding.recursive import *
 from reloop.languages.rlp2.lpsolver import *
 import getpass
 import maxflow_example
