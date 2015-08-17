@@ -6,6 +6,7 @@ from sympy.core import expand, Add, Mul, Pow, Number, Expr
 from sympy.printing import sstr
 import scipy.sparse
 import numpy
+from ordered_set import OrderedSet
 
 
 class RecursiveGrounder(Grounder):
@@ -34,7 +35,7 @@ class RecursiveGrounder(Grounder):
                     ground_result = ground.__class__(expand(self.ground_expression(ground.lhs)), ground.rhs)
                     self.add_constraint_to_lp(ground_result)
 
-        return self.lpmodel.get_scipy_matrices(),[name for name in self.lpmodel.lp_variables]
+        return self.lpmodel.get_scipy_matrices(), self.lpmodel.lp_variables
 
     def ground_expression(self, expr):
 
@@ -117,58 +118,61 @@ class LpProblem():
     def lp_variables(self):
         return self._lp_variables
 
-    def add_lp_variable(self, name):
-        if name in self._lp_variables:
-            return self._lp_variables[name]
-        else:
-            self._lp_variables[name] = self.lp_variable(name)
-        return self._lp_variables[name]
+    def add_lp_variable(self, predicate):
+        if predicate.__class__ not in self._lp_variables:
+            self._lp_variables[predicate.__class__] = OrderedSet()
+
+        return self._lp_variables[predicate.__class__].add(predicate.args)
+
+    @property
+    def lp_variable_count(self):
+        return sum([len(predicate) for key, predicate in self._lp_variables.items()])
 
     def get_scipy_matrices(self):
 
         ineq_constraint_count = len(self._constraints[1]) + len(self._constraints[-1])
         eq_constraint_count = len(self._constraints[0])
 
-        a = scipy.sparse.dok_matrix((eq_constraint_count, self._index))
+        a = scipy.sparse.dok_matrix((eq_constraint_count, self.lp_variable_count))
         b = scipy.sparse.dok_matrix((eq_constraint_count, 1))
 
-        g = scipy.sparse.dok_matrix((ineq_constraint_count, self._index))
+        g = scipy.sparse.dok_matrix((ineq_constraint_count, self.lp_variable_count))
         h = scipy.sparse.dok_matrix((ineq_constraint_count, 1))
 
-        c = scipy.sparse.dok_matrix((self._index, 1))
+        c = scipy.sparse.dok_matrix((self.lp_variable_count, 1))
 
         i = 0
         for constraint in self._constraints[0]:
             for variable, factor in constraint[0]:
-                a[i, variable[0]] = factor
+                a[i, variable] = factor
             b[i] = constraint[1]
             i += 1
 
         i = 0
         for constraint in self._constraints[-1]:
             for variable, factor in constraint[0]:
-                g[i, variable[0]] = factor
+                g[i, variable] = factor
             h[i] = constraint[1]
             i += 1
 
         for constraint in self._constraints[1]:
             for variable, factor in constraint[0]:
-                g[i, variable[0]] = -factor
+                g[i, variable] = -factor
             h[i] = -constraint[1]
             i += 1
 
         for variable in self._objective:
-            c[variable[0][0]] = variable[1]
+            c[variable[0]] = variable[1]
 
         c = self.sense * c
 
         return c.todense(), g.tocoo(), h.todense(), a.tocoo(), b.todense()
 
 
-    def lp_variable(self, name):
+    def lp_variable(self):
         curr_index = self._index
         self._index += 1
-        return curr_index, "undefined"
+        return curr_index
 
     def add_constraint(self, constraint_tuple):
         lhs, b, sense = constraint_tuple
@@ -179,33 +183,33 @@ class LpProblem():
         self._objective = self.get_affine(expr)
 
     def get_affine(self, expr):
-        pred_names, factors = get_predicate_names(expr)
+        predicates, factors = get_predicates_factors(expr)
 
-        length = len(pred_names)
+        length = len(predicates)
         factor_vector = numpy.zeros(length)
 
         contained_lp_variables = []
         used_lp_variables = []
 
         for j in range(length):
-            lp_variable = self.add_lp_variable(pred_names[j])
+            lp_variable = self.add_lp_variable(predicates[j])
 
-            if pred_names[j] in used_lp_variables:
-                factor_vector[used_lp_variables.index(pred_names[j])] += factors[j]
+            if predicates[j] in used_lp_variables:
+                factor_vector[used_lp_variables.index(predicates[j])] += factors[j]
             else:
                 contained_lp_variables.append(lp_variable)
-                used_lp_variables.append(pred_names[j])
-                factor_vector[used_lp_variables.index(pred_names[j])] = factors[used_lp_variables.index(pred_names[j])]
+                used_lp_variables.append(predicates[j])
+                factor_vector[used_lp_variables.index(predicates[j])] = factors[used_lp_variables.index(predicates[j])]
 
         return [(contained_lp_variables[i], factor_vector[i]) for i in range(len(contained_lp_variables))]
 
-def get_predicate_names(expr):
+def get_predicates_factors(expr):
     pred_names = []
     factors = []
 
     if expr.func is Add:
         for s in expr.args:
-            p, f = get_predicate_names(s)
+            p, f = get_predicates_factors(s)
             pred_names += p
             factors += f
 
@@ -229,10 +233,10 @@ def get_predicate_names(expr):
         else:
             raise NotImplementedError()
 
-        return [sstr(pred), ], [float(value), ]
+        return [pred], [float(value), ]
 
     elif isinstance(expr, RlpPredicate):
-        return [sstr(expr), ], [float(1), ]
+        return [expr], [float(1), ]
 
     elif expr.func is Pow:
         raise ValueError("Found non-linear constraint!")

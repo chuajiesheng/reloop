@@ -90,7 +90,12 @@ class RlpProblem():
         :return: The solution of the LP
         """
 
-        return {name: self.solution[i] for i,name in enumerate(self.varmap)}
+        # (flow.__class__, ('a', 'b')) => sol
+        solution = {}
+        for predicate_class, var_map in self.varmap.items():
+                solution.update({(predicate_class, args): self.solution[index] for index, args in enumerate(var_map)})
+
+        return solution
 
     def __str__(self):
         asstr = "Objective: "

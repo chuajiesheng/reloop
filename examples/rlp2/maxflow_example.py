@@ -50,16 +50,16 @@ def maxflow(grounder, solver):
     sol = model.get_solution()
 
     print "The solutions for the flow variables are:\n"
-    for key, value in sol.iteritems():
-        if "flow" in key and value > 0:
-            print key+" = "+str(value)
 
     total = 0
-    for key, value in sol.iteritems():
-        if "flow" in key and value > 0:
+    for (predicate_class, args), value in sol.iteritems():
+            print(str(predicate_class)+str(args) + " = " + str(value))
             total += value
+
+    inflow = sol[(flow, (Symbol('a'), Symbol('b')))] + sol[(flow, (Symbol('a'), Symbol('c')))]
+
 
     print "\nTime needed for the grounding and solving: " + str(end - start) + " s."
     #TODO: Change output to display correct results for an arbitrary number of edges outgoing from the source
-    print "\nThus, the maximum flow entering the traffic network at node a is "+str(sol["flow(a, b)"]+sol["flow(a, c)"])+" cars per hour."
+    print "\nThus, the maximum flow entering the traffic network at node a is "+ str(inflow) +" cars per hour."
     print "\nThe total flow in the traffic network is "+str(total)+" cars per hour."

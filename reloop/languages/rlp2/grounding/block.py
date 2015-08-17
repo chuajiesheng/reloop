@@ -56,7 +56,7 @@ class BlockGrounder(Grounder):
                 else:
                     value = sp.sparse.dok_matrix((len(self.row_dicts[constr_name]), len(self.col_dicts[key])))
                 if constr_matrix is not None:
-                    value.resize((self.row_dicts[constr_name]["count"], self.col_dicts[key]["count"]))
+                    value.resize((len(self.row_dicts[constr_name]), len(self.col_dicts[key])))
                     constr_matrix = sp.sparse.hstack((constr_matrix, value)) #TODO: this should not be done like that, assign predicate ranges
                 else:
                     constr_matrix = value
@@ -80,7 +80,9 @@ class BlockGrounder(Grounder):
 
         c = rlpProblem.sense * c
 
-        return c.todense().T, A.tocoo(), b.todense(), G.tocoo(), h.todense()
+        lp = c.todense().T, A.tocoo(), b.todense(), G.tocoo(), h.todense()
+
+        return lp, self.col_dicts
 
     def constraint_to_matrix(self, constraint, col_dicts, row_dicts, T):
 
@@ -148,8 +150,8 @@ class BlockGrounder(Grounder):
 
             sparse_data = np.array([[
                 np.float(rec[expr_index]),
-                row_dict.add(hash(tuple(rec[i] for i in constr_qs_indices))),
-                col_dict.add(hash(tuple(rec[i] for i in variable_qs_indices)))
+                row_dict.add(tuple(rec[i] for i in constr_qs_indices)),
+                col_dict.add(tuple(rec[i] for i in variable_qs_indices))
                 ] for rec in records])
 
             D = sp.sparse.coo_matrix((sparse_data[:, 0], (sparse_data[:, 1], sparse_data[:, 2]))).todok()
