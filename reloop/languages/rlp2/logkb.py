@@ -73,7 +73,6 @@ class PyDatalogLogKb(LogKb):
 
         answer = pyDatalog.ask(helper_predicate)
         pyEngine.Pred.reset_clauses(pyEngine.Pred("helper", len(query_symbols)))
-
         return answer.answers
 
     def ask_predicate(self, predicate):
@@ -86,7 +85,6 @@ class PyDatalogLogKb(LogKb):
         query = predicate.name + "("
         query += ','.join(["'" + str(a) + "'" for a in predicate.args])
         query += ", X)"
-
         answer = pyDatalog.ask(query)
         return answer.answers
 
@@ -299,3 +297,62 @@ class PostgreSQLKb(LogKb):
         self.cursor.execute(query)
         ans = [item[0] for item in self.cursor.fetchall()]
         return ans
+
+class PrologKB(LogKb):
+
+    def __init__(self, prolog):
+        from pyswip import Prolog
+        assert isinstance(prolog,Prolog)
+
+        self.prolog = prolog
+
+    def ask_predicate(self, predicate):
+
+        result =    list(self.prolog.query(predicate.name +\
+                    "(" +\
+                    ",".join([str(arg) for index, arg in enumerate(predicate.args)]) +\
+                    ",X)"))
+
+        answer=[]
+        for dictionary in result:
+            for key, value in dictionary.items():
+                answer.append((value,))
+        return answer
+
+    def ask(self, query_symbols, logical_query):
+        """
+        Builds a Prolog program from the logical_query and queries for it. Then executes the query for the query_symbols.
+        :param query_symbols: The symbols to be queried.
+        :type query_symbols: list(SubSymbol)
+        :param logical_query:
+        :type:
+        :return:
+        """
+        query = self.transform_query(logical_query)
+        prolog_answer = list(self.prolog.query(query))
+        answers = []
+        for dictionary in prolog_answer:
+            assert isinstance(dictionary,dict)
+            res=[]
+            for query_symbol in query_symbols:
+                res.append(dictionary.get(str(query_symbol)))
+            answers.append(tuple(res))
+        return answers
+
+    @staticmethod
+    def transform_query(logical_query):
+        """
+        Recursively builds the logical_query string from the given logical logical_query,by evaluating
+        :param logical_query: Type changes depending on the recursive depth and the depth of the expression.
+                              The logical query, needed for the pyDataLog program string.
+        :type logical_query: Boolean, BooleanPredicate
+        :return: The complete Body for loading the program into pyDataLog.
+        """
+        if logical_query.func is And:
+            return ", ".join([PrologKB.transform_query(arg) for arg in logical_query.args])
+        if logical_query.func is Not:
+            return " not(" + PrologKB.transform_query(logical_query.args[0]) +")"
+        if isinstance(logical_query, BooleanPredicate):
+            join = ",".join([str(arg) if isinstance(arg, SubSymbol) else str(arg)  for arg in logical_query.args])
+            return " " + logical_query.name + "(" + join + ")"
+        raise NotImplementedError

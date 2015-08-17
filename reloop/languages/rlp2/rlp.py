@@ -69,7 +69,8 @@ class RlpProblem():
         """
         Grounds and solves the logical programm.
         """
-        lp = self.grounder.ground(self)
+        lp, varmap = self.grounder.ground(self)
+        self.varmap = varmap
         self.solution = self.lpsolver().solve(*lp)
 
 
@@ -88,7 +89,8 @@ class RlpProblem():
 
         :return: The solution of the LP
         """
-        return self.solution()
+
+        return {name: self.solution[i] for i,name in enumerate(self.varmap)}
 
     def __str__(self):
         asstr = "Objective: "

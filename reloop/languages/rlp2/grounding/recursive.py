@@ -34,7 +34,7 @@ class RecursiveGrounder(Grounder):
                     ground_result = ground.__class__(expand(self.ground_expression(ground.lhs)), ground.rhs)
                     self.add_constraint_to_lp(ground_result)
 
-        return self.lpmodel.get_scipy_matrices()
+        return self.lpmodel.get_scipy_matrices(),[name for name in self.lpmodel.lp_variables]
 
     def ground_expression(self, expr):
 
@@ -177,18 +177,6 @@ class LpProblem():
 
     def add_objective(self, expr):
         self._objective = self.get_affine(expr)
-
-    def get_solution(self):
-        return {name: self.lp_variables[name][1] for name in self.lp_variables}
-
-    def set_solution(self, solution):
-        i = 0
-        for variable in self._lp_variables:
-            var_index = self._lp_variables[variable][0]
-            var_opt_sol = solution[var_index]
-            self._lp_variables[variable] = (var_index, var_opt_sol)
-            i += 1
-
 
     def get_affine(self, expr):
         pred_names, factors = get_predicate_names(expr)

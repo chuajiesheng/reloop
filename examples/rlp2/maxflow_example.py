@@ -45,7 +45,7 @@ def maxflow(grounder, solver):
 
     end = time.time()
 
-    print "\nThe model has been solved: " + model.status() + "."
+    print "\nThe model has been solved: " + str(model.status()) + "."
 
     sol = model.get_solution()
 
