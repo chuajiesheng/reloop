@@ -326,7 +326,7 @@ class PrologKB(LogKb):
         :type query_symbols: list(SubSymbol)
         :param logical_query:
         :type:
-        :return:
+        :return:[(a,b),(a,c)]
         """
         query = self.transform_query(logical_query)
         prolog_answer = list(self.prolog.query(query))
@@ -338,6 +338,82 @@ class PrologKB(LogKb):
                 res.append(dictionary.get(str(query_symbol)))
             answers.append(tuple(res))
         return answers
+
+    @staticmethod
+    def transform_query(logical_query):
+        """
+        Recursively builds the logical_query string from the given logical logical_query,by evaluating
+        :param logical_query: Type changes depending on the recursive depth and the depth of the expression.
+                              The logical query, needed for the pyDataLog program string.
+        :type logical_query: Boolean, BooleanPredicate
+        :return: The complete Body for loading the program into pyDataLog.
+        """
+        if logical_query.func is And:
+            return ", ".join([PrologKB.transform_query(arg) for arg in logical_query.args])
+        if logical_query.func is Not:
+            return " not(" + PrologKB.transform_query(logical_query.args[0]) +")"
+        if isinstance(logical_query, BooleanPredicate):
+            join = ",".join([str(arg) if isinstance(arg, SubSymbol) else str(arg)  for arg in logical_query.args])
+            return " " + logical_query.name + "(" + join + ")"
+        raise NotImplementedError
+
+class ProbLogKB(LogKb):
+
+    def __init__(self, file_path):
+        file = open(file_path, "r")
+        self.knowledge = file.read()
+        file.close()
+
+    def execute(self, query):
+        #import subprocess
+        #proc = subprocess.Popen(["/home/danny/Workspace/Reloop/saucywrapper/problog/problog-cli.py", "prob","-"], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+        problog_prog = self.knowledge + "\n".join(query)
+        import StringIO
+        import sys
+
+        s = StringIO.StringIO(problog_prog)
+        sys.stdin = s
+        import problog.problog.tasks.probability as pppp
+
+        result = pppp.execute(filename = "-")[1]
+        sys.stdin = sys.__stdin__
+
+        return result
+
+
+
+
+    def ask(self,  query_symbols, logical_query):
+
+        rhs_rule = self.transform_query(logical_query)
+        lhs_rule = 'helper(' + ','.join([str(v) for v in query_symbols]) + ')'
+        rule = lhs_rule + ':-' + rhs_rule +"."
+        query = "query(" + lhs_rule +")."
+
+        answer = self.execute([rule, query])
+
+        answer_args = []
+        for key in answer.keys():
+            answer_args.append(key.args)
+
+        result = [tuple(map(lambda t: t.functor, t)) for t in answer_args]
+        return result
+
+
+
+    def ask_predicate(self, predicate):
+
+        answer = self.execute(["query(" + predicate.name +\
+                    "(" +\
+                    ",".join([str(arg) for index, arg in enumerate(predicate.args)]) +\
+                    ",X))."])
+
+        answer_args = []
+        for key in answer.keys():
+            answer_args.append(key.args)
+
+        result = [(answer_args[0][-1].functor,)]
+        return result
 
     @staticmethod
     def transform_query(logical_query):
