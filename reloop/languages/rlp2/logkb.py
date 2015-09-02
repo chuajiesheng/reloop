@@ -1,5 +1,6 @@
 from rlp import *
 import logging
+from ordered_set import OrderedSet
 
 try:
     from pyDatalog import pyDatalog, pyEngine
@@ -56,7 +57,7 @@ class PyDatalogLogKb(LogKb):
     def __init__(self):
         assert pydatalog_available, "Import Error: PyDatalog is not installed on your machine. To use our PyDatalog interface please install pydatalog"
 
-    def ask(self, query_symbols, logical_query):
+    def ask(self, query_symbols, logical_query, coeff_expr = None):
         """
         Builds a pyDataLog program from the logical_query and loads it. Then executes the query for the query_symbols.
 
@@ -66,13 +67,28 @@ class PyDatalogLogKb(LogKb):
         :type:
         :return:
         """
+        helper_len = 0
+        tmp = None
 
-        helper_predicate = 'helper(' + ','.join([str(v) for v in query_symbols]) + ')'
-        tmp = helper_predicate + " <= " + self.transform_query(logical_query)
-        pyDatalog.load(tmp)
+	if coeff_expr is None:
+	  helper_len = len(query_symbols)
+	  helper_predicate = 'helper(' + ','.join([str(v) for v in query_symbols]) + ')'
+	  tmp = helper_predicate + " <= " + self.transform_query(logical_query)
+	else:
+	  helper_len = len(query_symbols)+1
+	  syms = OrderedSet(query_symbols)
+	  syms.add('COEFF_EXPR')
+	  helper_predicate = 'helper(' + ','.join([str(v) for v in syms]) +')'
+	  index_query = self.transform_query(logical_query)
+	  coeff_query = "(COEFF_EXPR == " + str(coeff_expr) + ")"
+	  if index_query is None:
+	    tmp = helper_predicate + " <= " + coeff_query
+	  else:
+	    tmp = helper_predicate + " <= " + " & ".join([index_query,coeff_query])
 
+	pyDatalog.load(tmp)
         answer = pyDatalog.ask(helper_predicate)
-        pyEngine.Pred.reset_clauses(pyEngine.Pred("helper", len(query_symbols)))
+        pyEngine.Pred.reset_clauses(pyEngine.Pred("helper", helper_len))
         return answer.answers
 
     def ask_predicate(self, predicate):
@@ -83,7 +99,7 @@ class PyDatalogLogKb(LogKb):
         :return: The Value of the given predicate if it exists in the Database, None otherwise.
         """
         query = predicate.name + "("
-        query += ','.join(["'" + str(a) + "'" for a in predicate.args])
+        query += ','.join([ str(a) for a in predicate.args])
         query += ", X)"
         answer = pyDatalog.ask(query)
         return answer.answers
@@ -108,6 +124,9 @@ class PyDatalogLogKb(LogKb):
         if isinstance(logical_query, BooleanPredicate):
             join = ",".join([str(arg) if isinstance(arg, SubSymbol) else str(arg)  for arg in logical_query.args])
             return " " + logical_query.name + "(" + join + ")"
+
+        if logical_query == True:
+            return None
 
         raise NotImplementedError
 
