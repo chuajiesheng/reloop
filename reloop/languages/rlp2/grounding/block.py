@@ -177,17 +177,21 @@ def coefficient_to_query(expr):
             b = boolean_predicate(str(expr.func), len(expr.args)+1)
             return [b(*(expr.args+tuple([val]))), val, None]
     else:
-        query = []
+        query = [True,]
         query_expr = []
         var_atom = None
-        for arg in expr.args:
-            if arg.has(NumericPredicate):
-                [q, e, v] = coefficient_to_query(arg)
-                if v is not None: var_atom = v
-            else:
-                q = True; e = arg
-            query.append(q); query_expr.append(e)
-        return [And(*query), expr.func(*query_expr), var_atom]
+        if len(expr.args) == 0:
+            return [And(*query), expr, var_atom]
+        else:
+            for arg in expr.args:
+                print arg
+                if arg.has(NumericPredicate):
+                    [q, e, v] = coefficient_to_query(arg)
+                    if v is not None: var_atom = v
+                else:
+                    q = True; e = arg
+                query.append(q); query_expr.append(e)
+            return [And(*query), expr.func(*query_expr), var_atom]
 
 
 def variable_name_for_expression(expr):
