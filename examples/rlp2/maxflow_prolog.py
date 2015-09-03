@@ -41,7 +41,7 @@ prolog = Prolog()
 ################################################################################################################
 
 prolog.consult("maxflow.pl")
-logkb = PrologKB(prolog)
-grounder = RecursiveGrounder(logkb)
+logkb = ProbLogKB("maxflow.pl")
+grounder = BlockGrounder(logkb)
 
 model = maxflow_example.maxflow(grounder, CvxoptSolver)

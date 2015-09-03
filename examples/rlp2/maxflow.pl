@@ -21,16 +21,16 @@ edge(d,f).
 edge(e,g).
 edge(f,g).
 
-cost(a,b,'50').
-cost(a,c,'100').
-cost(b,d,'40').
-cost(b,e,'20').
-cost(c,d,'60').
-cost(c,f,'20').
-cost(d,e,'50').
-cost(d,f,'60').
-cost(e,g,'70').
-cost(f,g,'70').
+cost(a,b,50).
+cost(a,c,100).
+cost(b,d,40).
+cost(b,e,20).
+cost(c,d,60).
+cost(c,f,20).
+cost(d,e,50).
+cost(d,f,60).
+cost(e,g,70).
+cost(f,g,70).
 
 source(a).
 target(g).

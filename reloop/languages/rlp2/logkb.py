@@ -70,23 +70,23 @@ class PyDatalogLogKb(LogKb):
         helper_len = 0
         tmp = None
 
-	if coeff_expr is None:
-	  helper_len = len(query_symbols)
-	  helper_predicate = 'helper(' + ','.join([str(v) for v in query_symbols]) + ')'
-	  tmp = helper_predicate + " <= " + self.transform_query(logical_query)
-	else:
-	  helper_len = len(query_symbols)+1
-	  syms = OrderedSet(query_symbols)
-	  syms.add('COEFF_EXPR')
-	  helper_predicate = 'helper(' + ','.join([str(v) for v in syms]) +')'
-	  index_query = self.transform_query(logical_query)
-	  coeff_query = "(COEFF_EXPR == " + str(coeff_expr) + ")"
-	  if index_query is None:
-	    tmp = helper_predicate + " <= " + coeff_query
-	  else:
-	    tmp = helper_predicate + " <= " + " & ".join([index_query,coeff_query])
+        if coeff_expr is None:
+            helper_len = len(query_symbols)
+            helper_predicate = 'helper(' + ','.join([str(v) for v in query_symbols]) + ')'
+            tmp = helper_predicate + " <= " + self.transform_query(logical_query)
+        else:
+            helper_len = len(query_symbols)+1
+            syms = OrderedSet(query_symbols)
+            syms.add('COEFF_EXPR')
+            helper_predicate = 'helper(' + ','.join([str(v) for v in syms]) +')'
+            index_query = self.transform_query(logical_query)
+            coeff_query = "(COEFF_EXPR == " + str(coeff_expr) + ")"
+            if index_query is None:
+                tmp = helper_predicate + " <= " + coeff_query
+            else:
+                tmp = helper_predicate + " <= " + " & ".join([index_query,coeff_query])
 
-	pyDatalog.load(tmp)
+        pyDatalog.load(tmp)
         answer = pyDatalog.ask(helper_predicate)
         pyEngine.Pred.reset_clauses(pyEngine.Pred("helper", helper_len))
         return answer.answers
@@ -395,7 +395,7 @@ class ProbLogKB(LogKb):
 
         s = StringIO.StringIO(problog_prog)
         sys.stdin = s
-        import problog.problog.tasks.probability as pppp
+        import problog.tasks.probability as pppp
 
         result = pppp.execute(filename = "-")[1]
         sys.stdin = sys.__stdin__
@@ -405,18 +405,34 @@ class ProbLogKB(LogKb):
 
 
 
-    def ask(self,  query_symbols, logical_query):
+    def ask(self, query_symbols, logical_query, coeff_expr = None):
 
-        rhs_rule = self.transform_query(logical_query)
-        lhs_rule = 'helper(' + ','.join([str(v) for v in query_symbols]) + ')'
-        rule = lhs_rule + ':-' + rhs_rule +"."
-        query = "query(" + lhs_rule +")."
+        if coeff_expr is None:
+            lhs_rule = 'helper(' + ','.join([str(v) for v in query_symbols]) + ')'
+            rule = lhs_rule + ":-" + self.transform_query(logical_query) + "."
+            query = "query(" + lhs_rule +")."
+        else:
+            syms = OrderedSet(query_symbols)
+            syms.add('COEFF_EXPR')
+            lhs_rule = 'helper(' + ','.join([str(v) for v in syms]) +')'
+            index_query = self.transform_query(logical_query)
+            coeff_query = "COEFF_EXPR = " + str(coeff_expr) + ""
+            query = "query(" + lhs_rule +")."
+            if index_query is None:
+                rule = lhs_rule + " :- " + coeff_query + "."
+            else:
+                rule = lhs_rule + " :- " + " , ".join([index_query,coeff_query]) + "."
 
         answer = self.execute([rule, query])
 
         answer_args = []
         for key in answer.keys():
             answer_args.append(key.args)
+
+        for t in answer_args:
+            for term in t:
+                if term.functor == '\'-\'':
+                    term.functor = '-' + str(term.args[0])
 
         result = [tuple(map(lambda t: t.functor, t)) for t in answer_args]
         return result
