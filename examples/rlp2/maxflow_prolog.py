@@ -40,8 +40,8 @@ prolog = Prolog()
 #    prolog.assertz(insert)
 ################################################################################################################
 
-prolog.consult("maxflow.pl")
-logkb = ProbLogKB("maxflow.pl")
-grounder = BlockGrounder(logkb)
+prolog.consult("maxflow_swipl.pl")
+logkb = PrologKB(prolog)
+grounder = RecursiveGrounder(logkb)
 
 model = maxflow_example.maxflow(grounder, CvxoptSolver)
