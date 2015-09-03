@@ -53,10 +53,11 @@ def maxflow(grounder, solver):
 
     total = 0
     for (predicate_class, args), value in sol.iteritems():
+        if isinstance(predicate_class, FunctionClass):
             print(str(predicate_class)+str(args) + " = " + str(value))
             total += value
 
-    inflow = sol[(flow, (Symbol('a'), Symbol('b')))] + sol[(flow, (Symbol('a'), Symbol('c')))]
+    inflow = sol[(flow,('a','b'))] + sol[(flow,('a', 'c'))]
 
 
     print "\nTime needed for the grounding and solving: " + str(end - start) + " s."
