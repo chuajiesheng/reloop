@@ -184,7 +184,6 @@ def coefficient_to_query(expr):
             return [And(*query), expr, var_atom]
         else:
             for arg in expr.args:
-                print arg
                 if arg.has(NumericPredicate):
                     [q, e, v] = coefficient_to_query(arg)
                     if v is not None: var_atom = v
