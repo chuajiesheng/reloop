@@ -86,6 +86,7 @@ class PyDatalogLogKb(LogKb):
             else:
                 tmp = helper_predicate + " <= " + " & ".join([index_query,coeff_query])
 
+	log.debug("pyDatalog query: " + tmp)
         pyDatalog.load(tmp)
         answer = pyDatalog.ask(helper_predicate)
         pyEngine.Pred.reset_clauses(pyEngine.Pred("helper", helper_len))
