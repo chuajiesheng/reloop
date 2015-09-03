@@ -4,8 +4,10 @@ import scipy as sp
 import scipy.sparse
 import numpy as np
 from ordered_set import OrderedSet
+import logging
 
 from sympy.sets import EmptySet
+log = logging.getLogger(__name__)
 
 class BlockGrounder(Grounder):
 
@@ -21,8 +23,9 @@ class BlockGrounder(Grounder):
         Ground the RLP by grounding the objective and each constraint.
         """
         self.constraint_to_matrix(rlpProblem.objective, self.col_dicts, self.row_dicts, self.O)
-
+        log.setLevel(1)
         for constraint in rlpProblem.constraints:
+            log.debug("\nGrounding: \n %s: %s", constraint_str(constraint), str(constraint))
             self.constraint_to_matrix(constraint, self.col_dicts, self.row_dicts, self.T)
 
         G = h = A = b = c = None
@@ -30,13 +33,11 @@ class BlockGrounder(Grounder):
         for constr_name in self.O.keys():
             for reloop_variable in rlpProblem.reloop_variables:
                 key = reloop_variable
-
                 if self.O[constr_name].has_key(key):
                     value = self.O[constr_name][key]
                     value.resize((len(self.row_dicts[constr_name]), len(self.col_dicts[key])))
                 else:
                     value = sp.sparse.dok_matrix((len(self.row_dicts[constr_name]), len(self.col_dicts[key])))
-
                 if c is not None:
                     c = sp.sparse.hstack((c, value))
                 else:
@@ -44,31 +45,40 @@ class BlockGrounder(Grounder):
         #TODO: figure out the precise var mapping at some point.
 
         for constraint in rlpProblem.constraints:
+            log.debug("\nAssembling: %s.", constraint_str(constraint))
             constr_matrix = None
             constr_vector = None
             constr_name = constraint_str(constraint)
 
             for reloop_variable in rlpProblem.reloop_variables:
                 key = reloop_variable
-
+                log.debug("\n\tkey: %s.", key)
                 if key in self.T[constr_name]:
                     value = self.T[constr_name][key]
+                    value.resize((len(self.row_dicts[constr_name]), len(self.col_dicts[key])))
                 else:
                     value = sp.sparse.dok_matrix((len(self.row_dicts[constr_name]), len(self.col_dicts[key])))
                 if constr_matrix is not None:
-                    value.resize((len(self.row_dicts[constr_name]), len(self.col_dicts[key])))
                     constr_matrix = sp.sparse.hstack((constr_matrix, value)) #TODO: this should not be done like that, assign predicate ranges
                 else:
                     constr_matrix = value
 
+            log.debug("\n\tkey: RHS.")
             if None.__class__ in self.T[constr_name]:
                 value = self.T[constr_name][None.__class__]
                 value.resize((len(self.row_dicts[constr_name]), 1))
                 constr_vector = value
             else:
                 constr_vector = sp.sparse.dok_matrix((len(self.row_dicts[constr_name]), 1))
+            
+            if isinstance(constraint, ForAll): 
+                rel = constraint.relation
+            elif isinstance(constraint, Rel):
+                rel = constraint
+            else:
+                raise RuntimeError("The constraint is neither a relation nor a forall... what is it then?")
 
-            if isinstance(constraint.relation, Equality):
+            if isinstance(rel, Equality):
                 G = constr_matrix if G is None else sp.sparse.vstack((G, constr_matrix))
                 h = constr_vector if h is None else sp.sparse.vstack((h, constr_vector))
             else:
@@ -88,7 +98,6 @@ class BlockGrounder(Grounder):
 
 
         constr_name = constraint_str(constraint)
-        print constr_name
         T[constr_name] = {}
         row_dicts[constr_name] = OrderedSet()
         row_dict = row_dicts[constr_name]

@@ -160,7 +160,6 @@ class PostgreSQLKb(LogKb):
         :param query:         see :func:`~logkb.LogKB.ask`
         :return: The answers, which satisfy the executed query on the database
         """
-
         logical_query = simplify(logical_query)
 
         negated_predicates = []
@@ -179,6 +178,10 @@ class PostgreSQLKb(LogKb):
             raise NotImplementedError("Next version")
         elif isinstance(logical_query, BooleanPredicate):
             predicates.append(logical_query)
+        elif isinstance(logical_query, BooleanTrue):
+            #there is no logical query here, hence we must be grounding a 
+            #single number here, e.g. the rhs of a non-forall-quantified constraint
+            return [[coeff_expr]]
         else:
             raise NotImplementedError('The given function of the query has not been implemented yet or is not valid')
 
