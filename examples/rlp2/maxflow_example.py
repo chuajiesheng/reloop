@@ -57,8 +57,10 @@ def maxflow(grounder, solver):
             print(str(predicate_class)+str(args) + " = " + str(value))
             total += value
 
-    inflow = sol[(flow,('a','b'))] + sol[(flow,('a', 'c'))]
-
+    try:
+        inflow = sol[(flow, (Symbol('a'), Symbol('b')))] + sol[(flow, (Symbol('a'), Symbol('c')))]
+    except KeyError:
+        inflow = sol[(flow,('a','b'))] + sol[(flow,('a', 'c'))]
 
     print "\nTime needed for the grounding and solving: " + str(end - start) + " s."
     #TODO: Change output to display correct results for an arbitrary number of edges outgoing from the source
