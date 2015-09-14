@@ -15,61 +15,66 @@ class BlockGrounder(Grounder):
         self.logkb = logkb
         self.col_dicts = {}
         self.row_dicts = {}
-        self.O = {}
-        self.T = {}
+        self.objective = {}
+        self.blocks = {}
 
     def ground(self, rlpProblem):
         """
         Ground the RLP by grounding the objective and each constraint.
         """
-        self.constraint_to_matrix(rlpProblem.objective, self.col_dicts, self.row_dicts, self.O)
-        log.setLevel(1)
+        self.constraint_to_matrix(rlpProblem.objective, self.objective)
+
         for constraint in rlpProblem.constraints:
             log.debug("\nGrounding: \n %s: %s", constraint_str(constraint), str(constraint))
-            self.constraint_to_matrix(constraint, self.col_dicts, self.row_dicts, self.T)
+            self.constraint_to_matrix(constraint, self.blocks)
 
-        G = h = A = b = c = None
+        a = b = g = h = c = None
 
-        for constr_name in self.O.keys():
+        for constr_name in self.objective.keys():
             for reloop_variable in rlpProblem.reloop_variables:
-                key = reloop_variable
-                if self.O[constr_name].has_key(key):
-                    value = self.O[constr_name][key]
-                    value.resize((len(self.row_dicts[constr_name]), len(self.col_dicts[key])))
+
+                shape = (len(self.row_dicts[constr_name]), len(self.col_dicts[reloop_variable]))
+                if self.objective[constr_name].has_key(reloop_variable):
+                    value = self.objective[constr_name][reloop_variable]
+                    value.resize(shape)
                 else:
-                    value = sp.sparse.dok_matrix((len(self.row_dicts[constr_name]), len(self.col_dicts[key])))
+                    value = sp.sparse.dok_matrix(shape)
                 if c is not None:
                     c = sp.sparse.hstack((c, value))
                 else:
                     c = value
-        #TODO: figure out the precise var mapping at some point.
+
+        # TODO: figure out the precise var mapping at some point.
 
         for constraint in rlpProblem.constraints:
             log.debug("\nAssembling: %s.", constraint_str(constraint))
             constr_matrix = None
-            constr_vector = None
+
             constr_name = constraint_str(constraint)
 
             for reloop_variable in rlpProblem.reloop_variables:
-                key = reloop_variable
-                log.debug("\n\tkey: %s.", key)
-                if key in self.T[constr_name]:
-                    value = self.T[constr_name][key]
-                    value.resize((len(self.row_dicts[constr_name]), len(self.col_dicts[key])))
+                log.debug("\n\tkey: %s.", reloop_variable)
+                shape = (len(self.row_dicts[constr_name]), len(self.col_dicts[reloop_variable]))
+                if reloop_variable in self.blocks[constr_name]:
+                    value = self.blocks[constr_name][reloop_variable]
+                    value.resize(shape)
                 else:
-                    value = sp.sparse.dok_matrix((len(self.row_dicts[constr_name]), len(self.col_dicts[key])))
+                    value = sp.sparse.dok_matrix(shape)
+
+                # TODO: this should not be done like that, assign predicate ranges
                 if constr_matrix is not None:
-                    constr_matrix = sp.sparse.hstack((constr_matrix, value)) #TODO: this should not be done like that, assign predicate ranges
+                    constr_matrix = sp.sparse.hstack((constr_matrix, value))
                 else:
                     constr_matrix = value
 
             log.debug("\n\tkey: RHS.")
-            if None.__class__ in self.T[constr_name]:
-                value = self.T[constr_name][None.__class__]
-                value.resize((len(self.row_dicts[constr_name]), 1))
+            constr_vector_shape = (len(self.row_dicts[constr_name]), 1)
+            if None.__class__ in self.blocks[constr_name]:
+                value = self.blocks[constr_name][None.__class__]
+                value.resize(constr_vector_shape)
                 constr_vector = value
             else:
-                constr_vector = sp.sparse.dok_matrix((len(self.row_dicts[constr_name]), 1))
+                constr_vector = sp.sparse.dok_matrix(constr_vector_shape)
             
             if isinstance(constraint, ForAll): 
                 rel = constraint.relation
@@ -79,27 +84,27 @@ class BlockGrounder(Grounder):
                 raise RuntimeError("The constraint is neither a relation nor a forall... what is it then?")
 
             if isinstance(rel, Equality):
-                G = constr_matrix if G is None else sp.sparse.vstack((G, constr_matrix))
-                h = constr_vector if h is None else sp.sparse.vstack((h, constr_vector))
-            else:
-                A = constr_matrix if A is None else sp.sparse.vstack((A, constr_matrix))
+                a = constr_matrix if a is None else sp.sparse.vstack((a, constr_matrix))
                 b = constr_vector if b is None else sp.sparse.vstack((b, constr_vector))
+            else:
+                g = constr_matrix if g is None else sp.sparse.vstack((g, constr_matrix))
+                h = constr_vector if h is None else sp.sparse.vstack((h, constr_vector))
 
-        if b is not None: b = -b #at some point we had lhs = lhs - rhs, so now we have to put b back on the rhs
-        if h is not None: h = -h
-
+        # at some point we had lhs = lhs - rhs, so now we have to put b back on the rhs
+        h *= -1
+        b *= -1
         c = rlpProblem.sense * c
 
-        lp = c.todense().T, A.tocoo(), b.todense(), G.tocoo(), h.todense()
+        lp = c.todense().T, g.tocoo(), h.todense(), a.tocoo(), b.todense()
 
         return lp, self.col_dicts
 
-    def constraint_to_matrix(self, constraint, col_dicts, row_dicts, block):
+    def constraint_to_matrix(self, constraint, block):
 
         constr_name = constraint_str(constraint)
         block[constr_name] = {}
-        row_dicts[constr_name] = OrderedSet()
-        row_dict = row_dicts[constr_name]
+        self.row_dicts[constr_name] = OrderedSet()
+        row_dict = self.row_dicts[constr_name]
 
         if isinstance(constraint, Rel):
             lhs = constraint.lhs - constraint.rhs
@@ -146,8 +151,8 @@ class BlockGrounder(Grounder):
             constr_qs_indices = [query_symbols.index(symbol) for symbol in constr_query_symbols]
 
             variable_class = variable.__class__
-            col_dict = col_dicts.get(variable_class, OrderedSet())
-            col_dicts[variable_class] = col_dict
+            col_dict = self.col_dicts.get(variable_class, OrderedSet())
+            self.col_dicts[variable_class] = col_dict
 
             expr_index = len(answers[0])-1
             sparse_data = []
