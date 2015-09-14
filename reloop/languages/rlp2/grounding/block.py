@@ -29,7 +29,6 @@ class BlockGrounder(Grounder):
 
         a = b = g = h = c = None
 
-
         for reloop_variable in rlpProblem.reloop_variables:
             shape = (1, len(self.col_dicts[reloop_variable]))
             if objective.has_key(reloop_variable):
