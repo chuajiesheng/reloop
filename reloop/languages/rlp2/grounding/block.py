@@ -94,11 +94,10 @@ class BlockGrounder(Grounder):
 
         return lp, self.col_dicts
 
-    def constraint_to_matrix(self, constraint, col_dicts, row_dicts, T):
-
+    def constraint_to_matrix(self, constraint, col_dicts, row_dicts, block):
 
         constr_name = constraint_str(constraint)
-        T[constr_name] = {}
+        block[constr_name] = {}
         row_dicts[constr_name] = OrderedSet()
         row_dict = row_dicts[constr_name]
 
@@ -109,7 +108,7 @@ class BlockGrounder(Grounder):
         elif isinstance(constraint, ForAll):
             lhs = constraint.relation.lhs - constraint.relation.rhs
             if isinstance(constraint.relation, GreaterThan):
-                lhs = -1*lhs
+                lhs *= -1
             constr_query = constraint.query
             constr_query_symbols = constraint.query_symbols
         else:
@@ -139,39 +138,51 @@ class BlockGrounder(Grounder):
             coef_expr = coef_query_symbols if not isinstance(coef_query_symbols, SubSymbol) else None
             query = constr_query & summand_query & coef_query
 
-            records = self.logkb.ask(query_symbols,  query, coef_expr)
+            answers = self.logkb.ask(query_symbols,  query, coef_expr)
 
+            variable_qs_indices = []
             if variable is not None:
-                variable_qs_indices = [query_symbols.index(var) for var in variable.args]
-            else:
-                variable_qs_indices = []
-
-            variable_class = variable.__class__
-            if col_dicts.has_key(variable_class):
-                col_dict = col_dicts[variable_class]
-            else:
-                col_dict = OrderedSet()
-                col_dicts[variable_class] = col_dict
-
+                variable_qs_indices = [query_symbols.index(arg) for arg in variable.args if isinstance(arg, SubSymbol)]
             constr_qs_indices = [query_symbols.index(symbol) for symbol in constr_query_symbols]
 
-            expr_index = len(records[0])-1
+            variable_class = variable.__class__
+            col_dict = col_dicts.get(variable_class, OrderedSet())
+            col_dicts[variable_class] = col_dict
 
-            sparse_data = np.array([[
-                np.float(rec[expr_index]),
-                row_dict.add(tuple(rec[i] for i in constr_qs_indices)),
-                col_dict.add(tuple(rec[i] for i in variable_qs_indices))
-                ] for rec in records])
+            expr_index = len(answers[0])-1
+            sparse_data = []
+            for answer in answers:
+                column_record = []
 
-            D = sp.sparse.coo_matrix((sparse_data[:, 0], (sparse_data[:, 1], sparse_data[:, 2]))).todok()
+                # summand has only one predicate
+                predicate = summand.atoms(NumericPredicate).pop()
 
-            if variable_class in T[constr_name]:
+                # use only subsymbols when they occur, otherwise constants
+                if variable is not None:
+                    j = 0
+                    for arg in predicate.args:
+                        if isinstance(arg, SubSymbol):
+                            column_record.append(answer[variable_qs_indices[j]])
+                            j += 1
+                        else:
+                            column_record.append(str(arg))
+
+                col_dict_index = col_dict.add(tuple(column_record))
+                row_dict_index = row_dict.add(tuple(answer[i] for i in constr_qs_indices))
+
+                sparse_data.append([np.float(answer[expr_index]), row_dict_index, col_dict_index])
+
+            sparse_data = np.array(sparse_data)
+
+            summand_block = sp.sparse.coo_matrix((sparse_data[:, 0], (sparse_data[:, 1], sparse_data[:, 2]))).todok()
+
+            if variable_class in block[constr_name]:
                 shape = (len(row_dict), len(col_dict))
-                D.resize(shape)
-                T[constr_name][variable_class].resize(shape)
-                T[constr_name][variable_class] += D
+                summand_block.resize(shape)
+                block[constr_name][variable_class].resize(shape)
+                block[constr_name][variable_class] += summand_block
             else:
-                T[constr_name][variable_class] = D
+                block[constr_name][variable_class] = summand_block
 
 
 def coefficient_to_query(expr):
