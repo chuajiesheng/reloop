@@ -90,6 +90,9 @@ class PyDatalogLogKb(LogKb):
         pyDatalog.load(tmp)
         answer = pyDatalog.ask(helper_predicate)
         pyEngine.Pred.reset_clauses(pyEngine.Pred("helper", helper_len))
+
+        if answer is None:
+            return []
         return answer.answers
 
     def ask_predicate(self, predicate):
@@ -429,6 +432,10 @@ class ProbLogKB(LogKb):
         answer_args = []
         for key in answer.keys():
             answer_args.append(key.args)
+
+        # Query yields no result
+        if answer.values()[0] == 0.0:
+            return []
 
         for t in answer_args:
             for term in t:

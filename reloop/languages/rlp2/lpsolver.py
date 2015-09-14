@@ -104,8 +104,8 @@ class PicosSolver(LpSolver):
 
 def get_cvxopt_matrices(c, g, h, a, b):
 
-        a = cvxopt.spmatrix(a.data, a.row.tolist(), a.col.tolist())
-        g = cvxopt.spmatrix(g.data, g.row.tolist(), g.col.tolist())
+        a = cvxopt.spmatrix(a.data, a.row.tolist(), a.col.tolist(), size=a.shape)
+        g = cvxopt.spmatrix(g.data, g.row.tolist(), g.col.tolist(), size=g.shape)
 
         b = cvxopt.matrix(b)
         c = cvxopt.matrix(c)
