@@ -354,7 +354,7 @@ class PrologKB(LogKb):
         :type:
         :return:[(a,b),(a,c)]
         """
-        query = self.transform_query(logical_query)
+        query = ProbLogKB.transform_query(logical_query)
         prolog_answer = list(self.prolog.query(query))
         answers = []
         for dictionary in prolog_answer:
@@ -364,24 +364,6 @@ class PrologKB(LogKb):
                 res.append(dictionary.get(str(query_symbol)))
             answers.append(tuple(res))
         return answers
-
-    @staticmethod
-    def transform_query(logical_query):
-        """
-        Recursively builds the logical_query string from the given logical logical_query,by evaluating
-        :param logical_query: Type changes depending on the recursive depth and the depth of the expression.
-                              The logical query, needed for the pyDataLog program string.
-        :type logical_query: Boolean, BooleanPredicate
-        :return: The complete Body for loading the program into pyDataLog.
-        """
-        if logical_query.func is And:
-            return ", ".join([PrologKB.transform_query(arg) for arg in logical_query.args])
-        if logical_query.func is Not:
-            return " not(" + PrologKB.transform_query(logical_query.args[0]) +")"
-        if isinstance(logical_query, BooleanPredicate):
-            join = ",".join([str(arg) if isinstance(arg, SubSymbol) else str(arg)  for arg in logical_query.args])
-            return " " + logical_query.name + "(" + join + ")"
-        raise NotImplementedError
 
 class ProbLogKB(LogKb):
 
@@ -399,9 +381,9 @@ class ProbLogKB(LogKb):
 
         s = StringIO.StringIO(problog_prog)
         sys.stdin = s
-        import problog.tasks.probability as pppp
+        import problog.tasks.probability as problog
 
-        result = pppp.execute(filename = "-")[1]
+        result = problog.execute(filename = "-")[1]
         sys.stdin = sys.__stdin__
 
         return result
@@ -445,8 +427,6 @@ class ProbLogKB(LogKb):
         result = [tuple(map(lambda t: t.functor, t)) for t in answer_args]
         return result
 
-
-
     def ask_predicate(self, predicate):
 
         answer = self.execute(["query(" + predicate.name +\
@@ -471,9 +451,9 @@ class ProbLogKB(LogKb):
         :return: The complete Body for loading the program into pyDataLog.
         """
         if logical_query.func is And:
-            return ", ".join([PrologKB.transform_query(arg) for arg in logical_query.args])
+            return ", ".join([ProbLogKB.transform_query(arg) for arg in logical_query.args])
         if logical_query.func is Not:
-            return " not(" + PrologKB.transform_query(logical_query.args[0]) +")"
+            return " not(" + ProbLogKB.transform_query(logical_query.args[0]) +")"
         if isinstance(logical_query, BooleanPredicate):
             join = ",".join([str(arg) if isinstance(arg, SubSymbol) else str(arg)  for arg in logical_query.args])
             return " " + logical_query.name + "(" + join + ")"

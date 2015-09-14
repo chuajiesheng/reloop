@@ -20,27 +20,27 @@ prolog = Prolog()
 ###############################################################################################################
 # Directly inserts the predicates into the PrologKB via the prolog object.
 
-#nodes = ["a","b","c","d","e","f","g"]
-#edges = ["a,b","a,c","b,d","b,e","c,d","c,f","d,e","d,f","e,g","f,g"]
-#costs = ["a,b,'50'","a,c,'100'","b,d,'40'","b,e,'20'","c,d,'60'","c,f,'20'","d,e,'50'","d,f,'60'","e,g,'70'","f,g,'70'"]
-#source = ["a"]
-#target = ["g"]
-#prolog.assertz("source(" + source[0] + ")")
-#prolog.assertz("target(" + target[0] + ")")
+nodes = ["a","b","c","d","e","f","g"]
+edges = ["a,b","a,c","b,d","b,e","c,d","c,f","d,e","d,f","e,g","f,g"]
+costs = ["a,b,'50'","a,c,'100'","b,d,'40'","b,e,'20'","c,d,'60'","c,f,'20'","d,e,'50'","d,f,'60'","e,g,'70'","f,g,'70'"]
+source = ["a"]
+target = ["g"]
+prolog.assertz("source(" + source[0] + ")")
+prolog.assertz("target(" + target[0] + ")")
 #print list(prolog.query("test(A,B,C,D,E,F,G)"))
-#for node in nodes:
-#    prolog.assertz("node(" + node + ")")
-#for edge in edges:
-#    insert = "edge(" + edge + ")"
+for node in nodes:
+    prolog.assertz("node(" + node + ")")
+for edge in edges:
+    insert = "edge(" + edge + ")"
 #    print insert
-#    prolog.assertz(insert)
-#for cost in costs:
-#    insert = "cost(" + cost + ")"
+    prolog.assertz(insert)
+for cost in costs:
+    insert = "cost(" + cost + ")"
 #    print insert
-#    prolog.assertz(insert)
-################################################################################################################
+    prolog.assertz(insert)
 
-prolog.consult("maxflow_swipl.pl")
+
+#prolog.consult("maxflow_swipl.pl")
 logkb = PrologKB(prolog)
 grounder = RecursiveGrounder(logkb)
 
