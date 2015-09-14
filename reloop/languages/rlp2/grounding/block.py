@@ -15,36 +15,33 @@ class BlockGrounder(Grounder):
         self.logkb = logkb
         self.col_dicts = {}
         self.row_dicts = {}
-        self.objective = {}
         self.blocks = {}
 
     def ground(self, rlpProblem):
         """
         Ground the RLP by grounding the objective and each constraint.
         """
-        self.constraint_to_matrix(rlpProblem.objective, self.objective)
+        objective = self.objective_to_matrix(rlpProblem.objective)
 
         for constraint in rlpProblem.constraints:
             log.debug("\nGrounding: \n %s: %s", constraint_str(constraint), str(constraint))
-            self.constraint_to_matrix(constraint, self.blocks)
+            self.constraint_to_matrix(constraint)
 
         a = b = g = h = c = None
 
-        for constr_name in self.objective.keys():
-            for reloop_variable in rlpProblem.reloop_variables:
 
-                shape = (len(self.row_dicts[constr_name]), len(self.col_dicts[reloop_variable]))
-                if self.objective[constr_name].has_key(reloop_variable):
-                    value = self.objective[constr_name][reloop_variable]
-                    value.resize(shape)
-                else:
-                    value = sp.sparse.dok_matrix(shape)
-                if c is not None:
-                    c = sp.sparse.hstack((c, value))
-                else:
-                    c = value
+        for reloop_variable in rlpProblem.reloop_variables:
+            shape = (1, len(self.col_dicts[reloop_variable]))
+            if objective.has_key(reloop_variable):
+                value = objective[reloop_variable]
+                value.resize(shape)
+            else:
+                value = sp.sparse.dok_matrix(shape)
 
-        # TODO: figure out the precise var mapping at some point.
+            if c is not None:
+                c = sp.sparse.hstack((c, value))
+            else:
+                c = value
 
         for constraint in rlpProblem.constraints:
             log.debug("\nAssembling: %s.", constraint_str(constraint))
@@ -61,7 +58,6 @@ class BlockGrounder(Grounder):
                 else:
                     value = sp.sparse.dok_matrix(shape)
 
-                # TODO: this should not be done like that, assign predicate ranges
                 if constr_matrix is not None:
                     constr_matrix = sp.sparse.hstack((constr_matrix, value))
                 else:
@@ -99,10 +95,14 @@ class BlockGrounder(Grounder):
 
         return lp, self.col_dicts
 
-    def constraint_to_matrix(self, constraint, block):
+    def objective_to_matrix(self, objective):
 
+        var_blocks = self.expr_to_matrix(objective, OrderedSet(), True, EmptySet())
+        return var_blocks
+
+    def constraint_to_matrix(self, constraint):
         constr_name = constraint_str(constraint)
-        block[constr_name] = {}
+
         self.row_dicts[constr_name] = OrderedSet()
         row_dict = self.row_dicts[constr_name]
 
@@ -117,17 +117,22 @@ class BlockGrounder(Grounder):
             constr_query = constraint.query
             constr_query_symbols = constraint.query_symbols
         else:
-            lhs = constraint
-            constr_query = True
-            constr_query_symbols = EmptySet()
+            raise Exception("Impossible-to-happen Exception!")
 
-        lhs = Normalizer(lhs).result
+        var_blocks = self.expr_to_matrix(lhs, row_dict, constr_query, constr_query_symbols)
 
-        if not isinstance(lhs, Add):
-            summands = [lhs]
+        self.blocks[constr_name] = var_blocks
+
+    def expr_to_matrix(self, expr, row_dict, constr_query, constr_query_symbols):
+
+        expr = Normalizer(expr).result
+
+        if not isinstance(expr, Add):
+            summands = [expr]
         else:
-            summands = lhs.args
+            summands = expr.args
 
+        result = {}
         for summand in summands:
             if isinstance(summand, RlpSum):
                 summand_query = summand.query
@@ -181,13 +186,15 @@ class BlockGrounder(Grounder):
 
             summand_block = sp.sparse.coo_matrix((sparse_data[:, 0], (sparse_data[:, 1], sparse_data[:, 2]))).todok()
 
-            if variable_class in block[constr_name]:
+            if variable_class in result:
                 shape = (len(row_dict), len(col_dict))
+                result[variable_class].resize(shape)
                 summand_block.resize(shape)
-                block[constr_name][variable_class].resize(shape)
-                block[constr_name][variable_class] += summand_block
+                result[variable_class] += summand_block
             else:
-                block[constr_name][variable_class] = summand_block
+                result[variable_class] = summand_block
+
+        return result
 
 
 def coefficient_to_query(expr):
