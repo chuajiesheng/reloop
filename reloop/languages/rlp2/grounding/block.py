@@ -154,6 +154,8 @@ class BlockGrounder(Grounder):
             col_dict = self.col_dicts.get(variable_class, OrderedSet())
             self.col_dicts[variable_class] = col_dict
 
+            if len(answers) == 0:
+                continue
             expr_index = len(answers[0])-1
             sparse_data = []
             for answer in answers:
