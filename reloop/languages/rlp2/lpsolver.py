@@ -60,14 +60,11 @@ class CvxoptSolver(LpSolver):
     def solve(self, c, g, h, a, b):
         c, g, h, a, b = get_cvxopt_matrices(c, g, h, a, b)
 
-        print("START MATRICES")
-        print(c)
-        print(g)
-        print(h)
-        print(a)
-        print(b)
-        print("END MATRICES")
-
+        log.debug("c: \n" + str(c))
+        log.debug("g: \n" + str(g))
+        log.debug("h: \n" + str(h))
+        log.debug("a: \n" + str(a))
+        log.debug("b: \n" + str(b))
 
         #solver = self.options.get("cvxopt_solver","conelp")
         solver = "glpk"
