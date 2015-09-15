@@ -98,14 +98,18 @@ class PicosSolver(LpSolver):
     def status(self):
         return self._result.status
 
+#def get_cvxopt_spmatrix(scipy_sparse_matrix):
+
+#def get_cvxopt_
+
 
 def get_cvxopt_matrices(c, g, h, a, b):
 
-        a = cvxopt.spmatrix(a.data, a.row.tolist(), a.col.tolist(), size=a.shape)
-        g = cvxopt.spmatrix(g.data, g.row.tolist(), g.col.tolist(), size=g.shape)
+        a = a if a is None else cvxopt.spmatrix(a.data, a.row.tolist(), a.col.tolist(), size=a.shape)
+        g = g if g is None else cvxopt.spmatrix(g.data, g.row.tolist(), g.col.tolist(), size=g.shape)
 
-        b = cvxopt.matrix(b)
+        b = b if b is None else cvxopt.matrix(b)
         c = cvxopt.matrix(c)
-        h = cvxopt.matrix(h)
+        h = h if h is None else cvxopt.matrix(h)
 
         return c, g, h, a, b

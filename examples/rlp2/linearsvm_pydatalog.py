@@ -1,5 +1,7 @@
-from reloop.languages.rlp2.logkb import *
-from reloop.languages.rlp2.lp import *
+from reloop.languages.rlp2 import  *
+from reloop.languages.rlp2.grounding.block import  *
+from reloop.languages.rlp2.grounding.recursive import  *
+
 
 @pyDatalog.predicate()
 def attribute3(x, y, z):
@@ -22,7 +24,13 @@ def label2(x, y):
 
 # Linear Program definition
 
-model = RlpProblem("LP-SVM", LpMinimize, PyDatalogLogKb(), Pulp)
+
+logkb = PyDatalogLogKb()
+grounder = BlockGrounder(logkb)
+grounder = RecursiveGrounder(logkb)
+
+
+model = RlpProblem("LP-SVM", LpMinimize, grounder, CvxoptSolver)
 print("\nBuilding a relational variant of the " + model.name)
 
 # const
@@ -63,7 +71,7 @@ print model
 
 model.solve()
 
-print("The model has been solved: " + model.status() + ".")
+#print("The model has been solved: " + model.status() + ".")
 
 sol = model.get_solution()
 print(sol)

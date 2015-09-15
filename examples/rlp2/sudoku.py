@@ -1,10 +1,13 @@
 from reloop.languages.rlp2 import *
 from reloop.languages.rlp2.grounding.block import BlockGrounder
+from reloop.languages.rlp2.grounding.recursive import RecursiveGrounder
 from reloop.languages.rlp2.lpsolver import CvxoptSolver
 from reloop.languages.rlp2.logkb import PyDatalogLogKb
 
 import time
+import sys
 
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 for u in range(9):
     pyDatalog.assert_fact('num', u+1)
@@ -50,6 +53,7 @@ pyDatalog.load("""
 start = time.time()
 logkb = PyDatalogLogKb()
 grounder = BlockGrounder(logkb)
+#grounder = RecursiveGrounder(logkb)
 model = RlpProblem("play sudoku for fun and profit",
                    LpMaximize, grounder, CvxoptSolver)
 
@@ -69,6 +73,10 @@ boxind = boolean_predicate("boxind", 1)
 
 model.add_reloop_variable(fill)
 
+
+# nonnegativity
+model += ForAll([I, J, X], num(X) & num(I) & num(J), fill(I, J, X) |ge| 0)
+
 # objective
 model += RlpSum([X, ], num(X), fill(1, 1, X))
 
@@ -84,11 +92,8 @@ model += ForAll([J, X], num(J) & num(X), RlpSum([I, ], num(I), fill(I, J, X)) |e
 # each number is encountered exactly once per box
 model += ForAll([X, U, V], num(X) & boxind(U) & boxind(V), RlpSum([I, J], box(I, J, U, V), fill(I, J, X)) |eq| 1)
 
-# nonnegativity 
-model += ForAll([I, J, X], num(X) & num(I) & num(J), fill(I, J, X) |ge| 0)
-
 # initial assignment
-model += ForAll([I, J, X], initial(I, J, X), fill(I, J, X) |eq| 1) 
+model += ForAll([I, J, X], initial(I, J, X), fill(I, J, X) |eq| 1)
 
 model.solve()
 

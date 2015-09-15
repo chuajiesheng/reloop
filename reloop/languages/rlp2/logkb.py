@@ -106,6 +106,9 @@ class PyDatalogLogKb(LogKb):
         query += ','.join([ str(a) for a in predicate.args])
         query += ", X)"
         answer = pyDatalog.ask(query)
+
+        if answer is None:
+            return None
         return answer.answers
 
     @staticmethod
@@ -118,6 +121,8 @@ class PyDatalogLogKb(LogKb):
         :type logical_query: Boolean, BooleanPredicate
         :return: The complete Body for loading the program into pyDataLog.
         """
+        if logical_query == True:
+            return None
 
         if logical_query.func is And:
             return " &".join([PyDatalogLogKb.transform_query(arg) for arg in logical_query.args])
@@ -129,8 +134,7 @@ class PyDatalogLogKb(LogKb):
             join = ",".join([str(arg) if isinstance(arg, SubSymbol) else str(arg)  for arg in logical_query.args])
             return " " + logical_query.name + "(" + join + ")"
 
-        if logical_query == True:
-            return None
+
 
         raise NotImplementedError
 

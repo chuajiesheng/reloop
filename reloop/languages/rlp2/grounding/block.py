@@ -86,11 +86,21 @@ class BlockGrounder(Grounder):
                 h = constr_vector if h is None else sp.sparse.vstack((h, constr_vector))
 
         # at some point we had lhs = lhs - rhs, so now we have to put b back on the rhs
-        h *= -1
-        b *= -1
         c = rlpProblem.sense * c
 
-        lp = c.todense().T, g.tocoo(), h.todense(), a.tocoo(), b.todense()
+        if a is not None and b is not None:
+            b *= -1
+            b = b.todense()
+            a = a.tocoo()
+        elif (a is not None and b is None) or (b is not None and a is None):
+            raise Exception("This is just wrong")
+
+        if g is not None and h is not None:
+            h *= -1
+            h = h.todense()
+            g = g.tocoo()
+
+        lp = c.todense().T, g, h, a, b
 
         return lp, self.col_dicts
 
@@ -166,17 +176,24 @@ class BlockGrounder(Grounder):
                 column_record = []
 
                 # summand has only one predicate
-                predicate = summand.atoms(NumericPredicate).pop()
+                predicates_in_atom = summand.atoms(RlpPredicate)
+
+                if len(predicates_in_atom) == 0:
+                    predicate = None
+                else:
+                    predicate = predicates_in_atom.pop()
+
 
                 # use only subsymbols when they occur, otherwise constants
-                if variable is not None:
+                if variable is not None and variable is NumericPredicate:
                     j = 0
-                    for arg in predicate.args:
-                        if isinstance(arg, SubSymbol):
-                            column_record.append(answer[variable_qs_indices[j]])
-                            j += 1
-                        else:
-                            column_record.append(str(arg))
+                    if predicate is not None:
+                        for arg in predicate.args:
+                            if isinstance(arg, SubSymbol):
+                                column_record.append(answer[variable_qs_indices[j]])
+                                j += 1
+                            else:
+                                column_record.append(str(arg))
 
                 col_dict_index = col_dict.add(tuple(column_record))
                 row_dict_index = row_dict.add(tuple(answer[i] for i in constr_qs_indices))
@@ -202,7 +219,7 @@ def coefficient_to_query(expr):
     """
     TODO: write me tenderly
     """
-    if isinstance(expr, NumericPredicate):
+    if isinstance(expr, RlpPredicate):
         if(expr.isReloopVariable):
             return [True, Float(1.0), expr]
         else:
@@ -217,7 +234,7 @@ def coefficient_to_query(expr):
             return [And(*query), expr, var_atom]
         else:
             for arg in expr.args:
-                if arg.has(NumericPredicate):
+                if arg.has(RlpPredicate):
                     [q, e, v] = coefficient_to_query(arg)
                     if v is not None: var_atom = v
                 else:
