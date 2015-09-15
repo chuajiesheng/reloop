@@ -1,4 +1,8 @@
 from reloop.languages.rlp2 import *
+from reloop.languages.rlp2.grounding.block import BlockGrounder
+from reloop.languages.rlp2.lpsolver import CvxoptSolver
+from reloop.languages.rlp2.logkb import PyDatalogLogKb
+
 import time
 
 
@@ -44,8 +48,10 @@ pyDatalog.load("""
 """)
 
 start = time.time()
+logkb = PyDatalogLogKb()
+grounder = BlockGrounder(logkb)
 model = RlpProblem("play sudoku for fun and profit",
-                   LpMaximize, PyDatalogLogKb(), Pulp)
+                   LpMaximize, grounder, CvxoptSolver)
 
 
 I, J, X, U, V = sub_symbols('I', 'J', 'X', 'U', 'V')
