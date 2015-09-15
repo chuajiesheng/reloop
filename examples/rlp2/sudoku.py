@@ -73,12 +73,11 @@ boxind = boolean_predicate("boxind", 1)
 
 model.add_reloop_variable(fill)
 
+# objective
+model += RlpSum([X, ], num(X), fill(1, 1, X))
 
 # nonnegativity
 model += ForAll([I, J, X], num(X) & num(I) & num(J), fill(I, J, X) |ge| 0)
-
-# objective
-model += RlpSum([X, ], num(X), fill(1, 1, X))
 
 # each cell receives exactly one number
 model += ForAll([I, J], num(I) & num(J), RlpSum([X, ], num(X), fill(I, J, X)) |eq| 1)
@@ -99,10 +98,10 @@ model.solve()
 
 end = time.time()
 
-print "\nThe model has been solved: " + model.status() + "."
+# print "\nThe model has been solved: " + model.status() + "."
 
 sol = model.get_solution()
 print "The solutions for the fill variables are:\n"
 for key, value in sol.iteritems():
-    if "fill" in key and value != 0:
-	print key
+	print str(key[0])+ str(key[1]), "=", value
+    

@@ -37,8 +37,7 @@ print("\nBuilding a relational variant of the " + model.name)
 c = 1.0
 
 # declarations
-X, Z, J, I = sub_symbols('X', 'Z', 'J', 'I')
-
+X, Z, J, I, P, Q = sub_symbols('X', 'Z', 'J', 'I', 'P', 'Q')
 attribute = numeric_predicate("attribute", 2)
 
 slack = numeric_predicate("slack", 1)
@@ -52,8 +51,8 @@ model.add_reloop_variable(slack, weight, b, r)
 b_attribute = boolean_predicate("attribute", 3)
 b_label = boolean_predicate("label", 2)
 
-slacks = RlpSum([I, ], b_label(I, Z), slack(I))
-innerProd = RlpSum([J, ], b_attribute(X, J, Z), weight(J) * attribute(I, J))
+slacks = RlpSum([I, ], b_label(I, Q), slack(I))
+innerProd = RlpSum([J, ], b_attribute(X, J, P), weight(J) * attribute(I, J))
 
 # objective
 model += -r() + c * slacks

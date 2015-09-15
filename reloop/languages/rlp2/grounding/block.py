@@ -77,7 +77,6 @@ class BlockGrounder(Grounder):
                 rel = constraint
             else:
                 raise RuntimeError("The constraint is neither a relation nor a forall... what is it then?")
-
             if isinstance(rel, Equality):
                 a = constr_matrix if a is None else sp.sparse.vstack((a, constr_matrix))
                 b = constr_vector if b is None else sp.sparse.vstack((b, constr_vector))
@@ -119,6 +118,8 @@ class BlockGrounder(Grounder):
             lhs = constraint.lhs - constraint.rhs
             constr_query = True
             constr_query_symbols = EmptySet()
+            if isinstance(constraint, GreaterThan):
+                lhs *= -1
         elif isinstance(constraint, ForAll):
             lhs = constraint.relation.lhs - constraint.relation.rhs
             if isinstance(constraint.relation, GreaterThan):
@@ -133,7 +134,6 @@ class BlockGrounder(Grounder):
         self.blocks[constr_name] = var_blocks
 
     def expr_to_matrix(self, expr, row_dict, constr_query, constr_query_symbols):
-
         expr = Normalizer(expr).result
 
         if not isinstance(expr, Add):
@@ -142,7 +142,9 @@ class BlockGrounder(Grounder):
             summands = expr.args
 
         result = {}
+        log.debug("\nSummands: %s", str(summands))
         for summand in summands:
+            log.debug("\n->summand: %s", str(summand))  
             if isinstance(summand, RlpSum):
                 summand_query = summand.query
                 summand_query_symbols = summand.query_symbols
@@ -158,7 +160,6 @@ class BlockGrounder(Grounder):
             query = constr_query & summand_query & coef_query
 
             answers = self.logkb.ask(query_symbols,  query, coef_expr)
-
             variable_qs_indices = []
             if variable is not None:
                 variable_qs_indices = [query_symbols.index(arg) for arg in variable.args if isinstance(arg, SubSymbol)]
@@ -176,32 +177,40 @@ class BlockGrounder(Grounder):
                 column_record = []
 
                 # summand has only one predicate
-                predicates_in_atom = summand.atoms(RlpPredicate)
 
-                if len(predicates_in_atom) == 0:
-                    predicate = None
-                else:
-                    predicate = predicates_in_atom.pop()
-
-
+                #the above is actually wrong. We can have multiple 
+                #predicates, but only one variable. E.g. cost(X,Y)*flow(X,Y)
+                #where flow is the variable --MM
+                predicate = None
+                for predcandidate in summand.atoms(RlpPredicate):
+                    if variable.__class__ == predcandidate.__class__:
+                        predicate = predcandidate
+                        break 
                 # use only subsymbols when they occur, otherwise constants
-                if variable is not None and variable is NumericPredicate:
-                    j = 0
-                    if predicate is not None:
-                        for arg in predicate.args:
-                            if isinstance(arg, SubSymbol):
-                                column_record.append(answer[variable_qs_indices[j]])
-                                j += 1
-                            else:
-                                column_record.append(str(arg))
 
+                # this condition breaks everything, we have to think this through
+                #--MM
+                # if variable is not None and variable is NumericPredicate:
+                j = 0
+                if predicate is not None:
+                    for arg in predicate.args:
+                        if isinstance(arg, SubSymbol):
+                            #it seems that in this branch it appends non-strings, 
+                            #whereas in the other, it appends strings, so this 
+                            #one produces [1,1], whereas the other could produce
+                            #['1',1] for the same atom and thei fail to unify.
+                            #I have added an str() to the append -- MM
+                            column_record.append(str(answer[variable_qs_indices[j]]))
+                            j += 1
+                        else:
+                            column_record.append(str(arg))
+                
                 col_dict_index = col_dict.add(tuple(column_record))
                 row_dict_index = row_dict.add(tuple(answer[i] for i in constr_qs_indices))
 
                 sparse_data.append([np.float(answer[expr_index]), row_dict_index, col_dict_index])
 
             sparse_data = np.array(sparse_data)
-
             summand_block = sp.sparse.coo_matrix((sparse_data[:, 0], (sparse_data[:, 1], sparse_data[:, 2]))).todok()
 
             if variable_class in result:
