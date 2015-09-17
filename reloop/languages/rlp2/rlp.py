@@ -93,7 +93,8 @@ class RlpProblem():
         # (flow.__class__, ('a', 'b')) => sol
         solution = {}
         for predicate_class, var_map in self.varmap.items():
-            solution.update({(predicate_class, args): self.solution[index] for index, args in enumerate(var_map)})
+            if isinstance(predicate_class, FunctionClass):
+                solution.update({(predicate_class, args): self.solution[index] for index, args in enumerate(var_map)})
 
         return solution
 

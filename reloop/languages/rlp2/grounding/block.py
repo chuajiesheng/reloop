@@ -166,10 +166,8 @@ class BlockGrounder(Grounder):
             constr_qs_indices = [query_symbols.index(symbol) for symbol in constr_query_symbols]
 
             variable_class = variable.__class__
-
             col_dict = self.col_dicts.get(variable_class, OrderedSet())
-            if isinstance(variable_class, FunctionClass):
-                self.col_dicts[variable_class] = col_dict
+            self.col_dicts[variable_class] = col_dict
 
             if len(answers) == 0:
                 continue
