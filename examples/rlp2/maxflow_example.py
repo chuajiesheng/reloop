@@ -53,7 +53,6 @@ def maxflow(grounder, solver):
 
     total = 0
     for (predicate_class, args), value in sol.iteritems():
-        if isinstance(predicate_class, FunctionClass):
             print(str(predicate_class)+str(args) + " = " + str(value))
             total += value
 
