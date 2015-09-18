@@ -26,7 +26,7 @@ def label2(x, y):
 
 
 logkb = PyDatalogLogKb()
-grounder = BlockGrounder(logkb)
+grounder = RecursiveGrounder(logkb)
 
 
 model = RlpProblem("LP-SVM", LpMinimize, grounder, CvxoptSolver)
@@ -35,6 +35,8 @@ print("\nBuilding a relational variant of the " + model.name)
 # const
 c = 1.0
 
+print Symbol("a") + 1
+print Symbol("3") + 1
 # declarations
 X, Z, J, I, P, Q = sub_symbols('X', 'Z', 'J', 'I', 'P', 'Q')
 attribute = numeric_predicate("attribute", 2)

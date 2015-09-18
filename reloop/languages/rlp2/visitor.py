@@ -83,13 +83,13 @@ class Normalizer(ImmutableVisitor):
 
 
 
-X, Y = sub_symbols('x', 'y')
-pred = boolean_predicate("pred", 1)
-#sum = RlpSum({X, }, pred(X), Add(4, Mul(X, 3)))
-sum = RlpSum({X, }, pred(X), Add(RlpSum({Y, }, pred(Y) & pred(X), 7*Y),4, Mul(X, 3)))
-#sum = Add(RlpSum({Y, }, pred(Y), 7*Y),4)
+# X, Y = sub_symbols('x', 'y')
+# pred = boolean_predicate("pred", 1)
+# #sum = RlpSum({X, }, pred(X), Add(4, Mul(X, 3)))
+# sum = RlpSum({X, }, pred(X), Add(RlpSum({Y, }, pred(Y) & pred(X), 7*Y),4, Mul(X, 3)))
+# #sum = Add(RlpSum({Y, }, pred(Y), 7*Y),4)
 
-print(srepr(sum))
+# print(srepr(sum))
 
 #norm_visit = NormalizeVisitor(sum)
 #print("NormalizeVisitor: " + srepr(norm_visit.result))
