@@ -26,7 +26,7 @@ def maxflow(grounder, solver):
     node = boolean_predicate("node", 1)
 
     # objective
-    model += RlpSum([Y], edge('a', Y), flow('a', Y) )
+    model += RlpSum([X,Y], source(X) & edge(X, Y), flow(X, Y) )
 
     # constraints for flow preservation
     outFlow = RlpSum([X, ], edge(X, Z), flow(X, Z))

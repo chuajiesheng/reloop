@@ -3,7 +3,7 @@ from reloop.languages.rlp2.visitor import ExpressionGrounder
 from reloop.languages.rlp2.rlp import RlpPredicate
 from sympy.core.relational import Rel, Ge, Le, Eq
 from sympy.core import expand, Add, Mul, Pow, Number, Expr
-from sympy.printing import sstr
+from sympy.logic.boolalg import *
 import scipy.sparse
 import numpy
 from ordered_set import OrderedSet
@@ -50,22 +50,24 @@ class RecursiveGrounder(Grounder):
         """
         # log.debug("Add constraint: " + str(constraint))
         # + "\n" + srepr(constraint)
-        lhs = constraint.lhs
-        b = constraint.rhs
-        if constraint.lhs.func is Add:
-            for s in constraint.lhs.args:
-                if s.is_Atom:
-                    lhs -= s
-                    b -= s
 
-        # TODO handle Lt and Gt
-        if constraint.func is Ge:
-            sense = 1
-        elif constraint.func is Eq:
-            sense = 0
-        elif constraint.func is Le:
-            sense = -1
-        self.lpmodel += (lhs, b, sense)
+        if self.is_valid_constraint(constraint):
+            lhs = constraint.lhs
+            b = constraint.rhs
+            if constraint.lhs.func is Add:
+                for s in constraint.lhs.args:
+                    if s.is_Atom:
+                        lhs -= s
+                        b -= s
+
+            # TODO handle Lt and Gt
+            if constraint.func is Ge:
+                sense = 1
+            elif constraint.func is Eq:
+                sense = 0
+            elif constraint.func is Le:
+                sense = -1
+            self.lpmodel += (lhs, b, sense)
 
     def add_objective_to_lp(self, objective):
         """
@@ -75,14 +77,23 @@ class RecursiveGrounder(Grounder):
         """
         # log.debug("Add objective: " + str(objective))
         # + "\n" + srepr(objective)
-        expr = objective
-        if objective.func is Add:
-            for s in objective.args:
-                if s.is_Atom:
-                    expr -= s
+        if self.is_valid_constraint(objective):
+            expr = objective
+            if objective.func is Add:
+                for s in objective.args:
+                    if s.is_Atom:
+                        expr -= s
 
-        self.lpmodel += expr
+            self.lpmodel += expr
 
+    def is_valid_constraint(self, constraint):
+        if isinstance(constraint, BooleanTrue):
+            return False
+
+        if isinstance(constraint, BooleanFalse):
+            raise ValueError("A constraint was grounded to False. You defined a constraint that can't be satisfied")
+
+        return True
 
 
 class LpProblem():
