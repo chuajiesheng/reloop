@@ -27,7 +27,6 @@ def label2(x, y):
 
 logkb = PyDatalogLogKb()
 grounder = BlockGrounder(logkb)
-grounder = RecursiveGrounder(logkb)
 
 
 model = RlpProblem("LP-SVM", LpMinimize, grounder, CvxoptSolver)
@@ -70,7 +69,4 @@ print model
 
 model.solve()
 
-#print("The model has been solved: " + model.status() + ".")
-
-sol = model.get_solution()
-print(sol)
+print model.get_solution()
