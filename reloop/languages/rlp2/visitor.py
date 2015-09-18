@@ -9,6 +9,9 @@ import abc
 
 
 class ImmutableVisitor():
+    """
+    Class interfacing a generic visitor used by the Normalizer
+    """
     __metaclass__ = abc.ABCMeta
 
     @abc.abstractmethod
@@ -20,6 +23,9 @@ class ImmutableVisitor():
         return self._result
 
 class Normalizer(ImmutableVisitor):
+    """
+    Normalizes a given expression by visiting each node in the syntax tree and applying different methods for the different occuring types in the given expression.
+    """
     def __init__(self, expr):
         expanded_expr = expand(expr)
 
@@ -29,6 +35,12 @@ class Normalizer(ImmutableVisitor):
         self._result = self.visit(expanded_expr)
 
     def visit(self, expr):
+        """
+        Visits the given expression nodewise and executes methods based on the current node instance
+        :param expr: The expression to be visited
+        :type expr: Sympy Expression
+        :return: A normalized expression
+        """
         if not expr.has(RlpSum):
             return expr
 
@@ -42,10 +54,13 @@ class Normalizer(ImmutableVisitor):
 
             return expr.func(*normalized_args)
 
-
-        #aise ValueError("Malformed expression detected: argument is not instance of sympy.core.Mul, sympy.core.Add or RlpSum but contains a RlpSum; Type is " + str(type(expr)))
-
     def visit_mul(self, mul):
+        """
+        Visitor Method, which is called in case the current node is a multiplication
+        :param mul: The multiplication node to be processed
+        :type mul: Sympy Mul
+        :return:
+        """
         args = mul.args
         for arg in args:
             arg = self.visit(arg)
@@ -66,6 +81,12 @@ class Normalizer(ImmutableVisitor):
             return mul
 
     def visit_rlpsum(self, rlpsum):
+        """
+         Visitor Method, which is called in case the current node is a rlpsum
+         :param rlpsum:
+         :type: rlpsum: rlpsum
+         :return:
+        """
         expr = self.visit(rlpsum.expression)
         rlpsum = RlpSum(rlpsum.query_symbols, rlpsum.query, expr)
 
@@ -80,30 +101,9 @@ class Normalizer(ImmutableVisitor):
             # If not then probably nothing changed
             return rlpsum
 
-
-
-
-X, Y = sub_symbols('x', 'y')
-pred = boolean_predicate("pred", 1)
-#sum = RlpSum({X, }, pred(X), Add(4, Mul(X, 3)))
-sum = RlpSum({X, }, pred(X), Add(RlpSum({Y, }, pred(Y) & pred(X), 7*Y),4, Mul(X, 3)))
-#sum = Add(RlpSum({Y, }, pred(Y), 7*Y),4)
-
-print(srepr(sum))
-
-#norm_visit = NormalizeVisitor(sum)
-#print("NormalizeVisitor: " + srepr(norm_visit.result))
-
-
-#print("\nOrigin:  " + srepr(sum))
-
-##print(sum)
-#print(norm_visit.result)
-
-
 class ExpressionGrounder(ImmutableVisitor):
     """
-    Grounds a sympy expression into a set of lp variables and the grounded expression
+    Grounds a sympy expression into a set of lp variables and the grounded expression for the recursive grounder
     """
 
     def __init__(self, expr, logkb):
@@ -114,7 +114,12 @@ class ExpressionGrounder(ImmutableVisitor):
         self._result = self.visit(expanded_expr)
 
     def visit(self, expr):
-
+        """
+        Recursively visits the syntax tree nodes for the given expression and executes a method based on the current properties of the node in the tree.
+        :param expr: The Sympy expression the visitor visits.
+        :type expr: Sympy Add|Mul|RlpSum|Pow
+        :return: The ground expression
+        """
         if expr.func in [Mul, Add, Pow]:
             return expr.func(*map(lambda a: self.visit(a), expr.args))
 
@@ -132,6 +137,12 @@ class ExpressionGrounder(ImmutableVisitor):
         return expr
 
     def visit_rlpsum(self, rlpsum):
+        """
+        Visitor Method, which is called in case the current node of the syntax tree is an instance of a rlpsum
+        :param rlpsum: The current node, which is an instance of a rlpsum
+        :type rlpsum: RLPSum
+        :return:
+        """
         answers = self.logkb.ask(rlpsum.query_symbols, rlpsum.query)
         result = Float(0.0)
         for answer in answers:
@@ -143,6 +154,12 @@ class ExpressionGrounder(ImmutableVisitor):
         return result
 
     def visit_numeric_predicate(self, pred):
+        """
+        Visitor Method, which is called in case the current node of the syntrax tree for a given expression is a numeric predicate
+        :param pred: The numeric predicate to be processed
+        :type pred: Numeric Predicate
+        :return:
+        """
         args = pred.args
         if len(args) > pred.arity:
             raise Exception("Too many arguments.")
@@ -179,7 +196,12 @@ class AffineExpressionCompiler(ImmutableVisitor):
         self._result = self.visit(expanded_expr)
 
     def visit(self, expr):
-
+        """
+        Recursively visits the syntax tree nodes for the given expression and executes a method based on the current properties of the node in the tree.
+        :param expr: The Sympy expression the visitor visits.
+        :type expr: Sympy Add|Mul|RlpSum|Pow
+        :return: The ground expression
+        """
         if expr.func in [Mul, Add, Pow]:
             return expr.func(*map(lambda a: self.visit(a), expr.args))
 
@@ -199,6 +221,12 @@ class AffineExpressionCompiler(ImmutableVisitor):
         return expr
 
     def visit_rlpsum(self, rlpsum):
+        """
+        Visitor Method, which is called in case the current node of the syntax tree is an instance of a rlpsum
+        :param rlpsum: The current node, which is an instance of a rlpsum
+        :type rlpsum: RLPSum
+        :return:
+        """
         answers = self.logkb.ask(rlpsum.query_symbols, rlpsum.query)
         result = Float(0.0)
         for answer in answers:
@@ -210,6 +238,12 @@ class AffineExpressionCompiler(ImmutableVisitor):
         return result
 
     def visit_numeric_predicate(self, pred):
+        """
+        Visitor Method, which is called in case the current node of the syntrax tree for a given expression is a numeric predicate
+        :param pred: The numeric predicate to be processed
+        :type pred: Numeric Predicate
+        :return:
+        """
         args = pred.args
         if len(args) > pred.arity:
             raise Exception("Too many arguments.")
