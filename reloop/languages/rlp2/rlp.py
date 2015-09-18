@@ -73,7 +73,6 @@ class RlpProblem():
         """
         lp, varmap = self.grounder.ground(self)
         self.varmap = varmap
-        print varmap
         self.solution = self.lpsolver().solve(*lp)
 
 
@@ -161,14 +160,16 @@ class ForAll(Query):
         :return: A set of grounded constraints
         """
         answers = logkb.ask(self.query_symbols, self.query)
-
         result = set([])
         if answers is not None:
             lhs = self.relation.lhs - self.relation.rhs
             for answer in answers:
                     expression_eval_subs = lhs
                     for index, symbol in enumerate(self.query_symbols):
-                        expression_eval_subs = expression_eval_subs.subs(symbol, answer[index])
+                        #this ensures that pydatalog strings do not get parsed by sympy
+                        subanswer = answer[index] if not isinstance(answer[index],basestring)\
+                                                    else Symbol(answer[index])
+                        expression_eval_subs = expression_eval_subs.subs(symbol, subanswer)
                     result |= {self.relation.__class__(expression_eval_subs, 0.0)}
 
         self.result = result

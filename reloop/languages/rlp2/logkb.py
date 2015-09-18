@@ -85,8 +85,7 @@ class PyDatalogLogKb(LogKb):
                 tmp = helper_predicate + " <= " + coeff_query
             else:
                 tmp = helper_predicate + " <= " + " & ".join([index_query,coeff_query])
-
-	log.debug("pyDatalog query: " + tmp)
+        log.debug("pyDatalog query: " + tmp)
         pyDatalog.load(tmp)
         answer = pyDatalog.ask(helper_predicate)
         pyEngine.Pred.reset_clauses(pyEngine.Pred("helper", helper_len))
@@ -103,7 +102,8 @@ class PyDatalogLogKb(LogKb):
         :return: The Value of the given predicate if it exists in the Database, None otherwise.
         """
         query = predicate.name + "("
-        query += ','.join([ str(a) for a in predicate.args])
+        query += ','.join([ str(a) if not isinstance(a, Symbol) else "\'" + str(a) + "\'" \
+                                    for a in predicate.args])
         query += ", X)"
         answer = pyDatalog.ask(query)
 
