@@ -131,7 +131,7 @@ class PyDatalogLogKb(LogKb):
             return " ~" + PyDatalogLogKb.transform_query(logical_query.args[0])
 
         if isinstance(logical_query, BooleanPredicate):
-            join = ",".join([str(arg) if isinstance(arg, SubSymbol) else str(arg)  for arg in logical_query.args])
+            join = ",".join([str(arg) if isinstance(arg, SubSymbol) else "\'" + str(arg) + "\'"  for arg in logical_query.args])
             return " " + logical_query.name + "(" + join + ")"
 
 
