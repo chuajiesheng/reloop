@@ -331,7 +331,12 @@ class PostgreSQLKb(LogKb):
 class PrologKB(LogKb):
 
     def __init__(self, prolog):
-        from pyswip import Prolog
+        try:
+            from pyswip import Prolog
+        except ImportError:
+            print("Pyswip is not available on your machine or an error has occured while trying to import the necessary modules. Please install Pyswip or fix your System Setup to use the PrologKB.")
+            exit(1)
+
         assert isinstance(prolog,Prolog)
 
         self.prolog = prolog
@@ -372,6 +377,7 @@ class PrologKB(LogKb):
 class ProbLogKB(LogKb):
 
     def __init__(self, file_path):
+        assert prolog_available, "Import Error : It seems like Problog is currently not installed or available on your machine. To proceed please install Problog"
         file = open(file_path, "r")
         self.knowledge = file.read()
         file.close()
