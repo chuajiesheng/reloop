@@ -2,6 +2,7 @@ from rlp import *
 import logging
 from ordered_set import OrderedSet
 
+#Try to import at least one knowledge base to guarantee the functionality of Reloop
 try:
     from pyDatalog import pyDatalog, pyEngine
 
@@ -352,7 +353,11 @@ class PrologKB(LogKb):
         self.prolog = prolog
 
     def ask_predicate(self, predicate):
-
+        """
+        Queries the SWI-Prolog object for a given predicate and returns the reuslt.
+        :param predicate: The predicate to be queried for
+        :return: A list of tuples resulting from the query
+        """
         result = list(self.prolog.query(predicate.name + \
                                         "(" + \
                                         ",".join([str(arg) for index, arg in enumerate(predicate.args)]) + \
@@ -393,8 +398,12 @@ class ProbLogKB(LogKb):
         file.close()
 
     def execute(self, query):
-        # import subprocess
-        # proc = subprocess.Popen(["/home/danny/Workspace/Reloop/saucywrapper/problog/problog-cli.py", "prob","-"], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+        """
+        Executes a given query by directly calling the execute methode of the problog probability task
+        :param query: A Prolog query to be evaluated by the prolog interface
+        :type query: str
+        :return: A dictionary of answers for the given query returned by problog
+        """
         problog_prog = self.knowledge + "\n".join(query)
         import StringIO
         import sys
@@ -408,7 +417,13 @@ class ProbLogKB(LogKb):
         return result
 
     def ask(self, query_symbols, logical_query, coeff_expr=None):
-
+        """
+        Builds a prolog query for a given set of query symbols, a logical query and a coefficient expression
+        :param query_symbols: A Set of query (sub)symbols to be queried for
+        :param logical_query: The logical query containing constants and presumably the query symbols
+        :param coeff_expr: The coefficient expression for the given query
+        :return: A list of tuples containg the answers for the query symbols
+        """
         if coeff_expr is None:
             lhs_rule = 'helper(' + ','.join([str(v) for v in query_symbols]) + ')'
             rule = lhs_rule + ":-" + self.transform_query(logical_query) + "."
@@ -444,7 +459,11 @@ class ProbLogKB(LogKb):
         return result
 
     def ask_predicate(self, predicate):
-
+        """
+        Queries the prolog knowledge base for a given predicate
+        :param predicate: The predicate to be queried for
+        :return: A list of tuples containing the answers for the query
+        """
         answer = self.execute(["query(" + predicate.name + \
                                "(" + \
                                ",".join([str(arg) for index, arg in enumerate(predicate.args)]) + \
@@ -453,6 +472,10 @@ class ProbLogKB(LogKb):
         answer_args = []
         for key in answer.keys():
             answer_args.append(key.args)
+
+        # Query yields no result
+        if answer.values()[0] == 0.0:
+            return []
 
         result = [(answer_args[0][-1].functor,)]
         return result
