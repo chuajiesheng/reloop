@@ -101,27 +101,6 @@ class Normalizer(ImmutableVisitor):
             # If not then probably nothing changed
             return rlpsum
 
-
-
-
-# X, Y = sub_symbols('x', 'y')
-# pred = boolean_predicate("pred", 1)
-# #sum = RlpSum({X, }, pred(X), Add(4, Mul(X, 3)))
-# sum = RlpSum({X, }, pred(X), Add(RlpSum({Y, }, pred(Y) & pred(X), 7*Y),4, Mul(X, 3)))
-# #sum = Add(RlpSum({Y, }, pred(Y), 7*Y),4)
-
-# print(srepr(sum))
-
-#norm_visit = NormalizeVisitor(sum)
-#print("NormalizeVisitor: " + srepr(norm_visit.result))
-
-
-#print("\nOrigin:  " + srepr(sum))
-
-##print(sum)
-#print(norm_visit.result)
-
-
 class ExpressionGrounder(ImmutableVisitor):
     """
     Grounds a sympy expression into a set of lp variables and the grounded expression for the recursive grounder
