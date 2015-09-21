@@ -7,11 +7,23 @@ from ordered_set import OrderedSet
 import logging
 
 from sympy.sets import EmptySet
+
 log = logging.getLogger(__name__)
 
+
 class BlockGrounder(Grounder):
+    """
+    Provides the tools to ground a given RLP (Objective and Contraints) into their respective lp matrices by using
+    grounding each contraint and objective into a 'block' of the matrix and then building the whole lp matrix.
+    """
 
     def __init__(self, logkb):
+        """
+        Initialize the BlockGrounder by creating new row and column dictionaries and a dictionary for the blocks of the
+        matrix.
+        :param logkb: The knowledge base used for querying expressions
+        :return:
+        """
         self.logkb = logkb
         self.col_dicts = {}
         self.row_dicts = {}
@@ -19,8 +31,14 @@ class BlockGrounder(Grounder):
 
     def ground(self, rlpProblem):
         """
-        Ground the RLP by grounding the objective and each constraint.
+        Resets the status of the row and column dictionaries of the BlockGrounder instance and
+        grounds the RLP by grounding the objective and each constraint.
+        :param rlpProblem: The instance of the given RLP
+        :type rlpProblem: rlpProblem
         """
+
+        self.__init__(self.logkb)
+
         objective = self.objective_to_matrix(rlpProblem.objective)
 
         for constraint in rlpProblem.constraints:
@@ -70,8 +88,8 @@ class BlockGrounder(Grounder):
                 constr_vector = value
             else:
                 constr_vector = sp.sparse.dok_matrix(constr_vector_shape)
-            
-            if isinstance(constraint, ForAll): 
+
+            if isinstance(constraint, ForAll):
                 rel = constraint.relation
             elif isinstance(constraint, Rel):
                 rel = constraint
@@ -104,11 +122,18 @@ class BlockGrounder(Grounder):
         return lp, self.col_dicts
 
     def objective_to_matrix(self, objective):
-
+        """
+        Grounds the objective of the given RLP into the matrix
+        :param objective: The objective of the LP from which the corresponding block is generated from.
+        """
         var_blocks = self.expr_to_matrix(objective, OrderedSet(), True, EmptySet())
         return var_blocks
 
     def constraint_to_matrix(self, constraint):
+        """
+        Generates the corresponding block in the lp matrix from a given constraint and adds the result to the block dictionary.
+        :param constraint: The constraint the corresponding block is generated from.
+        """
         constr_name = constraint_str(constraint)
 
         self.row_dicts[constr_name] = OrderedSet()
@@ -134,6 +159,19 @@ class BlockGrounder(Grounder):
         self.blocks[constr_name] = var_blocks
 
     def expr_to_matrix(self, expr, row_dict, constr_query, constr_query_symbols):
+        """
+        First normalizes a given expression with a visitor pattern then queries the knowledge base for the given query
+        and assigns the results to their respective row and column index defined the the row and column dictionaries.
+        :param expr: The expression to be grounded
+        :type expr: Sympy Expression| RLPSum
+        :param row_dict: An OrderedSet containing the row indices for the lp matrix for the given expression
+        :type row_dict: OrderedSet
+        :param constr_query: The query originating from a given constraint
+        :type constr_query: Sympy Expression | RLPSum
+        :param constr_query_symbols: A Set containing the query symbols for the given constraint query
+        :type constr_query_symbols FiniteSet
+        :return: A dictionary containing a unique name for the variable and the results returned from the knowledge base.
+        """
         expr = Normalizer(expr).result
 
         if not isinstance(expr, Add):
@@ -143,8 +181,10 @@ class BlockGrounder(Grounder):
 
         result = {}
         log.debug("\nSummands: %s", str(summands))
+
         for summand in summands:
-            log.debug("\n->summand: %s", str(summand))  
+            log.debug("\n->summand: %s", str(summand))
+
             if isinstance(summand, RlpSum):
                 summand_query = summand.query
                 summand_query_symbols = summand.query_symbols
@@ -159,7 +199,7 @@ class BlockGrounder(Grounder):
             coef_expr = coef_query_symbols if not isinstance(coef_query_symbols, SubSymbol) else None
             query = constr_query & summand_query & coef_query
 
-            answers = self.logkb.ask(query_symbols,  query, coef_expr)
+            answers = self.logkb.ask(query_symbols, query, coef_expr)
             variable_qs_indices = []
             if variable is not None:
                 variable_qs_indices = [query_symbols.index(arg) for arg in variable.args if isinstance(arg, SubSymbol)]
@@ -169,42 +209,43 @@ class BlockGrounder(Grounder):
             col_dict = self.col_dicts.get(variable_class, OrderedSet())
             self.col_dicts[variable_class] = col_dict
 
+            #If the query yields no results we don't have to add anything to the matrix
             if len(answers) == 0:
                 continue
-            expr_index = len(answers[0])-1
+            expr_index = len(answers[0]) - 1
             sparse_data = []
             for answer in answers:
                 column_record = []
 
                 # summand has only one predicate
 
-                #the above is actually wrong. We can have multiple 
-                #predicates, but only one variable. E.g. cost(X,Y)*flow(X,Y)
-                #where flow is the variable --MM
+                # the above is actually wrong. We can have multiple
+                # predicates, but only one variable. E.g. cost(X,Y)*flow(X,Y)
+                # where flow is the variable --MM
                 predicate = None
                 for predcandidate in summand.atoms(RlpPredicate):
                     if variable.__class__ == predcandidate.__class__:
                         predicate = predcandidate
-                        break 
-                # use only subsymbols when they occur, otherwise constants
+                        break
+                        # use only subsymbols when they occur, otherwise constants
 
                 # this condition breaks everything, we have to think this through
-                #--MM
+                # --MM
                 # if variable is not None and variable is NumericPredicate:
                 j = 0
                 if predicate is not None:
                     for arg in predicate.args:
                         if isinstance(arg, SubSymbol):
-                            #it seems that in this branch it appends non-strings, 
-                            #whereas in the other, it appends strings, so this 
-                            #one produces [1,1], whereas the other could produce
-                            #['1',1] for the same atom and thei fail to unify.
-                            #I have added an str() to the append -- MM
+                            # it seems that in this branch it appends non-strings,
+                            # whereas in the other, it appends strings, so this
+                            # one produces [1,1], whereas the other could produce
+                            # ['1',1] for the same atom and thei fail to unify.
+                            # I have added an str() to the append -- MM
                             column_record.append(str(answer[variable_qs_indices[j]]))
                             j += 1
                         else:
                             column_record.append(str(arg))
-                
+
                 col_dict_index = col_dict.add(tuple(column_record))
                 row_dict_index = row_dict.add(tuple(answer[i] for i in constr_qs_indices))
 
@@ -226,17 +267,20 @@ class BlockGrounder(Grounder):
 
 def coefficient_to_query(expr):
     """
-    TODO: write me tenderly
+    Generates a logkb query from a given expression
+    :param expr: the expression the query is generated from
+    :type expr: Sympy Expression | RLPSum
+    :return: the query as a sympy expression
     """
     if isinstance(expr, RlpPredicate):
-        if(expr.isReloopVariable):
+        if (expr.isReloopVariable):
             return [True, Float(1.0), expr]
         else:
             val = VariableSubSymbol(variable_name_for_expression(expr))
-            b = boolean_predicate(str(expr.func), len(expr.args)+1)
-            return [b(*(expr.args+tuple([val]))), val, None]
+            b = boolean_predicate(str(expr.func), len(expr.args) + 1)
+            return [b(*(expr.args + tuple([val]))), val, None]
     else:
-        query = [True,]
+        query = [True, ]
         query_expr = []
         var_atom = None
         if len(expr.args) == 0:
@@ -247,13 +291,26 @@ def coefficient_to_query(expr):
                     [q, e, v] = coefficient_to_query(arg)
                     if v is not None: var_atom = v
                 else:
-                    q = True; e = arg
-                query.append(q); query_expr.append(e)
+                    q = True;
+                    e = arg
+                query.append(q);
+                query_expr.append(e)
             return [And(*query), expr.func(*query_expr), var_atom]
 
 
 def variable_name_for_expression(expr):
+    """
+    Generates a unique identifier for a given expression
+    :param expr: The expression for which the identifier is generated.
+    :return: A str unique to the given expression (Memory Address)
+    """
     return 'VAL' + str(id(expr))
 
+
 def constraint_str(constraint):
-    return 'CONSTR'+str(id(constraint))
+    """
+     Generates a unique identifier for a given constraint
+    :param constraint: The constraint for which the identifier is generated.
+    :return: A str unique to the given expression (Memory Address)
+    """
+    return 'CONSTR' + str(id(constraint))

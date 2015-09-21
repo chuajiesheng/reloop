@@ -4,6 +4,8 @@ from sympy.sets import FiniteSet
 from sympy.logic.boolalg import *
 from infix import or_infix
 import logging
+from ordered_set import OrderedSet
+
 
 log = logging.getLogger(__name__)
 
@@ -25,7 +27,7 @@ class RlpProblem():
         self.grounder = grounder
         self.lpsolver = lpsolver
         self.name = name
-        self._reloop_variables = set([])
+        self._reloop_variables = OrderedSet([])
         self._constraints = []
         self.objective = None
 
@@ -92,8 +94,13 @@ class RlpProblem():
 
         # (flow.__class__, ('a', 'b')) => sol
         solution = {}
-        for predicate_class, var_map in self.varmap.items():
-                solution.update({(predicate_class, args): self.solution[index] for index, args in enumerate(var_map)})
+        index = 0
+        for varp in self._reloop_variables:
+            atoms = self.varmap[varp]
+            for atom in atoms: 
+                #TODO: this could be done better
+                solution.update({str(varp.name) + "(" + ",".join([str(arg) for arg in atom])+")" : self.solution[index]})
+                index += 1
 
         return solution
 
@@ -153,14 +160,16 @@ class ForAll(Query):
         :return: A set of grounded constraints
         """
         answers = logkb.ask(self.query_symbols, self.query)
-
         result = set([])
         if answers is not None:
             lhs = self.relation.lhs - self.relation.rhs
             for answer in answers:
                     expression_eval_subs = lhs
                     for index, symbol in enumerate(self.query_symbols):
-                        expression_eval_subs = expression_eval_subs.subs(symbol, answer[index])
+                        #this ensures that pydatalog strings do not get parsed by sympy
+                        subanswer = answer[index] if not isinstance(answer[index],basestring)\
+                                                    else Symbol(answer[index])
+                        expression_eval_subs = expression_eval_subs.subs(symbol, subanswer)
                     result |= {self.relation.__class__(expression_eval_subs, 0.0)}
 
         self.result = result

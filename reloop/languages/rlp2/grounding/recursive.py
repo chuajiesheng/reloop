@@ -3,7 +3,7 @@ from reloop.languages.rlp2.visitor import ExpressionGrounder
 from reloop.languages.rlp2.rlp import RlpPredicate
 from sympy.core.relational import Rel, Ge, Le, Eq
 from sympy.core import expand, Add, Mul, Pow, Number, Expr
-from sympy.printing import sstr
+from sympy.logic.boolalg import *
 import scipy.sparse
 import numpy
 from ordered_set import OrderedSet
@@ -35,7 +35,7 @@ class RecursiveGrounder(Grounder):
                     ground_result = ground.__class__(expand(self.ground_expression(ground.lhs)), ground.rhs)
                     self.add_constraint_to_lp(ground_result)
 
-        return self.lpmodel.get_scipy_matrices(), self.lpmodel.lp_variables
+        return self.lpmodel.get_scipy_matrices(rlpProblem), self.lpmodel.lp_variables
 
     def ground_expression(self, expr):
 
@@ -50,22 +50,24 @@ class RecursiveGrounder(Grounder):
         """
         # log.debug("Add constraint: " + str(constraint))
         # + "\n" + srepr(constraint)
-        lhs = constraint.lhs
-        b = constraint.rhs
-        if constraint.lhs.func is Add:
-            for s in constraint.lhs.args:
-                if s.is_Atom:
-                    lhs -= s
-                    b -= s
 
-        # TODO handle Lt and Gt
-        if constraint.func is Ge:
-            sense = 1
-        elif constraint.func is Eq:
-            sense = 0
-        elif constraint.func is Le:
-            sense = -1
-        self.lpmodel += (lhs, b, sense)
+        if self.is_valid_constraint(constraint):
+            lhs = constraint.lhs
+            b = constraint.rhs
+            if constraint.lhs.func is Add:
+                for s in constraint.lhs.args:
+                    if s.is_Atom:
+                        lhs -= s
+                        b -= s
+
+            # TODO handle Lt and Gt
+            if constraint.func is Ge:
+                sense = 1
+            elif constraint.func is Eq:
+                sense = 0
+            elif constraint.func is Le:
+                sense = -1
+            self.lpmodel += (lhs, b, sense)
 
     def add_objective_to_lp(self, objective):
         """
@@ -75,14 +77,23 @@ class RecursiveGrounder(Grounder):
         """
         # log.debug("Add objective: " + str(objective))
         # + "\n" + srepr(objective)
-        expr = objective
-        if objective.func is Add:
-            for s in objective.args:
-                if s.is_Atom:
-                    expr -= s
+        if self.is_valid_constraint(objective):
+            expr = objective
+            if objective.func is Add:
+                for s in objective.args:
+                    if s.is_Atom:
+                        expr -= s
 
-        self.lpmodel += expr
+            self.lpmodel += expr
 
+    def is_valid_constraint(self, constraint):
+        if isinstance(constraint, BooleanTrue):
+            return False
+
+        if isinstance(constraint, BooleanFalse):
+            raise ValueError("A constraint was grounded to False. You defined a constraint that can't be satisfied")
+
+        return True
 
 
 class LpProblem():
@@ -128,7 +139,18 @@ class LpProblem():
     def lp_variable_count(self):
         return sum([len(predicate) for key, predicate in self._lp_variables.items()])
 
-    def get_scipy_matrices(self):
+    def get_scipy_matrices(self,rlpProblem):
+
+        poscounts = {}
+        i = 0
+
+        for varclass in rlpProblem.reloop_variables:
+            if varclass in self._lp_variables:
+                # print "asdf"
+                # print varclass
+                # print i
+                poscounts[varclass] = i
+                i += len(self._lp_variables[varclass])
 
         ineq_constraint_count = len(self._constraints[1]) + len(self._constraints[-1])
         eq_constraint_count = len(self._constraints[0])
@@ -143,26 +165,26 @@ class LpProblem():
 
         i = 0
         for constraint in self._constraints[0]:
-            for variable, factor in constraint[0]:
-                a[i, variable] = factor
+            for varclass, order, factor in constraint[0]:
+                a[i, poscounts[varclass] + order] = factor
             b[i] = constraint[1]
             i += 1
 
         i = 0
         for constraint in self._constraints[-1]:
-            for variable, factor in constraint[0]:
-                g[i, variable] = factor
+            for varclass, order, factor in constraint[0]:
+                g[i, poscounts[varclass] + order] = factor
             h[i] = constraint[1]
             i += 1
 
         for constraint in self._constraints[1]:
-            for variable, factor in constraint[0]:
-                g[i, variable] = -factor
+            for varclass, order, factor in constraint[0]:
+                g[i, poscounts[varclass] + order] = -factor
             h[i] = -constraint[1]
             i += 1
 
         for variable in self._objective:
-            c[variable[0]] = variable[1]
+            c[poscounts[variable[0]] + variable[1]] = variable[2]
 
         c = self.sense * c
 
@@ -183,13 +205,14 @@ class LpProblem():
         self._objective = self.get_affine(expr)
 
     def get_affine(self, expr):
+        #TODO: predicates should be called atoms here!
         predicates, factors = get_predicates_factors(expr)
-
         length = len(predicates)
         factor_vector = numpy.zeros(length)
 
         contained_lp_variables = []
         used_lp_variables = []
+        lp_variable_orders = []
 
         for j in range(length):
             lp_variable = self.add_lp_variable(predicates[j])
@@ -197,11 +220,11 @@ class LpProblem():
             if predicates[j] in used_lp_variables:
                 factor_vector[used_lp_variables.index(predicates[j])] += factors[j]
             else:
-                contained_lp_variables.append(lp_variable)
+                contained_lp_variables.append(predicates[j])
                 used_lp_variables.append(predicates[j])
+                lp_variable_orders.append(lp_variable)
                 factor_vector[used_lp_variables.index(predicates[j])] = factors[used_lp_variables.index(predicates[j])]
-
-        return [(contained_lp_variables[i], factor_vector[i]) for i in range(len(contained_lp_variables))]
+        return [(contained_lp_variables[i].__class__, lp_variable_orders[i], factor_vector[i]) for i in range(len(contained_lp_variables))]
 
 def get_predicates_factors(expr):
     pred_names = []

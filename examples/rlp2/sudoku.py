@@ -103,5 +103,5 @@ end = time.time()
 sol = model.get_solution()
 print "The solutions for the fill variables are:\n"
 for key, value in sol.iteritems():
-	print str(key[0])+ str(key[1]), "=", value
+	print key, "=", value
     

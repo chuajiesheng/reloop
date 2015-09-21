@@ -26,7 +26,7 @@ def maxflow(grounder, solver):
     node = boolean_predicate("node", 1)
 
     # objective
-    model += RlpSum([Y], edge('a', Y), flow('a', Y) )
+    model += RlpSum([X,Y], source(X) & edge(X, Y), flow(X, Y) )
 
     # constraints for flow preservation
     outFlow = RlpSum([X, ], edge(X, Z), flow(X, Z))
@@ -52,15 +52,14 @@ def maxflow(grounder, solver):
     print "The solutions for the flow variables are:\n"
 
     total = 0
-    for (predicate_class, args), value in sol.iteritems():
-        if isinstance(predicate_class, FunctionClass):
-            print(str(predicate_class)+str(args) + " = " + str(value))
+    for key, value in sol.iteritems():
+            print(str(key) + " = " + str(value))
             total += value
 
     try:
         inflow = sol[(flow, (Symbol('a'), Symbol('b')))] + sol[(flow, (Symbol('a'), Symbol('c')))]
     except KeyError:
-        inflow = sol[(flow,('a','b'))] + sol[(flow,('a', 'c'))]
+        inflow = sol['flow(a,b)'] + sol['flow(a,c)']
 
     print "\nTime needed for the grounding and solving: " + str(end - start) + " s."
     #TODO: Change output to display correct results for an arbitrary number of edges outgoing from the source

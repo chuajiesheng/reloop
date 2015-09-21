@@ -28,7 +28,7 @@ def label2(x, y):
 
 logkb = PyDatalogLogKb()
 grounder = BlockGrounder(logkb)
-# grounder = RecursiveGrounder(logkb)
+grounder = RecursiveGrounder(logkb)
 
 
 model = RlpProblem("LP-SVM", LpMinimize, grounder, CvxoptSolver)

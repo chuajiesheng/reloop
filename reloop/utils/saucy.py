@@ -116,4 +116,4 @@ def liftAbc(Ar, br, cr, G=None, h=None, sparse=True, orbits=False, sumrefine=Fal
 		LG2 = LG2.tocoo() 
 		return LA2, Lb, Lc, LG2, Lh, compresstime, Bcc2 
 	else: 
-		return LA2, Lb, Lc, compresstime, Bcc2
+		return LA2, Lb, Lc, None, None, compresstime, Bcc2
