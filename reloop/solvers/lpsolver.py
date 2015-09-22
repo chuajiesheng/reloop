@@ -83,11 +83,13 @@ class CvxoptSolver(LpSolver):
         self._lifted_options["sparse"] = True
 
         #process user options
-        self.setopts(kwargs)
+        if kwargs:
+            self.setopts(kwargs)
 
     def solve(self, c, g, h, a, b, **kwargs):
 
-        if kwargs: self.setopts(kwargs)
+        if kwargs:
+            self.setopts(kwargs)
         log.debug("entering solve() with arguments: \n" + ", ".join([str(u) + "=" + str(v) for u,v in kwargs.items()]))
 
 
@@ -136,7 +138,8 @@ class PicosSolver(LpSolver):
         self.setopts(kwargs)
 
     def solve(self, c, g, h, a, b, **kwargs):
-        if kwargs: self.setopts(kwargs)
+        if kwargs:
+            self.setopts(kwargs)
         log.debug("entering solve() with settings: \n" + ", ".join([str(u) + "=" + str(v) for u,v in self._solver_options.items()]) + "\n" \
                                                            + ", ".join([str(u) + "=" + str(v) for u,v in self._lifted_options.items()]) )
         problem = picos.Problem(**self._solver_options)
