@@ -1,11 +1,12 @@
 from distutils.command.config import config
 import pulp
-import numpy
-from reloop.languages.rlp2.rlp import *
+import numpy as np
+import scipy.sparse as sp
 import cvxopt
 import picos
 import logging
 import abc
+import reloop.utils.saucy as saucy
 
 log = logging.getLogger(__name__)
 
@@ -20,8 +21,12 @@ class LpSolver():
     """
     __metaclass__ = abc.ABCMeta
 
+    _solver_options = {}
+    _lifted_options = {}
+    _lifted = False
+
     @abc.abstractmethod
-    def solve(c, g, h, a, b):
+    def solve(c, g, h, a, b, **kwargs):
         """
         Solves the lp
         :return: The solution of the LP
@@ -35,8 +40,17 @@ class LpSolver():
         """
         raise NotImplementedError()
 
+    def setopts(self, opts):
+        #init defaults and provided options
+        self._solver_options = {}
+        for k, v in opts.items():
+            if k.startswith("solver_"):
+                self._solver_options[k[7:]] = v
+            elif k.startswith("lifted_"):
+                self._lifted_options[k[7:]] = v #remarkably, both "lifted_" and "solver_" are 7 letters
 
-
+        if "lifted" in opts:
+            self._lifted = opts["lifted"]
 
 
 class Pulp(LpSolver):
@@ -56,24 +70,51 @@ class LiftedLinear(LpSolver):
 
 
 class CvxoptSolver(LpSolver):
+    
+    def __init__(self, **kwargs):
+        #defaults
+        self._lifted = False
+        #solver defaults
+        #default solver is conelp, since glpk requires recompilation of cvxopt
+        self._solver_options["solver"] = "conelp"
+        #lifting defaults
+        self._lifted_options["orbits"] = False
+        self._lifted_options["sparse"] = True
 
-    def solve(self, c, g, h, a, b):
+        #process user options
+        self.setopts(kwargs)
+       
+    def solve(self, c, g, h, a, b, **kwargs):
         
-        #I prefer to output the scipy matrices 
-        # log.debug("c: \n" + str(c))
-        # log.debug("g: \n" + str(g.todense()))
-        # log.debug("h: \n" + str(h))
-        # log.debug("a: \n" + str(a.todense()))
-        # log.debug("b: \n" + str(b))
+        if kwargs is not None: self.setopts(kwargs)
+        log.debug("entering solve() with arguments: \n" + ", ".join([str(u) + "=" + str(v) for u,v in kwargs.items()]))
+      
+        
+        if self._lifted:
+        #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
+        #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
+        #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
+        #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
+        #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
+        #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
+            Lg, Lh, Lc, La, Lb, compresstime, Bcc = saucy.liftAbc(g, h, c, G=a, h=b, **self._lifted_options)
+            c, g, h, a, b = get_cvxopt_matrices(Lc, Lg, Lh, La, Lb)
+        else: c, g, h, a, b = get_cvxopt_matrices(c, g, h, a, b)
 
-        c, g, h, a, b = get_cvxopt_matrices(c, g, h, a, b)
+
+        self._result = cvxopt.solvers.lp(c, G=g, h=h, A=a, b=b, **self._solver_options)
 
 
-        #solver = self.options.get("cvxopt_solver","conelp")
-        solver = "glpk"
-        self._result = cvxopt.solvers.lp(c, G=g, h=h, A=a, b=b, solver=solver)
-        print(str(self._result["x"]))
-        return self._result['x']
+        try:
+            xopt = self._result["x"]
+        except:
+            xopt = np.array([0])
+        else:
+            if self._lifted:
+                r = sp.csr_matrix(np.array(xopt).ravel())
+                xopt = np.array((Bcc * r.T).todense()).ravel()
+
+        return xopt
 
     def status(self):
         return self._result.get("status")
@@ -81,29 +122,61 @@ class CvxoptSolver(LpSolver):
 
 class PicosSolver(LpSolver):
 
-    def solve(self, c, g, h, a, b):
-        c, g, h, a, b = get_cvxopt_matrices(c, g, h, a, b)
+    def __init__(self, **kwargs):
+        #defaults
+        self._lifted = False
+        #solver defaults
+        #default solver is cvxopt since we already have the dependency
+        self._solver_options["solver"] = "cvxopt"
+        #lifting defaults
+        self._lifted_options["orbits"] = False
+        self._lifted_options["sparse"] = True
 
-        solver=self.options.get("picos_solver","cvxopt")
+        self.setopts(kwargs)
 
-        problem = picos.Problem(solver=solver)
+    def solve(self, c, g, h, a, b, **kwargs):
+        if kwargs is not None: self.setopts(kwargs)
+        log.debug("entering solve() with settings: \n" + ", ".join([str(u) + "=" + str(v) for u,v in self._solver_options.items()]) + "\n" \
+                                                           + ", ".join([str(u) + "=" + str(v) for u,v in self._lifted_options.items()]) )
+        problem = picos.Problem(**self._solver_options)
+
+        if self._lifted:        
+            #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
+            #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
+            #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
+            #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
+            #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
+            #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
+            Lg, Lh, Lc, La, Lb, compresstime, Bcc = saucy.liftAbc(g, h, c, G=a, h=b, **self._lifted_options)
+            c, g, h, a, b = get_cvxopt_matrices(Lc, Lg, Lh, La, Lb)
+            print g
+        else: c, g, h, a, b = get_cvxopt_matrices(c, g, h, a, b)
 
         x = problem.add_variable('x', c.size)
 
-        problem.add_constraint(a*x == b)
-        problem.add_constraint(g*x <= h)
+        if (a is not None):
+            problem.add_constraint(a*x == b)
+        if (g is not None):
+            problem.add_constraint(g*x <= h)
 
-        problem.minimize(c.T*x)
 
-        self._result = problem
-        return x.value
+        problem.set_objective('min', c.T * x)
+        
+        self._result = problem.solve()
+
+        try:
+            xopt = x.value
+        except:
+            xopt = None
+        else:
+            if self._lifted:
+                r = sp.csr_matrix(np.array(xopt).ravel())
+                xopt = np.array((Bcc * r.T).todense()).ravel()
+
+        return xopt
 
     def status(self):
         return self._result.status
-
-#def get_cvxopt_spmatrix(scipy_sparse_matrix):
-
-#def get_cvxopt_
 
 
 def get_cvxopt_matrices(c, g, h, a, b):
@@ -116,3 +189,4 @@ def get_cvxopt_matrices(c, g, h, a, b):
         h = h if h is None else cvxopt.matrix(h)
 
         return c, g, h, a, b
+
