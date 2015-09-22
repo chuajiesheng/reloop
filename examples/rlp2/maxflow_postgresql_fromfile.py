@@ -24,17 +24,22 @@ WARNING : Executing this file will drop the tables "node", "edge", "cost", "sour
 
 # Initialize Database with necessary Tables and Values
 db_name = raw_input(
-    "Please specifiy the name of your Database (WARNING: this deletes the current contents of the database! Please use a dummy database.): ")
+    "Please specifiy the name of your Database "
+    "(WARNING: this deletes the current contents of the database! Please use a dummy database.): ")
+
 db_user = raw_input("Pease specify the Username for the Database: ")
+
 db_password = getpass.getpass("Enter your password (Leave blank if None): ")
 try:
     connection = psycopg2.connect("dbname=" + str(db_name) + " user=" + str(db_user) + " password=" + str(db_password))
 except NameError:
     raise ImportError(
-        "Psycopg2 is not currently installed on your machine therefore we can not establish a connection to your Postgres Database")
+        "Psycopg2 is currently not installed "
+        "on your machine therefore we can not establish a connection to your Postgres Database")
 except psycopg2.OperationalError:
     raise psycopg2.OperationalError(
-        "Your specified credetials could not be used to connect to any available database.Are you sure that your database is running or installed?")
+        "Your specified credentials could not be used to connect "
+        "to any available database. Are you sure that your database is running or installed?")
 
 cursor = connection.cursor()
 

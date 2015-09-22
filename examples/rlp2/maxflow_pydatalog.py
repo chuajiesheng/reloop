@@ -7,7 +7,23 @@ from reloop.languages.rlp2.logkb import PyDatalogLogKb
 from pyDatalog import pyDatalog
 
 """
-A static example for the maxflow problem contained in maxflow_example.max using pyDatalog
+Maxflow example, which uses the implemented PyDatalog knowledge base interface. The pure python way to define one's
+predicates is to assert the predicates via pyDatalog as shown below.
+
+pyDatalog.assert_fact(predicate_name, arg_1, arg_2 ...,arg_n)
+
+Additionally one can use one of the already available solvers and grounders by creating the appropriate object.
+
+grounder = Blockgrounder(logkb) | RecursiveGrounder(logkb)
+logkb = PyDatalogKB() | PostgreSQLKb(dbname,user,password) | PrologKb(swi_prolog_object) | ProbLogKb(path_to_pl_file)
+solver = CvxoptSolver() | PicosSolver()
+
+We recommend using the Block Grounding as it is more efficient especially grounding problems with huge amounts of data.
+For further information on the different logkbs please see the corresponding examples.
+
+After instantiating the objects one only has to create a model to solve the RLP.
+
+model = ...
 """
 
 pyDatalog.assert_fact('node', 'a')
