@@ -3,6 +3,7 @@ import time
 import logging
 import sys
 
+
 def maxflow(grounder, solver):
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -26,17 +27,17 @@ def maxflow(grounder, solver):
     node = boolean_predicate("node", 1)
 
     # objective
-    model += RlpSum([X,Y], source(X) & edge(X, Y), flow(X, Y) )
+    model += RlpSum([X, Y], source(X) & edge(X, Y), flow(X, Y))
 
     # constraints for flow preservation
     outFlow = RlpSum([X, ], edge(X, Z), flow(X, Z))
     inFlow = RlpSum([Y, ], edge(Z, Y), flow(Z, Y))
 
-    model += ForAll([Z, ], node(Z) & ~source(Z) & ~target(Z), inFlow |eq| outFlow)
+    model += ForAll([Z, ], node(Z) & ~source(Z) & ~target(Z), inFlow | eq | outFlow)
 
     # upper and lower bound constraints
-    model += ForAll([X, Y], edge(X, Y), flow(X, Y) |ge| 0)
-    model += ForAll([X, Y], edge(X, Y), flow(X, Y) |le| cost(X, Y))
+    model += ForAll([X, Y], edge(X, Y), flow(X, Y) | ge | 0)
+    model += ForAll([X, Y], edge(X, Y), flow(X, Y) | le | cost(X, Y))
 
     print "The model has been built:"
     print(model)
@@ -53,8 +54,8 @@ def maxflow(grounder, solver):
 
     total = 0
     for key, value in sol.iteritems():
-            print(str(key) + " = " + str(value))
-            total += value
+        print(str(key) + " = " + str(value))
+        total += value
 
     try:
         inflow = sol[(flow, (Symbol('a'), Symbol('b')))] + sol[(flow, (Symbol('a'), Symbol('c')))]
@@ -62,6 +63,6 @@ def maxflow(grounder, solver):
         inflow = sol['flow(a,b)'] + sol['flow(a,c)']
 
     print "\nTime needed for the grounding and solving: " + str(end - start) + " s."
-    #TODO: Change output to display correct results for an arbitrary number of edges outgoing from the source
-    print "\nThus, the maximum flow entering the traffic network at node a is "+ str(inflow) +" cars per hour."
-    print "\nThe total flow in the traffic network is "+str(total)+" cars per hour."
+    # TODO: Change output to display correct results for an arbitrary number of edges outgoing from the source
+    print "\nThus, the maximum flow entering the traffic network at node a is " + str(inflow) + " cars per hour."
+    print "\nThe total flow in the traffic network is " + str(total) + " cars per hour."

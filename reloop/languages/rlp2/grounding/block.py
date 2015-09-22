@@ -209,7 +209,7 @@ class BlockGrounder(Grounder):
             col_dict = self.col_dicts.get(variable_class, OrderedSet())
             self.col_dicts[variable_class] = col_dict
 
-            #If the query yields no results we don't have to add anything to the matrix
+            # If the query yields no results we don't have to add anything to the matrix
             if len(answers) == 0:
                 continue
             expr_index = len(answers[0]) - 1

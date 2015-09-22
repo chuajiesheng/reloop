@@ -6,13 +6,14 @@ from infix import or_infix
 import logging
 from ordered_set import OrderedSet
 
-
 log = logging.getLogger(__name__)
+
 
 class RlpProblem():
     """
     The model of a Relational Linear Program.
     """
+
     def __init__(self, name, sense, grounder, lpsolver):
         """
         Instantiates the model
@@ -75,7 +76,6 @@ class RlpProblem():
         self.varmap = varmap
         self.solution = self.lpsolver.solve(*lp, **kwargs)
 
-
     def status(self):
         """
         Passes the call to self.lpmodel
@@ -97,9 +97,10 @@ class RlpProblem():
         index = 0
         for varp in self._reloop_variables:
             atoms = self.varmap[varp]
-            for atom in atoms: 
-                #TODO: this could be done better
-                solution.update({str(varp.name) + "(" + ",".join([str(arg) for arg in atom])+")" : self.solution[index]})
+            for atom in atoms:
+                # TODO: this could be done better
+                solution.update(
+                    {str(varp.name) + "(" + ",".join([str(arg) for arg in atom]) + ")": self.solution[index]})
                 index += 1
 
         return solution
@@ -119,6 +120,7 @@ class Query:
     """
     Internal representation of a logical query.
     """
+
     def __init__(self, query_symbols, query):
         """
         :param query_symbols: List of type :class:`SubSymbol`
@@ -143,6 +145,7 @@ class ForAll(Query):
     """
     Wraps a :class:`.Query` and a :class:`.Rel` to represent a set of constraints.
     """
+
     def __init__(self, query_symbols, query, relation):
         Query.__init__(self, query_symbols, query)
         if not is_valid_relation(relation):
@@ -164,13 +167,13 @@ class ForAll(Query):
         if answers is not None:
             lhs = self.relation.lhs - self.relation.rhs
             for answer in answers:
-                    expression_eval_subs = lhs
-                    for index, symbol in enumerate(self.query_symbols):
-                        #this ensures that pydatalog strings do not get parsed by sympy
-                        subanswer = answer[index] if not isinstance(answer[index],basestring)\
-                                                    else Symbol(answer[index])
-                        expression_eval_subs = expression_eval_subs.subs(symbol, subanswer)
-                    result |= {self.relation.__class__(expression_eval_subs, 0.0)}
+                expression_eval_subs = lhs
+                for index, symbol in enumerate(self.query_symbols):
+                    # this ensures that pydatalog strings do not get parsed by sympy
+                    subanswer = answer[index] if not isinstance(answer[index], basestring) \
+                        else Symbol(answer[index])
+                    expression_eval_subs = expression_eval_subs.subs(symbol, subanswer)
+                result |= {self.relation.__class__(expression_eval_subs, 0.0)}
 
         self.result = result
         self.grounded = True
@@ -189,6 +192,7 @@ class SubSymbol(Symbol):
 
 class VariableSubSymbol(SubSymbol):
     pass
+
 
 def sub_symbols(*symbols):
     """
@@ -234,11 +238,14 @@ def rlp_predicate(name, arity, boolean):
         predicate_type = BooleanPredicate
     else:
         predicate_type = NumericPredicate
-    predicate_class = type(name, (predicate_type,), {"arity": arity, "name": name, "isReloopVariable": False, "__str__" : predicate_type.__class__.__str__})
+    predicate_class = type(name, (predicate_type,), {"arity": arity, "name": name, "isReloopVariable": False,
+                                                     "__str__": predicate_type.__class__.__str__})
     return predicate_class
+
 
 class RlpPredicate(Expr):
     pass
+
 
 class NumericPredicate(RlpPredicate, Function):
     """
@@ -268,6 +275,7 @@ class RlpSum(Expr, Query):
     """
 
     """
+
     def __new__(cls, query_symbols, query, expression):
         if not isinstance(query_symbols, FiniteSet):
             query_symbols = FiniteSet(*query_symbols)
@@ -297,17 +305,21 @@ class RlpSum(Expr, Query):
     def _sympyrepr(self, printer, *args):
         return "RlpSum(" + str(self.query_symbols) + " in " + str(self.query) + ", " + srepr(self.expression) + ")"
 
+
 @or_infix
 def eq(a, b):
     return Eq(a, b)
+
 
 @or_infix
 def ge(a, b):
     return Ge(a, b)
 
+
 @or_infix
 def le(a, b):
     return Le(a, b)
+
 
 def is_valid_relation(relation):
     if isinstance(relation, Gt) | isinstance(relation, Lt):
@@ -315,4 +327,3 @@ def is_valid_relation(relation):
     if isinstance(relation, Rel):
         return True
     return False
-

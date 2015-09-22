@@ -13,9 +13,9 @@ class RecursiveGrounder(Grounder):
     """
 
     """
+
     def __init__(self, logkb):
         self.logkb = logkb
-
 
     def ground(self, rlpProblem):
         self.lpmodel = LpProblem(rlpProblem.sense)
@@ -139,7 +139,7 @@ class LpProblem():
     def lp_variable_count(self):
         return sum([len(predicate) for key, predicate in self._lp_variables.items()])
 
-    def get_scipy_matrices(self,rlpProblem):
+    def get_scipy_matrices(self, rlpProblem):
 
         poscounts = {}
         i = 0
@@ -190,7 +190,6 @@ class LpProblem():
 
         return c.todense(), g.tocoo(), h.todense(), a.tocoo(), b.todense()
 
-
     def lp_variable(self):
         curr_index = self._index
         self._index += 1
@@ -205,7 +204,7 @@ class LpProblem():
         self._objective = self.get_affine(expr)
 
     def get_affine(self, expr):
-        #TODO: predicates should be called atoms here!
+        # TODO: predicates should be called atoms here!
         predicates, factors = get_predicates_factors(expr)
         length = len(predicates)
         factor_vector = numpy.zeros(length)
@@ -224,7 +223,9 @@ class LpProblem():
                 used_lp_variables.append(predicates[j])
                 lp_variable_orders.append(lp_variable)
                 factor_vector[used_lp_variables.index(predicates[j])] = factors[used_lp_variables.index(predicates[j])]
-        return [(contained_lp_variables[i].__class__, lp_variable_orders[i], factor_vector[i]) for i in range(len(contained_lp_variables))]
+        return [(contained_lp_variables[i].__class__, lp_variable_orders[i], factor_vector[i]) for i in
+                range(len(contained_lp_variables))]
+
 
 def get_predicates_factors(expr):
     pred_names = []

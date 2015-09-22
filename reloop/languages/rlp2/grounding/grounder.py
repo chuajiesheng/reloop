@@ -1,7 +1,7 @@
 import abc
 
-class Grounder():
 
+class Grounder():
     __metaclass__ = abc.ABCMeta
 
     @abc.abstractmethod
@@ -10,7 +10,6 @@ class Grounder():
 
 
 class PostgresqlConnector():
-
     def __init__(self, db_name, db_user, db_password=None):
         """
 
@@ -22,5 +21,6 @@ class PostgresqlConnector():
         """
         import psycopg2
 
-        connection = psycopg2.connect("dbname=" + str(db_name) + " user=" + str(db_user) + " password=" + str(db_password))
+        connection = psycopg2.connect(
+            "dbname=" + str(db_name) + " user=" + str(db_user) + " password=" + str(db_password))
         self.cursor = connection.cursor()

@@ -22,10 +22,12 @@ class ImmutableVisitor():
     def result(self):
         return self._result
 
+
 class Normalizer(ImmutableVisitor):
     """
     Normalizes a given expression by visiting each node in the syntax tree and applying different methods for the different occuring types in the given expression.
     """
+
     def __init__(self, expr):
         expanded_expr = expand(expr)
 
@@ -95,11 +97,12 @@ class Normalizer(ImmutableVisitor):
             query = rlpsum.query
 
             # If sum terms is Add, we create a new RlpSum for each argument and flatten
-            return Add( *[RlpSum(query_symbols + u.args[0], query & u.args[1], u.args[2]) if u.func is RlpSum
-                       else RlpSum(rlpsum.args[0], rlpsum.args[1], u) for u in expr.args])
+            return Add(*[RlpSum(query_symbols + u.args[0], query & u.args[1], u.args[2]) if u.func is RlpSum
+                         else RlpSum(rlpsum.args[0], rlpsum.args[1], u) for u in expr.args])
         else:
             # If not then probably nothing changed
             return rlpsum
+
 
 class ExpressionGrounder(ImmutableVisitor):
     """
@@ -146,14 +149,14 @@ class ExpressionGrounder(ImmutableVisitor):
         answers = self.logkb.ask(rlpsum.query_symbols, rlpsum.query)
         result = Float(0.0)
         for answer in answers:
-                expression_eval_subs = rlpsum.expression
-                for index, symbol in enumerate(rlpsum.query_symbols):
-                    subanswer = answer[index] if not isinstance(answer[index],basestring)\
-                            else Symbol(answer[index])
-                    
-                    expression_eval_subs = expression_eval_subs.subs(symbol, subanswer)
-                    # expression_eval_subs = expression_eval_subs.subs(symbol, answer[index])
-                result += expression_eval_subs
+            expression_eval_subs = rlpsum.expression
+            for index, symbol in enumerate(rlpsum.query_symbols):
+                subanswer = answer[index] if not isinstance(answer[index], basestring) \
+                    else Symbol(answer[index])
+
+                expression_eval_subs = expression_eval_subs.subs(symbol, subanswer)
+                # expression_eval_subs = expression_eval_subs.subs(symbol, answer[index])
+            result += expression_eval_subs
 
         return result
 
@@ -187,7 +190,6 @@ class ExpressionGrounder(ImmutableVisitor):
         return float(result[0])
 
 
-
 class AffineExpressionCompiler(ImmutableVisitor):
     """
     Grounds a sympy expression into a set of lp variables and the grounded expression
@@ -209,14 +211,11 @@ class AffineExpressionCompiler(ImmutableVisitor):
         if expr.func in [Mul, Add, Pow]:
             return expr.func(*map(lambda a: self.visit(a), expr.args))
 
-
         if isinstance(expr, NumericPredicate):
-                if not expr.isReloopVariable:
-                    raise ValueError("Not fully grounded")
-                else:
-                    self.lp_variables.add(sstr(expr))
-
-
+            if not expr.isReloopVariable:
+                raise ValueError("Not fully grounded")
+            else:
+                self.lp_variables.add(sstr(expr))
 
         if expr.func is BooleanPredicate:
             # TODO Evaluate to 0 or 1? Did Martin say: that would be cool?
@@ -234,14 +233,14 @@ class AffineExpressionCompiler(ImmutableVisitor):
         answers = self.logkb.ask(rlpsum.query_symbols, rlpsum.query)
         result = Float(0.0)
         for answer in answers:
-                expression_eval_subs = rlpsum.expression
-                for index, symbol in enumerate(rlpsum.query_symbols):
-                    subanswer = answer[index] if not isinstance(answer[index],basestring)\
-                                                else Symbol(answer[index])
+            expression_eval_subs = rlpsum.expression
+            for index, symbol in enumerate(rlpsum.query_symbols):
+                subanswer = answer[index] if not isinstance(answer[index], basestring) \
+                    else Symbol(answer[index])
 
-                    expression_eval_subs = expression_eval_subs.subs(symbol, subanswer)
-                    # expression_eval_subs = expression_eval_subs.subs(symbol, answer[index])
-                result += expression_eval_subs
+                expression_eval_subs = expression_eval_subs.subs(symbol, subanswer)
+                # expression_eval_subs = expression_eval_subs.subs(symbol, answer[index])
+            result += expression_eval_subs
 
         return result
 

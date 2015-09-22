@@ -2,36 +2,34 @@ from rlp import *
 import logging
 from ordered_set import OrderedSet
 
-#Try to import at least one knowledge base to guarantee the functionality of Reloop
+# Try to import at least one knowledge base to guarantee the functionality of Reloop
 try:
     from pyDatalog import pyDatalog, pyEngine
-
     pydatalog_available = True
 except ImportError:
     pydatalog_available = False
 
 try:
     import psycopg2
-
     psycopg2_available = True
 except ImportError:
     psycopg2_available = False
 
 try:
     import problog.tasks.probability as problog
-
     problog_available = True
 except ImportError:
     problog_available = False
 
 try:
     from pyswip import Prolog
-
     prolog_available = True
 except ImportError:
     prolog_available = False
 
-assert psycopg2_available or pydatalog_available or prolog_available or problog_available, 'Import Error : Please install any one of our interface Knowledgebases to proceed. Currently available are PostgreSQL and Pydatalog.'
+assert psycopg2_available or pydatalog_available or prolog_available or problog_available, \
+    'Import Error : Please install any one of our interface Knowledgebases to proceed. ' \
+    'Currently available are PostgreSQL and Pydatalog.'
 log = logging.getLogger(__name__)
 
 
@@ -42,7 +40,7 @@ class LogKb:
 
     def ask(self, query_symbols, logical_query):
         """
-        Constructs a query for the given LogKB and returns the List/Set of given answers from the LogKB
+        Generates a query for the given LogKB and returns the List/Set of given answers from the LogKB
 
         :param query_symbols: The symbols to be queried for.
         :param logical_query: The logical query, which is to be transformed into a query fitting the LogKB
@@ -63,7 +61,9 @@ class LogKb:
 
 class PyDatalogLogKb(LogKb):
     def __init__(self):
-        assert pydatalog_available, "Import Error: PyDatalog is not installed on your machine. To use our PyDatalog interface please install pydatalog"
+        assert pydatalog_available, \
+            "Import Error: PyDatalog is not installed on your machine. " \
+            "To use our PyDatalog interface please install pydatalog"
 
     def ask(self, query_symbols, logical_query, coeff_expr=None):
         """
@@ -161,7 +161,9 @@ class PostgreSQLKb(LogKb):
         :param password: The password for the given user if applicable
         """
 
-        assert psycopg2_available, "Import Error : It seems like psycopg2 is currently not installed or available on your machine. To proceed please install psycopg2"
+        assert psycopg2_available, \
+            "Import Error : It seems like psycopg2 is currently not installed or available on your machine. " \
+            "To proceed please install psycopg2"
 
         connection = psycopg2.connect("dbname=" + str(dbname) + " user=" + str(user) + " password=" + str(password))
         self.cursor = connection.cursor()
@@ -169,7 +171,8 @@ class PostgreSQLKb(LogKb):
 
     def ask(self, query_symbols, logical_query, coeff_expr=None):
         """
-        Builds a PostgreSQL query from a given logical query and its query_symbols by implicitly joining over all given predicates.
+        Builds a PostgreSQL query from a given logical query and its query_symbols
+        by implicitly joining over all given predicates.
 
         :param query_symbols: see :func:`~logkb.LogKB.ask`
         :param query:         see :func:`~logkb.LogKB.ask`
@@ -290,7 +293,8 @@ class PostgreSQLKb(LogKb):
 
         :param predicates: The given predicates. E.g. : edge(X,'a'), edge ('a','c')
         :type predicate: List(BooleanPredicate)
-        :param and_clause_added: Indicates if there was been an and-clause beforehand to correctly concantenate the querystring
+        :param and_clause_added: Indicates if there was been an and-clause beforehand to correctly concantenate
+        the querystring
         :type and_clause_added: Boolean
         :return: The SQL conjunctions for the given predicates
         """
@@ -316,7 +320,8 @@ class PostgreSQLKb(LogKb):
         :type query_symbol: List(SubSymbol)
         :param predicates: The predicates, where the symbols might occur (Values)
         :type predicates: List(BooleanPredicate)
-        :return: A dictionary, which maps from the given query_symbols to the corresponding predicates in which the symbols occur.
+        :return: A dictionary, which maps from the given query_symbols to the corresponding predicates in
+        which the symbols occur.
         """
         column_for_symbols = {key: [] for key in query_symbol}
         for predicate in predicates:
@@ -338,7 +343,8 @@ class PostgreSQLKb(LogKb):
         :type relation_name: str
         :return: A list consisting of the column names.
         """
-        query = "SELECT column_name FROM information_schema.columns where table_name=" + "'" + relation_name.lower() + "' ORDER BY ordinal_position ASC"
+        query = "SELECT column_name FROM information_schema.columns where table_name=" + "'" + relation_name.lower() \
+                + "' ORDER BY ordinal_position ASC"
         self.cursor.execute(query)
         ans = [item[0] for item in self.cursor.fetchall()]
         return ans
@@ -347,7 +353,10 @@ class PostgreSQLKb(LogKb):
 class PrologKB(LogKb):
     def __init__(self, prolog):
 
-        assert prolog_available, "Pyswip is not available on your machine or an error has occured while trying to import the necessary modules. Please install Pyswip or fix your System Setup to use the PrologKB."
+        assert prolog_available, \
+            "Pyswip is not available on your machine or an error has occured while trying to import " \
+            "the necessary modules. " \
+            "Please install Pyswip or fix your System Setup to use the PrologKB."
         assert isinstance(prolog, Prolog)
 
         self.prolog = prolog
@@ -392,7 +401,10 @@ class PrologKB(LogKb):
 
 class ProbLogKB(LogKb):
     def __init__(self, file_path):
-        assert problog_available, "Import Error : It seems like Problog is currently not installed or available on your machine. To proceed please install Problog"
+        assert problog_available, \
+            "Import Error : It seems like Problog is currently not installed " \
+            "or available on your machine. " \
+            "To proceed please install Problog"
         file = open(file_path, "r")
         self.knowledge = file.read()
         file.close()
