@@ -9,11 +9,10 @@ from reloop.languages.rlp2.logkb import PyDatalogLogKb
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 for u in range(9):
-    pyDatalog.assert_fact('num', u+1)
+    pyDatalog.assert_fact('num', u + 1)
 
 for u in range(3):
-    pyDatalog.assert_fact('boxind', u+1)
-
+    pyDatalog.assert_fact('boxind', u + 1)
 
 pyDatalog.assert_fact('initial', 1, 1, 5)
 pyDatalog.assert_fact('initial', 2, 1, 6)
@@ -52,11 +51,10 @@ pyDatalog.load("""
 start = time.time()
 logkb = PyDatalogLogKb()
 grounder = BlockGrounder(logkb)
-#grounder = RecursiveGrounder(logkb)
+# grounder = RecursiveGrounder(logkb)
 solver = CvxoptSolver(solver_solver='glpk')
 model = RlpProblem("play sudoku for fun and profit",
                    LpMaximize, grounder, solver)
-
 
 I, J, X, U, V = sub_symbols('I', 'J', 'X', 'U', 'V')
 """
@@ -70,29 +68,28 @@ initial = boolean_predicate("initial", 3)
 box = boolean_predicate("box", 4)
 boxind = boolean_predicate("boxind", 1)
 
-
 model.add_reloop_variable(fill)
 
 # objective
 model += RlpSum([X, ], num(X), fill(1, 1, X))
 
 # nonnegativity
-model += ForAll([I, J, X], num(X) & num(I) & num(J), fill(I, J, X) |ge| 0)
+model += ForAll([I, J, X], num(X) & num(I) & num(J), fill(I, J, X) | ge | 0)
 
 # each cell receives exactly one number
-model += ForAll([I, J], num(I) & num(J), RlpSum([X, ], num(X), fill(I, J, X)) |eq| 1)
+model += ForAll([I, J], num(I) & num(J), RlpSum([X, ], num(X), fill(I, J, X)) | eq | 1)
 
 # each number is encountered exactly once per row
-model += ForAll([I, X], num(I) & num(X), RlpSum([J, ], num(J), fill(I, J, X)) |eq| 1)
+model += ForAll([I, X], num(I) & num(X), RlpSum([J, ], num(J), fill(I, J, X)) | eq | 1)
 
 # each number is encountered exactly once per column
-model += ForAll([J, X], num(J) & num(X), RlpSum([I, ], num(I), fill(I, J, X)) |eq| 1)
+model += ForAll([J, X], num(J) & num(X), RlpSum([I, ], num(I), fill(I, J, X)) | eq | 1)
 
 # each number is encountered exactly once per box
-model += ForAll([X, U, V], num(X) & boxind(U) & boxind(V), RlpSum([I, J], box(I, J, U, V), fill(I, J, X)) |eq| 1)
+model += ForAll([X, U, V], num(X) & boxind(U) & boxind(V), RlpSum([I, J], box(I, J, U, V), fill(I, J, X)) | eq | 1)
 
 # initial assignment
-model += ForAll([I, J, X], initial(I, J, X), fill(I, J, X) |eq| 1)
+model += ForAll([I, J, X], initial(I, J, X), fill(I, J, X) | eq | 1)
 
 model.solve()
 
@@ -103,5 +100,4 @@ end = time.time()
 sol = model.get_solution()
 print "The solutions for the fill variables are:\n"
 for key, value in sol.iteritems():
-	print key, "=", value
-    
+    print key, "=", value

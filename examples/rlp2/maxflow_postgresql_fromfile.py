@@ -1,6 +1,4 @@
-import psycopg2
 from reloop.languages.rlp2.logkb import *
-from reloop.solvers.lpsolver import *
 import getpass
 import maxflow_example
 from reloop.solvers.lpsolver import *
@@ -20,18 +18,23 @@ For further examples on the formatting on the input files please see the filenam
    n b         (nodes)
    a a c 20
    a a b 50    (edges and cap)
+
+WARNING : Executing this file will drop the tables "node", "edge", "cost", "source" and "target" if either of them already exists"
 """
 
 # Initialize Database with necessary Tables and Values
-db_name = raw_input("Please specifiy the name of your Database (WARNING: this deletes the current contents of the database! Please use a dummy database.): ")
+db_name = raw_input(
+    "Please specifiy the name of your Database (WARNING: this deletes the current contents of the database! Please use a dummy database.): ")
 db_user = raw_input("Pease specify the Username for the Database: ")
 db_password = getpass.getpass("Enter your password (Leave blank if None): ")
 try:
     connection = psycopg2.connect("dbname=" + str(db_name) + " user=" + str(db_user) + " password=" + str(db_password))
 except NameError:
-    raise ImportError ("Psycopg2 is not currently installed on your machine therefore we can not establish a connection to your Postgres Database")
+    raise ImportError(
+        "Psycopg2 is not currently installed on your machine therefore we can not establish a connection to your Postgres Database")
 except psycopg2.OperationalError:
-    raise psycopg2.OperationalError("Your specified credetials could not be used to connect to any available database.Are you sure that your database is running or installed?")
+    raise psycopg2.OperationalError(
+        "Your specified credetials could not be used to connect to any available database.Are you sure that your database is running or installed?")
 
 cursor = connection.cursor()
 

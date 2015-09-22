@@ -1,22 +1,23 @@
 from reloop.languages.rlp2.logkb import *
-from reloop.languages.rlp2.lp import *
 import getpass
-import maxflow_example
 
 """
 A static example for the maxflow problem contained in maxflow_example.max using a user specified postgreSQL DB
 """
 
 # Initialize Database with necessary Tables and Values
-db_name = raw_input("Please specifiy the name of your Database (WARNING: this deletes the current contents of the database! Please use a dummy database.): ")
+db_name = raw_input(
+    "Please specifiy the name of your Database (WARNING: this deletes the current contents of the database! Please use a dummy database.): ")
 db_user = raw_input("Pease specify the Username for the Database: ")
 db_password = getpass.getpass("Enter your password (Leave blank if None):")
 try:
     connection = psycopg2.connect("dbname=" + str(db_name) + " user=" + str(db_user) + " password=" + str(db_password))
 except NameError:
-    raise ImportError ("Psycopg2 is not currently installed on your machine therefore we can not establish a connection to your Postgres Database")
+    raise ImportError(
+        "Psycopg2 is not currently installed on your machine therefore we can not establish a connection to your Postgres Database")
 except psycopg2.OperationalError:
-    raise psycopg2.OperationalError("Your specified credetials could not be used to connect to any available database.Are you sure that your database is running or installed?")
+    raise psycopg2.OperationalError(
+        "Your specified credetials could not be used to connect to any available database.Are you sure that your database is running or installed?")
 cursor = connection.cursor()
 
 # Drop Tables
@@ -50,5 +51,3 @@ cursor.close()
 connection.close()
 
 # maxflow_example.maxflow(PostgreSQLKb(db_name, db_user, db_password), Pulp)
-
-

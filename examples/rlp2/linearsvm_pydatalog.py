@@ -1,7 +1,5 @@
-from reloop.languages.rlp2 import  *
-from reloop.solvers.lpsolver import *
-from reloop.languages.rlp2.grounding.block import  *
-from reloop.languages.rlp2.grounding.recursive import  *
+from reloop.languages.rlp2.grounding.block import*
+from reloop.languages.rlp2.grounding.recursive import*
 
 
 @pyDatalog.predicate()

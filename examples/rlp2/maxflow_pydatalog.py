@@ -47,5 +47,5 @@ pyDatalog.assert_fact('cost', 'f', 'g', 70 )
 logkb = PyDatalogLogKb()
 grounder = BlockGrounder(logkb)
 
-
-model = maxflow_example.maxflow(grounder, CvxoptSolver())
+solver = CvxoptSolver()
+model = maxflow_example.maxflow(grounder, solver)
