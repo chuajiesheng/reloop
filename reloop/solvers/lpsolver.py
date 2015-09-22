@@ -50,7 +50,7 @@ class LpSolver():
             self._lifted = opts["lifted"]
 
     def reset(self):
-        
+
         # clears the options
         self._lifted = False
         self._lifted_options = {}
@@ -76,22 +76,34 @@ class LiftedLinear(LpSolver):
 class CvxoptSolver(LpSolver):
     def __init__(self, **kwargs):
         """
-        Initializes a solver object, which functions as a wrapper for the lifter and the cvxoptsolver.
-        To pass an argument to either solver or lifter take the folowwing example:
+        Initializes a solver object, which functions as a wrapper to CVXOPT with a possibility of lifting beforehand.
+        At instantiation, the constructor can pass named arguments through to the solver interface and the lifting code.
+        Solver arguments are prefixed with "solver_", lifting arguments are prefixed with "lifted_". For example,
 
+        CvxoptSolver(solver_solver = "glpk", lifted = True, lifted_orbits = True)            .
 
-        CvxoptSolver(solver_solver="glpk", lifted_orbits = True)
+        This will run and cvxopt.solvers.lp(..., solver = "glpk") and reloop.utils.saucy.liftAbc(..., orbits = True). For 
+        the meaning of these options, the user is referred to their respective documentation. There are no limitations on which options
+        are passed through. 
+        
+        Note that lifting is only run if lifted = True is specified, hence the lifted_orbits in 
 
-        This will pass the argument solver="glpk" to the solver and the boolean orbits=True to the lifter.
-        This causes Cvxopt to use glpk as a solver and sets orbits True in the lifter.
-        Depending on the solver you are using there might be different parameters to specify your desired options.
+        CvxoptSolver(solver_solver = "glpk", lifted_orbits = True) 
+  
+        will have no effect. 
 
-        Note: "conelp" is the default for cvxopt since using others solvers like glpk requires
-        to recompile cvxopt manually.
+        Note: "conelp" is the default for cvxopt. Using glpk generally requires cvxopt recompilation.
 
-        :param kwargs: The options to be passed onto the solver and lifter
+        :param \**kwargs: See below. 
         :type kwargs: dict
+
+        :Keyword Arguments:
+            * lifted = False --
+                Enables or disables lifting via equitable partitions. 
+            * anything prefixed with lifted_ is passed to reloop.utils.saucy.liftAbc
+            * anything prefixed with solver_ is passed to cvxopt.solvers.lp
         """
+
         # defaults
         self._lifted = False
         # solver defaults
@@ -140,6 +152,37 @@ class CvxoptSolver(LpSolver):
 
 
 class PicosSolver(LpSolver):
+    """
+        Initializes a solver object, which functions as a wrapper to PICOS with a possibility of lifting beforehand.
+        The PICOS interface is useful as it provides an interface to a number of other optimization packages such as 
+        Gurobi. 
+        
+        At instantiation, the constructor can pass named arguments through to the solver interface and the lifting code.
+        Solver arguments are prefixed with "solver_", lifting arguments are prefixed with "lifted_". For example,
+
+        PicosSolver(solver_solver = "gurobi", lifted = True, lifted_orbits = True)            .
+
+        This will run and problem.solve(solver = "gurobi") and reloop.utils.saucy.liftAbc(..., orbits = True). For 
+        the meaning of these options, the user is referred to their respective documentation. There are no limitations on which options
+        are passed through. 
+        
+        Note that lifting is only run if lifted = True is specified, hence the lifted_orbits in 
+
+        PicosSolver(solver_solver = "gurobi", lifted_orbits = True) 
+  
+        will have no effect. 
+
+        Note: "cvxopt" is the default for PICOS.
+
+        :param \**kwargs: See below. 
+        :type kwargs: dict
+
+        :Keyword Arguments:
+            * lifted = False --
+                Enables or disables lifting via equitable partitions. 
+            * anything prefixed with lifted_ is passed to reloop.utils.saucy.liftAbc
+            * anything prefixed with solver_ is passed to problem.solve
+        """
     def __init__(self, **kwargs):
         # defaults
         self._lifted = False
@@ -158,7 +201,7 @@ class PicosSolver(LpSolver):
         log.debug("entering solve() with settings: \n" + ", ".join(
             [str(u) + "=" + str(v) for u, v in self._solver_options.items()]) + "\n" \
                   + ", ".join([str(u) + "=" + str(v) for u, v in self._lifted_options.items()]))
-        problem = picos.Problem(**self._solver_options)
+        problem = picos.Problem()
 
         if self._lifted:
             # TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
@@ -182,7 +225,7 @@ class PicosSolver(LpSolver):
 
         problem.set_objective('min', c.T * x)
 
-        self._result = problem.solve()
+        self._result = problem.solve(**self._solver_options)
 
         try:
             xopt = x.value
