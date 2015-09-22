@@ -1,11 +1,10 @@
-from reloop.languages.rlp2 import *
-from reloop.languages.rlp2.grounding.block import BlockGrounder
-from reloop.languages.rlp2.grounding.recursive import RecursiveGrounder
-from reloop.languages.rlp2.lpsolver import CvxoptSolver
-from reloop.languages.rlp2.logkb import PyDatalogLogKb
-
 import time
 import sys
+
+from reloop.languages.rlp2 import *
+from reloop.languages.rlp2.grounding.block import BlockGrounder
+from reloop.solvers.lpsolver import CvxoptSolver
+from reloop.languages.rlp2.logkb import PyDatalogLogKb
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
@@ -55,7 +54,7 @@ logkb = PyDatalogLogKb()
 grounder = BlockGrounder(logkb)
 #grounder = RecursiveGrounder(logkb)
 model = RlpProblem("play sudoku for fun and profit",
-                   LpMaximize, grounder, CvxoptSolver)
+                   LpMaximize, grounder, CvxoptSolver())
 
 
 I, J, X, U, V = sub_symbols('I', 'J', 'X', 'U', 'V')

@@ -3,7 +3,7 @@ from reloop.languages.rlp2.logkb import *
 from reloop.solvers.lpsolver import *
 import getpass
 import maxflow_example
-
+from reloop.solvers.lpsolver import *
 
 """
 Execute this file if you want to read data for a maxflow problem from a plain text file
@@ -82,4 +82,4 @@ cursor.close()
 connection.close()
 file.close()
 
-model = maxflow_example.maxflow(PostgreSQLKb(db_name, db_user, db_password), Pulp)
+model = maxflow_example.maxflow(PostgreSQLKb(db_name, db_user, db_password), CvxoptSolver())

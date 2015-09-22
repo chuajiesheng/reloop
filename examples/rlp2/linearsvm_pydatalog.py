@@ -31,7 +31,7 @@ grounder = BlockGrounder(logkb)
 grounder = RecursiveGrounder(logkb)
 
 
-model = RlpProblem("LP-SVM", LpMinimize, grounder, CvxoptSolver)
+model = RlpProblem("LP-SVM", LpMinimize, grounder, CvxoptSolver())
 print("\nBuilding a relational variant of the " + model.name)
 
 # const

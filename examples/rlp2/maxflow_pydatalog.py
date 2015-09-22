@@ -48,4 +48,4 @@ logkb = PyDatalogLogKb()
 grounder = BlockGrounder(logkb)
 
 
-model = maxflow_example.maxflow(grounder, CvxoptSolver)
+model = maxflow_example.maxflow(grounder, CvxoptSolver())

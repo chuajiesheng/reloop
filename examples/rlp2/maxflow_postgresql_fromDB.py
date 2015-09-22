@@ -25,4 +25,4 @@ db_user = "reloop2"
 db_password="reloop"
 logkb = PostgreSQLKb(db_name, db_user, db_password)
 grounder = BlockGrounder(logkb)
-model = maxflow_example.maxflow(grounder, CvxoptSolver)
+model = maxflow_example.maxflow(grounder, CvxoptSolver())

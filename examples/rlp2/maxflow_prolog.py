@@ -44,4 +44,4 @@ for cost in costs:
 logkb = PrologKB(prolog)
 grounder = RecursiveGrounder(logkb)
 
-model = maxflow_example.maxflow(grounder, CvxoptSolver)
+model = maxflow_example.maxflow(grounder, CvxoptSolver())
