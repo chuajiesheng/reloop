@@ -42,9 +42,7 @@ class LpSolver():
 
     def setopts(self, opts):
         #init defaults and provided options
-        self._solver_options = {}
         for k, v in opts.items():
-
             if k.startswith("solver_"):
                 self._solver_options[k[7:]] = v
             elif k.startswith("lifted_"):
