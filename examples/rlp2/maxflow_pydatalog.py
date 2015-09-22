@@ -7,6 +7,9 @@ from reloop.languages.rlp2.logkb import PyDatalogLogKb
 from pyDatalog import pyDatalog
 
 """
+Dependencies:
+    PyDatalog>0.15.2
+--------------------
 Maxflow example, which uses the implemented PyDatalog knowledge base interface. The pure python way to define one's
 predicates is to assert the predicates via pyDatalog as shown below.
 

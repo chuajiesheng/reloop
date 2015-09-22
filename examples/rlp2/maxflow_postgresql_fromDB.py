@@ -5,6 +5,9 @@ import maxflow_example
 
 
 """
+Dependencies:
+    psycopg2 > 2.6
+----------------
 Maxflow example, which uses already present data from a Postgres Database.
 For the maxflow example the stored data is supposed to be in the following tables :
     "node"

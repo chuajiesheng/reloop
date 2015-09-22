@@ -5,6 +5,9 @@ from reloop.languages.rlp2.grounding.block import BlockGrounder
 from reloop.solvers.lpsolver import *
 
 """
+Dependencies:
+    psycopg2 > 2.6
+----------------
 Maxflow example for usage with a Postgres Database.
 You will have to specify the database as well as username, password and file location.
 The file location can be specified relative to the location of the files.

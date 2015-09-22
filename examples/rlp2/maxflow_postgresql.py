@@ -5,6 +5,9 @@ import maxflow_example
 import getpass
 
 """
+Dependencies:
+    psycopg2 > 2.6
+----------------
 Maxflow example for usage with a Postgres Database.
 You will have to specify the database as well as username, password.
 This examples creates the tables and its contents directly from python code, by using psycopg2 as an interface.
