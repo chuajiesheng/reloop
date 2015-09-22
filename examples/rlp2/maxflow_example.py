@@ -3,7 +3,11 @@ import time
 import logging
 import sys
 
-
+"""
+Declaration of the maxflow problem as Relatione Linear Program. First a model is instantiated with the parameters given
+from the respective callee. By declaring substitution symbols, predicates, objective and constraints one can solve the
+specified model and receive the results directly from an lp solver.
+"""
 def maxflow(grounder, solver):
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 

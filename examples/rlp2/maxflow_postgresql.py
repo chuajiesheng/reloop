@@ -1,8 +1,34 @@
 from reloop.languages.rlp2.logkb import *
+from reloop.languages.rlp2.grounding.block import BlockGrounder
+from reloop.solvers.lpsolver import *
+import maxflow_example
 import getpass
 
 """
-A static example for the maxflow problem contained in maxflow_example.max using a user specified postgreSQL DB
+Maxflow example for usage with a Postgres Database.
+You will have to specify the database as well as username, password.
+This examples creates the tables and its contents directly from python code, by using psycopg2 as an interface.
+Creating a cursor allows one to directly manipulate tables and its contents in the database by executing queries
+and commands.
+
+WARNING : Executing this file will drop the tables "node", "edge", "cost", "source" and "target" if either of them already exists"
+
+Additionally one can use one of the already available solvers and grounders by creating the appropriate object.
+
+grounder = Blockgrounder(logkb) | RecursiveGrounder(logkb)
+logkb = PyDatalogKB() | PostgreSQLKb(dbname,user,password) | PrologKb(swi_prolog_object) | ProbLogKb(path_to_pl_file)
+solver = CvxoptSolver() | PicosSolver()
+
+Additional parameters for the solver can be passed onto the solver / lifted solver by simply creating the solver object
+with the prefered arguments. For more information on the available parameters see lpsolvers.py.
+
+We recommend using the Block Grounding as it is more efficient especially grounding problems with huge amounts of data.
+For further information on the different logkbs please see the corresponding examples.
+
+After instantiating the objects one only has to create a model to solve the RLP.
+
+model = ...
+
 """
 
 # Initialize Database with necessary Tables and Values

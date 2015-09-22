@@ -1,14 +1,14 @@
 from reloop.languages.rlp2.logkb import *
 import getpass
 import maxflow_example
+from reloop.languages.rlp2.grounding.block import BlockGrounder
 from reloop.solvers.lpsolver import *
 
 """
-Execute this file if you want to read data for a maxflow problem from a plain text file
-If you do not want to input your database credentials every time you run the file please feel free to change
-db_name, db_user and db_password as well as the path accordingly.
-Also feel free to change the table names.
-Currently you will also have to change the names in maxflow_example.py as well.
+Maxflow example for usage with a Postgres Database.
+You will have to specify the database as well as username, password and file location.
+The file location can be specified relative to the location of the files.
+For the given example specifying the path as "maxflow_example.max" is sufficient.
 
 For further examples on the formatting on the input files please see the filename extension  .max
 
@@ -20,11 +20,27 @@ For further examples on the formatting on the input files please see the filenam
    a a b 50    (edges and cap)
 
 WARNING : Executing this file will drop the tables "node", "edge", "cost", "source" and "target" if either of them already exists"
+
+Additionally one can use one of the already available solvers and grounders by creating the appropriate object.
+
+grounder = Blockgrounder(logkb) | RecursiveGrounder(logkb)
+logkb = PyDatalogKB() | PostgreSQLKb(dbname,user,password) | PrologKb(swi_prolog_object) | ProbLogKb(path_to_pl_file)
+solver = CvxoptSolver() | PicosSolver()
+
+Additional parameters for the solver can be passed onto the solver / lifted solver by simply creating the solver object
+with the prefered arguments. For more information on the available parameters see lpsolvers.py.
+
+We recommend using the Block Grounding as it is more efficient especially grounding problems with huge amounts of data.
+For further information on the different logkbs please see the corresponding examples.
+
+After instantiating the objects one only has to create a model to solve the RLP.
+
+model = ...
 """
 
 # Initialize Database with necessary Tables and Values
 db_name = raw_input(
-    "Please specifiy the name of your Database "
+    "Please specify the name of your Database "
     "(WARNING: this deletes the current contents of the database! Please use a dummy database.): ")
 
 db_user = raw_input("Pease specify the Username for the Database: ")

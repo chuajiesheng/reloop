@@ -18,6 +18,9 @@ grounder = Blockgrounder(logkb) | RecursiveGrounder(logkb)
 logkb = PyDatalogKB() | PostgreSQLKb(dbname,user,password) | PrologKb(swi_prolog_object) | ProbLogKb(path_to_pl_file)
 solver = CvxoptSolver() | PicosSolver()
 
+Additional parameters for the solver can be passed onto the solver / lifted solver by simply creating the solver object
+with the prefered arguments. For more information on the available parameters see lpsolvers.py.
+
 We recommend using the Block Grounding as it is more efficient especially grounding problems with huge amounts of data.
 For further information on the different logkbs please see the corresponding examples.
 
