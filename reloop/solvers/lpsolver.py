@@ -1,5 +1,3 @@
-from distutils.command.config import config
-import pulp
 import numpy as np
 import scipy.sparse as sp
 import cvxopt
@@ -41,12 +39,12 @@ class LpSolver():
         raise NotImplementedError()
 
     def setopts(self, opts):
-        #init defaults and provided options
+        # init defaults and provided options
         for k, v in opts.items():
             if k.startswith("solver_"):
                 self._solver_options[k[7:]] = v
             elif k.startswith("lifted_"):
-                self._lifted_options[k[7:]] = v #remarkably, both "lifted_" and "solver_" are 7 letters
+                self._lifted_options[k[7:]] = v  # remarkably, both "lifted_" and "solver_" are 7 letters
 
         if "lifted" in opts:
             self._lifted = opts["lifted"]
@@ -60,7 +58,6 @@ class Pulp(LpSolver):
 
 
 class LiftedLinear(LpSolver):
-
     def solve(self):
         pass
 
@@ -69,18 +66,33 @@ class LiftedLinear(LpSolver):
 
 
 class CvxoptSolver(LpSolver):
-
     def __init__(self, **kwargs):
-        #defaults
+        """
+        Initializes a solver object, which functions as a wrapper for the lifter and the cvxoptsolver.
+        To pass an argument to either solver or lifter take the folowwing example:
+
+
+        CvxoptSolver(solver_solver="glpk", lifted_orbits = True)
+
+        This will pass the argument solver="glpk" to the solver and the boolean orbits=True to the lifter.
+        This causes Cvxopt to use glpk as a solver and sets orbits True in the lifter.
+        Depending on the solver you are using there might be different parameters to specify your desired options.
+
+        Note: "conelp" is the default for cvxopt since using others solvers like glpk requires
+        to recompile cvxopt manually.
+
+        :param kwargs: The options to be passed onto the solver and lifter
+        :type kwargs: dict
+        """
+        # defaults
         self._lifted = False
-        #solver defaults
-        #default solver is conelp, since glpk requires recompilation of cvxopt
+        # solver defaults
         self._solver_options["solver"] = "conelp"
-        #lifting defaults
+        # lifting defaults
         self._lifted_options["orbits"] = False
         self._lifted_options["sparse"] = True
 
-        #process user options
+        # process user options
         if kwargs:
             self.setopts(kwargs)
 
@@ -88,23 +100,21 @@ class CvxoptSolver(LpSolver):
 
         if kwargs:
             self.setopts(kwargs)
-        log.debug("entering solve() with arguments: \n" + ", ".join([str(u) + "=" + str(v) for u,v in kwargs.items()]))
-
+        log.debug("entering solve() with arguments: \n" + ", ".join([str(u) + "=" + str(v) for u, v in kwargs.items()]))
 
         if self._lifted:
-        #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
-        #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
-        #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
-        #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
-        #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
-        #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
+            # TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
+            # TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
+            # TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
+            # TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
+            # TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
+            # TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
             Lg, Lh, Lc, La, Lb, compresstime, Bcc = saucy.liftAbc(g, h, c, G=a, h=b, **self._lifted_options)
             c, g, h, a, b = get_cvxopt_matrices(Lc, Lg, Lh, La, Lb)
-        else: c, g, h, a, b = get_cvxopt_matrices(c, g, h, a, b)
-
+        else:
+            c, g, h, a, b = get_cvxopt_matrices(c, g, h, a, b)
 
         self._result = cvxopt.solvers.lp(c, G=g, h=h, A=a, b=b, **self._solver_options)
-
 
         try:
             xopt = self._result["x"]
@@ -122,14 +132,13 @@ class CvxoptSolver(LpSolver):
 
 
 class PicosSolver(LpSolver):
-
     def __init__(self, **kwargs):
-        #defaults
+        # defaults
         self._lifted = False
-        #solver defaults
-        #default solver is cvxopt since we already have the dependency
+        # solver defaults
+        # default solver is cvxopt since we already have the dependency
         self._solver_options["solver"] = "cvxopt"
-        #lifting defaults
+        # lifting defaults
         self._lifted_options["orbits"] = False
         self._lifted_options["sparse"] = True
 
@@ -138,29 +147,30 @@ class PicosSolver(LpSolver):
     def solve(self, c, g, h, a, b, **kwargs):
         if kwargs:
             self.setopts(kwargs)
-        log.debug("entering solve() with settings: \n" + ", ".join([str(u) + "=" + str(v) for u,v in self._solver_options.items()]) + "\n" \
-                                                           + ", ".join([str(u) + "=" + str(v) for u,v in self._lifted_options.items()]) )
+        log.debug("entering solve() with settings: \n" + ", ".join(
+            [str(u) + "=" + str(v) for u, v in self._solver_options.items()]) + "\n" \
+                  + ", ".join([str(u) + "=" + str(v) for u, v in self._lifted_options.items()]))
         problem = picos.Problem(**self._solver_options)
 
         if self._lifted:
-            #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
-            #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
-            #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
-            #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
-            #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
-            #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
+            # TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
+            # TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
+            # TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
+            # TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
+            # TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
+            # TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
             Lg, Lh, Lc, La, Lb, compresstime, Bcc = saucy.liftAbc(g, h, c, G=a, h=b, **self._lifted_options)
             c, g, h, a, b = get_cvxopt_matrices(Lc, Lg, Lh, La, Lb)
             print g
-        else: c, g, h, a, b = get_cvxopt_matrices(c, g, h, a, b)
+        else:
+            c, g, h, a, b = get_cvxopt_matrices(c, g, h, a, b)
 
         x = problem.add_variable('x', c.size)
 
         if (a is not None):
-            problem.add_constraint(a*x == b)
+            problem.add_constraint(a * x == b)
         if (g is not None):
-            problem.add_constraint(g*x <= h)
-
+            problem.add_constraint(g * x <= h)
 
         problem.set_objective('min', c.T * x)
 
@@ -182,13 +192,11 @@ class PicosSolver(LpSolver):
 
 
 def get_cvxopt_matrices(c, g, h, a, b):
+    a = a if a is None else cvxopt.spmatrix(a.data, a.row.tolist(), a.col.tolist(), size=a.shape)
+    g = g if g is None else cvxopt.spmatrix(g.data, g.row.tolist(), g.col.tolist(), size=g.shape)
 
-        a = a if a is None else cvxopt.spmatrix(a.data, a.row.tolist(), a.col.tolist(), size=a.shape)
-        g = g if g is None else cvxopt.spmatrix(g.data, g.row.tolist(), g.col.tolist(), size=g.shape)
+    b = b if b is None else cvxopt.matrix(b)
+    c = cvxopt.matrix(c)
+    h = h if h is None else cvxopt.matrix(h)
 
-        b = b if b is None else cvxopt.matrix(b)
-        c = cvxopt.matrix(c)
-        h = h if h is None else cvxopt.matrix(h)
-
-        return c, g, h, a, b
-
+    return c, g, h, a, b
