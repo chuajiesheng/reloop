@@ -53,8 +53,9 @@ start = time.time()
 logkb = PyDatalogLogKb()
 grounder = BlockGrounder(logkb)
 #grounder = RecursiveGrounder(logkb)
+solver = CvxoptSolver(solver='glpk')
 model = RlpProblem("play sudoku for fun and profit",
-                   LpMaximize, grounder, CvxoptSolver())
+                   LpMaximize, grounder, solver)
 
 
 I, J, X, U, V = sub_symbols('I', 'J', 'X', 'U', 'V')
