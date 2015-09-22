@@ -1,4 +1,5 @@
 from reloop.languages.rlp2 import  *
+from reloop.solvers.lpsolver import *
 from reloop.languages.rlp2.grounding.block import  *
 from reloop.languages.rlp2.grounding.recursive import  *
 
@@ -27,6 +28,7 @@ def label2(x, y):
 
 logkb = PyDatalogLogKb()
 grounder = BlockGrounder(logkb)
+grounder = RecursiveGrounder(logkb)
 
 
 model = RlpProblem("LP-SVM", LpMinimize, grounder, CvxoptSolver)
@@ -69,4 +71,7 @@ print model
 
 model.solve()
 
-print model.get_solution()
+#print("The model has been solved: " + model.status() + ".")
+
+sol = model.get_solution()
+print(sol)

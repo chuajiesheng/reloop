@@ -2,7 +2,7 @@ from pyswip import Prolog
 import maxflow_example
 from reloop.languages.rlp2.logkb import PrologKB
 from reloop.languages.rlp2.grounding.block import *
-from reloop.languages.rlp2.lpsolver import CvxoptSolver
+from reloop.solvers.lpsolver import CvxoptSolver
 from reloop.languages.rlp2.grounding.recursive import RecursiveGrounder
 
 '''

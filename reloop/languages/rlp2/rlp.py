@@ -67,13 +67,13 @@ class RlpProblem():
 
         return self
 
-    def solve(self):
+    def solve(self, **kwargs):
         """
         Grounds and solves the logical programm.
         """
         lp, varmap = self.grounder.ground(self)
         self.varmap = varmap
-        self.solution = self.lpsolver().solve(*lp)
+        self.solution = self.lpsolver.solve(*lp, **kwargs)
 
 
     def status(self):
