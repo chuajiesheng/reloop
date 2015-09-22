@@ -1,6 +1,7 @@
 from rlp import *
 import logging
 from ordered_set import OrderedSet
+from reloop.languages.rlp2.rlp import SubSymbol
 
 # Try to import at least one knowledge base to guarantee the functionality of Reloop
 try:
@@ -35,26 +36,49 @@ log = logging.getLogger(__name__)
 
 class LogKb:
     """
-    Interface for various LogKBs. Provides basic functionality for every LogKB to be implemented.
+    Interfaces an implementation for a logical knowledge base(logkb) by providing the basic functions any
+    implementation of a logkb needs to have in order to function properly within the reloop framework.
+
+    This class does not provide the implementation itself but rather the framework for implementing one's own
+    knowledgebase if desired.
+
+    We provide four working implementations of logkbs available to the user.
+        -PyDataLog
+        -PostgreSQL
+        -SWI-Prolog
+        -Prolog as part of Problog
+
+    To implement one's own logkb one has to implement the two following methods in order for reloop to work.
     """
 
     def ask(self, query_symbols, logical_query):
         """
-        Generates a query for the given LogKB and returns the List/Set of given answers from the LogKB
+        Generates a query for the specified logical knowledge base from a given logical query and their respective
+        query symbols. The given logical query, in form of a sympy logical formula, has to be transformed accordingly
+        to match the syntax of the knowledge base.
+
+        For Example : And{edge('a',Y),source('a')}
+            returns [('a','b'),('a','c')]
+            for the given maxflow example in ./examples
 
         :param query_symbols: The symbols to be queried for.
-        :param logical_query: The logical query, which is to be transformed into a query fitting the LogKB
-        :return: A List of elements, which satisfy the query
+        :type query_symbols: Subsymbol
+        :param logical_query: The logical sympy query to be transformed into a matching knowledge base query.
+        :return: A List of tuples, which satisfy the query.
         """
         raise NotImplementedError
 
     def ask_predicate(self, predicate):
         """
-        Queries the LogKB for a specific Value for given constants.
-        For Example : cost('a','b') = 50
+        Queries the logical knowledge base for a given predicate, which contains only constants.
+        For Example : cost('a','b')
+            returns [(50,)}
 
-        :param predicate: The predicate to be queried for
-        :return: The Value associated with the predicate
+        Where cost('a','b') is generated from the given predicate, which contains the predicate name and the constants.
+
+        :param predicate: The predicate and its constants to be queried for
+        :type predicate: Reloop Variable
+        :return: The Value associated with the predicate in form of a list of tuple(s)
         """
         raise NotImplementedError
 
