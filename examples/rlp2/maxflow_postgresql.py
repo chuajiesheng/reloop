@@ -50,4 +50,7 @@ connection.commit()
 cursor.close()
 connection.close()
 
-# maxflow_example.maxflow(PostgreSQLKb(db_name, db_user, db_password), Pulp)
+logkb = PostgreSQLKb(db_name, db_user, db_password)
+grounder = BlockGrounder(logkb)
+solver = CvxoptSolver()
+maxflow_example.maxflow(grounder, solver)

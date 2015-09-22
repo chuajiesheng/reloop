@@ -90,4 +90,7 @@ cursor.close()
 connection.close()
 file.close()
 
-model = maxflow_example.maxflow(PostgreSQLKb(db_name, db_user, db_password), CvxoptSolver())
+solver = CvxoptSolver()
+logkb = PostgreSQLKb(db_name, db_user, db_password)
+grounder = BlockGrounder(logkb)
+model = maxflow_example.maxflow(grounder, solver)
