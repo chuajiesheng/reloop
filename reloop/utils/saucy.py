@@ -7,11 +7,11 @@ def epBipartite(A, b, c, G=None, h=None, orbits=False):
 
 	_, cmod = np.unique(np.array(c.todense()), return_inverse=True)
 	_, bmod = np.unique(np.array(b.todense()), return_inverse=True)
-	if h != None:
+	if h is not None:
 		_, hmod = np.unique(np.array(h.todense()), return_inverse=True)
 		hmod += np.max(bmod) + 1
 		bmod = np.hstack((bmod, hmod))
-	if G != None:
+	if G is not None:
 		A = sp.vstack((A,G))
 	# print "======++EPBIPARTITE"
 	# print bmod.shape
@@ -57,7 +57,7 @@ def liftAbc(Ar, br, cr, G=None, h=None, sparse=True, orbits=False, sumrefine=Fal
 	:returns:
 	"""
 	eqs = False
-	if G != None and h != None: eqs = True
+	if G is not None and h is not None: eqs = True
 	GC = None
 	ho = None
 
