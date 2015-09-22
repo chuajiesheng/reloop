@@ -49,6 +49,14 @@ class LpSolver():
         if "lifted" in opts:
             self._lifted = opts["lifted"]
 
+    def reset(self):
+        
+        # clears the options
+        self._lifted = False
+        self._lifted_options = {}
+        self._solver_options = {}
+
+
 
 class Pulp(LpSolver):
     """
