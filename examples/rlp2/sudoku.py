@@ -53,7 +53,7 @@ start = time.time()
 logkb = PyDatalogLogKb()
 grounder = BlockGrounder(logkb)
 #grounder = RecursiveGrounder(logkb)
-solver = CvxoptSolver(solver='glpk')
+solver = CvxoptSolver(solver_solver='glpk')
 model = RlpProblem("play sudoku for fun and profit",
                    LpMaximize, grounder, solver)
 

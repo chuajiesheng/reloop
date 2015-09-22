@@ -44,13 +44,15 @@ class LpSolver():
         #init defaults and provided options
         self._solver_options = {}
         for k, v in opts.items():
-            if k.startswith("solver"):
-                self._solver_options[k[0:6]] = v
+
+            if k.startswith("solver_"):
+                self._solver_options[k[7:]] = v
             elif k.startswith("lifted_"):
                 self._lifted_options[k[7:]] = v #remarkably, both "lifted_" and "solver_" are 7 letters
 
         if "lifted" in opts:
             self._lifted = opts["lifted"]
+
 
 class Pulp(LpSolver):
     """
@@ -69,7 +71,7 @@ class LiftedLinear(LpSolver):
 
 
 class CvxoptSolver(LpSolver):
-    
+
     def __init__(self, **kwargs):
         #defaults
         self._lifted = False
@@ -81,15 +83,14 @@ class CvxoptSolver(LpSolver):
         self._lifted_options["sparse"] = True
 
         #process user options
-        if kwargs:
-            self.setopts(kwargs)
-       
+        self.setopts(kwargs)
+
     def solve(self, c, g, h, a, b, **kwargs):
-        
+
         if kwargs: self.setopts(kwargs)
         log.debug("entering solve() with arguments: \n" + ", ".join([str(u) + "=" + str(v) for u,v in kwargs.items()]))
-      
-        
+
+
         if self._lifted:
         #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
         #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
@@ -140,7 +141,7 @@ class PicosSolver(LpSolver):
                                                            + ", ".join([str(u) + "=" + str(v) for u,v in self._lifted_options.items()]) )
         problem = picos.Problem(**self._solver_options)
 
-        if self._lifted:        
+        if self._lifted:
             #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
             #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
             #TODO: refactor lifting code to reflect that g,h are now used for a,b and vice-versa
@@ -161,7 +162,7 @@ class PicosSolver(LpSolver):
 
 
         problem.set_objective('min', c.T * x)
-        
+
         self._result = problem.solve()
 
         try:
