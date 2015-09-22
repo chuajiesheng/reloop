@@ -16,4 +16,5 @@ Dependencies :
 logkb = ProbLogKB("maxflow_problog.pl")
 grounder = BlockGrounder(logkb)
 
-model = maxflow_example.maxflow(grounder, CvxoptSolver())
+solver = CvxoptSolver(solver='glpk')
+model = maxflow_example.maxflow(grounder, solver)

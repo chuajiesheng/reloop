@@ -44,14 +44,13 @@ class LpSolver():
         #init defaults and provided options
         self._solver_options = {}
         for k, v in opts.items():
-            if k.startswith("solver_"):
-                self._solver_options[k[7:]] = v
+            if k.startswith("solver"):
+                self._solver_options[k[0:6]] = v
             elif k.startswith("lifted_"):
                 self._lifted_options[k[7:]] = v #remarkably, both "lifted_" and "solver_" are 7 letters
 
         if "lifted" in opts:
             self._lifted = opts["lifted"]
-
 
 class Pulp(LpSolver):
     """
@@ -82,11 +81,12 @@ class CvxoptSolver(LpSolver):
         self._lifted_options["sparse"] = True
 
         #process user options
-        self.setopts(kwargs)
+        if kwargs:
+            self.setopts(kwargs)
        
     def solve(self, c, g, h, a, b, **kwargs):
         
-        if kwargs is not None: self.setopts(kwargs)
+        if kwargs: self.setopts(kwargs)
         log.debug("entering solve() with arguments: \n" + ", ".join([str(u) + "=" + str(v) for u,v in kwargs.items()]))
       
         
@@ -135,7 +135,7 @@ class PicosSolver(LpSolver):
         self.setopts(kwargs)
 
     def solve(self, c, g, h, a, b, **kwargs):
-        if kwargs is not None: self.setopts(kwargs)
+        if kwargs: self.setopts(kwargs)
         log.debug("entering solve() with settings: \n" + ", ".join([str(u) + "=" + str(v) for u,v in self._solver_options.items()]) + "\n" \
                                                            + ", ".join([str(u) + "=" + str(v) for u,v in self._lifted_options.items()]) )
         problem = picos.Problem(**self._solver_options)
