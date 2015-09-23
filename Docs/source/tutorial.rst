@@ -85,245 +85,178 @@ We start by importing the necessary reloop components::
 
 Let us shortly explain what these are. In order to create an RLP model, we need three objects -- a logical knowledge base, a solver and a grounder. The :ref:`logkb interface<python_logkb>` provides RLP with means to query the relational database/reasoning engine where our data is stored. Currently, we support pyDatalog, PostgreSQL, SWI Prolog and ProbLog. For the current example we will use pyDatalog. The :ref:`solver interface<python_solvers>` interfaces RLP to a linear programming solver such as glpk, CXOPT or gurobi. Finally, the :ref:`grounder<reloop_grounding>` is an object that implements a strategy of parsing the relational LP constraints and querying the logkb in order to convert the RLP to matrix form, which the solver understands.   
 
-We now instantiate the three objects in question:
+We now instantiate the three objects in question::
 
     logkb = PyDatalogLogKb()
     grounder = BlockGrounder(logkb)
     solver = CvxoptSolver(solver_solver='glpk')
 
-The option ``solver_solver = 'glpk'`` is a passtrhough argument that tells CVXOPT to use glpk, since we need to solve the sudoku LP with a simplex method.  
+The option ``solver_solver = 'glpk'`` is a passtrhough argument that tells CVXOPT to use glpk, since we need to solve the sudoku LP with a simplex method (see :ref:`solver doc<python_solvers>` for further details). We are ready to instantiate the model::
 
- It has four parameters, the first being the
-arbitrary name of this problem (as a string), and the second parameter being either LpMinimize or LpMaximize depending on the type of LP we are trying to solve.
-With the third parameter one can specify a LogKB, with the third one an LP-Solver. ::
+    model = RlpProblem("play sudoku for fun and profit",
+                       LpMaximize, grounder, solver)
 
-    model = RlpProblem("flow", LpMaximize, PyDatalogLogKb(), Pulp)
-
+The model takes as arguments a grounder (the logkb is accessed through the grounder), a solver and a sense of the objective, either LpMinimize or LpMaximize. For this example it does not really matter.
 
 Before we start defining constraints, we will declare our predicates and symbols. 
-We need three different symbols for the constraint definition. So we define them with ::
+We need some symbols to serve as logical variables. These are defined with ::
     
-    X, Y, Z = sub_symbols('X', 'Y', 'Z')
+    I, J, X, U, V = sub_symbols('I', 'J', 'X', 'U', 'V')
 
-Reloop has two different kinds of predicates: 
- - Numeric predicates that will return a numeric value, e.g. cap('a', 'b') -> 100
- - Boolean predicate that will return a boolean value, e.g. cap('a', 'b', 100) -> True
+We move on to predicate definitions. Reloop has two different kinds of predicates, 
 
-In this case we have two numeric predicates: ``flow`` -- our variable predicate, and ``cap``, which stores the capacities of the edges. We declare them as follows ::
-  
-    flow = numeric_predicate("flow", 2)
-    cap = numeric_predicate("cap", 2)
+* Numeric predicates (essentially functions) that will return a numeric value, e.g. pred('a', 'b') -> 100. In the logkb, this numerical atom is stored as pred('a', 'b', 100).
+* Boolean predicate that will return a boolean value, e.g. pred('a', 'b', 100) -> True.
 
-The function ``numeric_predicate()`` has two arguments: The predicate name and the arity.
-Next we want to introduce the ``flow`` predicate as a variable to the model, use ::
+In our sudoku LP, we have the following predicates::  
 
-    model.add_reloop_variable(flow)
+    num = boolean_predicate("num", 1)
+    boxind = boolean_predicate("boxind", 1)
+    box = boolean_predicate("box", 4)
+    initial = boolean_predicate("initial", 3)
+    fill = numeric_predicate("fill", 3)
 
-Beside the numeric predicates, the flow problem also has 4 boolean predicates: ::
+Predicate declaration in RLP takes two arguments - a predicate name and an arity. An RLP predicate can be a variable predicate, meaning that each of its atoms in the Herbrand basis may appear in the LP as a decision variable. If a predicate is not a variable predicate, it must be interpreted in the knowledge base, either extrinsically by facts or intrinsically by rules.  
 
-    source = boolean_predicate("source", 1)
-    target = boolean_predicate("target", 1)
-    edge = boolean_predicate("edge", 2)
-    node = boolean_predicate("node", 1)
+Our variable predicate is ``fill``. We let the model know this by::
 
-Because the reloop language builds on top of `sympy <http://www.sympy.org/en/index.html>`_, one can use almost all of sympy's features, such as substitutions, functions and the expression syntax.
-Reloop extends sympy with ``RlpSum``, an expression that represents the sum over an arbitrary logical query. 
+    model.add_reloop_variable(fill)
 
-Now we start collecting our model specification in the ``model`` variable using the += operator.
-We start with our objective, namely that the flow out of the source node must be maximized. ::
+The other predicates will be interpreted in the knowled base. Since we leave the knowledge base discussion for the end of this example, let us briefly mention what these predicates are supposed to mean. 
 
-    model += RlpSum([X, Y], source(X) & edge(X, Y), flow(X, Y))
+``num`` will evaluate to true if the argument is an integer from 1 to 9. This will be used for grid coordinates and for numbers to fill in the squares. ``boxind`` holds the numbers from 1 to 3. This will be used for the coordinates of the boxes. E.g., box 1,1 is the upper-left box in the grid, while box 3,3 is the lower-right. The predicate ``box`` takes 4 arguments - the two coordinates of a square and the two coordinates of a box. ``box(x,y,u,v)`` evaluates to true if the square at x,y is in the box at u,v. E.g., ``box(7,8,3,3)`` is true since at row 7 and column 8 is in the lower-right box. Finally ``initial`` tells us how squares are filled in the initial grid state. E.g. ``initial(1,1,5)`` is true in the grid of the figure.   
+
+We now have everything in order to introduce the RLP constraints:: 
+
+    # each cell receives exactly one number
+    model += ForAll([I, J], num(I) & num(J), RlpSum([X, ], num(X), fill(I, J, X)) | eq | 1)
+
+    # each number is encountered exactly once per row
+    model += ForAll([I, X], num(I) & num(X), RlpSum([J, ], num(J), fill(I, J, X)) | eq | 1)
+
+    # each number is encountered exactly once per column
+    model += ForAll([J, X], num(J) & num(X), RlpSum([I, ], num(I), fill(I, J, X)) | eq | 1)
+
+    # each number is encountered exactly once per box
+    model += ForAll([X, U, V], num(X) & boxind(U) & boxind(V), RlpSum([I, J], box(I, J, U, V), fill(I, J, X)) | eq | 1)
+
+    # nonnegativity
+    model += ForAll([I, J, X], num(X) & num(I) & num(J), fill(I, J, X) | ge | 0)
+
+    # initial assignment
+    model += ForAll([I, J, X], initial(I, J, X), fill(I, J, X) | eq | 1)
+
+The default way to add constraints to a model is by the overloaded addition operator. Constraints can be defined through the ``ForAll`` function, which takes as arguments a list of query symbols X, a logical query L(X,Y), and a parametrized relation R(X) (a relation is a linear equality or inequality), where the query symbols appear as parameters. The semantics of ``ForAll`` are as follows: the query L(X,Y) is executed and projected onto X (i.e., we ask the knowledge base for the tuples of ``answer(X) <- L(X,Y)`` with duplicate elimination). For every tuple t in ``answer(X)``, we instantiate a ground constraint with the relation R(t). E.g., the constraint ``ForAll([X], num(X), fill(1,1,X) |ge| 0)`` is equivalent to the ground constraints ``fill(1,1,1) >= 0,...,fill(1,1,9) >= 0``.
+
+Constraints can also be added directly by ``model += R`` without ``ForAll``, however, no free variables should occur in ``R``. E.g. ``model += fill(1,1,1) |ge| 0`` is acceptable.    
+
+We will now discuss relations. A relation is an expression of the form A rel B, where A and B are linear expressions and rel is one of `|eq|``, ``|ge|``/``>=``  and ``|le|``/``<=``. A linear (in terms of the RLP decision variables) expression may contain addition of linear terms, multiplication of linear terms with a non-variable numberic predicate, or an`` RlpSum``. An ``RlpSum`` is a first-order expression that generates a sum based ot the result of a query. The syntax is similar to ``ForAll``. E.g.m "RlpSum([X], num(X), fill(1,1,X))" is equivalent to ``fill(1,1,1) + ... + fill(1,1,9)``.
+
+Finally, we may add an objective by adding a linear term (not a relation) to the model::
     
-This says that we want to sum all ``flow(X,Y)`` terms for which ``X`` is a source node and there is an edge between ``X`` and ``Y``.  
- 
-Next, we encode the preservation of in- and outflows for all nodes that are not the source resp. target nodes: ::
+    # objective
+    model += RlpSum([X, ], num(X), fill(1, 1, X))
 
-    outFlow = RlpSum([X, ], edge(X, Z), flow(X, Z))
-    inFlow = RlpSum([Y, ], edge(Z, Y), flow(Z, Y))
+This is done here for illustration purposes as this LP does not need an objective. 
 
-    model += ForAll([Z, ], node(Z) & ~source(Z) & ~target(Z), inFlow |eq| outFlow)
+Together with a logical knowledge base, effectively a logical program consisting of logical facts and rules, these relational rules induce a ground linear program which can be solved. We show how to how to create a knowledge base in the next section. 
 
-The class ``ForAll`` has similar arguments as RlpSum a list of symbols, a query for these symbols and a sympy relation. It represents a ground constraint for every variable in the answer of the query. 
+A Logical Knowledge Base for Sudoku
+***********************************
 
-This constraint expresses that except for the entrance and exit, the flow into each intersection
-equals the flow out.
+As alrady noted, we will use pyDatalog as a knowledge engine. 
 
-*Notice:* You may want to use the ``outFlow`` and ``inFlow`` definitions with another symbol (differing from ``Z``).
-To archieve this, use `subs() <http://docs.sympy.org/dev/tutorial/basic_operations.html#substitution>`_ from sympy.
+Our first order of business is to assert the facts. We can do so by::
 
-Besides ``ForAll`` constraints one can use also sympy relations as constraints.
-This is useful, when you don't want to query the LogKB. 
-It is possible to use either ``Eq()``, ``Ge()`` and ``Le()`` directly or the infix notation with ``|eq|``, ``|ge|``/``>=``  and ``|le|``/``<=``. 
+    for u in range(1, 10):
+        pyDatalog.assert_fact('num', u)
 
-Next, the capacity and traffic load are defined for each link: ::
+    for u in range(1, 4):
+        pyDatalog.assert_fact('boxind', u)
 
-    model += ForAll([X, Y], edge(X, Y), flow(X, Y) |le| cap(X, Y))
-
-Again, we have used cap/2 to refer to the corresponding values. The relational constraint introduces upper bounds for
-all flow/2 variables. Finally, we include also the lower bounds: ::
-
-    model += ForAll([X, Y], edge(X, Y), flow(X, Y) |ge| 0)
-
-Now that all the model is specified, we still have to add the definitions of the logical predicates and parameters. When we have done this, we could print the induced
-LP using the "print model". We could even use the writeLP() to copy this information into a .lp file into the directory
-that your code-block is running from. Once your code runs successfully, you can open this .lp file with a text editor to see what the above steps were doing.
-
-This allows one to express LPs relationally for a varying number of individuals and relations among them without enumerating them.
-Together with a logical knowledge base, effectively a logical program consisting of logical facts and rules, it induces a ground LP as we will show next.
-
-
-A Logical Knowledge Base for the Flow RLP
-*****************************************
-While we are using pyDatalog as a Logical Knowledge Base (LogKB) for this problem, there is also one for PostgreSQL.
-
-Fist we define the node/1 predicate, i.e., the set of nodes in the flow network. To do so, we use pyDatalog and its decorator: ::
-
-    @pyDatalog.predicate()
-    def node1(X):
-        yield('a')
-        yield('b')
-        yield('c')
-        yield('d')
-        yield('e')
-        yield('f')
-        yield('g')
-
-In the same way we next define the links resp. edges of the traffic networks as well as the source and target nodes resp. intersections ::
-
-    @pyDatalog.predicate()
-    def edge2(X,Y):
-        yield('a','b')
-        yield('a','c')
-        yield('b','d')
-        yield('b','e')
-        yield('c','d')
-        yield('c','f')
-        yield('d','e')
-        yield('d','f')
-        yield('e','g')
-        yield('f','g')
+    pyDatalog.assert_fact('initial', 1, 1, 5)
+    pyDatalog.assert_fact('initial', 2, 1, 6)
+    pyDatalog.assert_fact('initial', 4, 1, 8)
+    pyDatalog.assert_fact('initial', 5, 1, 4)
+    pyDatalog.assert_fact('initial', 6, 1, 7)
+    pyDatalog.assert_fact('initial', 1, 2, 3)
+    pyDatalog.assert_fact('initial', 3, 2, 9)
+    pyDatalog.assert_fact('initial', 7, 2, 6)
+    pyDatalog.assert_fact('initial', 3, 3, 8)
+    pyDatalog.assert_fact('initial', 2, 4, 1)
+    pyDatalog.assert_fact('initial', 5, 4, 8)
+    pyDatalog.assert_fact('initial', 8, 4, 4)
+    pyDatalog.assert_fact('initial', 1, 5, 7)
+    pyDatalog.assert_fact('initial', 2, 5, 9)
+    pyDatalog.assert_fact('initial', 4, 5, 6)
+    pyDatalog.assert_fact('initial', 6, 5, 2)
+    pyDatalog.assert_fact('initial', 8, 5, 1)
+    pyDatalog.assert_fact('initial', 9, 5, 8)
+    pyDatalog.assert_fact('initial', 2, 6, 5)
+    pyDatalog.assert_fact('initial', 5, 6, 3)
+    pyDatalog.assert_fact('initial', 8, 6, 9)
+    pyDatalog.assert_fact('initial', 7, 7, 2)
+    pyDatalog.assert_fact('initial', 3, 8, 6)
+    pyDatalog.assert_fact('initial', 7, 8, 8)
+    pyDatalog.assert_fact('initial', 9, 8, 7)
+    pyDatalog.assert_fact('initial', 4, 9, 3)
+    pyDatalog.assert_fact('initial', 5, 9, 1)
+    pyDatalog.assert_fact('initial', 6, 9, 6)
+    pyDatalog.assert_fact('initial', 8, 9, 5)
 
 
+Second, we add the rules. In our case we have only one::
 
-    @pyDatalog.predicate()
-    def source1(X):
-        yield('a')
+    pyDatalog.load("""
+        box(I, J, U, V) <= boxind(U) & boxind(V) & num(I) & num(J) & (I > (U-1)*3) & (I <= U*3) & (J > (V-1)*3) & (J <= V*3)
+    """)
 
-    @pyDatalog.predicate()
-    def target1(X):
-        yield('g')
-
-Finally, we still habe to define the capacities of all links. To so so, we specify the cost(X,Y,Z) predicate econcoding
-costs(X,Y)=Z: ::
-
-    @pyDatalog.predicate()
-    def cap3(X,Y,Z):
-        yield('a','b',50)
-        yield('a','c',100)
-        yield('b','d',40)
-        yield('b','e',20)
-        yield('c','d',60)
-        yield('c','f',20)
-        yield('d','e',50)
-        yield('d','f',60)
-        yield('e','g',70)
-        yield('f','g',70)
-
+This rule defines the ``box`` predicate, which tells us if a square belongs to a box by checking if its coordinates belong to the range of the box.
 
 Solving Instances of Relational Flow LP
 ***************************************
 
-To obtain the solution to this instance of the relational flow linear program, we could just call the solve() function.
-It calls PuLP' solver. Since everything is embedded within Python, we could also use Python to process
-the solution even further: ::
-
+Having created a logKB, we are ready to solve the linear program. We do so and print the output::
+     
     model.solve()
 
-    print "The model has been solved: " + model.status()
-
-    sol =  model.getSolution()
-
-    print "The solutions for the flow variables are:\n"
+    sol = model.get_solution()
+    print "The solutions for the fill variables are:\n"
     for key, value in sol.iteritems():
-        if "flow" in key and value > 0:
-            print key+" = "+str(value)
-
-    total = 0
-    for key, value in sol.iteritems():
-        if "flow" in key and value > 0:
-            total += value
-
-    print "\nThus, the maximum flow entering the traffic network at node a is "+str(sol["flow('a','b')"]+sol["flow('a','c')"])+" cars per hour."
-    print "\nThe total flow in the traffic network is "+str(total)+" cars per hour."
+        if round(value, 2) >= 0.99:
+            print key, "=", round(value, 2)
 
 
 This produces the following output: ::
 
-    The model has been solved: Optimal
-    The solutions for the flow variables are:
+        GLPK Simplex Optimizer, v4.45
+    1082 rows, 729 columns, 3674 non-zeros
+          0: obj =   0.000000000e+00  infeas =  3.530e+02 (353)
+    *   446: obj =  -1.000000000e+00  infeas =  0.000e+00 (108)
+    OPTIMAL SOLUTION FOUND
+    The solutions for the fill variables are:
 
-    flow(b,e) = 20.0
-    flow(d,f) = 40.0
-    flow(f,g) = 60.0
-    flow(c,f) = 20.0
-    flow(a,b) = 50.0
-    flow(c,d) = 60.0
-    flow(e,g) = 70.0
-    flow(a,c) = 80.0
-    flow(b,d) = 30.0
-    flow(d,e) = 50.0
+    fill(1,4,6) = 1.0
+    fill(7,1,9) = 1.0
+    fill(6,2,1) = 1.0
+    fill(9,9,9) = 1.0
+    fill(2,7,3) = 1.0
+    fill(1,7,9) = 1.0
+    fill(2,6,5) = 1.0
+    fill(7,3,1) = 1.0
+    fill(9,3,5) = 1.0
+    fill(3,7,5) = 1.0
+    fill(3,9,7) = 1.0
+    fill(5,8,9) = 1.0
+    fill(2,4,1) = 1.0
+    fill(5,9,1) = 1.0
+    fill(9,6,6) = 1.0
+    fill(1,9,2) = 1.0
+    fill(8,4,4) = 1.0
+    fill(8,7,6) = 1.0
+        ...
 
-
-    Thus, the maximum flow entering the traffic network at node a is 130.0 cars per hour.
-
-    The total flow in the traffic network is 480.0 cars per hour.
-
-Of course, changing the knowledge base will result in different solutions. The corresponding .lp file (produced e.g. by PuLP) would look like this: ::
-
-    flow LP:
-    MAXIMIZE
-    1.0*flow(a,b) + 1.0*flow(a,c) + 0
-    SUBJECT TO
-    _C1: flow(c,f) + flow(d,f) - flow(f,g) = 0
-    _C2: flow(b,d) + flow(c,d) - flow(d,e) - flow(d,f) = 0
-    _C3: flow(a,b) - flow(b,d) - flow(b,e) = 0
-    _C4: flow(b,e) + flow(d,e) - flow(e,g) = 0
-    _C5: flow(a,c) - flow(c,d) - flow(c,f) = 0
-    _C6: flow(e,g) <= 70
-    _C7: flow(c,d) <= 60
-    _C8: flow(c,f) <= 20
-    _C9: flow(a,b) <= 50
-    _C10: flow(f,g) <= 70
-    _C11: flow(b,e) <= 20
-    _C12: flow(a,c) <= 100
-    _C13: flow(d,f) <= 60
-    _C14: flow(b,d) <= 40
-    _C15: flow(d,e) <= 50
-    _C16: flow(d,e) >= 0
-    _C17: flow(e,g) >= 0
-    _C18: flow(a,b) >= 0
-    _C19: flow(b,e) >= 0
-    _C20: flow(c,f) >= 0
-    _C21: flow(f,g) >= 0
-    _C22: flow(a,c) >= 0
-    _C23: flow(b,d) >= 0
-    _C24: flow(d,f) >= 0
-    _C25: flow(c,d) >= 0
-
-    VARIABLES
-    flow(a,b) free Continuous
-    flow(a,c) free Continuous
-    flow(b,d) free Continuous
-    flow(b,e) free Continuous
-    flow(c,d) free Continuous
-    flow(c,f) free Continuous
-    flow(d,e) free Continuous
-    flow(d,f) free Continuous
-    flow(e,g) free Continuous
-    flow(f,g) free Continuous
-
-
-The complete running example can be found :ref:`here<maxflow>`.
+The complete running example can be found :ref:`here<sudoku>`.
 
 
 Equitable Partitions and Lifted Linear Programming
