@@ -1,18 +1,14 @@
-import time
-import sys
-
 from reloop.languages.rlp2 import *
 from reloop.languages.rlp2.grounding.block import BlockGrounder
-from reloop.solvers.lpsolver import CvxoptSolver
 from reloop.languages.rlp2.logkb import PyDatalogLogKb
+from reloop.solvers.lpsolver import CvxoptSolver
 
-logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
-for u in range(9):
-    pyDatalog.assert_fact('num', u + 1)
+for u in range(1, 10):
+    pyDatalog.assert_fact('num', u)
 
-for u in range(3):
-    pyDatalog.assert_fact('boxind', u + 1)
+for u in range(1, 4):
+    pyDatalog.assert_fact('boxind', u)
 
 pyDatalog.assert_fact('initial', 1, 1, 5)
 pyDatalog.assert_fact('initial', 2, 1, 6)
@@ -48,11 +44,10 @@ pyDatalog.load("""
     box(I, J, U, V) <= boxind(U) & boxind(V) & num(I) & num(J) & (I > (U-1)*3) & (I <= U*3) & (J > (V-1)*3) & (J <= V*3)
 """)
 
-start = time.time()
 logkb = PyDatalogLogKb()
 grounder = BlockGrounder(logkb)
-# grounder = RecursiveGrounder(logkb)
 solver = CvxoptSolver(solver_solver='glpk')
+
 model = RlpProblem("play sudoku for fun and profit",
                    LpMaximize, grounder, solver)
 
@@ -70,12 +65,6 @@ boxind = boolean_predicate("boxind", 1)
 
 model.add_reloop_variable(fill)
 
-# objective
-model += RlpSum([X, ], num(X), fill(1, 1, X))
-
-# nonnegativity
-model += ForAll([I, J, X], num(X) & num(I) & num(J), fill(I, J, X) | ge | 0)
-
 # each cell receives exactly one number
 model += ForAll([I, J], num(I) & num(J), RlpSum([X, ], num(X), fill(I, J, X)) | eq | 1)
 
@@ -88,16 +77,19 @@ model += ForAll([J, X], num(J) & num(X), RlpSum([I, ], num(I), fill(I, J, X)) | 
 # each number is encountered exactly once per box
 model += ForAll([X, U, V], num(X) & boxind(U) & boxind(V), RlpSum([I, J], box(I, J, U, V), fill(I, J, X)) | eq | 1)
 
+# nonnegativity
+model += ForAll([I, J, X], num(X) & num(I) & num(J), fill(I, J, X) | ge | 0)
+
+# objective
+model += RlpSum([X, ], num(X), fill(1, 1, X))
+
 # initial assignment
 model += ForAll([I, J, X], initial(I, J, X), fill(I, J, X) | eq | 1)
 
 model.solve()
 
-end = time.time()
-
-# print "\nThe model has been solved: " + model.status() + "."
-
 sol = model.get_solution()
 print "The solutions for the fill variables are:\n"
 for key, value in sol.iteritems():
-    print key, "=", value
+	if round(value, 2) >= 0.99:
+		print key, "=", round(value, 2)

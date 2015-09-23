@@ -16,55 +16,74 @@ Mathematical programs (MPs) are often specified using algebraic modelling langua
 notation instead of matrices and define an objective and constraints through parameters whose domains are defined in a separate file,
 thus enabling separating the model from its instances. That is, algebraic modeling languages such as AMPL allow one to write down the problem description
 in a declarative way. They free the user from engineering instance specific MPs while capturing the general properties of the problem class at hand.
-However, they do not provide logically parameterized definitions for the arithmetic expressions and for the index sets. RAMPL, which we will introduce now,
-feature exactly this.
+However, they do not provide logically parameterized definitions for the arithmetic expressions and for the index sets. RLP, which we will introduce now,
+features exactly this.
 
-Let's consider a traffic flow problem, i.e., we are given a transportation network consisting of a source (S), sink (T), and
-intermediate nodes connected with links of certain capacity. For example, consider the following network. 
+Sudoku
+******
 
+`Sudoku <https://en.wikipedia.org/wiki/Sudoku>`_ is a numerical puzzle in which one is presented with a 9x9 square grid subdivided into 3x3 boxes with 3x3 squares each such as the one in the figure below. 
 
-.. figure:: images/flownetwork.svg
-   :scale: 45 %
+.. figure:: images/sudoku-problem.svg
+   :scale: 40 %
    :alt: transportation network
    :align: center
 
-   Transportation network for the flow LP. Numbers indicate capacities of the links.
+   A sudoku problem.
+
+As a starting condition, the grid is partially populated with numbers from 1 to 9. The objective of the puzzle is to fill the remaining empty squares with numbers from 1 to 9 such that: 
+
+* no number occurs twice in a row, 
+* no number occurs twice in a column, and, 
+* no number occurs twice in a box. 
+
+A sudoku puzzle can be solved by means of linear programming. To do so, we construct an assignment LP. To start, we introduce a decision variable ``fill(X,Y,N)`` for every pair of row and column indices X,Y and every number N. The intent of these variables, which we will bound between 0 and 1, will be to indicate where the number N is filled in the empty square X,Y. E.g., having ``fill(9,7,1) = 1`` in our solution represents that the square in the ninth row and seventh column receives the number 1.
+
+Our first job is to ensure that exactly one number can be assigned to a square, hence our first LP constraint is  
+
+.. math:: 
+    \forall X,Y \in \{1,\ldots,9\}: \sum_{N \in \{1,\ldots,9\}} \mathtt{fill(X, Y, N)} = 1 \;. 
+
+This ensures that the solution is a valid assignment. Next, we want to satisfy the sudoku constraints. Hence we add
 
 
-Our task is to find a way to route as much goods from the source to the sink as the network allows. One popular way to do this is using a linear program. Let us briefly describe what an LP for the max flow problem could look like. The first step to a linear programming model of the flow problem is to assign a continuous variable to each edge in the network. Our intention is that in the LP solution, these variables will hold the amount of goods flowing on the edges. In order to get an admissible flow, however, we need to constrain these variables. Clearly, the amount of goods flowing on an edge must not exceed its capacity. This is a linear constraint on the flow variables. Another linear constraint is that a flow must be nonnegative (by convention). Finally, we have to need to introduce flow conservation: the amount of goods flowing in each node must be equal to the amount of goods flowing out (except for the source and sink nodes). The LP we end up with is as follows:
+.. math:: 
+    \forall Y,N \in \{1,\ldots,9\}: \sum_{X \in \{1,\ldots,9\}} \mathtt{fill(X, Y, N)} = 1
 
-.. math::
-   \operatorname*{maximize}\limits_{{\bf f} \in \mathbb{R}^{|E|}}  &\quad \sum_{v: (s,v)\in E} f_{sv} \\
-             \text{s.t.} &\quad \forall v\in V\setminus \{s, t\} : \sum\nolimits_{u: (u,v) \in E} f_{uv} = \sum\nolimits_{u: (v,u) \in E} f_{vu} \;,\\
-             & \quad \forall e \in E: \quad 0 \leq f_e \leq c_e\;.
+to require that each number occurs exactly once in a row; similarly,
 
-To add structure to this LP, let us make the following definitions:
+.. math:: 
+    \forall X,N \in \{1,\ldots,9\}: \sum_{Y \in \{1,\ldots,9\}} \mathtt{fill(X, Y, N)} = 1  
 
-.. math::
-       \operatorname*{inFlow}(X) := \sum\nolimits_{u: (u,X) \in E} f_{uX}\; ,\\
-       \operatorname*{outFlow}(X) := \sum\nolimits_{u: (X,u) \in E} f_{Xu}\;.\\
+ensures that numbers occur exactly once in a column. The final requirement, that no number occurs twice in a box, is expressed as 
 
+.. math:: 
+    \forall B \in \mathtt{Boxes},N \in \{1,\ldots,9\}: \sum_{(X,Y) \in B} \mathtt{fill(X, Y, N)} = 1\; .  
 
-We thus end up with:
+Here, B is understood to be the set of indices of the squares that are in the respective box. E.g., {(4,4), (4,5), (4,6), (5,4), (5,5), (5,6), (6,4), (6,5), (6,6)} is the box in the center of the grid.  
+The final constraint is that the ``fill`` variables must be nonnegative
 
-.. math::
-   \operatorname*{maximize}\limits_{{\bf f} \in \mathbb{R}^{|E|}}  &\quad \sum_{v: (s,v)\in E} f_{sv} \\
-             \text{s.t.} &\quad \forall v\in V\setminus \{s, t\} : \operatorname*{inFlow}(v) = \operatorname*{outFlow}(v)\;,\\
-             & \quad \forall e \in E: \quad 0 \leq f_e \leq c_e\;.
+.. math:: 
+    \forall X,Y,N \in \{1,\ldots,9\}: \mathtt{fill(X,Y,N)} \geq 0\;.
 
+The conjunction of all these constraints forms a linear program whose feasible set happens to be the convex hull of integral vectors. Thus if we were to solve it via the Simplex method, we would obtain a solution in which the ``fill`` variables have values of either 0 or 1, so we can read off the assignment. 
 
-We will now show how to use reloop's RLP language to construct and solve this model.
+We will now show how to use reloop’s RLP language to construct and solve this model.
 
 
-A Relational Linear Program for Maximum Flow: Modelling in Operator Notation
-****************************************************************************
-(The running code for this example can be found in :ref:`maxflow_operator.py<maxflowOperator>`.)
+A Relational Linear Program for Sudoku
+**************************************
+(The running code for this example can be found in :ref:`sudoku.py<sudoku>`.)
 
-The start of your file will import reloop’s functions for use in your code::
+The start of the file we import the necessary reloop components::
 
-    from reloop.languages.rlp2 import *    
+    from reloop.languages.rlp2 import *
+    from reloop.languages.rlp2.grounding.block import BlockGrounder
+    from reloop.languages.rlp2.logkb import PyDatalogLogKb
+    from reloop.solvers.lpsolver import CvxoptSolver
+    
 
-A variable called model (although its name is not important) is created by instantiate RlpProblem. It has four parameters, the first being the
+Let us shortly explain what these are. A variable called model (although its name is not important) is created by instantiate RlpProblem. It has four parameters, the first being the
 arbitrary name of this problem (as a string), and the second parameter being either LpMinimize or LpMaximize depending on the type of LP we are trying to solve.
 With the third parameter one can specify a LogKB, with the third one an LP-Solver. ::
 
