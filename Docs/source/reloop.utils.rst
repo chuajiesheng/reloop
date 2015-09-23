@@ -1,17 +1,11 @@
-reloop.utils package
+Saucywrapper
 ====================
-
-Subpackages
------------
 
 .. toctree::
 
     reloop.utils.io
 
-Submodules
-----------
-
-reloop.utils.saucy module
+Saucy
 -------------------------
 
 .. automodule:: reloop.utils.saucy
@@ -19,7 +13,7 @@ reloop.utils.saucy module
     :undoc-members:
     :show-inheritance:
 
-reloop.utils.saucywrapper module
+Saucywrapper
 --------------------------------
 
 .. automodule:: reloop.utils.saucywrapper
@@ -27,11 +21,3 @@ reloop.utils.saucywrapper module
     :undoc-members:
     :show-inheritance:
 
-
-Module contents
----------------
-
-.. automodule:: reloop.utils
-    :members:
-    :undoc-members:
-    :show-inheritance:

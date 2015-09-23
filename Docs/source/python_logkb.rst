@@ -1,8 +1,7 @@
-LogKB
-****************
+Logical Knowledge Base
+----------------------------------
 
-Documentation
-=======================
 .. automodule:: reloop.languages.rlp2.logkb
-	.. autoclass:: LogKb
-		:members:
+    :members:
+    :undoc-members:
+    :show-inheritance:

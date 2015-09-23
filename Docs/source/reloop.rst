@@ -1,7 +1,7 @@
-reloop package
+Reloop
 ==============
 
-Subpackages
+References
 -----------
 
 .. toctree::
@@ -9,11 +9,3 @@ Subpackages
     reloop.languages
     reloop.solvers
     reloop.utils
-
-Module contents
----------------
-
-.. automodule:: reloop
-    :members:
-    :undoc-members:
-    :show-inheritance:

@@ -16,7 +16,8 @@
    installation
    tutorial 
    examples
-   code
+   quick_reference
+   reference
    bibliography
    download
    contact

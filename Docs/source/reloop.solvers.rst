@@ -1,10 +1,7 @@
-reloop.solvers package
+Solvers
 ======================
 
-Submodules
-----------
-
-reloop.solvers.llp module
+Linear Program
 -------------------------
 
 .. automodule:: reloop.solvers.llp
@@ -12,19 +9,10 @@ reloop.solvers.llp module
     :undoc-members:
     :show-inheritance:
 
-reloop.solvers.lpsolver module
+LP Solver
 ------------------------------
 
 .. automodule:: reloop.solvers.lpsolver
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: reloop.solvers
     :members:
     :undoc-members:
     :show-inheritance:

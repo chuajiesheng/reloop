@@ -1,17 +1,11 @@
-reloop.languages package
+Languages
 ========================
-
-Subpackages
------------
 
 .. toctree::
 
     reloop.languages.rlp2
 
-Submodules
-----------
-
-reloop.languages.maxflow module
+Maxflow
 -------------------------------
 
 .. automodule:: reloop.languages.maxflow
@@ -19,7 +13,7 @@ reloop.languages.maxflow module
     :undoc-members:
     :show-inheritance:
 
-reloop.languages.reloop module
+Reloop
 ------------------------------
 
 .. automodule:: reloop.languages.reloop
@@ -27,19 +21,10 @@ reloop.languages.reloop module
     :undoc-members:
     :show-inheritance:
 
-reloop.languages.rlp module
+RLP
 ---------------------------
 
 .. automodule:: reloop.languages.rlp
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: reloop.languages
     :members:
     :undoc-members:
     :show-inheritance:

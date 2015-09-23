@@ -1,17 +1,13 @@
-reloop.languages.rlp2 package
+Relational Linear Programming
 =============================
-
-Subpackages
------------
 
 .. toctree::
 
     reloop.languages.rlp2.grounding
 
-Submodules
-----------
 
-reloop.languages.rlp2.logkb module
+
+Logical Knowledge Base
 ----------------------------------
 
 .. automodule:: reloop.languages.rlp2.logkb
@@ -19,7 +15,7 @@ reloop.languages.rlp2.logkb module
     :undoc-members:
     :show-inheritance:
 
-reloop.languages.rlp2.rlp module
+Relational Linear Programming
 --------------------------------
 
 .. automodule:: reloop.languages.rlp2.rlp
@@ -27,19 +23,10 @@ reloop.languages.rlp2.rlp module
     :undoc-members:
     :show-inheritance:
 
-reloop.languages.rlp2.visitor module
+Visitor
 ------------------------------------
 
 .. automodule:: reloop.languages.rlp2.visitor
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: reloop.languages.rlp2
     :members:
     :undoc-members:
     :show-inheritance:

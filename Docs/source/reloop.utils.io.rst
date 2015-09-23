@@ -1,10 +1,7 @@
-reloop.utils.io package
+IO
 =======================
 
-Submodules
-----------
-
-reloop.utils.io.glpkwrap module
+Glpk Wrapper
 -------------------------------
 
 .. automodule:: reloop.utils.io.glpkwrap
@@ -12,19 +9,10 @@ reloop.utils.io.glpkwrap module
     :undoc-members:
     :show-inheritance:
 
-reloop.utils.io.read module
+Read
 ---------------------------
 
 .. automodule:: reloop.utils.io.read
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: reloop.utils.io
     :members:
     :undoc-members:
     :show-inheritance:
