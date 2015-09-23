@@ -10,7 +10,7 @@ Relational Linear Programming
 Logical Knowledge Base
 ----------------------------------
 
-.. automodule:: reloop.languages.rlp2.logkb
+.. automodule:: reloop.languages.rlp.logkb
     :members:
     :undoc-members:
     :show-inheritance:
@@ -19,7 +19,7 @@ Logical Knowledge Base
 Relational Linear Programming
 --------------------------------
 
-.. automodule:: reloop.languages.rlp2.rlp
+.. automodule:: reloop.languages.rlp.rlp
     :members:
     :undoc-members:
     :show-inheritance:
@@ -28,7 +28,7 @@ Relational Linear Programming
 Visitor
 ------------------------------------
 
-.. automodule:: reloop.languages.rlp2.visitor
+.. automodule:: reloop.languages.rlp.visitor
     :members:
     :undoc-members:
     :show-inheritance:

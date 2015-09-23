@@ -3,7 +3,7 @@
 Logical Knowledge Base
 ----------------------------------
 
-.. automodule:: reloop.languages.rlp2.logkb
+.. automodule:: reloop.languages.rlp.logkb
     :members:
     :undoc-members:
     :show-inheritance:
