@@ -72,7 +72,7 @@ class LogKb:
         """
         Queries the logical knowledge base for a given predicate, which contains only constants.
         For Example : cost('a','b')
-            returns [(50,)}
+        returns [(50,)}
 
         Where cost('a','b') is generated from the given predicate, which contains the predicate name and the constants.
 
@@ -293,7 +293,8 @@ class PostgreSQLKb(LogKb):
     def ask_predicate(self, predicate):
         """
         Queries a value from the database for a given predicate.
-        The predicate only has constants as symbols and the value per definition has to be in the last column of the table.
+        The predicate only has constants as symbols and the value per definition has to be in the last column \
+        of the table.
         Such that a query "cost('a','b') implicitly queries for SELECT z FROM cost WHERE x = 'a' AND y = 'b'
         with z here being the third column of the table.
 
@@ -317,7 +318,7 @@ class PostgreSQLKb(LogKb):
 
         :param predicates: The given predicates. E.g. : edge(X,'a'), edge ('a','c')
         :type predicate: List(BooleanPredicate)
-        :param and_clause_added: Indicates if there was been an and-clause beforehand to correctly concantenate
+        :param and_clause_added: Indicates if there was been an and-clause beforehand to correctly concatenate \
         the querystring
         :type and_clause_added: Boolean
         :return: The SQL conjunctions for the given predicates
@@ -344,7 +345,7 @@ class PostgreSQLKb(LogKb):
         :type query_symbol: List(SubSymbol)
         :param predicates: The predicates, where the symbols might occur (Values)
         :type predicates: List(BooleanPredicate)
-        :return: A dictionary, which maps from the given query_symbols to the corresponding predicates in
+        :return: A dictionary, which maps from the given query_symbols to the corresponding predicates in \
         which the symbols occur.
         """
         column_for_symbols = {key: [] for key in query_symbol}
