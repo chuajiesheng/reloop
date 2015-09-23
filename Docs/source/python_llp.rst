@@ -10,3 +10,4 @@ Documentation
 
 .. automodule:: reloop.solvers.llp
     :members:
+    :noindex:

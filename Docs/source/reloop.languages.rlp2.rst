@@ -14,6 +14,7 @@ Logical Knowledge Base
     :members:
     :undoc-members:
     :show-inheritance:
+    :noindex:
 
 Relational Linear Programming
 --------------------------------
@@ -22,6 +23,7 @@ Relational Linear Programming
     :members:
     :undoc-members:
     :show-inheritance:
+    :noindex:
 
 Visitor
 ------------------------------------
@@ -30,3 +32,4 @@ Visitor
     :members:
     :undoc-members:
     :show-inheritance:
+    :noindex:

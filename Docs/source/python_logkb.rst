@@ -5,3 +5,4 @@ Logical Knowledge Base
     :members:
     :undoc-members:
     :show-inheritance:
+    :noindex:

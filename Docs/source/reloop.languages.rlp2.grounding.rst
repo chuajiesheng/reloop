@@ -8,6 +8,7 @@ Block Grounder
     :members:
     :undoc-members:
     :show-inheritance:
+    :noindex:
 
 Grounder(Interface)
 -----------------------------------------------
@@ -16,6 +17,7 @@ Grounder(Interface)
     :members:
     :undoc-members:
     :show-inheritance:
+    :noindex:
 
 Recursive Grounder
 ------------------------------------------------
@@ -24,3 +26,5 @@ Recursive Grounder
     :members:
     :undoc-members:
     :show-inheritance:
+    :noindex:
+    
