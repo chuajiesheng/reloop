@@ -144,37 +144,38 @@ class CvxoptSolver(LpSolver):
 
 
 class PicosSolver(LpSolver):
-    """
-        Initializes a solver object, which functions as a wrapper to PICOS with a possibility of lifting beforehand.
-        The PICOS interface is useful as it provides an interface to a number of other optimization packages such as 
-        Gurobi. 
-        
-        At instantiation, the constructor can pass named arguments through to the solver interface and the lifting code.
-        Solver arguments are prefixed with "\\solver_", lifting arguments are prefixed with "\\lifted_". For example,
-
-        PicosSolver(solver_solver = "gurobi", lifted = True, lifted_orbits = True)            .
-
-        This will run and problem.solve(solver = "gurobi") and reloop.utils.saucy.liftAbc(..., orbits = True). For 
-        the meaning of these options, the user is referred to their respective documentation. There are no limitations on which options
-        are passed through. 
-        
-        Note that lifting is only run if lifted = True is specified, hence the lifted_orbits in 
-
-        PicosSolver(solver_solver = "gurobi", lifted_orbits = True) 
-  
-        will have no effect. 
-
-        Note: "cvxopt" is the default for PICOS.
-
-        :param \**kwargs: See below. 
-        :type kwargs: dict
-
-        :Keyword Arguments:
-            * lifted = False: enables or disables lifting via equitable partitions. 
-            * anything prefixed with \\lifted_ is passed to reloop.utils.saucy.liftAbc
-            * anything prefixed with \\solver_ is passed to problem.solve
-    """
+    
     def __init__(self, **kwargs):
+        """
+            Initializes a solver object, which functions as a wrapper to PICOS with a possibility of lifting beforehand.
+            The PICOS interface is useful as it provides an interface to a number of other optimization packages such as
+            Gurobi.
+
+            At instantiation, the constructor can pass named arguments through to the solver interface and the lifting code.
+            Solver arguments are prefixed with "\\solver_", lifting arguments are prefixed with "\\lifted_". For example,
+
+            PicosSolver(solver_solver = "gurobi", lifted = True, lifted_orbits = True)            .
+
+            This will run and problem.solve(solver = "gurobi") and reloop.utils.saucy.liftAbc(..., orbits = True). For
+            the meaning of these options, the user is referred to their respective documentation. There are no limitations on which options
+            are passed through.
+
+            Note that lifting is only run if lifted = True is specified, hence the lifted_orbits in
+
+            PicosSolver(solver_solver = "gurobi", lifted_orbits = True)
+
+            will have no effect.
+
+            Note: "cvxopt" is the default for PICOS.
+
+            :param \**kwargs: See below.
+            :type kwargs: dict
+
+            :Keyword Arguments:
+                * lifted = False: enables or disables lifting via equitable partitions.
+                * anything prefixed with \\lifted_ is passed to reloop.utils.saucy.liftAbc
+                * anything prefixed with \\solver_ is passed to problem.solve
+        """
         # defaults
         self._lifted = False
         # solver defaults
