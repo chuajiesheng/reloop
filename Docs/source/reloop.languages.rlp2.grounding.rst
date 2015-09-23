@@ -1,10 +1,7 @@
-reloop.languages.rlp2.grounding package
+Grounding
 =======================================
 
-Submodules
-----------
-
-reloop.languages.rlp2.grounding.block module
+Block Grounder
 --------------------------------------------
 
 .. automodule:: reloop.languages.rlp2.grounding.block
@@ -12,7 +9,7 @@ reloop.languages.rlp2.grounding.block module
     :undoc-members:
     :show-inheritance:
 
-reloop.languages.rlp2.grounding.grounder module
+Grounder(Interface)
 -----------------------------------------------
 
 .. automodule:: reloop.languages.rlp2.grounding.grounder
@@ -20,19 +17,10 @@ reloop.languages.rlp2.grounding.grounder module
     :undoc-members:
     :show-inheritance:
 
-reloop.languages.rlp2.grounding.recursive module
+Recursive Grounder
 ------------------------------------------------
 
 .. automodule:: reloop.languages.rlp2.grounding.recursive
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: reloop.languages.rlp2.grounding
     :members:
     :undoc-members:
     :show-inheritance:
