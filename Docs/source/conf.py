@@ -57,7 +57,7 @@ source_suffix = '.rst'
 #source_encoding = 'utf-8-sig'
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = 'introduction'
 
 # General information about the project.
 project = u'reloop'
@@ -143,7 +143,9 @@ html_theme_options = {
     # Note the "1" or "True" value above as the third argument to indicate
     # an arbitrary url.
     'navbar_links': [
-         ("Home","index"),
+         ("Reloop","index"),
+         ("Introduction", "introduction"),
+         ("Documentation", "documentation"),
          ("Download","download")
     #    ("Examples", "examples"),
     #    ("Link", "http://example.com", True),
@@ -177,7 +179,7 @@ html_theme_options = {
 
     # Fix navigation bar to top of page?
     # Values: "true" (default) or "false"
-    'navbar_fixed_top': "true",
+    'navbar_fixed_top': "false",
 
     # Location of link to source.
     # Options are "nav" (default), "footer" or anything else to exclude.

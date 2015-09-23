@@ -1,51 +1,3 @@
-img.intro-logo {
-    height: 45px;
-    margin-top: -13px;
-}
-@media (max-width: 767px) {
-    .navbar-ls8-title {
-        margin-top: 15px;
-        margin-bottom: 0px;
-    }
-}
-div.math {
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-dl.method {
-   background-color: #eee;
-   padding: 5px;
-}
-
-
-dl.function {
-   background-color: #eee;
-}
-
-dl.function > dt {
-   border-bottom: 2px solid #cbc;
-   padding: 3px 3px 0px 8px;
-}
-
-dl.class > dt {
-   border-bottom: 2px solid #cbc;
-   background-color: rgb(224,234, 204);
-   padding: 3px 3px 0px 8px;
-}
-
-dl.class > dd, dl.method > dd, dl.function > dd {
-   margin-left: 15px;
-}
-
-code {
-   color: #649600;
-}
-
-
-/* reloop new */
-
 
 a, a:hover, a:visited, a:focus {
     text-decoration: none;
@@ -55,7 +7,7 @@ a, a:hover, a:visited, a:focus {
     color: #d12f58;
     font-size: 30px;
     margin: 30px 0px 60px 0px;
-
+        
 }
 
 .wrapper {
@@ -99,8 +51,8 @@ nav ul :not(:first-child) a:hover {
     background-color: #F2F2F2 !important;
 }
 
-nav ul:first-of-type :first-child a,
-mav ul:first-of-type :first-child a:hover {
+nav ul:first-of-type :first-child a, 
+mav ul:first-of-type :first-child a:hover { 
     font-size: 18px;
     background-color:  #ECECEC !important;
 }
@@ -116,13 +68,13 @@ nav ul {
     font-size: 20px;
     border-radius: 0px;
 }
-.btn-outline-inverse:hover,
-.btn-outline-inverse:focus {
+.btn-outline-inverse:hover, 
+.btn-outline-inverse:focus { 
     background-color: #fff;
     color: #B9DC31;
 }
 
-.feature-dark-green {
+.feature-dark-green { 
     background-color: #98BA13;
     padding: 10px 10px;
 }
@@ -182,6 +134,7 @@ pre {
     padding-bottom: 30px;
 }
 
-.feature-light-gray {
+.feature-light-gray { 
     background-color: #ECECEC;
-)
+) 
+    
