@@ -77,9 +77,9 @@ A Relational Linear Program for Sudoku
 
 We start by importing the necessary reloop components::
 
-    from reloop.languages.rlp2 import *
-    from reloop.languages.rlp2.grounding.block import BlockGrounder
-    from reloop.languages.rlp2.logkb import PyDatalogLogKb
+    from reloop.languages.rlp import *
+    from reloop.languages.rlp.grounding.block import BlockGrounder
+    from reloop.languages.rlp.logkb import PyDatalogLogKb
     from reloop.solvers.lpsolver import CvxoptSolver
     
 
