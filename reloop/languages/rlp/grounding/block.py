@@ -309,7 +309,7 @@ def variable_name_for_expression(expr):
 
 def constraint_str(constraint):
     """
-     Generates a unique identifier for a given constraint
+    Generates a unique identifier for a given constraint
     :param constraint: The constraint for which the identifier is generated.
     :return: A str unique to the given expression (Memory Address)
     """
