@@ -46,6 +46,7 @@ pyDatalog.load("""
 
 logkb = PyDatalogLogKb()
 grounder = BlockGrounder(logkb)
+# Note: CVXOPT needs to be compiled with glpk support. See the CVXOPT documentation.
 solver = CvxoptSolver(solver_solver='glpk')
 
 model = RlpProblem("play sudoku for fun and profit",
