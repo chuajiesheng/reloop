@@ -5,9 +5,6 @@ Languages
 
     reloop.languages.rlp2
 
-Submodules
-----------
-
 Maxflow
 -------------------------------
 
