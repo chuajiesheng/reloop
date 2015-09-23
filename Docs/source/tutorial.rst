@@ -83,7 +83,10 @@ The start of the file we import the necessary reloop components::
     from reloop.solvers.lpsolver import CvxoptSolver
     
 
-Let us shortly explain what these are. A variable called model (although its name is not important) is created by instantiate RlpProblem. It has four parameters, the first being the
+Let us shortly explain what these are. In order to create an RLP model, we need three objects -- a logical knowledge base interface, a solver and a grounder. The :ref:`logkb interface<python_logkb>` provides RLP with means to query the relational database/reasoning engine where our data is stored. Currently, we support 
+
+
+ It has four parameters, the first being the
 arbitrary name of this problem (as a string), and the second parameter being either LpMinimize or LpMaximize depending on the type of LP we are trying to solve.
 With the third parameter one can specify a LogKB, with the third one an LP-Solver. ::
 
