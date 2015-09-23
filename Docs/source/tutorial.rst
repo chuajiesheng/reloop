@@ -258,7 +258,9 @@ This produces the following output: ::
 
 The complete running example can be found :ref:`here<sudoku>`.
 
-
+Further Examples
+****************
+Further examples can be found at :ref:`the examples section<examples>`.
 Equitable Partitions and Lifted Linear Programming
 --------------------------------------------------
 
