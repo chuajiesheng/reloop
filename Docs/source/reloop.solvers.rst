@@ -1,14 +1,6 @@
 Solvers
 ======================
 
-Linear Program
--------------------------
-
-.. automodule:: reloop.solvers.llp
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 LP Solver
 ------------------------------
 
