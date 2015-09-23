@@ -12,15 +12,12 @@
    :hidden:
    :maxdepth: 1
 
-   introduction
    installation
    tutorial 
    examples
    quick_reference
    reference
    bibliography
-   download
-   contact
 
 |br| |br|
 

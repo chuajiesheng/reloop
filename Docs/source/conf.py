@@ -57,7 +57,7 @@ source_suffix = '.rst'
 #source_encoding = 'utf-8-sig'
 
 # The master toctree document.
-master_doc = 'introduction'
+master_doc = 'documentation'
 
 # General information about the project.
 project = u'reloop'
@@ -143,10 +143,8 @@ html_theme_options = {
     # Note the "1" or "True" value above as the third argument to indicate
     # an arbitrary url.
     'navbar_links': [
-         ("Reloop","index"),
-         ("Introduction", "introduction"),
-         ("Documentation", "documentation"),
-         ("Download","download")
+        ("Reloop", "index"),
+        ("Download","download")
     #    ("Examples", "examples"),
     #    ("Link", "http://example.com", True),
     ],
