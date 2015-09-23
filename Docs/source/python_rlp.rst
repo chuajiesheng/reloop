@@ -5,3 +5,4 @@ Relational Linear Programming
     :members:
     :undoc-members:
     :show-inheritance:
+    :noindex:

@@ -8,6 +8,7 @@ Glpk Wrapper
     :members:
     :undoc-members:
     :show-inheritance:
+    :noindex:
 
 Read
 ---------------------------
@@ -16,3 +17,4 @@ Read
     :members:
     :undoc-members:
     :show-inheritance:
+    :noindex:

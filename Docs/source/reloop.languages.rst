@@ -12,6 +12,7 @@ Maxflow
     :members:
     :undoc-members:
     :show-inheritance:
+    :noindex:
 
 Reloop
 ------------------------------
@@ -20,6 +21,7 @@ Reloop
     :members:
     :undoc-members:
     :show-inheritance:
+    :noindex:
 
 RLP
 ---------------------------
@@ -28,3 +30,5 @@ RLP
     :members:
     :undoc-members:
     :show-inheritance:
+    :noindex:
+    

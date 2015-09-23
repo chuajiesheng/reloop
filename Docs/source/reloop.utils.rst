@@ -12,7 +12,8 @@ Saucy
     :members:
     :undoc-members:
     :show-inheritance:
-
+    :noindex:
+    
 Saucywrapper
 --------------------------------
 
@@ -20,4 +21,4 @@ Saucywrapper
     :members:
     :undoc-members:
     :show-inheritance:
-
+    :noindex:

@@ -148,7 +148,7 @@ class PyDatalogLogKb(LogKb):
         """
         Recursively builds the logical_query string from the given logical logical_query,by evaluating
 
-        :param logical_query: Type changes depending on the recursive depth and the depth of the expression.
+        :param logical_query: Type changes depending on the recursive depth and the depth of the expression. \
                               The logical query, needed for the pyDataLog program string.
         :type logical_query: Boolean, BooleanPredicate
         :return: The complete Body for loading the program into pyDataLog.
@@ -522,7 +522,7 @@ class ProbLogKB(LogKb):
         """
         Recursively builds the logical_query string from the given logical logical_query,by evaluating
         :param logical_query: Type changes depending on the recursive depth and the depth of the expression.
-                              The logical query, needed for the pyDataLog program string.
+        The logical query, needed for the pyDataLog program string.
         :type logical_query: Boolean, BooleanPredicate
         :return: The complete Body for loading the program into pyDataLog.
         """
