@@ -46,6 +46,7 @@ pyDatalog.load("""
 
 logkb = PyDatalogLogKb()
 grounder = BlockGrounder(logkb)
+# Note: CVXOPT needs to be compiled with glpk support. See the CVXOPT documentation.
 solver = CvxoptSolver(solver_solver='glpk')
 
 model = RlpProblem("play sudoku for fun and profit",
@@ -58,10 +59,11 @@ The predicate fill(I,J,X) indicates the assignment of cell I,J with number X.
 """
 
 num = boolean_predicate("num", 1)
-fill = numeric_predicate("fill", 3)
-initial = boolean_predicate("initial", 3)
-box = boolean_predicate("box", 4)
 boxind = boolean_predicate("boxind", 1)
+box = boolean_predicate("box", 4)
+initial = boolean_predicate("initial", 3)
+fill = numeric_predicate("fill", 3)
+
 
 model.add_reloop_variable(fill)
 
@@ -80,11 +82,11 @@ model += ForAll([X, U, V], num(X) & boxind(U) & boxind(V), RlpSum([I, J], box(I,
 # nonnegativity
 model += ForAll([I, J, X], num(X) & num(I) & num(J), fill(I, J, X) | ge | 0)
 
-# objective
-model += RlpSum([X, ], num(X), fill(1, 1, X))
-
 # initial assignment
 model += ForAll([I, J, X], initial(I, J, X), fill(I, J, X) | eq | 1)
+
+# objective
+model += RlpSum([X, ], num(X), fill(1, 1, X))
 
 model.solve()
 
