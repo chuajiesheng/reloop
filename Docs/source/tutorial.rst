@@ -213,8 +213,8 @@ Second, we add the rules. In our case we have only one::
 
 This rule defines the ``box`` predicate, which tells us if a square belongs to a box by checking if its coordinates belong to the range of the box.
 
-Solving Instances of Relational Flow LP
-***************************************
+Solving Sudoku
+**************
 
 Having created a logKB, we are ready to solve the linear program. We do so and print the output::
      
