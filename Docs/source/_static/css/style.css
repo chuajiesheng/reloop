@@ -50,8 +50,8 @@ nav ul :not(:first-child) a:hover {
     background-color: #F2F2F2 !important;
 }
 
-nav ul:first-of-type :first-child a, 
-mav ul:first-of-type :first-child a:hover { 
+nav ul.nav:first-of-type >:first-child a, 
+nav ul.nav:first-of-type >:first-child a:hover { 
     font-size: 18px;
     background-color:  #ECECEC !important;
 }
