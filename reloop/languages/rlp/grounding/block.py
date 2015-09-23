@@ -1,5 +1,5 @@
 from grounder import Grounder
-from reloop.languages.rlp2 import *
+from reloop.languages.rlp import *
 import scipy as sp
 import scipy.sparse
 import numpy as np
@@ -13,7 +13,7 @@ log = logging.getLogger(__name__)
 
 class BlockGrounder(Grounder):
     """
-    Provides the tools to ground a given RLP (Objective and Contraints) into their respective lp matrices by using
+    Provides the tools to ground a given rlp (Objective and Contraints) into their respective lp matrices by using
     grounding each contraint and objective into a 'block' of the matrix and then building the whole lp matrix.
     """
 
@@ -32,8 +32,8 @@ class BlockGrounder(Grounder):
     def ground(self, rlpProblem):
         """
         Resets the status of the row and column dictionaries of the BlockGrounder instance and
-        grounds the RLP by grounding the objective and each constraint.
-        :param rlpProblem: The instance of the given RLP
+        grounds the rlp by grounding the objective and each constraint.
+        :param rlpProblem: The instance of the given rlp
         :type rlpProblem: rlpProblem
         """
 
@@ -123,7 +123,7 @@ class BlockGrounder(Grounder):
 
     def objective_to_matrix(self, objective):
         """
-        Grounds the objective of the given RLP into the matrix
+        Grounds the objective of the given rlp into the matrix
         :param objective: The objective of the LP from which the corresponding block is generated from.
         """
         var_blocks = self.expr_to_matrix(objective, OrderedSet(), True, EmptySet())

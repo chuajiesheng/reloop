@@ -1,5 +1,5 @@
 import maxflow_example
-from reloop.languages.rlp2.grounding.block import *
+from reloop.languages.rlp.grounding.block import *
 from reloop.solvers.lpsolver import CvxoptSolver
 
 '''
@@ -22,7 +22,7 @@ with the prefered arguments. For more information on the available parameters se
 We recommend using the Block Grounding as it is more efficient especially grounding problems with huge amounts of data.
 For further information on the different logkbs please see the corresponding examples.
 
-After instantiating the objects one only has to create a model to solve the RLP.
+After instantiating the objects one only has to create a model to solve the rlp.
 
 model = ...
 '''

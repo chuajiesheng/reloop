@@ -1,7 +1,7 @@
 from rlp import *
 import logging
 from ordered_set import OrderedSet
-from reloop.languages.rlp2.rlp import SubSymbol
+from reloop.languages.rlp.rlp import SubSymbol
 
 # Try to import at least one knowledge base to guarantee the functionality of Reloop
 try:

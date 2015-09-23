@@ -1,5 +1,5 @@
-from reloop.languages.rlp2.logkb import *
-from reloop.languages.rlp2.grounding.block import BlockGrounder
+from reloop.languages.rlp.logkb import *
+from reloop.languages.rlp.grounding.block import BlockGrounder
 from reloop.solvers.lpsolver import *
 import maxflow_example
 import getpass
@@ -28,7 +28,7 @@ with the prefered arguments. For more information on the available parameters se
 We recommend using the Block Grounding as it is more efficient especially grounding problems with huge amounts of data.
 For further information on the different logkbs please see the corresponding examples.
 
-After instantiating the objects one only has to create a model to solve the RLP.
+After instantiating the objects one only has to create a model to solve the rlp.
 
 model = ...
 

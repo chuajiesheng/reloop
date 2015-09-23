@@ -1,4 +1,4 @@
-from reloop.languages.rlp2 import *
+from reloop.languages.rlp import *
 import time
 import logging
 import sys
