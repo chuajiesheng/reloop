@@ -44,7 +44,6 @@ nav li {
 
 nav li a, nav li a:hover, nav li a:visited {
     color: rgba(209, 47, 88, 0.74);
-    padding: 15px 15px;
 }
 
 nav ul :not(:first-child) a:hover {
