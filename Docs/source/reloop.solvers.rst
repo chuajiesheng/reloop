@@ -8,5 +8,7 @@ LP Solver
 
 .. automodule:: reloop.solvers.lpsolver
     :members:
+    :special-members: __init__
     :undoc-members:
     :show-inheritance:
+    :noindex:
