@@ -69,7 +69,7 @@ class CvxoptSolver(LpSolver):
     """
         Initializes a solver object, which functions as a wrapper to CVXOPT with a possibility of lifting beforehand.
         At instantiation, the constructor can pass named arguments through to the solver interface and the lifting code.
-        Solver arguments are prefixed with "solver_", lifting arguments are prefixed with "lifted_". For example,
+        Solver arguments are prefixed with "\\solver_", lifting arguments are prefixed with "\\lifted_". For example,
 
         CvxoptSolver(solver_solver = "glpk", lifted = True, lifted_orbits = True)            .
 
@@ -150,7 +150,7 @@ class PicosSolver(LpSolver):
         Gurobi. 
         
         At instantiation, the constructor can pass named arguments through to the solver interface and the lifting code.
-        Solver arguments are prefixed with "solver_", lifting arguments are prefixed with "lifted_". For example,
+        Solver arguments are prefixed with "\\solver_", lifting arguments are prefixed with "\\lifted_". For example,
 
         PicosSolver(solver_solver = "gurobi", lifted = True, lifted_orbits = True)            .
 
@@ -171,8 +171,8 @@ class PicosSolver(LpSolver):
 
         :Keyword Arguments:
             * lifted = False: enables or disables lifting via equitable partitions. 
-            * anything prefixed with \\lifted\\_ is passed to reloop.utils.saucy.liftAbc
-            * anything prefixed with \\solver\\_ is passed to problem.solve
+            * anything prefixed with \\lifted_ is passed to reloop.utils.saucy.liftAbc
+            * anything prefixed with \\solver_ is passed to problem.solve
     """
     def __init__(self, **kwargs):
         # defaults
