@@ -4,7 +4,7 @@ from sympy.core.function import expand
 from sympy.core import Mul
 from sympy.core import Symbol
 
-from reloop.languages.rlp2 import *
+from reloop.languages.rlp import *
 import abc
 
 

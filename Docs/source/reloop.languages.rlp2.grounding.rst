@@ -6,7 +6,7 @@ Grounding
 Block Grounder
 --------------------------------------------
 
-.. automodule:: reloop.languages.rlp2.grounding.block
+.. automodule:: reloop.languages.rlp.grounding.block
     :members:
     :undoc-members:
     :show-inheritance:
@@ -15,7 +15,7 @@ Block Grounder
 Grounder(Interface)
 -----------------------------------------------
 
-.. automodule:: reloop.languages.rlp2.grounding.grounder
+.. automodule:: reloop.languages.rlp.grounding.grounder
     :members:
     :undoc-members:
     :show-inheritance:
@@ -24,7 +24,7 @@ Grounder(Interface)
 Recursive Grounder
 ------------------------------------------------
 
-.. automodule:: reloop.languages.rlp2.grounding.recursive
+.. automodule:: reloop.languages.rlp.grounding.recursive
     :members:
     :undoc-members:
     :show-inheritance:

@@ -1,6 +1,6 @@
 from grounder import Grounder
-from reloop.languages.rlp2.visitor import ExpressionGrounder
-from reloop.languages.rlp2.rlp import RlpPredicate
+from reloop.languages.rlp.visitor import ExpressionGrounder
+from reloop.languages.rlp.rlp import RlpPredicate
 from sympy.core.relational import Rel, Ge, Le, Eq
 from sympy.core import expand, Add, Mul, Pow, Number, Expr
 from sympy.logic.boolalg import *

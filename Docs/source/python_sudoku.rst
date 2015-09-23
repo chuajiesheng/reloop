@@ -5,4 +5,4 @@
 sudoku.py
 ===================
 
-.. literalinclude:: ../../examples/rlp2/sudoku.py
+.. literalinclude:: ../../examples/RLP/sudoku.py

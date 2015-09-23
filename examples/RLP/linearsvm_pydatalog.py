@@ -1,5 +1,5 @@
-from reloop.languages.rlp2.grounding.block import*
-from reloop.languages.rlp2.grounding.recursive import*
+from reloop.languages.rlp.grounding.block import*
+from reloop.languages.rlp.grounding.recursive import*
 
 
 @pyDatalog.predicate()

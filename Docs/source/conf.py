@@ -21,10 +21,10 @@ import sphinx_bootstrap_theme
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath('.'))
 sys.path.append(os.path.abspath('../../examples'))
-sys.path.append(os.path.abspath('../../examples/RLP/'))
+sys.path.append(os.path.abspath('../../examples/rlp/'))
 #sys.path.append(os.path.abspath('../../reloop/solvers/llp.py')) #this isn't relevant anymore
 # sys.path.append(os.path.abspath('../../reloop'))
-sys.path.append(os.path.abspath('../../reloop/languages/rlp2'))
+sys.path.append(os.path.abspath('../../reloop/languages/rlp'))
 sys.path.append(os.path.abspath('../../reloop/utils'))
 sys.path.append(os.path.abspath('../../reloop/utils/saucy'))
 sys.path.append(os.path.abspath('../../reloop/utils/io'))

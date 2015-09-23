@@ -18,3 +18,8 @@ Read
     :undoc-members:
     :show-inheritance:
     :noindex:
+
+Glpk2Py
+--------
+
+:ref:`glpk2py`
