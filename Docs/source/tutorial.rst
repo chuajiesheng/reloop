@@ -75,7 +75,7 @@ A Relational Linear Program for Sudoku
 **************************************
 (The running code for this example can be found in :ref:`sudoku.py<sudoku>`.)
 
-The start of the file we import the necessary reloop components::
+We start by importing the necessary reloop components::
 
     from reloop.languages.rlp2 import *
     from reloop.languages.rlp2.grounding.block import BlockGrounder
@@ -83,8 +83,15 @@ The start of the file we import the necessary reloop components::
     from reloop.solvers.lpsolver import CvxoptSolver
     
 
-Let us shortly explain what these are. In order to create an RLP model, we need three objects -- a logical knowledge base interface, a solver and a grounder. The :ref:`logkb interface<python_logkb>` provides RLP with means to query the relational database/reasoning engine where our data is stored. Currently, we support 
+Let us shortly explain what these are. In order to create an RLP model, we need three objects -- a logical knowledge base, a solver and a grounder. The :ref:`logkb interface<python_logkb>` provides RLP with means to query the relational database/reasoning engine where our data is stored. Currently, we support pyDatalog, PostgreSQL, SWI Prolog and ProbLog. For the current example we will use pyDatalog. The :ref:`solver interface<python_solvers>` interfaces RLP to a linear programming solver such as glpk, CXOPT or gurobi. Finally, the :ref:`grounder<reloop_grounding>` is an object that implements a strategy of parsing the relational LP constraints and querying the logkb in order to convert the RLP to matrix form, which the solver understands.   
 
+We now instantiate the three objects in question:
+
+    logkb = PyDatalogLogKb()
+    grounder = BlockGrounder(logkb)
+    solver = CvxoptSolver(solver_solver='glpk')
+
+The option ``solver_solver = 'glpk'`` is a passtrhough argument that tells CVXOPT to use glpk, since we need to solve the sudoku LP with a simplex method.  
 
  It has four parameters, the first being the
 arbitrary name of this problem (as a string), and the second parameter being either LpMinimize or LpMaximize depending on the type of LP we are trying to solve.

@@ -65,17 +65,8 @@ class Pulp(LpSolver):
     pass
 
 
-class LiftedLinear(LpSolver):
-    def solve(self):
-        pass
-
-    def status(self):
-        return "Not Available for LiftedLinearSolver"
-
-
 class CvxoptSolver(LpSolver):
-    def __init__(self, **kwargs):
-        """
+    """
         Initializes a solver object, which functions as a wrapper to CVXOPT with a possibility of lifting beforehand.
         At instantiation, the constructor can pass named arguments through to the solver interface and the lifting code.
         Solver arguments are prefixed with "solver_", lifting arguments are prefixed with "lifted_". For example,
@@ -89,7 +80,7 @@ class CvxoptSolver(LpSolver):
         Note that lifting is only run if lifted = True is specified, hence the lifted_orbits in 
 
         CvxoptSolver(solver_solver = "glpk", lifted_orbits = True) 
-  
+
         will have no effect. 
 
         Note: "conelp" is the default for cvxopt. Using glpk generally requires cvxopt recompilation.
@@ -98,11 +89,12 @@ class CvxoptSolver(LpSolver):
         :type kwargs: dict
 
         :Keyword Arguments:
-            * lifted = False --
-                Enables or disables lifting via equitable partitions. 
-            * anything prefixed with lifted_ is passed to reloop.utils.saucy.liftAbc
-            * anything prefixed with solver_ is passed to cvxopt.solvers.lp
-        """
+            * lifted = False: enables or disables lifting via equitable partitions. 
+            * anything prefixed with \\lifted\\_ is passed to reloop.utils.saucy.liftAbc
+            * anything prefixed with \\solver\\_ is passed to cvxopt.solvers.lp
+    """     
+    def __init__(self, **kwargs):
+
 
         # defaults
         self._lifted = False
@@ -178,11 +170,10 @@ class PicosSolver(LpSolver):
         :type kwargs: dict
 
         :Keyword Arguments:
-            * lifted = False --
-                Enables or disables lifting via equitable partitions. 
-            * anything prefixed with lifted_ is passed to reloop.utils.saucy.liftAbc
-            * anything prefixed with solver_ is passed to problem.solve
-        """
+            * lifted = False: enables or disables lifting via equitable partitions. 
+            * anything prefixed with \\lifted\\_ is passed to reloop.utils.saucy.liftAbc
+            * anything prefixed with \\solver\\_ is passed to problem.solve
+    """
     def __init__(self, **kwargs):
         # defaults
         self._lifted = False
