@@ -124,7 +124,7 @@ int
 dupe_check(int n, int *adj, int *edg)
 {
 	int i, j, self_loop_ctr;
-	int *dupe_tmp = calloc(n, sizeof(int));
+	int *dupe_tmp = (int *) calloc(n, sizeof(int));
 	if (!dupe_tmp) {
 		warn("can't allocate memory");
 		free(dupe_tmp);
@@ -185,10 +185,10 @@ amorph_read(const char *filename, int digraph)
 	}
 
 	/* Allocate everything */
-	g = malloc(sizeof(struct amorph_graph));
-	aout = calloc(digraph ? (2*n+2) : (n+1), sizeof(int));
-	eout = malloc(2 * e * sizeof(int));
-	colors = malloc(n * sizeof(int));
+	g = (struct amorph_graph *) malloc(sizeof(struct amorph_graph));
+	aout = (int *) calloc(digraph ? (2*n+2) : (n+1), sizeof(int));
+	eout = (int *) malloc(2 * e * sizeof(int));
+	colors = (int *) malloc(n * sizeof(int));
 	if (!g || !aout || !eout || !colors) goto out_free;
 
 	g->sg.n = n;
@@ -348,10 +348,10 @@ amorph_read_gap(const char *filename)
 	if (fscanf(f, ", %d)), [", &n) != 1) goto out_close;
 
 	/* Do the allocation */
-	g = malloc(sizeof(struct amorph_graph));
-	adj = calloc(n+1, sizeof(int));
-	edg = malloc(2 * e * sizeof(int));
-	colors = malloc(n * sizeof(int));
+	g = (struct amorph_graph *) malloc(sizeof(struct amorph_graph));
+	adj = (int *) calloc(n+1, sizeof(int));
+	edg = (int *) malloc(2 * e * sizeof(int));
+	colors = (int *) malloc(n * sizeof(int));
 	if (!g || !adj || !edg || !colors) goto out_free;
 
 	g->sg.n = n;
@@ -484,7 +484,7 @@ dimacs_graph_free(struct amorph_graph *g)
 static void
 dimacs_stats(struct amorph_graph *g, FILE *f)
 {
-	struct dimacs_info *info = g->data;
+	struct dimacs_info *info = (struct dimacs_info *) g->data;
 	fprintf(f, "variables = %d\n", info->vars);
 	fprintf(f, "clauses = %d\n", info->orig_clauses);
 	fprintf(f, "non-binary clauses = %d\n", info->clauses);
@@ -496,8 +496,8 @@ dimacs_print_automorphism(
 	int n, const int *gamma, int nsupp, const int *support,
 	struct amorph_graph *g, char *marks)
 {
-	struct dimacs_info *info = g->data;
-	int i, j, k, v = info->vars;
+	struct dimacs_info *info = (struct dimacs_info *) g->data;
+	int i, j, k, v = info->vars; 
 	int printed = 0;
 
 	/* We presume support is already sorted */
@@ -552,7 +552,7 @@ amorph_read_dimacs(const char *filename)
 	 * though, which may waste a bit of space.  Oh well.
 	 */
 	n = 2 * v + c;
-	adj = calloc(n+1, sizeof(int));
+	adj = (int *) calloc(n+1, sizeof(int));
 	if (adj == NULL) goto out_close;
 
 	/* Count boolean consistency edges */
@@ -598,7 +598,7 @@ amorph_read_dimacs(const char *filename)
 	e = init_fixadj1(nc, adj);
 
 	/* Allocate for edges, now that we know how many we'll have */
-	edg = malloc(e * sizeof(int));
+	edg = (int *) malloc(e * sizeof(int));
 	if (edg == NULL) goto out_free;
 
 	/* Rewind */
@@ -648,7 +648,7 @@ amorph_read_dimacs(const char *filename)
 	if (dupe_check(n, adj, edg)) goto out_free;
 
 	/* Initialize colors; clauses are separate from variables */
-	colors = malloc(nc * sizeof(int));
+	colors = (int *) malloc(nc * sizeof(int));
 	if (colors == NULL) goto out_free;
 	for (i = 0; i < 2*v; ++i) {
 		colors[i] = 0;
@@ -658,8 +658,8 @@ amorph_read_dimacs(const char *filename)
 	}
 
 	/* Allocate the other structures now */
-	g = malloc(sizeof(struct amorph_graph));
-	info = malloc(sizeof(struct dimacs_info));
+	g = (struct amorph_graph *) malloc(sizeof(struct amorph_graph));
+	info = (struct dimacs_info *) malloc(sizeof(struct dimacs_info));
 	if (!g || !info) goto out_free;
 
 	/* Graph data */
