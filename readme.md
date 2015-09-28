@@ -3,23 +3,23 @@ Reloop
 
 1.Prequisites
 -----------
-*Reloop requires Python 2.7+
-*Scipy v0.15+
-*Numpy v1.9.1+
-*Cython v0.21.1+
-*Cvxopt v1.1.7+
-*[Picos v1.0.1+](http://picos.zib.de/dist/PICOS-1.0.1.tar.gz)
-*infix v1.0.0+
-*Ordered-Set v1.3.1+
-*pyDatalog v0.14.6
+* Reloop requires Python 2.7+
+* Scipy v0.15+
+* Numpy v1.9.1+
+* Cython v0.21.1+
+* Cvxopt v1.1.7+
+* [Picos v1.0.1+](http://picos.zib.de/dist/PICOS-1.0.1.tar.gz)
+* infix v1.0.0+
+* Ordered-Set v1.3.1+
+* pyDatalog v0.14.6
 
 ###1.1 Optional Dependencies
 These optional dependencies enable additional knowledge bases for usage. While Problog and SWI-Prolog 
 both interface Prolog, psycopg2 interface a postgres database.
 
-*Problog v2.1+
-*Psycopg2 v2.6.1+
-*SWI-Prolog
+* Problog v2.1+
+* Psycopg2 v2.6.1+
+* SWI-Prolog
 
 
 Installation
