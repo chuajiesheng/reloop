@@ -1,7 +1,7 @@
 Reloop
 ======
 
-1.Prequisites
+1. Prequisites
 -----------
 * Reloop requires Python 2.7+
 * Scipy v0.15+
@@ -22,7 +22,7 @@ both interface Prolog, psycopg2 interface a postgres database.
 * SWI-Prolog
 
 
-Installation
+2. Installation
 ------------
 
 Once all the prequisites have been installed simply run
@@ -39,7 +39,7 @@ or
 
 from the root directory of Reloop.
 
-Examples
+3. Examples
 --------
 
 For examples on how to use Reloop please see our [Documentation](http://www-ai.cs.uni-dortmund.de/weblab/static/RLP/html/tutorial.html)
