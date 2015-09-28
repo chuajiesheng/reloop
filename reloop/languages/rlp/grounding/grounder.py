@@ -19,6 +19,9 @@ class Grounder():
         """
         raise NotImplementedError("")
 
+    def ask(self, query):
+        return self.logkb.ask(query.atoms(), query)
+
 
 class PostgresqlConnector():
     def __init__(self, db_name, db_user, db_password=None):
