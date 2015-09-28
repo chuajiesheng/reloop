@@ -1,24 +1,45 @@
-#To install this short example of a Cython wrapper do the following :
+Reloop
+======
 
-#Open the terminal and run
-python wrapper-setup.py install
+1.Prequisites
+-----------
+*Reloop requires Python 2.7+
+*Scipy v0.15+
+*Numpy v1.9.1+
+*Cython v0.21.1+
+*Cvxopt v1.1.7+
+*[Picos v1.0.1+](http://picos.zib.de/dist/PICOS-1.0.1.tar.gz)
+*infix v1.0.0+
+*Ordered-Set v1.3.1+
+*pyDatalog v0.14.6
 
-#The neccessary files are now being compiled
-#After all files are compiled run
+###1.1 Optional Dependencies
+These optional dependencies enable additional knowledge bases for usage. While Problog and SWI-Prolog 
+both interface Prolog, psycopg2 interface a postgres database.
 
-python liftedLP_glpk.py
-#to run the Test Application
+*Problog v2.1+
+*Psycopg2 v2.6.1+
+*SWI-Prolog
 
-python symLPExperiments.py
-#to run lifting
 
-#Requirements
-#############
-#To compile and run this script you'll need to install the following libaries on your local machine.
-#SciPy from http://scipy.org/install.html
-#glpk from http://en.wikibooks.org/wiki/GLPK/Linux_OS#Obtain
+Installation
+------------
 
-#The zlib1g-dev debian package
+Once all the prequisites have been installed simply run
 
-#cvxopt from http://cvxopt.org/install/index.html
-##############
+`python setup.py build_ext --inplace`
+
+followed by either 
+
+`python setup.py install`
+
+or
+
+`pip install .`
+
+from the root directory of Reloop.
+
+Examples
+--------
+
+For examples on how to use Reloop please see our [Documentation](http://www-ai.cs.uni-dortmund.de/weblab/static/RLP/html/tutorial.html)
