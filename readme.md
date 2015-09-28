@@ -13,6 +13,10 @@ Reloop
 * Ordered-Set v1.3.1+
 * pyDatalog v0.14.6
 
+If pip is available all prequisites can be installed at once by running
+
+`$ pip install -r requirements.txt --upgrade`
+
 ###1.1 Optional Dependencies
 These optional dependencies enable additional knowledge bases for usage. While Problog and SWI-Prolog 
 both interface Prolog, psycopg2 interface a postgres database.
@@ -43,3 +47,7 @@ from the root directory of Reloop.
 --------
 
 For examples on how to use Reloop please see our [Documentation](http://www-ai.cs.uni-dortmund.de/weblab/static/RLP/html/tutorial.html)
+
+4. Advanced Usage
+-----------------
+

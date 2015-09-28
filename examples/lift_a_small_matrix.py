@@ -1,6 +1,7 @@
 from scipy.io import mmread
 import scipy.sparse as sp
 import reloop.utils.saucy as saucy
+import reloop.utils.saucywrapper as sw
 import numpy as np
 
 
@@ -13,6 +14,6 @@ print np.unique(evid)
 print evid.shape
 
 
-colors = saucy.epSaucy(M.data.round(6).astype(np.float), M.row.astype(np.uintp), M.col.astype(np.uintp), evid.astype(np.uintp), np.int32(0));
+colors = sw.epSaucy(M.data.round(6).astype(np.float), M.row.astype(np.uintp), M.col.astype(np.uintp), evid.astype(np.uintp), np.int32(0));
 print "var colors: ", colors[0:M.shape[0]]
 print "edge colors: ", colors[M.shape[0]:]
