@@ -27,7 +27,7 @@ dl.function {
 dl.function > dt {
    border-bottom: 2px solid #cbc;
    padding: 3px 3px 0px 8px;
-}   
+}
 
 dl.class > dt {
    border-bottom: 2px solid #cbc;
@@ -42,4 +42,6 @@ dl.class > dd, dl.method > dd, dl.function > dd {
 code {
    color: #649600;
 }
+
+
 

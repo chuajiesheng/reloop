@@ -16,9 +16,14 @@ from distutils.core import setup
 from distutils.extension import Extension
 from Cython.Distutils import build_ext
 import os
+import sys
 # from Cython.Build import cythonize
 
-os.environ["CC"] = "g++" 
+if sys.platform == 'darwin':
+    os.environ["CC"] = "gcc"
+    os.environ["CXX"] = "g++"
+else:
+    os.environ['CC'] = "g++"
 
 ext_modules = [
     Extension(
@@ -51,7 +56,7 @@ ext_modules = [
 setup(
     name = 'reloop',
     version = "0.0",
-    packages = ['reloop', 'reloop.solvers', 'reloop.utils', 'reloop.utils.io','reloop.languages','reloop.languages.rlp2'],
+    packages = ['reloop', 'reloop.solvers', 'reloop.utils', 'reloop.utils.io','reloop.languages','reloop.languages.rlp', 'reloop.languages.rlp.grounding'],
     cmdclass = {'build_ext': build_ext},
     ext_modules = ext_modules,
     )

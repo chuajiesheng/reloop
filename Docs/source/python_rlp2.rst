@@ -15,5 +15,3 @@ Documentation
 .. automodule:: logkb
     :members:
 
-.. automodule:: lp
-    :members:
