@@ -43,10 +43,10 @@ class LogKb:
     knowledgebase if desired.
 
     We provide four working implementations of logkbs available to the user.
-        -PyDataLog
-        -PostgreSQL
-        -SWI-Prolog
-        -Prolog as part of Problog
+    *PyDataLog*
+    *PostgreSQL*
+    *SWI-Prolog*
+    *Prolog as part of Problog*
 
     To implement one's own logkb one has to implement the two following methods in order for reloop to work.
     """
@@ -389,6 +389,7 @@ class PrologKB(LogKb):
     def ask_predicate(self, predicate):
         """
         Queries the SWI-Prolog object for a given predicate and returns the reuslt.
+
         :param predicate: The predicate to be queried for
         :return: A list of tuples resulting from the query
         """
@@ -406,11 +407,12 @@ class PrologKB(LogKb):
     def ask(self, query_symbols, logical_query):
         """
         Builds a Prolog program from the logical_query and queries for it. Then executes the query for the query_symbols.
+
         :param query_symbols: The symbols to be queried.
         :type query_symbols: list(SubSymbol)
-        :param logical_query:
-        :type:
-        :return:[(a,b),(a,c)]
+        :param logical_query: The logical query to be executed
+        :type logical_query:
+        :return: [(a,b),(a,c)]
         """
         query = ProbLogKB.transform_query(logical_query)
         prolog_answer = list(self.prolog.query(query))
@@ -437,6 +439,7 @@ class ProbLogKB(LogKb):
     def execute(self, query):
         """
         Executes a given query by directly calling the execute methode of the problog probability task
+
         :param query: A Prolog query to be evaluated by the prolog interface
         :type query: str
         :return: A dictionary of answers for the given query returned by problog
@@ -456,6 +459,7 @@ class ProbLogKB(LogKb):
     def ask(self, query_symbols, logical_query, coeff_expr=None):
         """
         Builds a prolog query for a given set of query symbols, a logical query and a coefficient expression
+
         :param query_symbols: A Set of query (sub)symbols to be queried for
         :param logical_query: The logical query containing constants and presumably the query symbols
         :param coeff_expr: The coefficient expression for the given query
@@ -498,6 +502,7 @@ class ProbLogKB(LogKb):
     def ask_predicate(self, predicate):
         """
         Queries the prolog knowledge base for a given predicate
+
         :param predicate: The predicate to be queried for
         :return: A list of tuples containing the answers for the query
         """
@@ -521,7 +526,8 @@ class ProbLogKB(LogKb):
     def transform_query(logical_query):
         """
         Recursively builds the logical_query string from the given logical logical_query,by evaluating
-        :param logical_query: Type changes depending on the recursive depth and the depth of the expression.
+
+        :param logical_query: Type changes depending on the recursive depth and the depth of the expression. \
         The logical query, needed for the pyDataLog program string.
         :type logical_query: Boolean, BooleanPredicate
         :return: The complete Body for loading the program into pyDataLog.
