@@ -42,11 +42,11 @@ class LogKb:
     This class does not provide the implementation itself but rather the framework for implementing one's own
     knowledgebase if desired.
 
-    We provide four working implementations of logkbs available to the user.
-    *PyDataLog*
-    *PostgreSQL*
-    *SWI-Prolog*
-    *Prolog as part of Problog*
+    We provide four working implementations of logkbs available to the user :
+        * PyDataLog
+        * PostgreSQL
+        * SWI-Prolog
+        * Prolog as part of Problog
 
     To implement one's own logkb one has to implement the two following methods in order for reloop to work.
     """
