@@ -26,18 +26,18 @@ RLP is built on top of Sympy, a Python library for symbolic mathematics. That me
 
 Predicates
 ...........
-Predicates representate relational data inside our model definitions. If your data contains e.g. a relation ``R(String, String, Integer)``, it is possible to define a predicate inside RLP that maps to this specific relation. RLP distinguishes between two types of predicates: 
+Predicates represent relational data inside our model definitions. If your data contains e.g. a relation ``R(String, String, Integer)``, it is possible to define a predicate inside RLP that maps to this specific relation. RLP distinguishes between two types of predicates:
 
 1. **BooleanPredicates** 
    can be used to determine if a tuple is part of the relation. It will return True or False
 2. **NumericPredicates**
-   can be used to get numerical data from a LogKb for using it in mathematical expressions. It could also be interpreted as a function.
+   can be used to get numerical data from a LogKb for using it in mathematical expressions. It can also be interpreted as a function.
 
 
 SubSymbols
 ............
 
-SubSymbols in RLP are placeholders in expressions. They behave similar as `Sympys Symbols <http://docs.sympy.org/latest/modules/core.html#id17>`_, since SubSymbol subclasses Symbol.
+SubSymbols in RLP are placeholders in expressions. They behave similarly to `Sympys Symbols <http://docs.sympy.org/latest/modules/core.html#id17>`_, since SubSymbol subclasses Symbol.
 They can only be used inside a `Forall` or `RlpSum` statement, because the Grounder will try to substitute those SubSymbols with answers from the LogKB. 
 
 Queries
