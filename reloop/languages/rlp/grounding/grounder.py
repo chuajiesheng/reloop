@@ -14,6 +14,7 @@ class Grounder():
         """
         Grounds a relation linear program by applying a defined grounding strategy. The result is then used to formulate
         the lp problem, which is passed to the lpsolver.
+
         :param rlpProblem: The problem to be grounded
         :return: The linear program
         """

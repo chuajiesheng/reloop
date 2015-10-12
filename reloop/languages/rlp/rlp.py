@@ -83,6 +83,7 @@ class RlpProblem():
     def status(self):
         """
         Passes the call to self.lpmodel
+
         :return: The solution status of the LP.
 
         """
@@ -127,6 +128,7 @@ class Query:
 
     def __init__(self, query_symbols, query):
         """
+
         :param query_symbols: List of type :class:`SubSymbol`
         :param query: A logical query
         """
