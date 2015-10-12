@@ -57,11 +57,15 @@ class RlpProblem():
         :param rhs: Either an instance of :class :`Expr` (objective) or an instance of Rel or ForAllConstraint (constraint)
         :return: The class instance itself
         """
+        import types
 
         if is_valid_relation(rhs) | isinstance(rhs, ForAll):
             self._constraints += [rhs]
         elif isinstance(rhs, Expr):
             self.objective = rhs
+        elif(isinstance(rhs, types.GeneratorType)):
+            for item in rhs:
+                self += item
         else:
             raise ValueError("'rhs' must be either an instance of sympy.Rel, sympy.Expr or an instance of "
                              "ForallConstraint!")
