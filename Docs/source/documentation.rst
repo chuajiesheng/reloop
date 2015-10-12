@@ -18,6 +18,7 @@
    quick_reference
    reference
    bibliography
+   contact
 
 |br| |br|
 
@@ -61,7 +62,7 @@ From here you can:
 
 * get started with our code -- head over to :ref:`download <download>`, :ref:`installation <installation>` and then to our quickstart :ref:`tutorial <tutorial>`;
 
-* navigate the complete code :ref:`documentation <code>`;
+* navigate the complete code :ref:`documentation <reference>`;
 
 * find a list of all related papers on our :ref:`bibliography <bibliography>` page. 
 

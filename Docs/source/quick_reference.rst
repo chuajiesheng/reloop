@@ -66,8 +66,3 @@ When solving a RLP model, Reloop grounds the model definitions into a LP. It com
 3. SWI Prolog
 4. ProbLog
 
-
-
-
-
-
