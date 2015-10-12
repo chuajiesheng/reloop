@@ -6,7 +6,7 @@ Quick Reference
 Reloop
 -----------
 
-This Quick Reference should give you an overview about the available language features of RLP. For a full code documentation, please visit our :ref:`reference page<reference>`.
+This Quick Reference will provide you with an overview about the available language features of Relational Linear Programming. For a more in depth code documentation, please visit our :ref:`reference page<reference>`.
 
 Reloop comes with a powerful modelling language for relational linear programs: RLP. 
 
