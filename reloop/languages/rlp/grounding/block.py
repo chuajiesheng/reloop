@@ -254,7 +254,11 @@ class BlockGrounder(Grounder):
                 col_dict_index = col_dict.add(tuple(column_record))
                 row_dict_index = row_dict.add(tuple(answer[i] for i in constr_qs_indices))
 
-                sparse_data.append([np.float(answer[expr_index]), row_dict_index, col_dict_index])
+                if isinstance(answer[expr_index], Symbol):
+                    data = answer[expr_index].name
+                else:
+                    data = answer[expr_index]
+                sparse_data.append([np.float(data), row_dict_index, col_dict_index])
 
             sparse_data = np.array(sparse_data)
             summand_block = sp.sparse.coo_matrix((sparse_data[:, 0], (sparse_data[:, 1], sparse_data[:, 2]))).todok()

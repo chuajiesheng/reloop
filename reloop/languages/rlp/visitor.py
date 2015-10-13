@@ -193,7 +193,7 @@ class ExpressionGrounder(ImmutableVisitor):
 
         result = answers.pop()
 
-        return float(result[0])
+        return float(result[0].name)
 
 
 class AffineExpressionCompiler(ImmutableVisitor):

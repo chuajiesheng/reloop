@@ -124,7 +124,8 @@ class PyDatalogLogKb(LogKb):
 
         if answer is None:
             return []
-        return answer.answers
+        answers =  answer.answers
+        return self.transform_answer(answers)
 
     def ask_predicate(self, predicate):
         """
@@ -168,6 +169,19 @@ class PyDatalogLogKb(LogKb):
             return " " + logical_query.name + "(" + join + ")"
 
         raise NotImplementedError
+
+    @staticmethod
+    def transform_answer(answers):
+        """
+        """
+        if answers:
+            for index, answer in enumerate(answers):
+                subanswer = list(answer)
+                for ind, element in enumerate(subanswer):
+                    subanswer[ind] = element if not isinstance(element, basestring) else Symbol(element)
+                answers[index] = tuple(subanswer)
+        return answers
+
 
 
 class PostgreSQLKb(LogKb):
@@ -288,7 +302,7 @@ class PostgreSQLKb(LogKb):
         self.cursor.execute(query)
         values = self.cursor.fetchall()
 
-        return values
+        return PyDatalogLogKb.transform_answer(values)
 
     def ask_predicate(self, predicate):
         """
@@ -402,7 +416,7 @@ class PrologKB(LogKb):
         for dictionary in result:
             for key, value in dictionary.items():
                 answer.append((value,))
-        return answer
+        return  PyDatalogLogKb.transform_answer(answer)
 
     def ask(self, query_symbols, logical_query):
         """
@@ -497,7 +511,7 @@ class ProbLogKB(LogKb):
                     term.functor = '-' + str(term.args[0])
 
         result = [tuple(map(lambda t: t.functor, t)) for t in answer_args]
-        return result
+        return PyDatalogLogKb.transform_answer(result)
 
     def ask_predicate(self, predicate):
         """
