@@ -142,7 +142,7 @@ class PyDatalogLogKb(LogKb):
 
         if answer is None:
             return None
-        return answer.answers
+        return PyDatalogLogKb.transform_answer(answer.answers)
 
     @staticmethod
     def transform_query(logical_query):
@@ -324,7 +324,7 @@ class PostgreSQLKb(LogKb):
                     [str(columns[index][0]) + "=" + "'" + str(arg) + "'" for index, arg in enumerate(predicate.args)])
 
         self.cursor.execute(query)
-        return self.cursor.fetchall()
+        return PyDatalogLogKb.transform_answer(self.cursor.fetchall())
 
     def and_clause_for_constants(self, predicates, and_clause_added):
         """
@@ -437,7 +437,7 @@ class PrologKB(LogKb):
             for query_symbol in query_symbols:
                 res.append(dictionary.get(str(query_symbol)))
             answers.append(tuple(res))
-        return answers
+        return PyDatalogLogKb.transform_answer(answers)
 
 
 class ProbLogKB(LogKb):
@@ -534,7 +534,7 @@ class ProbLogKB(LogKb):
             return []
 
         result = [(answer_args[0][-1].functor,)]
-        return result
+        return PyDatalogLogKb.transform_answer(result)
 
     @staticmethod
     def transform_query(logical_query):
