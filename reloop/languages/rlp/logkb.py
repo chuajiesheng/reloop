@@ -254,8 +254,10 @@ class PostgreSQLKb(LogKb):
         query = "SELECT DISTINCT "
 
         query += ", ".join(
-            [value[0][0] + "." + value[0][1] + " AS " + str(key) for key, value in column_for_symbols_where.items()] + [
-                expr_as_string])
+            [value[0][0] + "." + value[0][1] + " AS " + str(key) for key, value in column_for_symbols_where.items()])
+
+        if coeff_expr is not None:
+            query += ", " + expr_as_string
         column_table_tuple_list = [value for key, value in column_for_symbols_where.items()]
         tables = set([item[0] for sublist in column_table_tuple_list for item in sublist])
 
