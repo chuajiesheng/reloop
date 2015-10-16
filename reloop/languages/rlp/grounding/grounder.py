@@ -1,7 +1,7 @@
 import abc
 
 
-class Grounder():
+class Grounder(object):
     """
     Interfaces the implementation of available grounding strategies by providing the essential methods for the grounder
     to work properly. This is an abstract class and should be handled as such. Addtionally implemented grounding strategies
