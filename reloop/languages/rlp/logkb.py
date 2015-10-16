@@ -2,6 +2,7 @@ from rlp import *
 import logging
 from ordered_set import OrderedSet
 from reloop.languages.rlp.rlp import SubSymbol
+import abc
 
 # Try to import at least one knowledge base to guarantee the functionality of Reloop
 try:
@@ -51,6 +52,9 @@ class LogKb:
     To implement one's own logkb one has to implement the two following methods in order for reloop to work.
     """
 
+    __metaclass__ = abc.ABCMeta
+
+    @abc.abstractmethod
     def ask(self, query_symbols, logical_query):
         """
         Generates a query for the specified logical knowledge base from a given logical query and their respective
@@ -68,6 +72,7 @@ class LogKb:
         """
         raise NotImplementedError
 
+    @abc.abstractmethod
     def ask_predicate(self, predicate):
         """
         Queries the logical knowledge base for a given predicate, which contains only constants.
@@ -80,7 +85,28 @@ class LogKb:
         :type predicate: Reloop Variable
         :return: The Value associated with the predicate in form of a list of tuple(s)
         """
-        raise NotImplementedError
+        raise NotImplementedError()
+
+    @classmethod
+    def transform_answer(self, answers):
+        """
+        Transforms the answer tuples for sympy
+        :param answers: list of answer tuples
+        :return: transformed list of answer tuples
+        """
+        if answers:
+            return [tuple(self.type_converter(a) for a in answer) for answer in answers]
+        return answers
+
+    @classmethod
+    def type_converter(self, item):
+        """
+        Converts the types from the answer of the logkb accordingly to its corresponding sympy type.
+        Override in subclass to specify necessary conversions per LogKB
+        :param item: the item to convert
+        :return: converted item
+        """
+        return item if not isinstance(item, basestring) else Symbol(item)
 
 
 class PyDatalogLogKb(LogKb):
@@ -142,7 +168,7 @@ class PyDatalogLogKb(LogKb):
 
         if answer is None:
             return None
-        return PyDatalogLogKb.transform_answer(answer.answers)
+        return self.transform_answer(answer.answers)
 
     @staticmethod
     def transform_query(logical_query):
@@ -169,19 +195,6 @@ class PyDatalogLogKb(LogKb):
             return " " + logical_query.name + "(" + join + ")"
 
         raise NotImplementedError
-
-    @staticmethod
-    def transform_answer(answers):
-        """
-        """
-        if answers:
-            for index, answer in enumerate(answers):
-                subanswer = list(answer)
-                for ind, element in enumerate(subanswer):
-                    subanswer[ind] = element if not isinstance(element, basestring) else Symbol(element)
-                answers[index] = tuple(subanswer)
-        return answers
-
 
 
 class PostgreSQLKb(LogKb):
@@ -304,7 +317,7 @@ class PostgreSQLKb(LogKb):
         self.cursor.execute(query)
         values = self.cursor.fetchall()
 
-        return PyDatalogLogKb.transform_answer(values)
+        return self.transform_answer(values)
 
     def ask_predicate(self, predicate):
         """
@@ -326,7 +339,7 @@ class PostgreSQLKb(LogKb):
                     [str(columns[index][0]) + "=" + "'" + str(arg) + "'" for index, arg in enumerate(predicate.args)])
 
         self.cursor.execute(query)
-        return PyDatalogLogKb.transform_answer(self.cursor.fetchall())
+        return self.transform_answer(self.cursor.fetchall())
 
     def and_clause_for_constants(self, predicates, and_clause_added):
         """
@@ -418,7 +431,7 @@ class PrologKB(LogKb):
         for dictionary in result:
             for key, value in dictionary.items():
                 answer.append((value,))
-        return  PyDatalogLogKb.transform_answer(answer)
+        return self.transform_answer(answer)
 
     def ask(self, query_symbols, logical_query):
         """
@@ -439,7 +452,7 @@ class PrologKB(LogKb):
             for query_symbol in query_symbols:
                 res.append(dictionary.get(str(query_symbol)))
             answers.append(tuple(res))
-        return PyDatalogLogKb.transform_answer(answers)
+        return self.transform_answer(answers)
 
 
 class ProbLogKB(LogKb):
@@ -513,7 +526,7 @@ class ProbLogKB(LogKb):
                     term.functor = '-' + str(term.args[0])
 
         result = [tuple(map(lambda t: t.functor, t)) for t in answer_args]
-        return PyDatalogLogKb.transform_answer(result)
+        return self.transform_answer(result)
 
     def ask_predicate(self, predicate):
         """
@@ -536,7 +549,7 @@ class ProbLogKB(LogKb):
             return []
 
         result = [(answer_args[0][-1].functor,)]
-        return PyDatalogLogKb.transform_answer(result)
+        return self.transform_answer(result)
 
     @staticmethod
     def transform_query(logical_query):
