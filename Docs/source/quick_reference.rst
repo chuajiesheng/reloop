@@ -1,5 +1,9 @@
 .. highlight:: python
 
+.. |br| raw:: html
+
+    <br />
+
 Quick Reference
 ================
 
@@ -29,10 +33,11 @@ Predicates
 Predicates represent relational data inside our model definitions. If your data contains e.g. a relation ``R(String, String, Integer)``, it is possible to define a predicate inside RLP that maps to this specific relation. RLP distinguishes between two types of predicates:
 
 1. **BooleanPredicates** 
-   can be used to determine if a tuple is part of the relation. It will return True or False
+   can be used to determine if a tuple is part of the relation. It will return True or False |br|
+   ``boolean_predicate(name, arity)``
 2. **NumericPredicates**
-   can be used to get numerical data from a LogKb for using it in mathematical expressions. It can also be interpreted as a function.
-
+   can be used to get numerical data from a LogKb for using it in mathematical expressions. It can also be interpreted as a function. |br|
+   ``numeric_predicate(name, arity)`` 
 
 SubSymbols
 ............
@@ -40,16 +45,24 @@ SubSymbols
 SubSymbols in RLP are placeholders in expressions. They behave similarly to `Sympys Symbols <http://docs.sympy.org/latest/modules/core.html#id17>`_, since SubSymbol subclasses Symbol.
 They can only be used inside a `Forall` or `RlpSum` statement, because the Grounder will try to substitute those SubSymbols with answers from the LogKB. 
 
+While ``X = SubSymbol('X')`` will instantiate a SubSymbol with value 'X' and store it inside the variable *X* we provide a convenience function to create multiple symbols at once:
+``X, Y, Z = sub_symbols('X', 'Y', 'Z')`` 
+
 Queries
 ........
 Queries are logical expressions and can consist of BooleanPredicates and `Boolean Functions <http://docs.sympy.org/0.7.6/modules/logic.html#boolean-functions>`_. They can be built with the standard python operators ``&`` (And), ``|`` (Or) and ``~`` (Not).
-Queries are used for 
+
+A possible query with boolean predicates ``node`` and ``edge`` where ``node(X)`` indicates that ``X`` is a node and ``edge(X, Y)`` indicates that there is an endge between nodes ``X`` and ``Y`` would be:
+``node(X) & edge(X, Y)`` over ``X, Y``. |br| The answer from the LogKB would contain all tuples (X,Y) that satisfy the query.
+
+Queries are used in
 
 1. **ForAll** 
-   statements: These allow batch constraint generation, based on answers from the LogKB. 
+   statements: These allow batch constraint generation, based on answers from the LogKB. |br|
+   ``ForAll({X, Y}, edge(X,Y) & node(X), cost(X, Y) <= cost(Y, X) )``
 2. **RlpSum** 's
-   : A mathematical sum over an answer set from the LogKB.
-
+   : A mathematical sum over an answer set from the LogKB. |br|
+   ``RlpSum({X}, node(X), expr(X))``
 
 Constraints
 ............
