@@ -150,8 +150,8 @@ class PyDatalogLogKb(LogKb):
 
         if answer is None:
             return []
-        answers =  answer.answers
-        return self.transform_answer(answers)
+
+        return self.transform_answer(answer.answers)
 
     def ask_predicate(self, predicate):
         """
