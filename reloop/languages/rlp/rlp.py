@@ -92,21 +92,17 @@ class RlpProblem():
 
     def get_solution(self):
         """
-        Passes the call to self.lpmodel
+
 
         :return: The solution of the LP
         """
 
         # (flow.__class__, ('a', 'b')) => sol
         solution = {}
-        index = 0
-        for varp in self._reloop_variables:
-            atoms = self.varmap[varp]
-            for atom in atoms:
-                # TODO: this could be done better
-                solution.update(
-                    {str(varp.name) + "(" + ",".join([str(arg) for arg in atom]) + ")": self.solution[index]})
-                index += 1
+        solution_iter = iter(self.solution)
+
+        for reloop_variable in self._reloop_variables:
+            solution.update({reloop_variable(*args): solution_iter.next() for args in self.varmap[reloop_variable]})
 
         return solution
 
@@ -262,12 +258,6 @@ class NumericPredicate(RlpPredicate, Function):
     @classmethod
     def eval(cls, *args):
         return None
-
-    @classmethod
-    def __str__(cls):
-        return '%s/%s' % (cls.name, cls.arity)
-
-    __repr__ = __str__
 
 
 class BooleanPredicate(BooleanAtom, Function):
