@@ -3,11 +3,6 @@ import time
 import logging
 import sys
 
-"""
-Declaration of the maxflow problem as Relatione Linear Program. First a model is instantiated with the parameters given
-from the respective callee. By declaring substitution symbols, predicates, objective and constraints one can solve the
-specified model and receive the results directly from an lp solver.
-"""
 def maxflow(grounder, solver):
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -33,16 +28,23 @@ def maxflow(grounder, solver):
     # objective
     model += RlpSum([X, Y], source(X) & edge(X, Y), flow(X, Y))
 
-    # constraints for flow preservation
-    outFlow = RlpSum([X, ], edge(X, Z), flow(X, Z))
-    inFlow = RlpSum([Y, ], edge(Z, Y), flow(Z, Y))
+    ask = grounder.ask
 
-    model += ForAll([Z, ], node(Z) & ~source(Z) & ~target(Z), inFlow >= outFlow)
-    model += ForAll([Z, ], node(Z) & ~source(Z) & ~target(Z), inFlow <= outFlow)
+    #model += ForAll([Z, ], node(Z) & ~source(Z) & ~target(Z), RlpSum([X, ], edge(X, j), flow(X, j)) |eq| RlpSum([Y, ], edge(j, Y), flow(j, Y))
+    model += (RlpSum([X, ], edge(X, j), flow(X, j)) |eq| RlpSum([Y, ], edge(j, Y), flow(j, Y))
+        for (j,) in ask(node(Z) & ~source(Z) & ~target(Z))
+    )
 
-    # upper and lower bound constraints
-    model += ForAll([X, Y], edge(X, Y), flow(X, Y) >= 0)
-    model += ForAll([X, Y], edge(X, Y), flow(X, Y) <= cost(X, Y))
+    # model += ForAll([X, Y], edge(X, Y), flow(X, Y) | ge | 0)
+    model += (flow(x, y) |ge| 0
+        for (x,y) in ask(edge(X,Y))
+    )
+
+    # model += ForAll([X, Y], edge(X, Y), flow(X, Y) | le | cost(X, Y))
+    for (x, y) in ask(edge(X,Y)):
+        model += flow(x, y) |le| cost(x, y)
+
+
 
     print "The model has been built:"
     print(model)
@@ -71,4 +73,5 @@ def maxflow(grounder, solver):
     # TODO: Change output to display correct results for an arbitrary number of edges outgoing from the source
     print "\nThus, the maximum flow entering the traffic network at node a is " + str(inflow) + " cars per hour."
     print "\nThe total flow in the traffic network is " + str(total) + " cars per hour."
-    return 0
+
+
