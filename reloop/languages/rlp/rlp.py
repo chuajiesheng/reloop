@@ -102,7 +102,7 @@ class RlpProblem():
         solution_iter = iter(self.solution)
 
         for reloop_variable in self._reloop_variables:
-            solution.update({(reloop_variable.name, args): solution_iter.next() for args in self.varmap[reloop_variable]})
+            solution.update({reloop_variable(*args): solution_iter.next() for args in self.varmap[reloop_variable]})
 
         return solution
 
@@ -258,12 +258,6 @@ class NumericPredicate(RlpPredicate, Function):
     @classmethod
     def eval(cls, *args):
         return None
-
-    @classmethod
-    def __str__(cls):
-        return '%s/%s' % (cls.name, cls.arity)
-
-    __repr__ = __str__
 
 
 class BooleanPredicate(BooleanAtom, Function):
