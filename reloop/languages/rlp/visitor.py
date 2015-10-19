@@ -39,6 +39,7 @@ class Normalizer(ImmutableVisitor):
     def visit(self, expr):
         """
         Visits the given expression nodewise and executes methods based on the current node instance
+
         :param expr: The expression to be visited
         :type expr: Sympy Expression
         :return: A normalized expression
@@ -59,6 +60,7 @@ class Normalizer(ImmutableVisitor):
     def visit_mul(self, mul):
         """
         Visitor Method, which is called in case the current node is a multiplication
+
         :param mul: The multiplication node to be processed
         :type mul: Sympy Mul
         :return:
@@ -85,6 +87,7 @@ class Normalizer(ImmutableVisitor):
     def visit_rlpsum(self, rlpsum):
         """
          Visitor Method, which is called in case the current node is a rlpsum
+
          :param rlpsum:
          :type: rlpsum: rlpsum
          :return:
@@ -119,6 +122,7 @@ class ExpressionGrounder(ImmutableVisitor):
     def visit(self, expr):
         """
         Recursively visits the syntax tree nodes for the given expression and executes a method based on the current properties of the node in the tree.
+
         :param expr: The Sympy expression the visitor visits.
         :type expr: Sympy Add|Mul|RlpSum|Pow
         :return: The ground expression
@@ -142,6 +146,7 @@ class ExpressionGrounder(ImmutableVisitor):
     def visit_rlpsum(self, rlpsum):
         """
         Visitor Method, which is called in case the current node of the syntax tree is an instance of a rlpsum
+
         :param rlpsum: The current node, which is an instance of a rlpsum
         :type rlpsum: RLPSum
         :return:
@@ -163,6 +168,7 @@ class ExpressionGrounder(ImmutableVisitor):
     def visit_numeric_predicate(self, pred):
         """
         Visitor Method, which is called in case the current node of the syntrax tree for a given expression is a numeric predicate
+
         :param pred: The numeric predicate to be processed
         :type pred: Numeric Predicate
         :return:
@@ -204,6 +210,7 @@ class AffineExpressionCompiler(ImmutableVisitor):
     def visit(self, expr):
         """
         Recursively visits the syntax tree nodes for the given expression and executes a method based on the current properties of the node in the tree.
+
         :param expr: The Sympy expression the visitor visits.
         :type expr: Sympy Add|Mul|RlpSum|Pow
         :return: The ground expression
@@ -226,6 +233,7 @@ class AffineExpressionCompiler(ImmutableVisitor):
     def visit_rlpsum(self, rlpsum):
         """
         Visitor Method, which is called in case the current node of the syntax tree is an instance of a rlpsum
+
         :param rlpsum: The current node, which is an instance of a rlpsum
         :type rlpsum: RLPSum
         :return:
@@ -247,6 +255,7 @@ class AffineExpressionCompiler(ImmutableVisitor):
     def visit_numeric_predicate(self, pred):
         """
         Visitor Method, which is called in case the current node of the syntrax tree for a given expression is a numeric predicate
+
         :param pred: The numeric predicate to be processed
         :type pred: Numeric Predicate
         :return:

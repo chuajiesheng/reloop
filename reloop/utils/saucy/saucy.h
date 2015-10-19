@@ -37,4 +37,5 @@ int* saucy_search(
 	int coarsest);
 
 void saucy_free(struct saucy *s);
+
 #endif

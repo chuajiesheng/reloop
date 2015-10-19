@@ -3,9 +3,10 @@ Relational Linear Programming
 
 .. toctree::
 
-    reloop.languages.rlp2.grounding
+    reloop.languages.rlp.grounding
 
 
+.. _reloop.languages.rlp.logkb:
 
 Logical Knowledge Base
 ----------------------------------

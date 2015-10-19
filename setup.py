@@ -19,11 +19,7 @@ import os
 import sys
 # from Cython.Build import cythonize
 
-if sys.platform == 'darwin':
-    os.environ["CC"] = "gcc"
-    os.environ["CXX"] = "g++"
-else:
-    os.environ['CC'] = "g++"
+os.environ['CC'] = "g++"
 
 ext_modules = [
     Extension(

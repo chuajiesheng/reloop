@@ -130,7 +130,7 @@ stats_handler(void)
 static int
 on_automorphism(int n, const int *gamma, int k, int *support, void *arg)
 {
-	struct amorph_graph *g = arg;
+	struct amorph_graph *g = (struct amorph_graph *) arg;
 	if (!quiet_mode) {
 		qsort_integers(support, k);
 		if (gap_mode) {
@@ -180,7 +180,7 @@ main(int argc, char **argv)
 	n = g->sg.n;
 
 	/* Allocate some memory to facilitate printing */
-	marks = calloc(n, sizeof(char));
+	marks = (char *) calloc(n, sizeof(char));
 	if (!marks) {
 		die("out of memory");
 	}
@@ -256,7 +256,7 @@ saucy_with_graph(struct amorph_graph *g, int smode, int qmode, int rep, int coar
 	n = g->sg.n;
 
 	/* Allocate some memory to facilitate printing */
-	marks = calloc(n, sizeof(char));
+	marks = (char *) calloc(n, sizeof(char));
 	if (!marks) {
 		die("out of memory");
 	}

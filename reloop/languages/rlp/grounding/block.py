@@ -21,6 +21,7 @@ class BlockGrounder(Grounder):
         """
         Initialize the BlockGrounder by creating new row and column dictionaries and a dictionary for the blocks of the
         matrix.
+
         :param logkb: The knowledge base used for querying expressions
         :return:
         """
@@ -33,6 +34,7 @@ class BlockGrounder(Grounder):
         """
         Resets the status of the row and column dictionaries of the BlockGrounder instance and
         grounds the rlp by grounding the objective and each constraint.
+
         :param rlpProblem: The instance of the given rlp
         :type rlpProblem: rlpProblem
         """
@@ -124,6 +126,7 @@ class BlockGrounder(Grounder):
     def objective_to_matrix(self, objective):
         """
         Grounds the objective of the given rlp into the matrix
+
         :param objective: The objective of the LP from which the corresponding block is generated from.
         """
         var_blocks = self.expr_to_matrix(objective, OrderedSet(), True, EmptySet())
@@ -132,6 +135,7 @@ class BlockGrounder(Grounder):
     def constraint_to_matrix(self, constraint):
         """
         Generates the corresponding block in the lp matrix from a given constraint and adds the result to the block dictionary.
+
         :param constraint: The constraint the corresponding block is generated from.
         """
         constr_name = constraint_str(constraint)
@@ -162,6 +166,7 @@ class BlockGrounder(Grounder):
         """
         First normalizes a given expression with a visitor pattern then queries the knowledge base for the given query
         and assigns the results to their respective row and column index defined the the row and column dictionaries.
+
         :param expr: The expression to be grounded
         :type expr: Sympy Expression| RLPSum
         :param row_dict: An OrderedSet containing the row indices for the lp matrix for the given expression
@@ -169,7 +174,7 @@ class BlockGrounder(Grounder):
         :param constr_query: The query originating from a given constraint
         :type constr_query: Sympy Expression | RLPSum
         :param constr_query_symbols: A Set containing the query symbols for the given constraint query
-        :type constr_query_symbols FiniteSet
+        :type constr_query_symbols: FiniteSet
         :return: A dictionary containing a unique name for the variable and the results returned from the knowledge base.
         """
         expr = Normalizer(expr).result
@@ -301,6 +306,7 @@ def coefficient_to_query(expr):
 def variable_name_for_expression(expr):
     """
     Generates a unique identifier for a given expression
+
     :param expr: The expression for which the identifier is generated.
     :return: A str unique to the given expression (Memory Address)
     """
@@ -310,6 +316,7 @@ def variable_name_for_expression(expr):
 def constraint_str(constraint):
     """
     Generates a unique identifier for a given constraint
+
     :param constraint: The constraint for which the identifier is generated.
     :return: A str unique to the given expression (Memory Address)
     """
