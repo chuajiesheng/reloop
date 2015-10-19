@@ -6,7 +6,7 @@ Quick Reference
 Reloop
 -----------
 
-This Quick Reference should give you an overview about the available language features of RLP. For a full code documentation, please visit our :ref:`reference page<reference>`.
+This Quick Reference will provide you with an overview about the available language features of Relational Linear Programming. For a more in depth code documentation, please visit our :ref:`reference page<reference>`.
 
 Reloop comes with a powerful modelling language for relational linear programs: RLP. 
 
@@ -26,18 +26,18 @@ RLP is built on top of Sympy, a Python library for symbolic mathematics. That me
 
 Predicates
 ...........
-Predicates representate relational data inside our model definitions. If your data contains e.g. a relation ``R(String, String, Integer)``, it is possible to define a predicate inside RLP that maps to this specific relation. RLP distinguishes between two types of predicates: 
+Predicates represent relational data inside our model definitions. If your data contains e.g. a relation ``R(String, String, Integer)``, it is possible to define a predicate inside RLP that maps to this specific relation. RLP distinguishes between two types of predicates:
 
 1. **BooleanPredicates** 
    can be used to determine if a tuple is part of the relation. It will return True or False
 2. **NumericPredicates**
-   can be used to get numerical data from a LogKb for using it in mathematical expressions. It could also be interpreted as a function.
+   can be used to get numerical data from a LogKb for using it in mathematical expressions. It can also be interpreted as a function.
 
 
 SubSymbols
 ............
 
-SubSymbols in RLP are placeholders in expressions. They behave similar as `Sympys Symbols <http://docs.sympy.org/latest/modules/core.html#id17>`_, since SubSymbol subclasses Symbol.
+SubSymbols in RLP are placeholders in expressions. They behave similarly to `Sympys Symbols <http://docs.sympy.org/latest/modules/core.html#id17>`_, since SubSymbol subclasses Symbol.
 They can only be used inside a `Forall` or `RlpSum` statement, because the Grounder will try to substitute those SubSymbols with answers from the LogKB. 
 
 Queries
@@ -54,7 +54,7 @@ Queries are used for
 Constraints
 ............
 
-While there is no datatype for constraints, we only allow instances of `ForAll` that contains a sympy `Relation <http://docs.sympy.org/latest/modules/core.html#module-sympy.core.relational>`_ or directly such relations. They can be added to the model with the ``+=`` operator.
+While there is no inherent datatype for constraints, we allow instances of `ForAll` that contains a sympy `Relation <http://docs.sympy.org/latest/modules/core.html#module-sympy.core.relational>`_ or directly such relations, which can be added to the model with the ``+=`` operator.
 
 Logical Knowledge Base & Grounding
 ----------------------------------
