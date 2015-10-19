@@ -70,3 +70,4 @@ def maxflow(grounder, solver):
     # TODO: Change output to display correct results for an arbitrary number of edges outgoing from the source
     print "\nThus, the maximum flow entering the traffic network at node a is " + str(inflow) + " cars per hour."
     print "\nThe total flow in the traffic network is " + str(total) + " cars per hour."
+    return 0
