@@ -53,14 +53,10 @@ class TestBlockGrounder(unittest.TestCase):
     def test_postgres(self):
         from examples.RLP import maxflow_example
         from reloop.languages.rlp.logkb import PostgreSQLKb
-        import getpass
 
-        db_name = raw_input("Please specify the name of your Database: ")
-        db_user = raw_input("Pease specify the Username for the Database: ")
-        db_password = getpass.getpass("Enter your password (Leave blank if None): ")
-        #db_name= "reloop"
-        #db_user = "reloop"
-        #db_password="reloop"
+        db_name= "reloop"
+        db_user = "reloop"
+        db_password="reloop"
 
         logkb = PostgreSQLKb(db_name, db_user, db_password)
         grounder = BlockGrounder(logkb)
