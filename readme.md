@@ -12,6 +12,7 @@ Reloop
 * infix v1.0.0+
 * Ordered-Set v1.3.1+
 * pyDatalog v0.14.6
+* sympy v0.7.6+
 
 If pip is available all prequisites can be installed at once by running
 
