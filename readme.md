@@ -1,8 +1,8 @@
 Reloop
 ======
 
-1. Prequisites
------------
+1. Prequisites as in requirements.txt
+-------------------------------------
 * Reloop requires Python 2.7+
 * Scipy v0.15+
 * Numpy v1.9.1+
@@ -13,6 +13,8 @@ Reloop
 * Ordered-Set v1.3.1+
 * pyDatalog v0.14.6
 * sympy v0.7.6+
+* psycopg2 v.2.6.1+
+* problog v.2.1.0.5+
 
 If pip is available all prequisites can be installed at once by running
 
@@ -48,7 +50,4 @@ from the root directory of Reloop.
 --------
 
 For examples on how to use Reloop please see our [Documentation](http://www-ai.cs.uni-dortmund.de/weblab/static/RLP/html/tutorial.html)
-
-4. Advanced Usage
------------------
 
