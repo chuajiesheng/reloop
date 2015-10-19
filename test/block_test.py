@@ -48,7 +48,7 @@ class TestBlockGrounder(unittest.TestCase):
 
         solver = CvxoptSolver()
         model = maxflow_example.maxflow(grounder, solver)
-        self.assertEqual(model, 0, "The test Failed - ALART")
+        self.assertEqual(model, 0, "PyDataLog Blockgrounding Failed")
 
     def test_postgres(self):
         from examples.RLP import maxflow_example
@@ -61,7 +61,7 @@ class TestBlockGrounder(unittest.TestCase):
         grounder = BlockGrounder(logkb)
         solver = CvxoptSolver()
         model = maxflow_example.maxflow(grounder, solver)
-        self.assertEqual(model, 0, "The test Failed - ALART")
+        self.assertEqual(model, 0, "PostgreSQL Blockgrounding Failed")
 
     def test_prolog(self):
         from examples.RLP import maxflow_example
@@ -72,7 +72,7 @@ class TestBlockGrounder(unittest.TestCase):
         solver = CvxoptSolver()
 
         model = maxflow_example.maxflow(grounder, solver)
-        self.assertEqual(model, 0, "The test Failed - ALART")
+        self.assertEqual(model, 0, "Prolog Blockgrounding Failed")
 
     def test_sudoku(self):
         from pyDatalog import pyDatalog

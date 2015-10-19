@@ -47,7 +47,7 @@ class TestRecursiveGrounder(unittest.TestCase):
 
         solver = CvxoptSolver()
         model = maxflow_example.maxflow(grounder, solver)
-        self.assertEqual(model, 0, "The test Failed - ALART")
+        self.assertEqual(model, 0, "PyDataLog Recursive Failed")
 
     def test_postgres(self):
         from reloop.languages.rlp.logkb import PostgreSQLKb
@@ -59,7 +59,7 @@ class TestRecursiveGrounder(unittest.TestCase):
         grounder = RecursiveGrounder(logkb)
         solver = CvxoptSolver()
         model = maxflow_example.maxflow(grounder, solver)
-        self.assertEqual(model, 0, "The test Failed - ALART")
+        self.assertEqual(model, 0, "PostgreSQL Recursive Failed")
 
     def test_prolog(self):
         from reloop.languages.rlp.logkb import ProbLogKB
@@ -69,7 +69,7 @@ class TestRecursiveGrounder(unittest.TestCase):
         solver = CvxoptSolver()
 
         model = maxflow_example.maxflow(grounder, solver)
-        self.assertEqual(model, 0, "The test Failed - ALART")
+        self.assertEqual(model, 0, "Prolog Recursive Failed")
 
     def test_swipl(self):
         from pyswip import Prolog
@@ -82,7 +82,7 @@ class TestRecursiveGrounder(unittest.TestCase):
         grounder = RecursiveGrounder(logkb)
         solver = CvxoptSolver()
         model = maxflow_example.maxflow(grounder, solver)
-        self.assertEqual(model, 0, "The test Failed - ALART")
+        self.assertEqual(model, 0, "SWI-Prolog Recursive Failed")
 
     def test_sudoku(self):
         pass
