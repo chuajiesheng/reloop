@@ -39,6 +39,11 @@ Predicates represent relational data inside our model definitions. If your data 
    can be used to get numerical data from a LogKb for using it in mathematical expressions. It can also be interpreted as a function. |br|
    ``numeric_predicate(name, arity)`` 
 
+Algebraic Expressions
+---------------------
+All defined Numeric Predicates can be used in algebraic expressions inside constraints and the objective function. An example for such an expression is ``3 * flow(X,Y) + cost(X,Y)**3`` 
+
+
 SubSymbols
 ............
 
