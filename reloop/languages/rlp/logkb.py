@@ -3,6 +3,7 @@ import logging
 from ordered_set import OrderedSet
 from reloop.languages.rlp.rlp import SubSymbol
 import abc
+from sympy.core.numbers import Integer, Float
 
 # Try to import at least one knowledge base to guarantee the functionality of Reloop
 try:
@@ -106,7 +107,15 @@ class LogKb:
         :param item: the item to convert
         :return: converted item
         """
-        return item if not isinstance(item, basestring) else Symbol(item)
+        if isinstance(item, basestring):
+            return Symbol(item)
+        if isinstance(item, int):
+            return Integer(item)
+        if isinstance(item, float):
+            return Float(item)
+
+        log.warn("Could not convert type from LogKB explicitly. An implicit conversion by SymPy may happen!")
+        return item
 
 
 class PyDatalogLogKb(LogKb):
