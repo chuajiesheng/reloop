@@ -280,7 +280,7 @@ class BooleanPredicate(BooleanAtom, Function):
 
 class RlpSum(Expr, Query):
     """
-
+    A sum over an answer set, obtained by querying the LogKB.
     """
 
     def __new__(cls, query_symbols, query, expression):
