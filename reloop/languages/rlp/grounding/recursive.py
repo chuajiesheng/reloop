@@ -320,8 +320,7 @@ class ExpressionGrounder(ImmutableVisitor):
         for answer in answers:
             expression_eval_subs = rlpsum.expression
             for index, symbol in enumerate(rlpsum.query_symbols):
-                subanswer = answer[index] if not isinstance(answer[index], basestring) \
-                    else Symbol(answer[index])
+                subanswer = answer[index]
 
                 expression_eval_subs = expression_eval_subs.subs(symbol, subanswer)
                 # expression_eval_subs = expression_eval_subs.subs(symbol, answer[index])
