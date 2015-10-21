@@ -315,9 +315,9 @@ class PostgreSQLKb(LogKb):
                 else:
                     and_clause = False
                 query += " AND NOT EXISTS (SELECT * FROM " + rel.lower() + " WHERE "
-                reference_column = column_for_symbols_where[symbol][0][0]
+                reference = column_for_symbols_where[symbol][0]
                 query += " AND ".join(
-                    [reference_column + "." + col + " = " + reltmp.lower() + "." + col for reltmp, col in value if
+                    [reference[0] + "." + reference[1] + " = " + reltmp.lower() + "." + col for reltmp, col in value if
                      reltmp == rel])
                 query += self.and_clause_for_constants(negated_predicates, and_clause)
 
@@ -341,11 +341,11 @@ class PostgreSQLKb(LogKb):
         :return: The Value associated with the predicate taken from the database
         """
         columns = self.get_column_names(predicate.name)
-        query = "SELECT " + str(columns[len(columns) - 1][0]) + \
+        query = "SELECT " + str(columns[-1]) + \
                 " FROM " + str(predicate.name.lower()) + \
                 " WHERE " + \
                 " AND ".join(
-                    [str(columns[index][0]) + "=" + "'" + str(arg) + "'" for index, arg in enumerate(predicate.args)])
+                    [str(columns[index]) + "=" + "'" + str(arg) + "'" for index, arg in enumerate(predicate.args)])
 
         self.cursor.execute(query)
         return self.transform_answer(self.cursor.fetchall())

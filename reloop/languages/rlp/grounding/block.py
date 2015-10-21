@@ -321,3 +321,85 @@ def constraint_str(constraint):
     :return: A str unique to the given expression (Memory Address)
     """
     return 'CONSTR' + str(id(constraint))
+
+class Normalizer(ImmutableVisitor):
+    """
+    Normalizes a given expression by visiting each node in the syntax tree and applying different methods for the different occuring types in the given expression.
+    """
+
+    def __init__(self, expr):
+        expanded_expr = expand(expr)
+
+        if not expanded_expr.has(RlpSum):
+            self._result = expanded_expr
+
+        self._result = self.visit(expanded_expr)
+
+    def visit(self, expr):
+        """
+        Visits the given expression nodewise and executes methods based on the current node instance
+
+        :param expr: The expression to be visited
+        :type expr: Sympy Expression
+        :return: A normalized expression
+        """
+        if not expr.has(RlpSum):
+            return expr
+
+        if isinstance(expr, Mul):
+            return self.visit_mul(expr)
+        elif isinstance(expr, RlpSum):
+            return self.visit_rlpsum(expr)
+        else:
+            args = expr.args
+            normalized_args = [self.visit(arg) for arg in args]
+
+            return expr.func(*normalized_args)
+
+    def visit_mul(self, mul):
+        """
+        Visitor Method, which is called in case the current node is a multiplication
+
+        :param mul: The multiplication node to be processed
+        :type mul: Sympy Mul
+        :return:
+        """
+        args = mul.args
+        for arg in args:
+            arg = self.visit(arg)
+
+        mul = Mul(*args)
+
+        non_rlps = []
+        rlpsum = None
+        for arg in mul.args:
+            if isinstance(arg, RlpSum):
+                rlpsum = arg
+            else:
+                non_rlps.append(arg)
+        if rlpsum is not None:
+            # If we have a term of the kind a*RlpSum(s,q,e), we return RlpSum(s,q,a*e)
+            return RlpSum(rlpsum.query_symbols, rlpsum.query, Mul(*(non_rlps + [rlpsum.expression])))
+        else:
+            return mul
+
+    def visit_rlpsum(self, rlpsum):
+        """
+         Visitor Method, which is called in case the current node is a rlpsum
+
+         :param rlpsum:
+         :type: rlpsum: rlpsum
+         :return:
+        """
+        expr = self.visit(rlpsum.expression)
+        rlpsum = RlpSum(rlpsum.query_symbols, rlpsum.query, expr)
+
+        if expr.func is Add:
+            query_symbols = rlpsum.query_symbols
+            query = rlpsum.query
+
+            # If sum terms is Add, we create a new RlpSum for each argument and flatten
+            return Add(*[RlpSum(query_symbols + u.args[0], query & u.args[1], u.args[2]) if u.func is RlpSum
+                         else RlpSum(rlpsum.args[0], rlpsum.args[1], u) for u in expr.args])
+        else:
+            return rlpsum
