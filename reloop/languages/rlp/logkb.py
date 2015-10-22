@@ -114,7 +114,7 @@ class LogKb:
         if isinstance(item, float):
             return Float(item)
 
-        log.warn("Could not convert answer {} of type {} from LogKB explicitly. Using default SymPy conversion.".format(item, type(item)))
+        log.warn("Could not convert answer {} of type {} from LogKB explicitly. Using default SymPy conversion (this is dangerous).".format(item, type(item)))
         return sympify(item)
 
 
