@@ -114,8 +114,8 @@ class LogKb:
         if isinstance(item, float):
             return Float(item)
 
-        log.warn("Could not convert type from LogKB explicitly. An implicit conversion by SymPy may happen!")
-        return item
+        log.warn("Could not convert answer {} of type {} from LogKB explicitly. Using default SymPy conversion.".format(item, type(item)))
+        return sympify(item)
 
 
 class PyDatalogLogKb(LogKb):
