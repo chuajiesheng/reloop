@@ -193,15 +193,14 @@ class BlockGrounder(Grounder):
             if isinstance(summand, RlpSum):
                 summand_query = summand.query
                 summand_query_symbols = summand.query_symbols
-                coef_query, coef_query_symbols, variable = coefficient_to_query(summand.args[2])
+                coef_query, coef_expr, variable = coefficient_to_query(summand.args[2])
             else:
                 summand_query = True
                 summand_query_symbols = EmptySet()
-                coef_query, coef_query_symbols, variable = coefficient_to_query(summand)
+                coef_query, coef_expr, variable = coefficient_to_query(summand)
 
             query_symbols = OrderedSet(constr_query_symbols + summand_query_symbols)
 
-            coef_expr = coef_query_symbols if not isinstance(coef_query_symbols, SubSymbol) else None
             query = constr_query & summand_query & coef_query
 
             answers = self.logkb.ask(query_symbols, query, coef_expr)
