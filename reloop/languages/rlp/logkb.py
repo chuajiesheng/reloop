@@ -2,6 +2,8 @@ from rlp import *
 import logging
 from ordered_set import OrderedSet
 from reloop.languages.rlp.rlp import SubSymbol
+import abc
+from sympy.core.numbers import Integer, Float
 
 # Try to import at least one knowledge base to guarantee the functionality of Reloop
 try:
@@ -42,15 +44,18 @@ class LogKb:
     This class does not provide the implementation itself but rather the framework for implementing one's own
     knowledgebase if desired.
 
-    We provide four working implementations of logkbs available to the user.
-        -PyDataLog
-        -PostgreSQL
-        -SWI-Prolog
-        -Prolog as part of Problog
+    We provide four working implementations of logkbs available to the user :
+        * PyDataLog
+        * PostgreSQL
+        * SWI-Prolog
+        * Prolog as part of Problog
 
     To implement one's own logkb one has to implement the two following methods in order for reloop to work.
     """
 
+    __metaclass__ = abc.ABCMeta
+
+    @abc.abstractmethod
     def ask(self, query_symbols, logical_query):
         """
         Generates a query for the specified logical knowledge base from a given logical query and their respective
@@ -68,6 +73,7 @@ class LogKb:
         """
         raise NotImplementedError
 
+    @abc.abstractmethod
     def ask_predicate(self, predicate):
         """
         Queries the logical knowledge base for a given predicate, which contains only constants.
@@ -80,7 +86,36 @@ class LogKb:
         :type predicate: Reloop Variable
         :return: The Value associated with the predicate in form of a list of tuple(s)
         """
-        raise NotImplementedError
+        raise NotImplementedError()
+
+    @classmethod
+    def transform_answer(self, answers):
+        """
+        Transforms the answer tuples for sympy
+        :param answers: list of answer tuples
+        :return: transformed list of answer tuples
+        """
+        if answers:
+            return [tuple(self.type_converter(a) for a in answer) for answer in answers]
+        return answers
+
+    @classmethod
+    def type_converter(self, item):
+        """
+        Converts the types from the answer of the logkb accordingly to its corresponding sympy type.
+        Override in subclass to specify necessary conversions per LogKB
+        :param item: the item to convert
+        :return: converted item
+        """
+        if isinstance(item, basestring):
+            return Symbol(item)
+        if isinstance(item, int):
+            return Integer(item)
+        if isinstance(item, float):
+            return Float(item)
+
+        log.warn("Could not convert type from LogKB explicitly. An implicit conversion by SymPy may happen!")
+        return item
 
 
 class PyDatalogLogKb(LogKb):
@@ -124,7 +159,8 @@ class PyDatalogLogKb(LogKb):
 
         if answer is None:
             return []
-        return answer.answers
+
+        return self.transform_answer(answer.answers)
 
     def ask_predicate(self, predicate):
         """
@@ -141,7 +177,7 @@ class PyDatalogLogKb(LogKb):
 
         if answer is None:
             return None
-        return answer.answers
+        return self.transform_answer(answer.answers)
 
     @staticmethod
     def transform_query(logical_query):
@@ -240,8 +276,10 @@ class PostgreSQLKb(LogKb):
         query = "SELECT DISTINCT "
 
         query += ", ".join(
-            [value[0][0] + "." + value[0][1] + " AS " + str(key) for key, value in column_for_symbols_where.items()] + [
-                expr_as_string])
+            [value[0][0] + "." + value[0][1] + " AS " + str(key) for key, value in column_for_symbols_where.items()])
+
+        if coeff_expr is not None:
+            query += ", " + expr_as_string
         column_table_tuple_list = [value for key, value in column_for_symbols_where.items()]
         tables = set([item[0] for sublist in column_table_tuple_list for item in sublist])
 
@@ -277,9 +315,9 @@ class PostgreSQLKb(LogKb):
                 else:
                     and_clause = False
                 query += " AND NOT EXISTS (SELECT * FROM " + rel.lower() + " WHERE "
-                reference_column = column_for_symbols_where[symbol][0][0]
+                reference = column_for_symbols_where[symbol][0]
                 query += " AND ".join(
-                    [reference_column + "." + col + " = " + reltmp.lower() + "." + col for reltmp, col in value if
+                    [reference[0] + "." + reference[1] + " = " + reltmp.lower() + "." + col for reltmp, col in value if
                      reltmp == rel])
                 query += self.and_clause_for_constants(negated_predicates, and_clause)
 
@@ -288,7 +326,7 @@ class PostgreSQLKb(LogKb):
         self.cursor.execute(query)
         values = self.cursor.fetchall()
 
-        return values
+        return self.transform_answer(values)
 
     def ask_predicate(self, predicate):
         """
@@ -303,14 +341,14 @@ class PostgreSQLKb(LogKb):
         :return: The Value associated with the predicate taken from the database
         """
         columns = self.get_column_names(predicate.name)
-        query = "SELECT " + str(columns[len(columns) - 1][0]) + \
+        query = "SELECT " + str(columns[-1]) + \
                 " FROM " + str(predicate.name.lower()) + \
                 " WHERE " + \
                 " AND ".join(
-                    [str(columns[index][0]) + "=" + "'" + str(arg) + "'" for index, arg in enumerate(predicate.args)])
+                    [str(columns[index]) + "=" + "'" + str(arg) + "'" for index, arg in enumerate(predicate.args)])
 
         self.cursor.execute(query)
-        return self.cursor.fetchall()
+        return self.transform_answer(self.cursor.fetchall())
 
     def and_clause_for_constants(self, predicates, and_clause_added):
         """
@@ -389,6 +427,7 @@ class PrologKB(LogKb):
     def ask_predicate(self, predicate):
         """
         Queries the SWI-Prolog object for a given predicate and returns the reuslt.
+
         :param predicate: The predicate to be queried for
         :return: A list of tuples resulting from the query
         """
@@ -401,16 +440,17 @@ class PrologKB(LogKb):
         for dictionary in result:
             for key, value in dictionary.items():
                 answer.append((value,))
-        return answer
+        return self.transform_answer(answer)
 
     def ask(self, query_symbols, logical_query):
         """
         Builds a Prolog program from the logical_query and queries for it. Then executes the query for the query_symbols.
+
         :param query_symbols: The symbols to be queried.
         :type query_symbols: list(SubSymbol)
-        :param logical_query:
-        :type:
-        :return:[(a,b),(a,c)]
+        :param logical_query: The logical query to be executed
+        :type logical_query:
+        :return: [(a,b),(a,c)]
         """
         query = ProbLogKB.transform_query(logical_query)
         prolog_answer = list(self.prolog.query(query))
@@ -421,7 +461,7 @@ class PrologKB(LogKb):
             for query_symbol in query_symbols:
                 res.append(dictionary.get(str(query_symbol)))
             answers.append(tuple(res))
-        return answers
+        return self.transform_answer(answers)
 
 
 class ProbLogKB(LogKb):
@@ -437,6 +477,7 @@ class ProbLogKB(LogKb):
     def execute(self, query):
         """
         Executes a given query by directly calling the execute methode of the problog probability task
+
         :param query: A Prolog query to be evaluated by the prolog interface
         :type query: str
         :return: A dictionary of answers for the given query returned by problog
@@ -456,6 +497,7 @@ class ProbLogKB(LogKb):
     def ask(self, query_symbols, logical_query, coeff_expr=None):
         """
         Builds a prolog query for a given set of query symbols, a logical query and a coefficient expression
+
         :param query_symbols: A Set of query (sub)symbols to be queried for
         :param logical_query: The logical query containing constants and presumably the query symbols
         :param coeff_expr: The coefficient expression for the given query
@@ -493,11 +535,12 @@ class ProbLogKB(LogKb):
                     term.functor = '-' + str(term.args[0])
 
         result = [tuple(map(lambda t: t.functor, t)) for t in answer_args]
-        return result
+        return self.transform_answer(result)
 
     def ask_predicate(self, predicate):
         """
         Queries the prolog knowledge base for a given predicate
+
         :param predicate: The predicate to be queried for
         :return: A list of tuples containing the answers for the query
         """
@@ -515,13 +558,14 @@ class ProbLogKB(LogKb):
             return []
 
         result = [(answer_args[0][-1].functor,)]
-        return result
+        return self.transform_answer(result)
 
     @staticmethod
     def transform_query(logical_query):
         """
         Recursively builds the logical_query string from the given logical logical_query,by evaluating
-        :param logical_query: Type changes depending on the recursive depth and the depth of the expression.
+
+        :param logical_query: Type changes depending on the recursive depth and the depth of the expression. \
         The logical query, needed for the pyDataLog program string.
         :type logical_query: Boolean, BooleanPredicate
         :return: The complete Body for loading the program into pyDataLog.

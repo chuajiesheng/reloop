@@ -57,11 +57,15 @@ class RlpProblem():
         :param rhs: Either an instance of :class :`Expr` (objective) or an instance of Rel or ForAllConstraint (constraint)
         :return: The class instance itself
         """
+        import types
 
         if is_valid_relation(rhs) | isinstance(rhs, ForAll):
             self._constraints += [rhs]
         elif isinstance(rhs, Expr):
             self.objective = rhs
+        elif(isinstance(rhs, types.GeneratorType)):
+            for item in rhs:
+                self += item
         else:
             raise ValueError("'rhs' must be either an instance of sympy.Rel, sympy.Expr or an instance of "
                              "ForallConstraint!")
@@ -79,6 +83,7 @@ class RlpProblem():
     def status(self):
         """
         Passes the call to self.lpmodel
+
         :return: The solution status of the LP.
 
         """
@@ -87,21 +92,17 @@ class RlpProblem():
 
     def get_solution(self):
         """
-        Passes the call to self.lpmodel
+
 
         :return: The solution of the LP
         """
 
         # (flow.__class__, ('a', 'b')) => sol
         solution = {}
-        index = 0
-        for varp in self._reloop_variables:
-            atoms = self.varmap[varp]
-            for atom in atoms:
-                # TODO: this could be done better
-                solution.update(
-                    {str(varp.name) + "(" + ",".join([str(arg) for arg in atom]) + ")": self.solution[index]})
-                index += 1
+        solution_iter = iter(self.solution)
+
+        for reloop_variable in self._reloop_variables:
+            solution.update({reloop_variable(*args): solution_iter.next() for args in self.varmap[reloop_variable]})
 
         return solution
 
@@ -123,6 +124,7 @@ class Query:
 
     def __init__(self, query_symbols, query):
         """
+
         :param query_symbols: List of type :class:`SubSymbol`
         :param query: A logical query
         """
@@ -227,6 +229,17 @@ def numeric_predicate(name, arity):
 
 
 def rlp_predicate(name, arity, boolean):
+    """
+    Serves as a predicate type factory: For the given parameters it will create a new type that inherits from Numeric\
+    /Boolean/Rlp predicate. Usually this funciton is called by :func:`~numeric_predicate` or
+    :func:`~boolean_predicate`
+
+    :param name: Name of the predicate
+    :param arity: Arity (count of relation elements decremented by one)
+    :param boolean: Flag, indicates wether thd new type is a boolean predicate
+    :return: A type with the given name, inherited from a predicate class with properties "arity", "name",\
+     "isReloopvariable" and "__str__"
+    """
     if arity < 0:
         raise ValueError("Arity must not be less than 0. Dude!")
     if arity == 0 & boolean:
@@ -257,12 +270,6 @@ class NumericPredicate(RlpPredicate, Function):
     def eval(cls, *args):
         return None
 
-    @classmethod
-    def __str__(cls):
-        return '%s/%s' % (cls.name, cls.arity)
-
-    __repr__ = __str__
-
 
 class BooleanPredicate(BooleanAtom, Function):
     """
@@ -273,7 +280,7 @@ class BooleanPredicate(BooleanAtom, Function):
 
 class RlpSum(Expr, Query):
     """
-
+    A sum over an answer set, obtained by querying the LogKB.
     """
 
     def __new__(cls, query_symbols, query, expression):

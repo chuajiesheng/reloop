@@ -7,7 +7,8 @@ Examples
 .. toctree::
    :maxdepth: 1
 
-   python_maxflow
- 
-   python_lift_factorgraph
-   python_lift_Abc
+   example_maxflow
+   example_sudoku
+   	
+   example_lift_factorgraph
+   example_lift_Abc

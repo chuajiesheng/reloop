@@ -1,5 +1,9 @@
 IO
 =======================
+.. toctree::
+	:maxdepth: 0
+
+	cpp_glpk2py
 
 Glpk Wrapper
 -------------------------------
@@ -18,8 +22,3 @@ Read
     :undoc-members:
     :show-inheritance:
     :noindex:
-
-Glpk2Py
---------
-
-:ref:`glpk2py`
