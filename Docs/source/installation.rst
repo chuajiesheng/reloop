@@ -14,6 +14,8 @@ Main dependencies
 *****************
 Before you can build and run reloop, you need to take care of a bunch of dependencies. In particular, reloop depends on the following Python modules:
 
+* `Sympy <http://docs.sympy.org/dev/install.html>`_
+
 * `Cython <https://pypi.python.org/pypi/Cython/>`_
 
 * `scipy <http://www.scipy.org/scipylib/download.html>`_
