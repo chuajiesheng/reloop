@@ -1,6 +1,7 @@
 import unittest
-from reloop.languages.rlp import SubSymbol, sub_symbols, rlp_predicate, numeric_predicate, NumericPredicate,\
+from reloop.languages.rlp import SubSymbol, sub_symbols, numeric_predicate, NumericPredicate,\
     boolean_predicate, BooleanPredicate, RlpPredicate
+
 
 class TestRlp(unittest.TestCase):
     def test_subsymbols(self):
@@ -9,7 +10,6 @@ class TestRlp(unittest.TestCase):
         self.assertEqual(a, SubSymbol('a'))
         self.assertEqual(b, SubSymbol('B'))
         self.assertEqual(x, SubSymbol('XX'))
-
 
         a = sub_symbols('a')
         self.assertEqual(a, SubSymbol('a'))
@@ -21,10 +21,10 @@ class TestRlp(unittest.TestCase):
         self.assertEqual(pred.name, "pred")
         self.assertFalse(pred.isReloopVariable)
 
-        predInst1 = pred(1,2)
-        self.assertIsInstance(predInst1, NumericPredicate)
-        predInst2 = pred(2,2)
-        self.assertNotEqual(predInst1, predInst2)
+        pred_inst1 = pred(1,2)
+        self.assertIsInstance(pred_inst1, NumericPredicate)
+        pred_inst2 = pred(2,2)
+        self.assertNotEqual(pred_inst1, pred_inst2)
 
         other = numeric_predicate("pred", 2)
         self.assertEqual(other, pred)
@@ -38,7 +38,6 @@ class TestRlp(unittest.TestCase):
         pred = numeric_predicate("pred", 0)
         self.assertIsInstance(pred(), RlpPredicate)
 
-
     def test_boolean_predicate(self):
         pred = boolean_predicate("pred", 2)
 
@@ -46,15 +45,13 @@ class TestRlp(unittest.TestCase):
         self.assertEqual(pred.name, "pred")
         self.assertFalse(pred.isReloopVariable)
 
-        predInst1 = pred(1,2)
-        self.assertIsInstance(predInst1, BooleanPredicate)
-        predInst2 = pred(2,2)
-        self.assertNotEqual(predInst1, predInst2)
+        pred_inst1 = pred(1,2)
+        self.assertIsInstance(pred_inst1, BooleanPredicate)
+        pred_inst2 = pred(2,2)
+        self.assertNotEqual(pred_inst1, pred_inst2)
 
         other = boolean_predicate("pred", 2)
         self.assertEqual(other, pred)
 
         self.assertRaises(ValueError, boolean_predicate, "pred", -1)
         self.assertRaises(ValueError, boolean_predicate, "pred", 0)
-
-
