@@ -203,7 +203,10 @@ def sub_symbols(*symbols):
     :param symbols: Tuple of strings
     :return: Tuple of SubSymbols
     """
-    return tuple(map(lambda s: SubSymbol(s), symbols))
+    sub_sym = map(lambda s: SubSymbol(s), symbols)
+    if len(sub_sym) == 1:
+        return sub_sym[0]
+    return tuple(sub_sym)
 
 
 def boolean_predicate(name, arity):
