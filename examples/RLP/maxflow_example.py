@@ -53,18 +53,23 @@ def maxflow(grounder, solver):
 
     print "\nThe model has been solved: " + str(model.status()) + "."
 
-    sol = model.get_solution()
+    solution = model.get_solution()
 
-    print "The solutions for the flow variables are:\n"
+    if solution is not None:
+        print "The solutions for the flow variables are:\n"
 
-    total = 0
-    for key, value in sol.iteritems():
-        print(str(key) + " = " + str(value))
-        total += value
+        total = 0
 
-    inflow = sol[flow('a','b')] + sol[flow('a','c')]
+        for key, value in solution.iteritems():
+            print(str(key) + " = " + str(value))
+            total += value
 
-    print "\nTime needed for the grounding and solving: " + str(end - start) + " s."
-    # TODO: Change output to display correct results for an arbitrary number of edges outgoing from the source
-    print "\nThus, the maximum flow entering the traffic network at node a is " + str(inflow) + " cars per hour."
-    print "\nThe total flow in the traffic network is " + str(total) + " cars per hour."
+        inflow = solution[flow('a','b')] + solution[flow('a','c')]
+
+        print "\nTime needed for the grounding and solving: " + str(end - start) + " s."
+        # TODO: Change output to display correct results for an arbitrary number of edges outgoing from the source
+        print "\nThus, the maximum flow entering the traffic network at node a is " + str(inflow) + " cars per hour."
+        print "\nThe total flow in the traffic network is " + str(total) + " cars per hour."
+
+    else:
+        print("The flow network has no solution!")
