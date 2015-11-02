@@ -1,108 +1,146 @@
 import unittest
-from reloop.languages.rlp.grounding.recursive import RecursiveGrounder
-from reloop.solvers.lpsolver import CvxoptSolver
-from examples.RLP import maxflow_example
 
-
-class TestLogKB(unittest.TestCase):
-    def test_pydatalog_ask_predicate(self):
+class PyDatalogLogKBTest(unittest.TestCase):
+    def setUp(self):
+        from reloop.languages.rlp.logkb import PyDatalogLogKb
         from pyDatalog import pyDatalog
         import random
-        from reloop.languages.rlp.rlp import Symbol
         from reloop.languages.rlp.rlp import RlpPredicate
-        from reloop.languages.rlp.logkb import PyDatalogLogKb
 
-        logkb = PyDatalogLogKb()
-        pred = RlpPredicate("test_predicate", 1)
-        pred.name = "test_predicate"
+        self.logkb = PyDatalogLogKb()
+        self.predicate = RlpPredicate("test_predicate", 1)
+        self.predicate.name = "test_predicate"
+        self.float_test_data = random.random()
+        self.integer_test_data = random.randint(1, 100)
+        pyDatalog.assert_fact("test_predicate", 'b', self.integer_test_data)
+        pyDatalog.assert_fact("test_predicate", 'a', self.float_test_data)
+
+    def tearDown(self):
+        from pyDatalog import pyDatalog
+        pyDatalog.clear()
+
+
+class PyDataLogKBFloatNumericPredicateTestCase(PyDatalogLogKBTest):
+    def runTest(self):
+        from reloop.languages.rlp.rlp import Symbol
 
         print("Testing PyDatalog Float Predicates...")
-        float_test_data = random.random()
-        pyDatalog.assert_fact("test_predicate", 'a', float_test_data)
-        pred._args = (Symbol('a'),)
-        test_query_answer = logkb.ask_predicate(pred)
-        self.assertEqual(float_test_data, test_query_answer[0][0],
+        self.predicate._args = (Symbol('a'),)
+        test_query_answer = self.logkb.ask_predicate(self.predicate)
+        self.assertEqual(self.float_test_data, test_query_answer[0][0],
                          "The result of the query : " + str(
                              test_query_answer) + " was not equal to the previously randomly generated number: " + str(
-                             float_test_data))
+                             self.float_test_data))
         print("...OK")
+
+
+class PyDataLogKBIntegerNumericPredicateTestCase(PyDatalogLogKBTest):
+    def runTest(self):
+        from reloop.languages.rlp.rlp import Symbol
 
         print("Testing PyDatalog Integer Predicates...")
-        integer_test_data = random.randint(1, 100)
-        pred._args = (Symbol('b'),)
-        pyDatalog.assert_fact("test_predicate", 'b', integer_test_data)
-        test_query_answer = logkb.ask_predicate(pred)
+        self.predicate._args = (Symbol('b'),)
 
-        self.assertEqual(integer_test_data, test_query_answer[0][0],
+        test_query_answer = self.logkb.ask_predicate(self.predicate)
+
+        self.assertEqual(self.integer_test_data, test_query_answer[0][0],
                          "The result of the query : " + str(
                              test_query_answer) + " was not equal to the previously randomly generated number: " + str(
-                             integer_test_data))
+                             self.integer_test_data))
         print("...OK")
 
+
+class PyDataLogKBNotExistingPredicateTestCase(PyDatalogLogKBTest):
+    def runTest(self):
+        from reloop.languages.rlp.rlp import Symbol
         print("Testing for no occurences in the Database...")
-        pred._args = (Symbol('c'),)
-        none_result = logkb.ask_predicate(pred)
+        self.predicate._args = (Symbol('c'),)
+        none_result = self.logkb.ask_predicate(self.predicate)
         self.assertEqual(None, none_result, "The result should have been None but was " + str(none_result))
         print("...OK")
 
-    def test_postgres_ask_predicate(self):
+class PostgreSQLLogKBTest(unittest.TestCase):
+    def setUp(self):
         import random
         from reloop.languages.rlp.logkb import PostgreSQLKb
-        from reloop.languages.rlp.rlp import Symbol
+        from reloop.languages.rlp.rlp import RlpPredicate
         from reloop.languages.rlp.rlp import RlpPredicate
 
-        logkb = PostgreSQLKb("danny", "danny", "")
+        self.logkb = PostgreSQLKb("danny", "danny", "")
+        self.integer_test_data = random.randint(1, 100)
+        self.float_test_data = random.random()
+
+        self.logkb.cursor.execute("DROP TABLE IF EXISTS unittest_int")
+        self.logkb.cursor.execute("DROP TABLE IF EXISTS unittest_float")
+        self.logkb.cursor.execute("CREATE TABLE unittest_int (x varchar(5), z INTEGER NOT NULL);")
+        self.logkb.cursor.execute("CREATE TABLE unittest_float (x varchar(5), z FLOAT NOT NULL);")
+        self.logkb.cursor.execute("INSERT INTO unittest_int values('a', {0}),('b',{1});".format(self.integer_test_data, self.float_test_data))
+        self.logkb.cursor.execute("INSERT INTO unittest_float values('a', {0}),('b',{1});".format(self.integer_test_data, self.float_test_data))
+
+        self.predicate = RlpPredicate("unittest", 1)
+        self.logkb.connection.commit()
+
+    def tearDown(self):
+        self.logkb.cursor.execute("DROP TABLE IF EXISTS unittest_int")
+        self.logkb.cursor.execute("DROP TABLE IF EXISTS unittest_float")
+        self.logkb.connection.commit()
+        self.logkb.connection.close()
 
 
-        integer_test_data = random.randint(1, 100)
-        float_test_data = random.random()
-        logkb.cursor.execute("DROP TABLE IF EXISTS unittest_int")
-        logkb.cursor.execute("DROP TABLE IF EXISTS unittest_float")
-        logkb.cursor.execute("CREATE TABLE unittest_int (x varchar(5), z INTEGER NOT NULL);")
-        logkb.cursor.execute("CREATE TABLE unittest_float (x varchar(5), z FLOAT NOT NULL);")
-        logkb.cursor.execute("INSERT INTO unittest_int values('a', {0}),('b',{1});".format(integer_test_data, float_test_data))
-        logkb.cursor.execute("INSERT INTO unittest_float values('a', {0}),('b',{1});".format(integer_test_data, float_test_data))
-        logkb.connection.commit()
+class PostgreSQLKBIntegerNumericPredicateTestCase(PostgreSQLLogKBTest):
 
-        pred = RlpPredicate("unittest", 1)
-        pred.name = "unittest_int"
+    def runTest(self):
+        from reloop.languages.rlp.rlp import Symbol
 
-        pred._args = (Symbol('a'),)
-        int_result = logkb.ask_predicate(pred)
+        self.predicate.name = "unittest_int"
+        self.predicate._args = (Symbol('a'),)
+        int_result = self.logkb.ask_predicate(self.predicate)
+        self.assertEqual(self.integer_test_data, int_result[0][0], "The inserted data was " + str(self.integer_test_data) + " but was returned as " + str(int_result) + " by the PostgresKB.")
 
-        pred.name = "unittest_float"
-        pred._args = (Symbol('b'),)
-        float_res = logkb.ask_predicate(pred)
 
-        print("Testing Integer and Float for PostgreSQL...")
-        self.assertAlmostEqual(float_test_data, float_res[0][0], msg="The inserted data was " + str(float_test_data) + " but was returned as " + str(float_res[0][0]) + " by the PostgresKB.")
-        self.assertEqual(integer_test_data,int_result[0][0], "The inserted data was " + str(integer_test_data) + " but was returned as " + str(int_result) + " by the PostgresKB.")
+class PostgreSQLKBFloatNumericPredicateTestCase(PostgreSQLLogKBTest):
+
+    def runTest(self):
+        from reloop.languages.rlp.rlp import Symbol
+
+        self.predicate.name = "unittest_float"
+        self.predicate._args = (Symbol('b'),)
+        float_res = self.logkb.ask_predicate(self.predicate)
+
+        print("Testing Float predicates for PostgreSQL...")
+        self.assertAlmostEqual(self.float_test_data, float_res[0][0], msg="The inserted data was " + str(self.float_test_data) + " but was returned as " + str(float_res[0][0]) + " by the PostgresKB.")
         print("...OK")
 
-        pred.name = "not_existing_predicate"
-        none_result = logkb.ask_predicate(pred)
-        self.assertEqual(None,none_result, "Not None")
 
-        pred.name = "unittest_int"
-        pred._args = (Symbol('not_existing_arg'),)
-        no_arg_result = logkb.ask_predicate(pred)
+class PostgreSQLKBNotExistingPredicateTestCase(PostgreSQLLogKBTest):
 
-        pred.name = "not_existing_predicate"
-        no_arg_no_pred_result = logkb.ask_predicate(pred)
+    def runTest(self):
+        self.predicate.name = "not_existing_predicate"
+        none_result = self.logkb.ask_predicate(self.predicate)
+        self.assertEqual(None, none_result, "The result of the query for postgrs was expected to be None, but returned" + str(none_result))
 
-        self.assertEqual(None, none_result, "Result was expected to be None but was " + str(none_result) + " instead.")
+
+class PostgreSQLNotExistingArgumentTestCase(PostgreSQLLogKBTest):
+
+    def runTest(self):
+        from reloop.languages.rlp.rlp import Symbol
+
+        self.predicate.name = "unittest_int"
+        self.predicate._args = (Symbol('not_existing_arg'),)
+        no_arg_result = self.logkb.ask_predicate(self.predicate)
         self.assertEqual([], no_arg_result, "Result was expected to be an empty List but was " + str(no_arg_result) + " instead.")
-        self.assertEqual(None, no_arg_no_pred_result, "Result was expected to be None but was " + str(no_arg_no_pred_result) + " instead.")
-        print("Cleaning up...")
-        logkb.cursor.execute("DROP TABLE IF EXISTS unittest_int")
-        logkb.cursor.execute("DROP TABLE IF EXISTS unittest_float")
-        logkb.connection.commit()
-        logkb.connection.close()
-        print("...done.")
 
-    def test_pydatalog_ask(self):
+
+class PostgreSQLNotExistingTableTestCase(PostgreSQLLogKBTest):
+
+    def runTest(self):
+        self.predicate.name = "not_existing_predicate"
+        no_arg_no_pred_result = self.logkb.ask_predicate(self.predicate)
+        self.assertEqual(None, no_arg_no_pred_result, "Result was expected to be None but was " + str(no_arg_no_pred_result) + " instead.")
+
+class PyDatalogAskTestCase(PyDatalogLogKBTest):
+    def runTest(self):
         from reloop.languages.rlp.logkb import PyDatalogLogKb
-        from pyDatalog import pyDatalog
 
         #permute all parameters of the method for profit, but only once at a time
         logkb = PyDatalogLogKb()
