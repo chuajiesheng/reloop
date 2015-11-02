@@ -5,11 +5,10 @@ class PyDatalogLogKBTest(unittest.TestCase):
         from reloop.languages.rlp.logkb import PyDatalogLogKb
         from pyDatalog import pyDatalog
         import random
-        from reloop.languages.rlp.rlp import RlpPredicate
+        from reloop.languages.rlp import numeric_predicate
 
         self.logkb = PyDatalogLogKb()
-        self.predicate = RlpPredicate("test_predicate", 1)
-        self.predicate.name = "test_predicate"
+        self.predicate = numeric_predicate("test_predicate", 1)
         self.float_test_data = random.random()
         self.integer_test_data = random.randint(1, 100)
         pyDatalog.assert_fact("test_predicate", 'b', self.integer_test_data)
@@ -22,11 +21,10 @@ class PyDatalogLogKBTest(unittest.TestCase):
 
 class PyDataLogKBFloatNumericPredicateTestCase(PyDatalogLogKBTest):
     def runTest(self):
-        from reloop.languages.rlp.rlp import Symbol
 
         print("Testing PyDatalog Float Predicates...")
-        self.predicate._args = (Symbol('a'),)
-        test_query_answer = self.logkb.ask_predicate(self.predicate)
+        pred = self.predicate('a')
+        test_query_answer = self.logkb.ask_predicate(pred)
         self.assertEqual(self.float_test_data, test_query_answer[0][0],
                          "The result of the query : " + str(
                              test_query_answer) + " was not equal to the previously randomly generated number: " + str(
@@ -36,12 +34,10 @@ class PyDataLogKBFloatNumericPredicateTestCase(PyDatalogLogKBTest):
 
 class PyDataLogKBIntegerNumericPredicateTestCase(PyDatalogLogKBTest):
     def runTest(self):
-        from reloop.languages.rlp.rlp import Symbol
-
         print("Testing PyDatalog Integer Predicates...")
-        self.predicate._args = (Symbol('b'),)
+        pred = self.predicate('b')
 
-        test_query_answer = self.logkb.ask_predicate(self.predicate)
+        test_query_answer = self.logkb.ask_predicate(pred)
 
         self.assertEqual(self.integer_test_data, test_query_answer[0][0],
                          "The result of the query : " + str(
@@ -52,10 +48,9 @@ class PyDataLogKBIntegerNumericPredicateTestCase(PyDatalogLogKBTest):
 
 class PyDataLogKBNotExistingPredicateTestCase(PyDatalogLogKBTest):
     def runTest(self):
-        from reloop.languages.rlp.rlp import Symbol
         print("Testing for no occurences in the Database...")
-        self.predicate._args = (Symbol('c'),)
-        none_result = self.logkb.ask_predicate(self.predicate)
+        pred = self.predicate('c')
+        none_result = self.logkb.ask_predicate(pred)
         self.assertEqual(None, none_result, "The result should have been None but was " + str(none_result))
         print("...OK")
 
@@ -64,9 +59,8 @@ class PostgreSQLLogKBTest(unittest.TestCase):
         import random
         from reloop.languages.rlp.logkb import PostgreSQLKb
         from reloop.languages.rlp.rlp import RlpPredicate
-        from reloop.languages.rlp.rlp import RlpPredicate
 
-        self.logkb = PostgreSQLKb("danny", "danny", "")
+        self.logkb = PostgreSQLKb("reloop", "reloop", "reloop")
         self.integer_test_data = random.randint(1, 100)
         self.float_test_data = random.random()
 
