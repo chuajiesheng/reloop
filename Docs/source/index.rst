@@ -14,5 +14,10 @@
    reference
    bibliography
 
+
 .. raw:: html
    :file: _static/landing.html
+
+
+RELOOP: the framework for relational optimization
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
