@@ -53,7 +53,7 @@ master_doc = 'documentation'
 
 # General information about the project.
 project = u'reloop'
-copyright = u'2014, Martin Mladenov, Kristian Kersting, Danny Heinrich, Leonard Kleinhans'
+copyright = u'2014-2015, Martin Mladenov, Kristian Kersting, Danny Heinrich, Leonard Kleinhans'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
