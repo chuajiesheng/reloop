@@ -92,12 +92,13 @@ class RlpProblem():
 
     def get_solution(self):
         """
-
-
         :return: The solution of the LP
         """
 
         # (flow.__class__, ('a', 'b')) => sol
+        if self.solution is None:
+            return None
+
         solution = {}
         solution_iter = iter(self.solution)
 
