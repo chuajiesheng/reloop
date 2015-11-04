@@ -243,7 +243,7 @@ def rlp_predicate(name, arity, boolean):
     """
     if arity < 0:
         raise ValueError("Arity must not be less than 0. Dude!")
-    if arity == 0 & boolean:
+    if arity == 0 and boolean:
         raise ValueError("Arity must not be less than 1, if boolean is true. Dude!")
 
     if arity == 0:
