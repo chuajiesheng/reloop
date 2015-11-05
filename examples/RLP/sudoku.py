@@ -88,6 +88,7 @@ model += ForAll([I, J, X], num(X) & num(I) & num(J), fill(I, J, X) >= 0)
 
 # initial assignment
 model += ForAll([I, J, X], initial(I, J, X), fill(I, J, X) <= 1)
+model += ForAll([I, J, X], initial(I, J, X), fill(I, J, X) >= 1)
 
 # objective
 model += RlpSum([X, ], num(X), fill(1, 1, X))
