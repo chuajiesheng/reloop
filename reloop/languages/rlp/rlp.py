@@ -252,13 +252,22 @@ def rlp_predicate(name, arity, boolean):
         predicate_type = BooleanPredicate
     else:
         predicate_type = NumericPredicate
-    predicate_class = type(name, (predicate_type,), {"arity": arity, "name": name, "isReloopVariable": False,
+    predicate_class = type(name, (predicate_type,), {"arity": arity,
+                                                     "nargs": arity,
+                                                     "name": name,
+                                                     "isReloopVariable": False,
                                                      "__str__": predicate_type.__class__.__str__})
     return predicate_class
 
 
 class RlpPredicate(Expr):
-    pass
+
+    def __new__(cls, *args):
+        if len(args) != 0:
+            raise TypeError('%s takes exactly 0 arguments (%s given)' % (cls.name, len(args)))
+        else:
+            return Expr.__new__(cls, *args)
+
 
 
 class NumericPredicate(RlpPredicate, Function):
@@ -266,6 +275,9 @@ class NumericPredicate(RlpPredicate, Function):
     Representing a predicate that is understood as a function. That is, though the relation :math:`R` inside the LogKB
     has :math:`k` elements, we define :math:`R(e_1, ..., e_{k-1}) := e_{k}`.
     """
+    def __new__(cls, *args):
+        return Function.__new__(cls, *args)
+
 
     @classmethod
     def eval(cls, *args):
