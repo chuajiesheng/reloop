@@ -1,7 +1,5 @@
 from reloop.languages.rlp import *
 import maxflow_example
-from reloop.languages.rlp.grounding.recursive import RecursiveGrounder
-from reloop.languages.rlp.grounding.block import BlockGrounder
 from reloop.solvers.lpsolver import CvxoptSolver
 from reloop.languages.rlp.logkb import PyDatalogLogKb
 from pyDatalog import pyDatalog
