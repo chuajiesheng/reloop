@@ -136,7 +136,8 @@ class PyDatalogLogKb(LogKb):
         """
         helper_len = 0
         tmp = None
-
+        if not query_symbols:
+            return None
         if coeff_expr is None:
             helper_len = len(query_symbols)
             helper_predicate = 'helper(' + ','.join([str(v) for v in query_symbols]) + ')'
@@ -225,8 +226,8 @@ class PostgreSQLKb(LogKb):
             "Import Error : It seems like psycopg2 is currently not installed or available on your machine. " \
             "To proceed please install psycopg2"
 
-        connection = psycopg2.connect("dbname=" + str(dbname) + " user=" + str(user) + " password=" + str(password))
-        self.cursor = connection.cursor()
+        self.connection = psycopg2.connect("dbname=" + str(dbname) + " user=" + str(user) + " password=" + str(password))
+        self.cursor = self.connection.cursor()
         self.recursive = True
 
     def ask(self, query_symbols, logical_query, coeff_expr=None):
@@ -341,14 +342,17 @@ class PostgreSQLKb(LogKb):
         :return: The Value associated with the predicate taken from the database
         """
         columns = self.get_column_names(predicate.name)
-        query = "SELECT " + str(columns[-1]) + \
-                " FROM " + str(predicate.name.lower()) + \
-                " WHERE " + \
-                " AND ".join(
-                    [str(columns[index]) + "=" + "'" + str(arg) + "'" for index, arg in enumerate(predicate.args)])
+        if columns:
+            query = "SELECT " + str(columns[-1]) + \
+                    " FROM " + str(predicate.name.lower()) + \
+                    " WHERE " + \
+                    " AND ".join(
+                        [str(columns[index]) + "=" + "'" + str(arg) + "'" for index, arg in enumerate(predicate.args)])
 
-        self.cursor.execute(query)
-        return self.transform_answer(self.cursor.fetchall())
+            self.cursor.execute(query)
+            return self.transform_answer(self.cursor.fetchall())
+        else:
+            return None
 
     def and_clause_for_constants(self, predicates, and_clause_added):
         """
