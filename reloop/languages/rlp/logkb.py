@@ -19,7 +19,8 @@ except ImportError:
     psycopg2_available = False
 
 try:
-    import problog.tasks.probability as problog
+    import problog.tasks.probability as problog_task
+    from problog.engine import Term
     problog_available = True
 except ImportError:
     problog_available = False
@@ -493,7 +494,7 @@ class ProbLogKB(LogKb):
         s = StringIO.StringIO(problog_prog)
         sys.stdin = s
 
-        result = problog.execute(filename="-")[1]
+        result = problog_task.execute(filename="-")[1]
         sys.stdin = sys.__stdin__
 
         return result
@@ -533,13 +534,7 @@ class ProbLogKB(LogKb):
         if answer.values()[0] == 0.0:
             return []
 
-        for t in answer_args:
-            for term in t:
-                if term.functor == '\'-\'':
-                    term.functor = '-' + str(term.args[0])
-
-        result = [tuple(map(lambda t: t.functor, t)) for t in answer_args]
-        return self.transform_answer(result)
+        return self.transform_answer(answer_args)
 
     def ask_predicate(self, predicate):
         """
@@ -563,6 +558,16 @@ class ProbLogKB(LogKb):
 
         result = [(answer_args[0][-1].functor,)]
         return self.transform_answer(result)
+
+    @classmethod
+    def type_converter(self, item):
+        if isinstance(item, Term):
+            if len(item.args) == 0:
+                return LogKb.type_converter(item.functor)
+            else:
+                return LogKb.type_converter(item.value)
+
+        raise TypeError("Invalid type %s in ProblogLogKB" % (type(item),))
 
     @staticmethod
     def transform_query(logical_query):
