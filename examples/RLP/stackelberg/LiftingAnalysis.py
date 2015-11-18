@@ -1,4 +1,4 @@
-from reloop.languages.rlp2.lpsolver import LpSolver
+from reloop.solvers.lpsolver import LpSolver
 from collections import OrderedDict
 import reloop.utils.saucy as saucy
 import numpy as np

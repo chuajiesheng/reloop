@@ -1,5 +1,5 @@
 import itertools as it
-from reloop.languages.rlp2.lp import *
+from reloop.solvers.lpsolver import *
 from pyDatalogUtil import *
 
 # DOBSS
