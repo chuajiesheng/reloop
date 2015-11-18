@@ -58,7 +58,7 @@ class PostgreSQLLogKBTest(unittest.TestCase):
     def setUp(self):
         import random
         from reloop.languages.rlp.logkb import PostgreSQLKb
-        from reloop.languages.rlp.rlp import RlpPredicate
+        from reloop.languages.rlp.rlp import numeric_predicate
 
         self.logkb = PostgreSQLKb("reloop", "reloop", "reloop")
         self.integer_test_data = random.randint(1, 100)
@@ -71,7 +71,7 @@ class PostgreSQLLogKBTest(unittest.TestCase):
         self.logkb.cursor.execute("INSERT INTO unittest_int values('a', {0}),('b',{1});".format(self.integer_test_data, self.float_test_data))
         self.logkb.cursor.execute("INSERT INTO unittest_float values('a', {0}),('b',{1});".format(self.integer_test_data, self.float_test_data))
 
-        self.predicate = RlpPredicate("unittest", 1)
+        self.predicate = numeric_predicate("unittest", 1)
         self.logkb.connection.commit()
 
     def tearDown(self):
@@ -86,9 +86,9 @@ class PostgreSQLKBIntegerNumericPredicateTestCase(PostgreSQLLogKBTest):
     def runTest(self):
         from reloop.languages.rlp.rlp import Symbol
 
-        self.predicate.name = "unittest_int"
-        self.predicate._args = (Symbol('a'),)
-        int_result = self.logkb.ask_predicate(self.predicate)
+        predicate = self.predicate('a')
+        predicate.name = "unittest_int"
+        int_result = self.logkb.ask_predicate(predicate)
         self.assertEqual(self.integer_test_data, int_result[0][0], "The inserted data was " + str(self.integer_test_data) + " but was returned as " + str(int_result) + " by the PostgresKB.")
 
 
@@ -97,9 +97,9 @@ class PostgreSQLKBFloatNumericPredicateTestCase(PostgreSQLLogKBTest):
     def runTest(self):
         from reloop.languages.rlp.rlp import Symbol
 
-        self.predicate.name = "unittest_float"
-        self.predicate._args = (Symbol('b'),)
-        float_res = self.logkb.ask_predicate(self.predicate)
+        pred = self.predicate('b')
+        pred.name = "unittest_float"
+        float_res = self.logkb.ask_predicate(pred)
 
         print("Testing Float predicates for PostgreSQL...")
         self.assertAlmostEqual(self.float_test_data, float_res[0][0], msg="The inserted data was " + str(self.float_test_data) + " but was returned as " + str(float_res[0][0]) + " by the PostgresKB.")
@@ -117,19 +117,19 @@ class PostgreSQLKBNotExistingPredicateTestCase(PostgreSQLLogKBTest):
 class PostgreSQLNotExistingArgumentTestCase(PostgreSQLLogKBTest):
 
     def runTest(self):
-        from reloop.languages.rlp.rlp import Symbol
+        predicate = self.predicate('not_existing_arg')
+        predicate.name = "unittest_int"
 
-        self.predicate.name = "unittest_int"
-        self.predicate._args = (Symbol('not_existing_arg'),)
-        no_arg_result = self.logkb.ask_predicate(self.predicate)
+        no_arg_result = self.logkb.ask_predicate(predicate)
         self.assertEqual([], no_arg_result, "Result was expected to be an empty List but was " + str(no_arg_result) + " instead.")
 
 
 class PostgreSQLNotExistingTableTestCase(PostgreSQLLogKBTest):
 
     def runTest(self):
-        self.predicate.name = "not_existing_predicate"
-        no_arg_no_pred_result = self.logkb.ask_predicate(self.predicate)
+        predicate = self.predicate('something')
+        predicate.name = "not_existing_predicate"
+        no_arg_no_pred_result = self.logkb.ask_predicate(predicate)
         self.assertEqual(None, no_arg_no_pred_result, "Result was expected to be None but was " + str(no_arg_no_pred_result) + " instead.")
 
 class PyDatalogAskTestCase(PyDatalogLogKBTest):
