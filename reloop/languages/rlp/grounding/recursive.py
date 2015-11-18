@@ -298,7 +298,7 @@ class ExpressionGrounder(ImmutableVisitor):
             result = self.visit_rlpsum(expr)
             return self.visit(result)
 
-        if isinstance(expr, NumericPredicate) and not expr.isReloopVariable:
+        if isinstance(expr, NumericPredicate) and not expr.is_reloop_variable:
             return self.visit_numeric_predicate(expr)
 
         if expr.func is BooleanPredicate:

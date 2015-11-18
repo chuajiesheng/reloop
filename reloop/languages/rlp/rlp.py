@@ -40,7 +40,7 @@ class RlpProblem():
         """
         for predicate in predicates:
             self._reloop_variables |= {predicate}
-            predicate.isReloopVariable = True
+            predicate.is_reloop_variable = True
 
     @property
     def reloop_variables(self):
@@ -204,7 +204,10 @@ def sub_symbols(*symbols):
     :param symbols: Tuple of strings
     :return: Tuple of SubSymbols
     """
-    return tuple(map(lambda s: SubSymbol(s), symbols))
+    sub_sym = map(lambda s: SubSymbol(s), symbols)
+    if len(sub_sym) == 1:
+        return sub_sym[0]
+    return tuple(sub_sym)
 
 
 def boolean_predicate(name, arity):
@@ -239,7 +242,7 @@ def rlp_predicate(name, arity, boolean):
     :param arity: Arity (count of relation elements decremented by one)
     :param boolean: Flag, indicates wether thd new type is a boolean predicate
     :return: A type with the given name, inherited from a predicate class with properties "arity", "name",\
-     "isReloopvariable" and "__str__"
+     "is_reloop_variable" and "__str__"
     """
     if arity < 0:
         raise ValueError("Arity must not be less than 0. Dude!")
@@ -252,10 +255,11 @@ def rlp_predicate(name, arity, boolean):
         predicate_type = BooleanPredicate
     else:
         predicate_type = NumericPredicate
+
     predicate_class = type(name, (predicate_type,), {"arity": arity,
                                                      "nargs": arity,
                                                      "name": name,
-                                                     "isReloopVariable": False,
+                                                     "is_reloop_variable": False,
                                                      "__str__": predicate_type.__class__.__str__})
     return predicate_class
 

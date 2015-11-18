@@ -216,39 +216,20 @@ class BlockGrounder(Grounder):
             # If the query yields no results we don't have to add anything to the matrix
             if len(answers) == 0:
                 continue
+
             expr_index = len(answers[0]) - 1
             sparse_data = []
             for answer in answers:
                 column_record = []
 
-                # summand has only one predicate
-
-                # the above is actually wrong. We can have multiple
-                # predicates, but only one variable. E.g. cost(X,Y)*flow(X,Y)
-                # where flow is the variable --MM
-                predicate = None
-                for predcandidate in summand.atoms(RlpPredicate):
-                    if variable.__class__ == predcandidate.__class__:
-                        predicate = predcandidate
-                        break
-                        # use only subsymbols when they occur, otherwise constants
-
-                # this condition breaks everything, we have to think this through
-                # --MM
-                # if variable is not None and variable is NumericPredicate:
-                j = 0
-                if predicate is not None:
-                    for arg in predicate.args:
+                # use only subsymbols when they occur, otherwise constants
+                qs_iterator = iter(variable_qs_indices)
+                if variable is not None:
+                    for arg in variable.args:
                         if isinstance(arg, SubSymbol):
-                            # it seems that in this branch it appends non-strings,
-                            # whereas in the other, it appends strings, so this
-                            # one produces [1,1], whereas the other could produce
-                            # ['1',1] for the same atom and thei fail to unify.
-                            # I have added an str() to the append -- MM
-                            column_record.append(str(answer[variable_qs_indices[j]]))
-                            j += 1
+                            column_record.append(answer[qs_iterator.next()])
                         else:
-                            column_record.append(str(arg))
+                            column_record.append(arg)
 
                 col_dict_index = col_dict.add(tuple(column_record))
                 row_dict_index = row_dict.add(tuple(answer[i] for i in constr_qs_indices))
@@ -277,7 +258,7 @@ def coefficient_to_query(expr):
     :return: the query as a sympy expression
     """
     if isinstance(expr, RlpPredicate):
-        if (expr.isReloopVariable):
+        if (expr.is_reloop_variable):
             return [True, Float(1.0), expr]
         else:
             val = VariableSubSymbol(variable_name_for_expression(expr))
@@ -299,6 +280,7 @@ def coefficient_to_query(expr):
                     e = arg
                 query.append(q);
                 query_expr.append(e)
+
             return [And(*query), expr.func(*query_expr), var_atom]
 
 
