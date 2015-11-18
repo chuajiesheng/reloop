@@ -1,5 +1,5 @@
-from reloop.languages.rlp2.grounding.block import BlockGrounder
-from reloop.languages.rlp2.logkb import PyDatalogLogKb
+from reloop.languages.rlp.grounding.block import BlockGrounder
+from reloop.languages.rlp.logkb import PyDatalogLogKb
 
 
 from DOBSS import *
