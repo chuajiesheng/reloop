@@ -72,7 +72,26 @@ Queries are used in
 Constraints
 ............
 
-While there is no inherent datatype for constraints, we allow instances of `ForAll` that contains a sympy `Relation <http://docs.sympy.org/latest/modules/core.html#module-sympy.core.relational>`_ or directly such relations, which can be added to the model with the ``+=`` operator.
+While there is no inherent datatype for constraints, we allow instances of ``ForAll`` that contains a sympy `Relation <http://docs.sympy.org/latest/modules/core.html#module-sympy.core.relational>`_ or directly such relations, which can be added to the model with the ``+=`` operator.
+
+Furthermore we provide two additional ways to declare constraints, where ``ask = grounder.ask``:
+
+
+.. code:: python
+
+    for (x, y) in ask(edge(X,Y)):
+        model += flow(x, y) |le| cost(x, y)
+        
+.. code:: python
+
+    model += (flow(x, y) |ge| 0
+        for (x,y) in ask(edge(X,Y))
+    )
+
+.. WARNING::
+
+    For now, both ways won't create `ForAll`-constraints, but ground directly into a set of pure sympy Relations. That can be slow, since you can't benefit from the ``BlockGrounder``.
+
 
 Logical Knowledge Base & Grounding
 ----------------------------------
