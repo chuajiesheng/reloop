@@ -72,7 +72,7 @@ Queries are used in
 Constraints
 ............
 
-While there is no inherent datatype for constraints, we allow instances of ``ForAll`` that contains a sympy `Relation <http://docs.sympy.org/latest/modules/core.html#module-sympy.core.relational>`_ or directly such relations, which can be added to the model with the ``+=`` operator.
+While there is no inherent datatype for constraints, we allow instances of ``ForAll`` that contain a sympy `Relation <http://docs.sympy.org/latest/modules/core.html#module-sympy.core.relational>`_ or directly such relations, which can be added to the model with the ``+=`` operator.
 
 Furthermore we provide two additional ways to declare constraints, where ``ask = grounder.ask``:
 
