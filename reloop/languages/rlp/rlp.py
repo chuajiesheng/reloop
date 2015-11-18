@@ -40,7 +40,7 @@ class RlpProblem():
         """
         for predicate in predicates:
             self._reloop_variables |= {predicate}
-            predicate.isReloopVariable = True
+            predicate.is_reloop_variable = True
 
     @property
     def reloop_variables(self):
@@ -92,12 +92,13 @@ class RlpProblem():
 
     def get_solution(self):
         """
-
-
         :return: The solution of the LP
         """
 
         # (flow.__class__, ('a', 'b')) => sol
+        if self.solution is None:
+            return None
+
         solution = {}
         solution_iter = iter(self.solution)
 
@@ -203,7 +204,10 @@ def sub_symbols(*symbols):
     :param symbols: Tuple of strings
     :return: Tuple of SubSymbols
     """
-    return tuple(map(lambda s: SubSymbol(s), symbols))
+    sub_sym = map(lambda s: SubSymbol(s), symbols)
+    if len(sub_sym) == 1:
+        return sub_sym[0]
+    return tuple(sub_sym)
 
 
 def boolean_predicate(name, arity):
@@ -238,11 +242,11 @@ def rlp_predicate(name, arity, boolean):
     :param arity: Arity (count of relation elements decremented by one)
     :param boolean: Flag, indicates wether thd new type is a boolean predicate
     :return: A type with the given name, inherited from a predicate class with properties "arity", "name",\
-     "isReloopvariable" and "__str__"
+     "is_reloop_variable" and "__str__"
     """
     if arity < 0:
         raise ValueError("Arity must not be less than 0. Dude!")
-    if arity == 0 & boolean:
+    if arity == 0 and boolean:
         raise ValueError("Arity must not be less than 1, if boolean is true. Dude!")
 
     if arity == 0:
@@ -251,13 +255,23 @@ def rlp_predicate(name, arity, boolean):
         predicate_type = BooleanPredicate
     else:
         predicate_type = NumericPredicate
-    predicate_class = type(name, (predicate_type,), {"arity": arity, "name": name, "isReloopVariable": False,
+
+    predicate_class = type(name, (predicate_type,), {"arity": arity,
+                                                     "nargs": arity,
+                                                     "name": name,
+                                                     "is_reloop_variable": False,
                                                      "__str__": predicate_type.__class__.__str__})
     return predicate_class
 
 
 class RlpPredicate(Expr):
-    pass
+
+    def __new__(cls, *args):
+        if len(args) != 0:
+            raise TypeError('%s takes exactly 0 arguments (%s given)' % (cls.name, len(args)))
+        else:
+            return Expr.__new__(cls, *args)
+
 
 
 class NumericPredicate(RlpPredicate, Function):
@@ -265,6 +279,9 @@ class NumericPredicate(RlpPredicate, Function):
     Representing a predicate that is understood as a function. That is, though the relation :math:`R` inside the LogKB
     has :math:`k` elements, we define :math:`R(e_1, ..., e_{k-1}) := e_{k}`.
     """
+    def __new__(cls, *args):
+        return Function.__new__(cls, *args)
+
 
     @classmethod
     def eval(cls, *args):
