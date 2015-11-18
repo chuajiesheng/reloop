@@ -1,6 +1,6 @@
 Cython>=0.21.1
-scipy>=0.15
 numpy>=1.9.1
+scipy>=0.15
 cvxopt>=1.1.7
 picos>=1.0.1
 PuLP>=1.5.6
