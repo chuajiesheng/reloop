@@ -9,5 +9,5 @@ Download
 
 .. _get in touch with us: mailto:reloop\@ls8.cs.uni-dortmund.de
 
-You can download the latest stable reloop release as a tarball `here <https://bitbucket.org/reloopdev/reloop/get/reloop-v1.1.0.tar.gz>`_.
+You can download the latest stable reloop release as a tarball `here <https://bitbucket.org/reloopdev/reloop/get/reloop-1.1.0.tar.gz>`_.
 
