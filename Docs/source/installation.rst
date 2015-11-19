@@ -7,7 +7,7 @@ Installation
 
 The first step is to download the latest reloop distribution from the :ref:`download <download>` section and unpack it in a directory of choice. E.g.:: 
 
-	$ wget https://bitbucket.org/reloopdev/reloop/get/reloop-v1.1.0.tar.gz
+	$ wget https://bitbucket.org/reloopdev/reloop/get/reloop-1.1.0.tar.gz
 	$ tar zxvf ŕeloop-1.1.0.tar.gz
 
 Main dependencies
