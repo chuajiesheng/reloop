@@ -1,13 +1,13 @@
 .. _maxflow:
 
-====================
-maxflow_pydatalog.py
-====================
+======================
+Maxflow with PyDatalog
+======================
 
 .. literalinclude:: ../../examples/RLP/maxflow_pydatalog.py
 
 ===================
-maxflow_example.py
+Maxflow Model
 ===================
 
 .. literalinclude:: ../../examples/RLP/maxflow_example.py

@@ -1,7 +1,7 @@
 .. _epFg:
 
 =========================
-lift_factorgraph.py
+Lifting a Factorgraph
 =========================
 
 .. literalinclude:: ../../examples/lift_factorgraph.py
