@@ -286,11 +286,7 @@ class PostgreSQLKb(LogKb):
         tables = set([item[0] for sublist in column_table_tuple_list for item in sublist])
 
         for table in tables:
-            queryy = "select exists(select * from information_schema.tables where table_name='" + table + "')"
-            self.cursor.execute(queryy)
-            if self.cursor.fetchone()[0] is False:
-                raise ValueError("Error : the table " + str(
-                    table) + " does not exist in the specified database and therefore can not be queried.")
+            self.check_table(table)
 
         query += " FROM " + ", ".join([str(value).lower() for value in tables])
 
@@ -416,6 +412,13 @@ class PostgreSQLKb(LogKb):
         self.cursor.execute(query)
         ans = [item[0] for item in self.cursor.fetchall()]
         return ans
+
+    def check_table(self, table):
+        query = "select exists(select * from information_schema.tables where table_name='" + table + "')"
+        self.cursor.execute(query)
+        if self.cursor.fetchone()[0] is False:
+            raise ValueError("Error : the table " + str(
+                table) + " does not exist in the specified database and therefore can not be queried.")
 
 
 class PrologKB(LogKb):
