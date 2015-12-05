@@ -1,10 +1,13 @@
 from grounder import Grounder
 from reloop.languages.rlp import *
+from reloop.languages.rlp.visitor import *
+from sympy.core import *
 import scipy as sp
 import scipy.sparse
 import numpy as np
 from ordered_set import OrderedSet
 import logging
+
 
 from sympy.sets import EmptySet
 

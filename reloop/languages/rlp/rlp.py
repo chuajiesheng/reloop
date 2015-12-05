@@ -1,4 +1,4 @@
-from sympy import srepr, simplify, sstr
+from sympy import srepr, simplify
 from sympy.core import *
 from sympy.sets import FiniteSet
 from sympy.logic.boolalg import *
