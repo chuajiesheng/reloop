@@ -1,9 +1,14 @@
-from rlp import *
-import logging
+
+from sympy import simplify
+from sympy.logic.boolalg import *
 from ordered_set import OrderedSet
-from reloop.languages.rlp.rlp import SubSymbol
+
+import logging
 import abc
-from sympy.core.numbers import Integer, Float
+
+from reloop.languages.rlp import *
+from reloop.languages.rlp.sql_renderer import *
+
 
 # Try to import at least one knowledge base to guarantee the functionality of Reloop
 try:
@@ -242,92 +247,15 @@ class PostgreSQLKb(LogKb):
         """
         logical_query = simplify(logical_query)
 
-        negated_predicates = []
-        predicates = []
-        if logical_query.func is And:
-            for arg in logical_query.args:
-                if arg.func is Not:
-                    negated_predicates.append(arg.args[0])
-                elif isinstance(arg, BooleanPredicate):
-                    predicates.append(arg)
-                else:
-                    raise ValueError('The given query is not in DNF')
-        elif logical_query.func is Not:
-            raise ValueError("This nothing! Or the universe! We don't know!")
-        elif logical_query.func is Or:
-            raise NotImplementedError("Next version")
-        elif isinstance(logical_query, BooleanPredicate):
-            predicates.append(logical_query)
-        elif isinstance(logical_query, BooleanTrue):
+        if isinstance(logical_query, BooleanTrue):
             # there is no logical query here, hence we must be grounding a
             # single number here, e.g. the rhs of a non-forall-quantified constraint
             return [[coeff_expr]]
-        else:
-            raise NotImplementedError('The given function of the query has not been implemented yet or is not valid')
 
-        column_for_symbols_where = self.get_columns_for_symbols(query_symbols, predicates)
-        column_for_symbols_notexists = self.get_columns_for_symbols(query_symbols, negated_predicates)
-        column_for_symbols_all = self.get_columns_for_symbols(logical_query.atoms(Symbol),
-                                                              predicates + negated_predicates)
-
-        expr_as_string = str(coeff_expr)
-        for symbol, columns in column_for_symbols_all.items():
-            if isinstance(symbol, VariableSubSymbol):
-                expr_as_string = expr_as_string.replace(str(symbol), columns[0][0] + "." + columns[0][1])
-
-        query = "SELECT DISTINCT "
-
-        query += ", ".join(
-            [value[0][0] + "." + value[0][1] + " AS " + str(key) for key, value in column_for_symbols_where.items()])
-
-        if coeff_expr is not None:
-            query += ", " + expr_as_string
-        column_table_tuple_list = [value for key, value in column_for_symbols_where.items()]
-        tables = set([item[0] for sublist in column_table_tuple_list for item in sublist])
-
-        for table in tables:
-            queryy = "select exists(select * from information_schema.tables where table_name='" + table + "')"
-            self.cursor.execute(queryy)
-            if self.cursor.fetchone()[0] is False:
-                raise ValueError("Error : the table " + str(
-                    table) + " does not exist in the specified database and therefore can not be queried.")
-
-        query += " FROM " + ", ".join([str(value).lower() for value in tables])
-
-        and_clause = False
-        query += " WHERE "
-        for symbol, value in column_for_symbols_where.items():
-            if and_clause:
-                query += " AND "
-
-            if len(value) > 0:
-                and_clause = True
-            else:
-                and_clause = False
-            reference_column = value[0][0] + "." + value[0][1]
-            query += " AND ".join([reference_column + " = " + rel.lower() + "." + col for rel, col in value])
-
-        query += self.and_clause_for_constants(predicates, and_clause)
-
-        and_clause = False
-        for symbol, value in column_for_symbols_notexists.items():
-            for rel, col in value:
-                if len(value) > 0:
-                    and_clause = True
-                else:
-                    and_clause = False
-                query += " AND NOT EXISTS (SELECT * FROM " + rel.lower() + " WHERE "
-                reference = column_for_symbols_where[symbol][0]
-                query += " AND ".join(
-                    [reference[0] + "." + reference[1] + " = " + reltmp.lower() + "." + col for reltmp, col in value if
-                     reltmp == rel])
-                query += self.and_clause_for_constants(negated_predicates, and_clause)
-
-                query += ")"
-
+        query = from_logical_query(query_symbols, logical_query, coeff_expr, self.cursor)
         self.cursor.execute(query)
-        values = self.cursor.fetchall()
 
+        values = self.cursor.fetchall()
         return self.transform_answer(values)
 
     def ask_predicate(self, predicate):
@@ -342,7 +270,7 @@ class PostgreSQLKb(LogKb):
         :type predicate: BooleanPredicate
         :return: The Value associated with the predicate taken from the database
         """
-        columns = self.get_column_names(predicate.name)
+        columns = get_column_names(predicate.name)
         if columns:
             query = "SELECT " + str(columns[-1]) + \
                     " FROM " + str(predicate.name.lower()) + \
@@ -354,68 +282,6 @@ class PostgreSQLKb(LogKb):
             return self.transform_answer(self.cursor.fetchall())
         else:
             return None
-
-    def and_clause_for_constants(self, predicates, and_clause_added):
-        """
-        Iterates over a list of given predicates and returns the where-clause for constants.
-
-        :param predicates: The given predicates. E.g. : edge(X,'a'), edge ('a','c')
-        :type predicate: List(BooleanPredicate)
-        :param and_clause_added: Indicates if there was been an and-clause beforehand to correctly concatenate \
-        the querystring
-        :type and_clause_added: Boolean
-        :return: The SQL conjunctions for the given predicates
-        """
-        query = ""
-        for predicate in predicates:
-            for index, arg in enumerate(predicate.args):
-                if not isinstance(arg, SubSymbol):
-                    if and_clause_added:
-                        query += " AND "
-                    else:
-                        and_clause_added = True
-                    query += predicate.name.lower() + "." + self.get_column_names(predicate.name)[
-                        index] + " = " + "'" + str(arg) + "'"
-
-        return query
-
-    def get_columns_for_symbols(self, query_symbol, predicates):
-        """
-        Creates a dictionary from symbols and predicates with Key, Value pairs of query_symbols,predicates , where
-        Symbol is the Key to its occurances in the predicates.
-
-        :param query_symbol: The Symbols to be queried for (Keys)
-        :type query_symbol: List(SubSymbol)
-        :param predicates: The predicates, where the symbols might occur (Values)
-        :type predicates: List(BooleanPredicate)
-        :return: A dictionary, which maps from the given query_symbols to the corresponding predicates in \
-        which the symbols occur.
-        """
-        column_for_symbols = {key: [] for key in query_symbol}
-        for predicate in predicates:
-            column_names = self.get_column_names(predicate.name)
-
-            for index, arg in enumerate(predicate.args):
-                if isinstance(arg, SubSymbol):
-                    # We only want those symbols, that appear in the query
-                    if column_for_symbols.has_key(arg):
-                        column_for_symbols[arg].append((predicate.name, column_names[index]))
-
-        return column_for_symbols
-
-    def get_column_names(self, relation_name):
-        """
-        Convenience function to get the name of the columns for a given table.
-
-        :param relation_name: The name of the table
-        :type relation_name: str
-        :return: A list consisting of the column names.
-        """
-        query = "SELECT column_name FROM information_schema.columns where table_name=" + "'" + relation_name.lower() \
-                + "' ORDER BY ordinal_position ASC"
-        self.cursor.execute(query)
-        ans = [item[0] for item in self.cursor.fetchall()]
-        return ans
 
 
 class PrologKB(LogKb):

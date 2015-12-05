@@ -4,7 +4,7 @@ from reloop.languages.rlp import *
 import abc
 
 
-class ImmutableVisitor():
+class ImmutableVisitor(object):
     """
     Class interfacing a generic visitor used by the Normalizer
     """

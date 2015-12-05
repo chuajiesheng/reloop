@@ -6,7 +6,7 @@ from sympy.logic.boolalg import *
 import scipy.sparse
 import numpy
 from ordered_set import OrderedSet
-
+from reloop.languages.rlp.visitor import *
 
 class RecursiveGrounder(Grounder):
     """
