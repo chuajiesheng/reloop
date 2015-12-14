@@ -16,7 +16,6 @@ Stackelberg Games
 -----------------------------
 
 We now turn to compressed optimization using a novel application of relational optimization: security games.
-(Explanation of Stackelberg)
 
 Lifted Optimization: Can you trick the police?
 **********************************************
