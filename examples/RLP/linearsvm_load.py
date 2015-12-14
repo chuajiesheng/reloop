@@ -57,7 +57,7 @@ cora_connection = psycopg2.connect("dbname=" + db_name + " user=" + db_user + " 
 cora_cursor = cora_connection.cursor()
 
 cora_cursor.execute("DROP TABLE IF EXISTS word_vector")
-cora_cursor.execute("CREATE TABLE word_vector (id SERIAL PRIMARY KEY, paper_id int, word_id int, weight int)")
+cora_cursor.execute("CREATE TABLE word_vector (id SERIAL PRIMARY KEY, paper_id int, word_id int)")
 
 cora_cursor.execute("DROP TABLE IF EXISTS paper")
 cora_cursor.execute("CREATE TABLE paper (id SERIAL PRIMARY KEY, paper_id int)")
@@ -71,9 +71,11 @@ cora_cursor.execute("CREATE OR REPLACE FUNCTION rbf_kernel(_c1 int, _c2 int) \
                     $func$\
                     DECLARE result FLOAT;\
                     BEGIN\
-                       EXECUTE format('SELECT exp(%s*-1*SUM(Power(w1.weight - w2.weight,2))) from word_vector as w1 \
-                       FULL OUTER JOIN word_vector as w2 ON (w1.word_id=w2.word_id) WHERE w1.paper_id=%s \
-                       AND w2.paper_id=%s AND w1.weight != w2.weight', 0.01 , _c1, _c2) INTO result;\
+                       EXECUTE format('WITH r as (SELECT word_id FROM word_vector where paper_id=%s),\
+                                            s as (SELECT word_id FROM word_vector where paper_id=%s),\
+                                            un as (SELECT count(*) as u FROM (SELECT * from r UNION SELECT * from s)y),\
+                                            xn as (SELECT count(*) as n FROM (SELECT * from r INTERSECT SELECT * from s)x)\
+                                            SELECT exp(0.01*-1*(un.u - xn.n)) AS counter_intersection FROM xn, un', _c1, _c2) INTO result;\
                        RETURN result;\
                     END\
                     $func$ LANGUAGE plpgsql;")
@@ -87,8 +89,6 @@ for index, line in enumerate(file):
             paper_id = elem
         elif elem == '1':
             bin_vectors.append((paper_id, str(ind), 1))
-        elif elem == '0':
-            bin_vectors.append((paper_id, str(ind), 0))
         else:
             continue
 
@@ -99,8 +99,8 @@ for index, line in enumerate(file):
 log.info(str(index) + " Finished scanning papers from " + path + ".")
 
 log.info("Inserting relations into database...")
-query = "INSERT INTO word_vector (paper_id, word_id, weight)VALUES" + ",".join(
-    "(" + item[0] + "," + str(item[1]) + "," + str(item[2]) + ")" for item in bin_vectors) + ";"
+query = "INSERT INTO word_vector (paper_id, word_id)VALUES" + ",".join(
+    "(" + item[0] + "," + str(item[1]) + ")" for item in bin_vectors) + ";"
 
 cora_cursor.execute(query)
 cora_cursor.execute("CREATE INDEX word_idx ON word_vector USING btree (paper_id, word_id);")
