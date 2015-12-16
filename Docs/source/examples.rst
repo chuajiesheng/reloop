@@ -9,7 +9,7 @@ Examples
     :depth: 3
     :local:
 
-In this chapter we will discuss additional examples, which are inteded to provide the user with a broader perspective of reloop's applications.
+In this chapter we will discuss additional examples, which are intended to provide the user with a broader perspective of reloop's applications.
 If you have not already visited the _tutorial: it is advised to do so first.
 
 Stackelberg Games
