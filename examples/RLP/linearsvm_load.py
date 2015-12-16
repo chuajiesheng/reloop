@@ -71,11 +71,11 @@ cora_cursor.execute("CREATE OR REPLACE FUNCTION rbf_kernel(_c1 int, _c2 int) \
                     $func$\
                     DECLARE result FLOAT;\
                     BEGIN\
-                       EXECUTE format('WITH r as (SELECT word_id FROM word_vector where paper_id=%s),\
-                                            s as (SELECT word_id FROM word_vector where paper_id=%s),\
-                                            un as (SELECT count(*) as u FROM (SELECT * from r UNION SELECT * from s)y),\
-                                            xn as (SELECT count(*) as n FROM (SELECT * from r INTERSECT SELECT * from s)x)\
-                                            SELECT exp(0.01*-1*(un.u - xn.n)) AS counter_intersection FROM xn, un', _c1, _c2) INTO result;\
+                       EXECUTE format('WITH word_id_1 as (SELECT word_id FROM word_vector where paper_id=%s),\
+                                            word_id_2 as (SELECT word_id FROM word_vector where paper_id=%s),\
+                                            word_id_union as (SELECT count(*) as word_id_union_count FROM (SELECT * from word_id_1 UNION SELECT * from word_id_2)y),\
+                                            word_id_intersection as (SELECT count(*) as word_id_intersection_count FROM (SELECT * from word_id_1 INTERSECT SELECT * from word_id_2)x)\
+                                            SELECT exp(0.01*-1*(word_id_union.word_id_union_count - word_id_intersection.word_id_intersection_count)) AS counter_intersection FROM word_id_intersection, word_id_union', _c1, _c2) INTO result;\
                        RETURN result;\
                     END\
                     $func$ LANGUAGE plpgsql;")
