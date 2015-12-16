@@ -159,4 +159,3 @@ if raw_input("Do you want to precompute the Kernel ?(y/n)") == 'y':
 
 cora_connection.commit()
 cora_connection.close()
-exit(0)

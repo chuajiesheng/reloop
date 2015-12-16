@@ -69,12 +69,5 @@ model.solve()
 sol = model.get_solution()
 print(sol)
 
-exit(0)
-
-
-
-
-
-
 
 
