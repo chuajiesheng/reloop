@@ -51,7 +51,7 @@ ext_modules = [
 
 setup(
     name = 'reloop',
-    version = "1.1.0",
+    version = "1.2.0",
     packages = ['reloop', 'reloop.solvers', 'reloop.utils', 'reloop.utils.io','reloop.languages','reloop.languages.rlp', 'reloop.languages.rlp.grounding'],
     cmdclass = {'build_ext': build_ext},
     ext_modules = ext_modules,
