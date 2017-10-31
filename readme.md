@@ -1,5 +1,7 @@
 # Reloop
 
+Note: This repo was originally hosted at [Bitbucket/Reloop](https://bitbucket.org/reloopdev/reloop).
+Please check out [Bitbucket/Reloop Developers](https://bitbucket.org/reloopdev/profile/members) for the list of original authors.
 
 ## 1. Prequisites as in requirements.txt
 
