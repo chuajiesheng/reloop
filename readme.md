@@ -1,8 +1,8 @@
-Reloop
-======
+# Reloop
 
-1. Prequisites as in requirements.txt
--------------------------------------
+
+## 1. Prequisites as in requirements.txt
+
 * Reloop requires Python 2.7+
 * Scipy v0.15+
 * Numpy v1.9.1+
@@ -20,7 +20,7 @@ If pip is available all prequisites can be installed at once by running
 
 `$ pip install -r requirements.txt --upgrade`
 
-###1.1 Optional Dependencies
+### 1.1 Optional Dependencies
 These optional dependencies enable additional knowledge bases for usage. While Problog and SWI-Prolog 
 both interface Prolog, psycopg2 interface a postgres database.
 
@@ -29,8 +29,8 @@ both interface Prolog, psycopg2 interface a postgres database.
 * SWI-Prolog
 
 
-2. Installation
-------------
+## 2. Installation
+
 
 Once all the prequisites have been installed simply run
 
@@ -46,8 +46,7 @@ or
 
 from the root directory of Reloop.
 
-3. Examples
---------
+## 3. Examples
 
 For examples on how to use Reloop please see our [Documentation](http://www-ai.cs.uni-dortmund.de/weblab/static/RLP/html/tutorial.html)
 
