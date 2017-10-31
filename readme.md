@@ -5,6 +5,7 @@ Please check out [Bitbucket/Reloop Developers](https://bitbucket.org/reloopdev/p
 
 ## 1. Prequisites as in requirements.txt
 
+* GNU GLPK Linear/Mixed Integer Solver (`brew install glpk` for MacOS users) 
 * Reloop requires Python 2.7+
 * Scipy v0.15+
 * Numpy v1.9.1+
